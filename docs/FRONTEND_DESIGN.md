@@ -98,19 +98,40 @@ The frontend includes a built-in **"Start Judge Walkthrough"** guided presenter 
 
 ---
 
-## 5. Visual Design System
+## 5. Visual Design System & Design Tokens (`styles/tokens.css`)
 
-- **Color Palette:**
-  - Background: Cyber dark theme (`#0b0f19`, `#111827`, `#1e293b`)
-  - Accents: Neon Cyan (`#38bdf8`), Emerald Green (`#10b981`), Amber Warning (`#f59e0b`), Crimson Danger (`#ef4444`), Purple Quantum (`#a855f7`)
-- **Typography:** Modern clean sans-serif (`Inter`, system UI font) with monospace code tags for hashes, keys, and base64 strings.
-- **Responsiveness:** Fluid grid layout that scales seamlessly from 1366x768 laptop screens to 1920x1080+ hackathon presentation displays.
-- **Accessibility:** Clear contrast ratios, readable font sizes, intuitive icon indicators via `lucide-react`.
+AegisTrace follows an editorial enterprise forensic security workstation aesthetic (inspired by Linear, Vercel, and Swiss precision typography), completely eschewing AI-slop (no purple-to-blue gradients, no giant glowing text, no generic cards-in-cards):
+
+- **Color Tokens & Dual-Theme Architecture:**
+  - **Light Mode (Daylight Forensic Terminal):** Pure white `#ffffff` elevated surfaces against `#f8fafc` workspace canvas and `#f1f5f9` structural chrome. Crisp `#0f172a` primary typography, `#475569` secondary body, and `#e2e8f0` structural borders.
+  - **Dark Mode (Layered Navy-Slate Depth):** Grounded `#090e17` base canvas, `#0d1526` structural navigation, `#111c30` workspace surface, `#162540` elevated surface, and `#1d3254` interactive hover states. Pure `#f8fafc` heading contrast and `#94a3b8` body text.
+  - **Aegis Forensic Accent:** Precision Aegis Blue (`#2563eb` light / `#3b82f6` dark), Emerald Verified (`#10b981`), Amber Advisory (`#f59e0b`), Crimson Breach/Tamper (`#ef4444`). Zero neon/cyan RGB flares.
+- **Typography & Cryptographic Data Displays:**
+  - Headings & Interface: `Geist`, `Manrope`, `-apple-system`, `Inter`.
+  - Cryptographic Primitives: `JetBrains Mono`, `ui-monospace`, `monospace` for all 64-char SHA-256 hashes, ML-KEM-768 encapsulation keys, ML-DSA-65 signatures, Tardos binary vectors, and mathematical metrics.
+- **Micro-Motion & Signature Experience:**
+  - **Signature Intro (~950ms):** 2D forensic laser trace line sweep across the central axis, resolving the Aegis shield and `AegisTrace` FIPS 203/204 wordmark with real-time parameter badge (`ML-KEM-768 • ML-DSA-65 • m=128`), seamlessly dissolving into the operations console. Fully skippable on keypress/click and automatically bypassed when `prefers-reduced-motion: reduce` is detected.
+  - **Spring Micro-Interactions:** Subtle, fast 150-200ms easing transitions powered by anime.js v4 and Framer Motion for drawer slide-overs, tamper verification state changes, and evidence inspection toggles.
+- **Progressive Disclosure:**
+  - High-level decision verdicts (Attributed recipient, confidence level, separation margin) are visible at a glance.
+  - Granular proofs (individual channel LLR contributions, reliability coefficients $\rho$, raw token bytes, ArUco homography details) are housed in collapsible proof drawers and progressive disclosure panels.
 
 ---
 
 ## 6. Verification and Testing Strategy
 
-- **Build Verification:** Strict TypeScript validation (`tsc --noEmit`) and Vite production bundle build (`vite build`).
-- **Unit & Integration Testing:** Automated tests in `tests/web/` validating data models, mock state transitions, ledger tampering detection logic, hash isolation, and Bayesian fusion calculations.
+- **Build Verification:** Strict TypeScript validation (`tsc --noEmit`) and Vite production bundle build (`vite build` compiling 1,960 modules with 0 errors).
+- **Automated Frontend Test Suite:** 28 passing unit/integration tests in `tests/web/`:
+  - `test_frontend.py` (12 tests): package integrity, component existence, mock data scenarios, hash isolation types, fail-closed state machines, and anti-overclaiming checks.
+  - `test_frontend_e2e_flow.py` (14 tests): 14-stage end-to-end judge demonstration verification covering key enrollment, release encryption, client decapsulation, tamper-evident hash chaining, adversarial attacks, and Tardos traitor-tracing.
+  - `test_state_machine.py` (2 tests): pipeline transitions, channel fusion, and conflict resolution fail-closed behavior.
+- **Full-System Integration:** Complete 339-test test suite (`py -m pytest -q`) passing with 100% success.
+- **Browser Playwright Validation:** Headless Chromium visual validation across light and dark modes with full-page screenshots recorded in `artifacts/frontend/screenshots/`:
+  - `signature_intro.png` — 2D laser trace initialization sequence.
+  - `overview_light.png` & `overview_dark.png` — Operations console in light & dark workstation themes.
+  - `forensic_attribution_light.png` & `forensic_attribution_dark.png` — Bayesian fusion workstation.
+  - `encrypted_releases_light.png` & `encrypted_releases_dark.png` — PQC release management and capsule status.
+  - `audit_ledger_tamper.png` — Real-time block corruption alert and hash-chain breakage proof.
+  - `attack_laboratory.png` — Print-camera, JPEG distortion, and token forgery stress-testing.
+  - `tardos_matrix.png` — Arc-sine bias bit distribution and continuous accusation scores.
 - **Repository Safety:** Zero modifications to backend or core cryptographic engines (`apps/api/**`, `core/**`, `attacks/**`).
