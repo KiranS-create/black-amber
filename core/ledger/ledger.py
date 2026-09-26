@@ -2,7 +2,7 @@ import json
 import hashlib
 import base64
 from datetime import datetime, timezone
-from typing import List, Optional, Dict, Any, Tuple
+from typing import List, Optional, Dict, Any, Tuple, Set
 from pydantic import BaseModel, Field
 
 class EvidenceEvent(BaseModel):
@@ -23,6 +23,7 @@ class EvidenceEvent(BaseModel):
     def compute_event_hash(self) -> str:
         """
         Compute deterministic SHA-256 hash of event content (excluding hash itself).
+        Canonical JSON sorting ensures cross-platform consistency.
         """
         data = {
             "event_id": self.event_id,
@@ -45,6 +46,7 @@ class EvidenceEvent(BaseModel):
 class TamperEvidentLedger:
     """
     Hash-chained tamper-evident audit ledger for cryptographic decryption provenance.
+    Enforces sequential cryptographic linking, event deduplication, and full chain audit.
     """
     GENESIS_HASH = "0" * 64
 
@@ -52,6 +54,7 @@ class TamperEvidentLedger:
         self.storage_file = storage_file
         self.events: List[EvidenceEvent] = []
         self._event_hashes: List[str] = []
+        self._seen_event_ids: Set[str] = set()
 
     def get_last_event_hash(self) -> str:
         if not self._event_hashes:
@@ -60,9 +63,13 @@ class TamperEvidentLedger:
 
     def append_event(self, event: EvidenceEvent) -> str:
         """
-        Append an event to the ledger, verifying that its previous_event_hash
-        matches the current tip of the hash chain.
+        Append an event to the ledger, verifying that:
+        1. event_id is unique (anti-duplicate/anti-replay)
+        2. previous_event_hash matches the current tip of the hash chain.
         """
+        if event.event_id in self._seen_event_ids:
+            raise ValueError(f"Replay detected: duplicate event_id '{event.event_id}' rejected")
+
         expected_prev = self.get_last_event_hash()
         if event.previous_event_hash != expected_prev:
             raise ValueError(
@@ -73,17 +80,31 @@ class TamperEvidentLedger:
         event_hash = event.compute_event_hash()
         self.events.append(event)
         self._event_hashes.append(event_hash)
+        self._seen_event_ids.add(event.event_id)
         return event_hash
 
     def verify_chain(self) -> Tuple[bool, List[str]]:
         """
-        Verify the complete integrity of the hash chain.
-        Returns (is_valid, list_of_errors).
+        Verify the complete integrity of the hash chain:
+        - Exact correspondence between event count and hash count
+        - Correct chaining of previous_event_hash from GENESIS_HASH
+        - Unaltered event hashes
+        - Non-duplication of event_ids
         """
         errors = []
+        if len(self.events) != len(self._event_hashes):
+            errors.append(
+                f"Ledger length desynchronization: {len(self.events)} events vs {len(self._event_hashes)} hashes"
+            )
+
         prev_hash = self.GENESIS_HASH
+        seen_ids: Set[str] = set()
 
         for idx, event in enumerate(self.events):
+            if event.event_id in seen_ids:
+                errors.append(f"Duplicate event_id detected at index {idx}: '{event.event_id}'")
+            seen_ids.add(event.event_id)
+
             if event.previous_event_hash != prev_hash:
                 errors.append(
                     f"Chain broken at index {idx} (event {event.event_id}): "

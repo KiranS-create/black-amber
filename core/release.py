@@ -9,7 +9,7 @@ from pydantic import BaseModel, Field
 from core.crypto.models import SymmetricCiphertext, RecipientPackage
 from core.crypto.symmetric import generate_symmetric_key, encrypt_aes_gcm, wrap_key_aes_kw
 from core.crypto.kem import MLKEM768
-from core.crypto.key_derivation import derive_key
+from core.crypto.key_derivation import derive_recipient_wrapping_key
 from core.recipient import RecipientRegistry, default_registry
 
 class ReleaseRecipientPackage(BaseModel):
@@ -30,7 +30,7 @@ class DocumentRelease(BaseModel):
     release_id: str
     document_id: str
     document_name: str
-    original_hash: str  # SHA-256 hex digest of plaintext document
+    original_hash: str  # SHA-256 hex digest of pristine plaintext document
     issuer_id: str
     recipient_ids: List[str]
     crypto_parameters: Dict[str, Any]
@@ -54,16 +54,16 @@ class ReleaseManager:
         if not recipient_ids:
             raise ValueError("Release must have at least one recipient")
 
-        # 1. Compute original document SHA-256 hash
+        # 1. Compute original document SHA-256 hash (ORIGINAL_DOCUMENT_HASH)
         original_hash = hashlib.sha256(document_bytes).hexdigest()
         
         doc_id = document_id or f"doc_{hashlib.sha256(document_bytes[:64] + os.urandom(4)).hexdigest()[:12]}"
         rel_id = release_id or f"rel_{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}_{os.urandom(3).hex()}"
         
-        # 2. Generate random 256-bit document key
+        # 2. Generate random 256-bit document key (K_doc)
         doc_key = generate_symmetric_key()
 
-        # 3. Encrypt document once with AES-256-GCM
+        # 3. Encrypt document once with AES-256-GCM using authenticated associated data
         associated_data = f"DOC-RELEASE:{rel_id}:{doc_id}".encode('utf-8')
         enc_doc = encrypt_aes_gcm(doc_key, document_bytes, associated_data=associated_data)
 
@@ -74,25 +74,27 @@ class ReleaseManager:
         packages: Dict[str, ReleaseRecipientPackage] = {}
         timestamp_now = datetime.now(timezone.utc).isoformat()
 
-        # 4. For each recipient, encapsulate key and wrap doc_key
+        # 4. For each recipient: ML-KEM encapsulation + domain-separated key derivation + wrap
         for r_id in recipient_ids:
             recipient = self.registry.get(r_id)
             if not recipient:
                 raise ValueError(f"Recipient {r_id} is not registered")
             
-            # ML-KEM encapsulation with recipient's public key
+            # ML-KEM-768 encapsulation with recipient's public key
             encap_res = MLKEM768.encapsulate(recipient.kem_keypair.public_key_bytes)
             
-            # Derive wrapping key
-            wrapping_key = derive_key(
-                encap_res.shared_secret,
-                length=32,
-                salt=f"WRAP-SALT:{rel_id}:{r_id}".encode('utf-8'),
-                info=b"SIH26237-RECIPIENT-KEY-WRAP"
+            # Derive wrapping key using explicit domain separation
+            wrapping_key = derive_recipient_wrapping_key(
+                shared_secret=encap_res.shared_secret,
+                release_id=rel_id,
+                document_id=doc_id,
+                recipient_id=r_id,
+                algorithm_id=MLKEM768.ALGORITHM_NAME
             )
 
-            # Wrap document key
-            wrapped_doc_key = wrap_key_aes_kw(wrapping_key, doc_key)
+            # Wrap document key with authenticated release/recipient context
+            wrap_ad = f"KEY-WRAP-AUTH:{rel_id}:{r_id}".encode('utf-8')
+            wrapped_doc_key = wrap_key_aes_kw(wrapping_key, doc_key, associated_data=wrap_ad)
 
             package = ReleaseRecipientPackage(
                 release_id=rel_id,
@@ -119,9 +121,10 @@ class ReleaseManager:
             recipient_ids=recipient_ids,
             crypto_parameters={
                 "kem_algorithm": MLKEM768.ALGORITHM_NAME,
+                "kem_provider": MLKEM768.get_metadata().get("provider"),
                 "sym_algorithm": "AES-256-GCM",
                 "key_length_bits": 256,
-                "derivation": "HKDF-SHA256"
+                "derivation": "HKDF-SHA256-DomainSeparated"
             },
             created_at=timestamp_now,
             packages=packages

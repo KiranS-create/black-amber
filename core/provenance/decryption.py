@@ -10,7 +10,7 @@ from core.crypto.models import SymmetricCiphertext
 from core.crypto.kem import MLKEM768
 from core.crypto.signatures import MLDSA65
 from core.crypto.symmetric import decrypt_aes_gcm, unwrap_key_aes_kw
-from core.crypto.key_derivation import derive_key
+from core.crypto.key_derivation import derive_recipient_wrapping_key
 from core.recipient import Recipient, default_registry
 from core.release import ReleaseRecipientPackage
 from core.traceability.provider import PrototypeTraceabilityProvider
@@ -20,7 +20,7 @@ class DecryptionResult(BaseModel):
     recipient_id: str
     release_id: str
     document_id: str
-    document_hash: str
+    original_document_hash: str
     traceable_artifact_hash: str
     event_id: str
     event_hash: str
@@ -47,10 +47,10 @@ class RecipientDecryptionClient:
         """
         Execute full recipient decryption flow:
         1. Recipient ML-KEM decapsulation of kem_ciphertext with recipient.kem_keypair.private_key_bytes
-        2. Derive wrapping key via HKDF-SHA256
-        3. Unwrap document symmetric key
-        4. AES-256-GCM decrypt document ciphertext
-        5. Verify document SHA-256 hash matches package.document_hash
+        2. Derive domain-separated wrapping key via HKDF-SHA256
+        3. Unwrap document symmetric key with authenticated release/recipient context
+        4. AES-256-GCM decrypt document ciphertext with authenticated release associated data
+        5. Verify document SHA-256 hash matches package.document_hash (ORIGINAL_DOCUMENT_HASH)
         6. Produce recipient-specific traceable copy with embedded marker
         7. Recipient signs decryption event using recipient.dsa_keypair.private_key_bytes
         8. Append event to tamper-evident ledger
@@ -73,17 +73,19 @@ class RecipientDecryptionClient:
             kem_ciphertext
         )
 
-        # 2. Derive wrapping key
-        wrapping_key = derive_key(
-            shared_secret,
-            length=32,
-            salt=f"WRAP-SALT:{package.release_id}:{recipient.recipient_id}".encode('utf-8'),
-            info=b"SIH26237-RECIPIENT-KEY-WRAP"
+        # 2. Derive domain-separated wrapping key
+        wrapping_key = derive_recipient_wrapping_key(
+            shared_secret=shared_secret,
+            release_id=package.release_id,
+            document_id=package.document_id,
+            recipient_id=recipient.recipient_id,
+            algorithm_id=package.algorithm_kem
         )
 
-        # 3. Unwrap document key
+        # 3. Unwrap document key with authenticated context
+        wrap_ad = f"KEY-WRAP-AUTH:{package.release_id}:{recipient.recipient_id}".encode('utf-8')
         wrapped_doc_key = base64.b64decode(package.wrapped_doc_key_b64)
-        doc_key = unwrap_key_aes_kw(wrapping_key, wrapped_doc_key)
+        doc_key = unwrap_key_aes_kw(wrapping_key, wrapped_doc_key, associated_data=wrap_ad)
 
         # 4. Decrypt document with AES-256-GCM
         associated_data = f"DOC-RELEASE:{package.release_id}:{package.document_id}".encode('utf-8')
@@ -99,7 +101,7 @@ class RecipientDecryptionClient:
         )
         plaintext = decrypt_aes_gcm(doc_key, sym_ciphertext)
 
-        # 5. Verify document hash
+        # 5. Verify document hash against ORIGINAL_DOCUMENT_HASH
         computed_hash = hashlib.sha256(plaintext).hexdigest()
         if computed_hash != package.document_hash:
             raise ValueError(
@@ -119,12 +121,13 @@ class RecipientDecryptionClient:
         traceable_hash = hashlib.sha256(traceable_doc_bytes).hexdigest()
         marker_evidence_hash = hashlib.sha256(marker.signature_token.encode('utf-8')).hexdigest()
 
-        # 7. Create and sign decryption evidence event
+        # 7. Create and sign decryption evidence event with anti-replay nonce
+        replay_nonce = os.urandom(16).hex()
         event_id = f"evt_dec_{package.release_id[:12]}_{recipient.recipient_id}_{os.urandom(3).hex()}"
         timestamp_now = datetime.now(timezone.utc).isoformat()
         prev_event_hash = self.ledger.get_last_event_hash()
 
-        # Sign event payload
+        # Sign event payload (anchored to previous event hash, document ID, release ID, recipient ID, traceable hash)
         sign_payload = (
             f"DECRYPTION_PROVENANCE:{event_id}:{package.document_id}:"
             f"{package.release_id}:{recipient.recipient_id}:{traceable_hash}:"
@@ -153,8 +156,9 @@ class RecipientDecryptionClient:
             signer_public_key_b64=signer_pub_b64,
             metadata={
                 "recipient_name": recipient.name,
-                "document_hash": computed_hash,
-                "marker_token": marker.signature_token
+                "original_document_hash": computed_hash,
+                "marker_token": marker.signature_token,
+                "anti_replay_nonce": replay_nonce
             }
         )
 

@@ -53,13 +53,14 @@ def test_kem_wrap_unwrap():
     assert recovered_secret == encap_res.shared_secret
 
 def test_kem_decapsulation_wrong_key():
-    """Verify that decapsulation with wrong keypair fails."""
+    """Verify that decapsulation with wrong keypair implicitly rejects (derives mismatched key as per FIPS 203)."""
     kp1 = MLKEM768.generate_keypair()
     kp2 = MLKEM768.generate_keypair()
 
     encap_res = MLKEM768.encapsulate(kp1.public_key_bytes)
-    with pytest.raises(ValueError):
-        MLKEM768.decapsulate(kp2.private_key_bytes, encap_res.ciphertext)
+    wrong_secret = MLKEM768.decapsulate(kp2.private_key_bytes, encap_res.ciphertext)
+    assert wrong_secret != encap_res.shared_secret
+    assert len(wrong_secret) == 32
 
 def test_ml_dsa_signature():
     """Verify ML-DSA-65 digital signature generation and verification."""

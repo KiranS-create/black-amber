@@ -1,5 +1,10 @@
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, NewType
 from pydantic import BaseModel, Field
+
+# Explicit semantic typing for document lifecycle hashes to prevent domain confusion
+OriginalDocumentHash = NewType("OriginalDocumentHash", str)
+ReleaseArtifactHash = NewType("ReleaseArtifactHash", str)
+LeakArtifactHash = NewType("LeakArtifactHash", str)
 
 class KeyPair(BaseModel):
     algorithm: str
@@ -24,6 +29,6 @@ class RecipientPackage(BaseModel):
     encrypted_document: SymmetricCiphertext  # AES-256-GCM ciphertext
     algorithm_kem: str
     algorithm_sym: str
-    document_hash: str
+    original_document_hash: str
     timestamp: str
     metadata: Dict[str, Any] = Field(default_factory=dict)
