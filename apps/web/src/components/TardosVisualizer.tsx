@@ -231,7 +231,7 @@ export const TardosVisualizer: React.FC = () => {
             <BarChart2 size={16} style={{ color: 'var(--primary-text)' }} />
             <div>
               <h3 style={{ margin: 0, fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--text)' }}>
-                Continuous Accusation Scores ($Z_i$)
+                Continuous Accusation Scores (Zᵢ)
               </h3>
               <p style={{ margin: '2px 0 0 0', fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
                 Candidate correlation against recovered leak symbols
@@ -264,7 +264,7 @@ export const TardosVisualizer: React.FC = () => {
                         fontFamily: 'var(--font-mono)'
                       }}
                     >
-                      $Z_i$ = {u.score.toFixed(2)}
+                      Zᵢ = {u.score.toFixed(2)}
                     </span>
                   </div>
 
@@ -301,10 +301,10 @@ export const TardosVisualizer: React.FC = () => {
             }}
           >
             <div style={{ color: 'var(--text)', fontWeight: 700 }}>Tardos Mathematical Model</div>
-            <div>• $Z_i$ is a continuous correlation score, not an ungrounded percentage.</div>
-            <div>• Accusation Threshold: $\tau_Z = {threshold.toFixed(2)}$</div>
-            <div>• False Alarm Bound: $\epsilon \le 10^{-5}$ (Blayer-Tassa Bound)</div>
-            <div>• Assumed Coalition Size: $c \le 5$ colluders under Marking Assumption</div>
+            <div>• Zᵢ is a continuous correlation score, not an ungrounded percentage.</div>
+            <div>• Accusation Threshold: τ_Z = {threshold.toFixed(2)}</div>
+            <div>• False Alarm Bound: ε ≤ 10⁻⁵ (Blayer-Tassa Bound)</div>
+            <div>• Assumed Coalition Size: c ≤ 5 colluders under Marking Assumption</div>
           </div>
         </div>
       </div>

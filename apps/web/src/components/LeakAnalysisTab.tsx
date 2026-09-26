@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Search, 
   ShieldCheck, 
@@ -13,10 +13,15 @@ import {
   FileCheck,
   Lock,
   UploadCloud,
-  ChevronRight,
+  ChevronDown,
+  ChevronUp,
   Activity,
   Layers,
-  Cpu
+  Cpu,
+  ArrowRight,
+  ShieldAlert,
+  Sliders,
+  Eye
 } from 'lucide-react';
 import { AttributionResult, AttackTestScenario, LeakMetadata, AttackTelemetryInput, ChannelFusionScore } from '../types';
 import { ATTACK_SCENARIOS } from '../services/mockData';
@@ -40,16 +45,32 @@ export const LeakAnalysisTab: React.FC<LeakAnalysisTabProps> = ({
   const [customUpload, setCustomUpload] = useState<LeakMetadata | null>(null);
   const [selectedChannel, setSelectedChannel] = useState<ChannelFusionScore | null>(null);
   const [loading, setLoading] = useState(false);
+  const [loadingStage, setLoadingStage] = useState<number>(0);
   const [uploading, setUploading] = useState(false);
+  const [showTechnicalDetails, setShowTechnicalDetails] = useState(false);
 
   const handleRunAnalysis = async () => {
     setLoading(true);
-    if (customUpload) {
-      await onAnalyzeLeak(customUpload.leak_id, customUpload.suspected_release_id);
-    } else {
-      await onAnalyzeLeak(selectedScenarioId);
+    setLoadingStage(1);
+
+    // Multi-stage progression feedback
+    const s1 = setTimeout(() => setLoadingStage(2), 220);
+    const s2 = setTimeout(() => setLoadingStage(3), 440);
+    const s3 = setTimeout(() => setLoadingStage(4), 660);
+
+    try {
+      if (customUpload) {
+        await onAnalyzeLeak(customUpload.leak_id, customUpload.suspected_release_id);
+      } else {
+        await onAnalyzeLeak(selectedScenarioId);
+      }
+    } finally {
+      clearTimeout(s1);
+      clearTimeout(s2);
+      clearTimeout(s3);
+      setLoadingStage(5);
+      setTimeout(() => setLoading(false), 250);
     }
-    setLoading(false);
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,7 +124,7 @@ export const LeakAnalysisTab: React.FC<LeakAnalysisTabProps> = ({
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
-      {/* Top Workstation Header with Export Action */}
+      {/* 1. INVESTIGATION WORKFLOW STEPPER */}
       <div
         style={{
           backgroundColor: 'var(--surface)',
@@ -114,17 +135,35 @@ export const LeakAnalysisTab: React.FC<LeakAnalysisTabProps> = ({
           alignItems: 'center',
           justifyContent: 'space-between',
           flexWrap: 'wrap',
-          gap: 'var(--space-3)',
+          gap: 'var(--space-4)',
           boxShadow: 'var(--shadow-sm)'
         }}
       >
         <div>
-          <h2 style={{ margin: 0, fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--text)' }}>
-            Forensic Attribution & Multi-Channel Fusion Workstation
+          <h2 style={{ margin: 0, fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--text)' }}>
+            Forensic Attribution Workstation
           </h2>
           <p style={{ margin: '2px 0 0 0', fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
-            Evaluates spatial watermarks, Tardos traitor tracing (m=128), ML-DSA-65 signatures, and hash-chain provenance.
+            Multi-channel evidence correlation: DSSS spatial carrier, Tardos traitor tracing (m=128), and ML-DSA-65 provenance verification.
           </p>
+        </div>
+
+        {/* Workflow Progression Stepper */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: 'var(--text-secondary)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: 'var(--primary-text)', fontWeight: 600 }}>
+            <span style={{ width: '18px', height: '18px', borderRadius: '50%', backgroundColor: 'var(--primary-subtle)', border: '1px solid var(--primary-border)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px' }}>1</span>
+            <span>Upload Artifact</span>
+          </div>
+          <ChevronDown size={12} style={{ transform: 'rotate(-90deg)', color: 'var(--text-tertiary)' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: loading ? 'var(--primary-text)' : 'var(--text-secondary)' }}>
+            <span style={{ width: '18px', height: '18px', borderRadius: '50%', backgroundColor: 'var(--surface-subtle)', border: '1px solid var(--border)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px' }}>2</span>
+            <span>Analyze Channels</span>
+          </div>
+          <ChevronDown size={12} style={{ transform: 'rotate(-90deg)', color: 'var(--text-tertiary)' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: leakResult ? 'var(--success-text)' : 'var(--text-secondary)' }}>
+            <span style={{ width: '18px', height: '18px', borderRadius: '50%', backgroundColor: leakResult ? 'var(--success-subtle)' : 'var(--surface-subtle)', border: `1px solid ${leakResult ? 'var(--success-border)' : 'var(--border)'}`, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px' }}>3</span>
+            <span>Attribution Verdict</span>
+          </div>
         </div>
 
         {leakResult && (
@@ -154,80 +193,16 @@ export const LeakAnalysisTab: React.FC<LeakAnalysisTabProps> = ({
               (e.currentTarget as HTMLElement).style.color = 'var(--text)';
             }}
           >
-            <Download size={14} />
+            <Download size={13} />
             <span>Export Technical Dossier</span>
           </button>
         )}
       </div>
 
-      {/* 5-Step Pipeline Progress Indicator */}
-      <div
-        style={{
-          backgroundColor: 'var(--surface)',
-          border: '1px solid var(--border)',
-          borderRadius: 'var(--radius-lg)',
-          padding: 'var(--space-3) var(--space-5)',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
-          gap: 'var(--space-3)',
-          alignItems: 'center',
-          boxShadow: 'var(--shadow-sm)'
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <div style={{ width: '22px', height: '22px', borderRadius: '50%', backgroundColor: 'var(--primary-subtle)', color: 'var(--primary-text)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 700 }}>
-            1
-          </div>
-          <div>
-            <div style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text)' }}>Artifact Ingestion</div>
-            <div style={{ fontSize: '10px', color: 'var(--text-tertiary)' }}>Hash content-addressed</div>
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <div style={{ width: '22px', height: '22px', borderRadius: '50%', backgroundColor: 'var(--primary-subtle)', color: 'var(--primary-text)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 700 }}>
-            2
-          </div>
-          <div>
-            <div style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text)' }}>Watermark Recovery</div>
-            <div style={{ fontSize: '10px', color: 'var(--text-tertiary)' }}>ArUco + RS(255,223)</div>
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <div style={{ width: '22px', height: '22px', borderRadius: '50%', backgroundColor: 'var(--primary-subtle)', color: 'var(--primary-text)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 700 }}>
-            3
-          </div>
-          <div>
-            <div style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text)' }}>Tardos Correlation</div>
-            <div style={{ fontSize: '10px', color: 'var(--text-tertiary)' }}>m=128 Codeword Score</div>
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <div style={{ width: '22px', height: '22px', borderRadius: '50%', backgroundColor: 'var(--primary-subtle)', color: 'var(--primary-text)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 700 }}>
-            4
-          </div>
-          <div>
-            <div style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text)' }}>Evidence Fusion</div>
-            <div style={{ fontSize: '10px', color: 'var(--text-tertiary)' }}>Bayesian Log-Likelihood</div>
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <div style={{ width: '22px', height: '22px', borderRadius: '50%', backgroundColor: leakResult ? 'var(--success-subtle)' : 'var(--surface-subtle)', color: leakResult ? 'var(--success-text)' : 'var(--text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 700 }}>
-            ✓
-          </div>
-          <div>
-            <div style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text)' }}>Fail-Closed Verdict</div>
-            <div style={{ fontSize: '10px', color: 'var(--text-tertiary)' }}>Threshold & Margin Check</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Two-Column Layout */}
+      {/* 2. SPLIT WORKSPACE: INGESTION vs ATTRIBUTION CONCLUSION */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: 'var(--space-6)', alignItems: 'start' }}>
-        {/* Left Column: Input Carrier & Evaluation Scenarios */}
+        
+        {/* Left Column: Artifact Ingestion & Vector Selection */}
         <div
           style={{
             backgroundColor: 'var(--surface)',
@@ -257,15 +232,15 @@ export const LeakAnalysisTab: React.FC<LeakAnalysisTabProps> = ({
             </div>
             <div>
               <h3 style={{ margin: 0, fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--text)' }}>
-                Select Leaked Document Vector
+                Artifact Vector Selection
               </h3>
               <p style={{ margin: '2px 0 0 0', fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
-                Upload artifact or select benchmark scenario
+                Upload suspect artifact or evaluate deterministic forensic scenario
               </p>
             </div>
           </div>
 
-          {/* Custom Upload Dropzone */}
+          {/* Upload Dropzone */}
           <div
             style={{
               backgroundColor: 'var(--surface-subtle)',
@@ -312,8 +287,8 @@ export const LeakAnalysisTab: React.FC<LeakAnalysisTabProps> = ({
             Or Evaluate Deterministic Benchmarks:
           </div>
 
-          {/* Scenario List */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '360px', overflowY: 'auto' }}>
+          {/* Scenario Selection List */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '380px', overflowY: 'auto' }}>
             {ATTACK_SCENARIOS.map(sc => {
               const isSelected = !customUpload && selectedScenarioId === sc.id;
               return (
@@ -354,11 +329,12 @@ export const LeakAnalysisTab: React.FC<LeakAnalysisTabProps> = ({
             })}
           </div>
 
+          {/* Run Analysis Action Button */}
           <button
             onClick={handleRunAnalysis}
             disabled={loading}
             style={{
-              height: '40px',
+              height: '42px',
               borderRadius: 'var(--radius-md)',
               backgroundColor: 'var(--primary)',
               color: '#ffffff',
@@ -369,19 +345,19 @@ export const LeakAnalysisTab: React.FC<LeakAnalysisTabProps> = ({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '6px',
+              gap: '8px',
               marginTop: 'var(--space-1)',
               transition: 'background var(--transition-fast)'
             }}
             onMouseEnter={e => ((e.currentTarget as HTMLElement).style.backgroundColor = 'var(--primary-hover)')}
             onMouseLeave={e => ((e.currentTarget as HTMLElement).style.backgroundColor = 'var(--primary)')}
           >
-            <Sparkles size={14} />
+            <Sparkles size={15} />
             <span>{loading ? 'Evaluating Evidence Channels...' : 'Execute Bayesian Evidence Fusion (POST /analyze)'}</span>
           </button>
         </div>
 
-        {/* Right Column: Forensic Verdict & Evidence Channels */}
+        {/* Right Column: Investigation Conclusion & Progressive Disclosure */}
         <div
           style={{
             backgroundColor: 'var(--surface)',
@@ -413,35 +389,84 @@ export const LeakAnalysisTab: React.FC<LeakAnalysisTabProps> = ({
               </div>
               <div>
                 <h3 style={{ margin: 0, fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--text)' }}>
-                  Forensic Verdict & Multi-Channel Scores
+                  Attribution Verdict & Conclusion
                 </h3>
                 <p style={{ margin: '2px 0 0 0', fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
-                  Fused log-likelihood ratio, Tardos score, and fail-closed safety
+                  Bayesian Log-Likelihood Ratio with Fail-Closed Decision Guard
                 </p>
               </div>
             </div>
             {leakResult?.origin && <OriginBadge origin={leakResult.origin} />}
           </div>
 
-          {leakResult ? (
+          {/* MULTI-STAGE COMPUTATIONAL LOADING STATE */}
+          {loading ? (
+            <div
+              style={{
+                backgroundColor: 'var(--surface-subtle)',
+                border: '1px solid var(--border)',
+                borderRadius: 'var(--radius-md)',
+                padding: 'var(--space-6)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 'var(--space-3)'
+              }}
+            >
+              <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--primary-text)', marginBottom: '4px' }}>
+                Analyzing Artifact & Correlating Cryptographic Fingerprints...
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-xs)', color: loadingStage >= 1 ? 'var(--text)' : 'var(--text-tertiary)' }}>
+                <span style={{ color: loadingStage >= 1 ? 'var(--success)' : 'var(--text-tertiary)' }}>
+                  {loadingStage >= 1 ? '✓' : '○'}
+                </span>
+                <span>Artifact content-addressed hash calculated (SHA-256)</span>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-xs)', color: loadingStage >= 2 ? 'var(--text)' : 'var(--text-tertiary)' }}>
+                <span style={{ color: loadingStage >= 2 ? 'var(--success)' : 'var(--text-tertiary)' }}>
+                  {loadingStage >= 2 ? '✓' : (loadingStage === 1 ? '→' : '○')}
+                </span>
+                <span>Spatial watermark carrier recovered via ArUco 4x4 homography</span>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-xs)', color: loadingStage >= 3 ? 'var(--text)' : 'var(--text-tertiary)' }}>
+                <span style={{ color: loadingStage >= 3 ? 'var(--success)' : 'var(--text-tertiary)' }}>
+                  {loadingStage >= 3 ? '✓' : (loadingStage === 2 ? '→' : '○')}
+                </span>
+                <span>Evaluating Tardos codebook correlation score (m=128, c ≤ 5)</span>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-xs)', color: loadingStage >= 4 ? 'var(--text)' : 'var(--text-tertiary)' }}>
+                <span style={{ color: loadingStage >= 4 ? 'var(--success)' : 'var(--text-tertiary)' }}>
+                  {loadingStage >= 4 ? '✓' : (loadingStage === 3 ? '→' : '○')}
+                </span>
+                <span>Fusing multi-channel evidence with anti-double-counting bounds</span>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-xs)', color: loadingStage >= 5 ? 'var(--text)' : 'var(--text-tertiary)' }}>
+                <span style={{ color: loadingStage >= 5 ? 'var(--success)' : 'var(--text-tertiary)' }}>
+                  {loadingStage >= 5 ? '✓' : (loadingStage === 4 ? '→' : '○')}
+                </span>
+                <span>Validating fail-closed accusation threshold (Z ≥ 11.40)</span>
+              </div>
+            </div>
+          ) : leakResult ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
-              {/* Primary Decision Banner */}
+              
+              {/* PRIMARY DECISION CONCLUSION BANNER */}
               <div
                 style={{
-                  backgroundColor: 'var(--surface-subtle)',
-                  border: '1px solid var(--border)',
+                  backgroundColor: leakResult.state === 'ATTRIBUTED' ? 'var(--success-subtle)' : (leakResult.state === 'CONFLICT' ? 'var(--danger-subtle)' : 'var(--warning-subtle)'),
+                  border: `1px solid ${leakResult.state === 'ATTRIBUTED' ? 'var(--success-border)' : (leakResult.state === 'CONFLICT' ? 'var(--danger-border)' : 'var(--warning-border)')}`,
                   borderRadius: 'var(--radius-md)',
-                  padding: 'var(--space-4)',
+                  padding: 'var(--space-5)',
                   display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  gap: 'var(--space-4)'
+                  flexDirection: 'column',
+                  gap: 'var(--space-3)'
                 }}
               >
-                <div>
-                  <div style={{ fontSize: '10.5px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-tertiary)', marginBottom: '3px' }}>
-                    System Decision State
-                  </div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <StatusBadge
                       label={leakResult.state}
@@ -449,216 +474,235 @@ export const LeakAnalysisTab: React.FC<LeakAnalysisTabProps> = ({
                       size="md"
                       dot
                     />
-                    <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', fontWeight: 600 }}>
+                    <span style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text-secondary)' }}>
                       Confidence: {leakResult.confidence_level}
                     </span>
                   </div>
-                </div>
 
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>Fused Score</div>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--primary-text)' }}>
-                    {leakResult.fused_score !== undefined ? leakResult.fused_score.toFixed(2) : 'N/A'}
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ fontSize: '10.5px', color: 'var(--text-tertiary)', textTransform: 'uppercase', fontWeight: 600 }}>
+                      Fused Score
+                    </div>
+                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-xl)', fontWeight: 800, color: 'var(--text)', lineHeight: 1 }}>
+                      {leakResult.fused_score !== undefined ? leakResult.fused_score.toFixed(2) : 'N/A'}
+                    </div>
                   </div>
                 </div>
+
+                {/* Candidate Highlight if Attributed */}
+                {leakResult.candidate && !leakResult.should_abstain ? (
+                  <div
+                    style={{
+                      marginTop: '4px',
+                      paddingTop: '12px',
+                      borderTop: '1px solid rgba(0,0,0,0.06)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      flexWrap: 'wrap',
+                      gap: 'var(--space-2)'
+                    }}
+                  >
+                    <div>
+                      <div style={{ fontSize: '11px', color: 'var(--success-text)', textTransform: 'uppercase', fontWeight: 700 }}>
+                        Attributed Recipient
+                      </div>
+                      <div style={{ fontSize: 'var(--text-xl)', fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.01em' }}>
+                        {leakResult.candidate.name}
+                      </div>
+                      <div style={{ fontSize: '11.5px', color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)' }}>
+                        Recipient ID: <code>{leakResult.candidate.recipient_id}</code>
+                      </div>
+                    </div>
+
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Separation Margin (Δ)</div>
+                      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--success-text)' }}>
+                        {leakResult.margin !== undefined ? `+${leakResult.margin.toFixed(2)}` : 'N/A'}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div style={{ marginTop: '2px', fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+                    <strong>Fail-Closed Decision Policy Enforced:</strong> {leakResult.summary || 'Evidence does not exceed the mandatory threshold or margin required for high-consequence forensic attribution.'}
+                  </div>
+                )}
               </div>
 
-              {/* Candidate Info if Attributed */}
-              {leakResult.candidate && !leakResult.should_abstain ? (
-                <div
-                  style={{
-                    backgroundColor: 'var(--success-subtle)',
-                    border: '1px solid var(--success-border)',
-                    borderRadius: 'var(--radius-md)',
-                    padding: 'var(--space-4)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between'
-                  }}
-                >
-                  <div>
-                    <div style={{ fontSize: '11px', color: 'var(--success-text)', textTransform: 'uppercase', fontWeight: 700 }}>
-                      Attributed Source Identity
-                    </div>
-                    <div style={{ fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--text)', marginTop: '2px' }}>
-                      {leakResult.candidate.name}
-                    </div>
-                    <div style={{ fontSize: '11.5px', color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)' }}>
-                      ID: {leakResult.candidate.recipient_id}
-                    </div>
-                  </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Separation Margin</div>
-                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--success-text)' }}>
-                      Δ {leakResult.margin?.toFixed(2) || '0.00'}
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div
-                  style={{
-                    backgroundColor: 'var(--warning-subtle)',
-                    border: '1px solid var(--warning-border)',
-                    borderRadius: 'var(--radius-md)',
-                    padding: 'var(--space-3) var(--space-4)',
-                    textAlign: 'center'
-                  }}
-                >
-                  <div style={{ color: 'var(--warning-text)', fontWeight: 700, fontSize: 'var(--text-xs)' }}>
-                    Fail-Closed Decision Boundary: Abstention Enforced
-                  </div>
-                  <div style={{ fontSize: '11.5px', color: 'var(--text-secondary)', marginTop: '2px' }}>
-                    Evidence does not clear the mandatory accusation threshold ($Z = 11.40$) or minimum margin.
-                  </div>
-                </div>
-              )}
+              {/* PROGRESSIVE DISCLOSURE TOGGLE */}
+              <button
+                onClick={() => setShowTechnicalDetails(!showTechnicalDetails)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '10px 14px',
+                  borderRadius: 'var(--radius-md)',
+                  backgroundColor: 'var(--surface-subtle)',
+                  border: '1px solid var(--border)',
+                  color: 'var(--text)',
+                  fontSize: 'var(--text-xs)',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'background var(--transition-fast)'
+                }}
+              >
+                <span>{showTechnicalDetails ? 'Hide Detailed Forensic Proofs & Telemetry' : 'Inspect Detailed Forensic Proofs & Channel Telemetry'}</span>
+                {showTechnicalDetails ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
+              </button>
 
-              {/* Degradation & Watermark Telemetry */}
-              {leakResult.metrics && (
-                <div
-                  style={{
-                    backgroundColor: 'var(--surface-subtle)',
-                    border: '1px solid var(--border)',
-                    borderRadius: 'var(--radius-md)',
-                    padding: 'var(--space-3)'
-                  }}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                    <span style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase' }}>
-                      Carrier & Distortion Telemetry
-                    </span>
-                    <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                      <StatusBadge
-                        label={`WM: ${leakResult.watermark_status || 'UNKNOWN'}`}
-                        variant={getWatermarkVariant(leakResult.watermark_status)}
-                        size="xs"
-                        dot
-                      />
-                      <span style={{ fontSize: '10.5px', color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}>
-                        Mode: {leakResult.metrics.execution_mode || 'SIMULATED'}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(70px, 1fr))', gap: '6px', textAlign: 'center' }}>
-                    {leakResult.metrics.psnr !== undefined && (
-                      <div style={{ backgroundColor: 'var(--surface)', padding: '6px', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border)' }}>
-                        <div style={{ fontSize: '10px', color: 'var(--text-tertiary)' }}>PSNR</div>
-                        <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>
-                          {leakResult.metrics.psnr} dB
-                        </div>
-                      </div>
-                    )}
-                    {leakResult.metrics.ssim !== undefined && (
-                      <div style={{ backgroundColor: 'var(--surface)', padding: '6px', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border)' }}>
-                        <div style={{ fontSize: '10px', color: 'var(--text-tertiary)' }}>SSIM</div>
-                        <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>
-                          {leakResult.metrics.ssim}
-                        </div>
-                      </div>
-                    )}
-                    {leakResult.metrics.ber !== undefined && (
-                      <div style={{ backgroundColor: 'var(--surface)', padding: '6px', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border)' }}>
-                        <div style={{ fontSize: '10px', color: 'var(--text-tertiary)' }}>BER</div>
-                        <div style={{ fontSize: '12px', fontWeight: 700, color: leakResult.metrics.ber > 0.2 ? 'var(--danger-text)' : 'var(--success-text)', fontFamily: 'var(--font-mono)' }}>
-                          {Math.round(leakResult.metrics.ber * 100)}%
-                        </div>
-                      </div>
-                    )}
-                    {leakResult.metrics.perspective_skew !== undefined && leakResult.metrics.perspective_skew > 0 && (
-                      <div style={{ backgroundColor: 'var(--surface)', padding: '6px', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border)' }}>
-                        <div style={{ fontSize: '10px', color: 'var(--text-tertiary)' }}>Skew</div>
-                        <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--warning-text)', fontFamily: 'var(--font-mono)' }}>
-                          {leakResult.metrics.perspective_skew}°
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Bayesian Channels Table */}
-              {leakResult.channels && leakResult.channels.length > 0 && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>
-                      Evidence Channels (LLR & Reliability ρ)
-                    </span>
-                    <span style={{ fontSize: '10.5px', color: 'var(--text-tertiary)' }}>
-                      Click channel to inspect mathematics
-                    </span>
-                  </div>
-
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                    {leakResult.channels.map(ch => (
-                      <div
-                        key={ch.channel_id}
-                        onClick={() => setSelectedChannel(ch)}
-                        style={{
-                          backgroundColor: selectedChannel?.channel_id === ch.channel_id ? 'var(--primary-subtle)' : 'var(--surface-subtle)',
-                          border: `1px solid ${selectedChannel?.channel_id === ch.channel_id ? 'var(--primary-border)' : 'var(--border)'}`,
-                          padding: '8px 12px',
-                          borderRadius: 'var(--radius-sm)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          fontSize: 'var(--text-xs)',
-                          cursor: 'pointer',
-                          transition: 'all var(--transition-fast)'
-                        }}
-                        onMouseEnter={e => {
-                          if (selectedChannel?.channel_id !== ch.channel_id) {
-                            (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--surface-hover)';
-                          }
-                        }}
-                        onMouseLeave={e => {
-                          if (selectedChannel?.channel_id !== ch.channel_id) {
-                            (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--surface-subtle)';
-                          }
-                        }}
-                      >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <span style={{ fontWeight: 600, color: 'var(--text)' }}>{ch.channel_name}</span>
-                          <span style={{ fontSize: '10px', color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}>
-                            [{ch.channel_id}]
-                          </span>
-                        </div>
-                        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                          <span style={{ color: 'var(--text-tertiary)' }}>ρ: {ch.reliability.toFixed(2)}</span>
-                          <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, color: ch.effective_llr > 0 ? 'var(--success-text)' : 'var(--danger-text)' }}>
-                            LLR: {ch.effective_llr > 0 ? `+${ch.effective_llr.toFixed(2)}` : ch.effective_llr.toFixed(2)}
+              {/* EXPANDABLE PROGRESSIVE DISCLOSURE TECHNICAL DETAILS */}
+              {showTechnicalDetails && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+                  
+                  {/* Distortion & Watermark Telemetry */}
+                  {leakResult.metrics && (
+                    <div
+                      style={{
+                        backgroundColor: 'var(--surface-subtle)',
+                        border: '1px solid var(--border)',
+                        borderRadius: 'var(--radius-md)',
+                        padding: 'var(--space-3)'
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase' }}>
+                          Physical Carrier & Distortion Metrics
+                        </span>
+                        <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                          <StatusBadge
+                            label={`WM: ${leakResult.watermark_status || 'UNKNOWN'}`}
+                            variant={getWatermarkVariant(leakResult.watermark_status)}
+                            size="xs"
+                            dot
+                          />
+                          <span style={{ fontSize: '10.5px', color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}>
+                            Mode: {leakResult.metrics.execution_mode || 'SIMULATED'}
                           </span>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                </div>
-              )}
 
-              {/* Findings & Rationale */}
-              {leakResult.explanation && (
-                <div
-                  style={{
-                    backgroundColor: 'var(--surface-subtle)',
-                    border: '1px solid var(--border)',
-                    borderRadius: 'var(--radius-md)',
-                    padding: 'var(--space-3) var(--space-4)'
-                  }}
-                >
-                  <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase', marginBottom: '4px' }}>
-                    Forensic Proofs & Findings
-                  </div>
-                  <ul style={{ margin: 0, paddingLeft: '18px', fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                    {leakResult.explanation.map((exp, i) => (
-                      <li key={i}>{exp}</li>
-                    ))}
-                  </ul>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(70px, 1fr))', gap: '6px', textAlign: 'center' }}>
+                        {leakResult.metrics.psnr !== undefined && (
+                          <div style={{ backgroundColor: 'var(--surface)', padding: '6px', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border)' }}>
+                            <div style={{ fontSize: '10px', color: 'var(--text-tertiary)' }}>PSNR</div>
+                            <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>
+                              {leakResult.metrics.psnr} dB
+                            </div>
+                          </div>
+                        )}
+                        {leakResult.metrics.ssim !== undefined && (
+                          <div style={{ backgroundColor: 'var(--surface)', padding: '6px', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border)' }}>
+                            <div style={{ fontSize: '10px', color: 'var(--text-tertiary)' }}>SSIM</div>
+                            <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>
+                              {leakResult.metrics.ssim}
+                            </div>
+                          </div>
+                        )}
+                        {leakResult.metrics.ber !== undefined && (
+                          <div style={{ backgroundColor: 'var(--surface)', padding: '6px', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border)' }}>
+                            <div style={{ fontSize: '10px', color: 'var(--text-tertiary)' }}>BER</div>
+                            <div style={{ fontSize: '12px', fontWeight: 700, color: leakResult.metrics.ber > 0.2 ? 'var(--danger-text)' : 'var(--success-text)', fontFamily: 'var(--font-mono)' }}>
+                              {Math.round(leakResult.metrics.ber * 100)}%
+                            </div>
+                          </div>
+                        )}
+                        {leakResult.metrics.perspective_skew !== undefined && leakResult.metrics.perspective_skew > 0 && (
+                          <div style={{ backgroundColor: 'var(--surface)', padding: '6px', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border)' }}>
+                            <div style={{ fontSize: '10px', color: 'var(--text-tertiary)' }}>Skew</div>
+                            <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--warning-text)', fontFamily: 'var(--font-mono)' }}>
+                              {leakResult.metrics.perspective_skew}°
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Multi-Channel Evidence Table */}
+                  {leakResult.channels && leakResult.channels.length > 0 && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>
+                          Evidence Channels (Log-Likelihood Ratio & Reliability ρ)
+                        </span>
+                        <span style={{ fontSize: '10.5px', color: 'var(--text-tertiary)' }}>
+                          Click row to inspect proof
+                        </span>
+                      </div>
+
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        {leakResult.channels.map(ch => (
+                          <div
+                            key={ch.channel_id}
+                            onClick={() => setSelectedChannel(ch)}
+                            style={{
+                              backgroundColor: selectedChannel?.channel_id === ch.channel_id ? 'var(--primary-subtle)' : 'var(--surface-subtle)',
+                              border: `1px solid ${selectedChannel?.channel_id === ch.channel_id ? 'var(--primary-border)' : 'var(--border)'}`,
+                              padding: '8px 12px',
+                              borderRadius: 'var(--radius-sm)',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                              fontSize: 'var(--text-xs)',
+                              cursor: 'pointer',
+                              transition: 'all var(--transition-fast)'
+                            }}
+                            onMouseEnter={e => {
+                              if (selectedChannel?.channel_id !== ch.channel_id) {
+                                (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--surface-hover)';
+                              }
+                            }}
+                            onMouseLeave={e => {
+                              if (selectedChannel?.channel_id !== ch.channel_id) {
+                                (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--surface-subtle)';
+                              }
+                            }}
+                          >
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <span style={{ fontWeight: 600, color: 'var(--text)' }}>{ch.channel_name}</span>
+                              <span style={{ fontSize: '10px', color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}>
+                                [{ch.channel_id}]
+                              </span>
+                            </div>
+                            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                              <span style={{ color: 'var(--text-tertiary)' }}>ρ: {ch.reliability.toFixed(2)}</span>
+                              <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, color: ch.effective_llr > 0 ? 'var(--success-text)' : 'var(--danger-text)' }}>
+                                LLR: {ch.effective_llr > 0 ? `+${ch.effective_llr.toFixed(2)}` : ch.effective_llr.toFixed(2)}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Forensic Findings & Rationale */}
+                  {leakResult.explanation && (
+                    <div
+                      style={{
+                        backgroundColor: 'var(--surface-subtle)',
+                        border: '1px solid var(--border)',
+                        borderRadius: 'var(--radius-md)',
+                        padding: 'var(--space-3) var(--space-4)'
+                      }}
+                    >
+                      <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase', marginBottom: '4px' }}>
+                        Forensic Telemetry & Proof Findings
+                      </div>
+                      <ul style={{ margin: 0, paddingLeft: '18px', fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                        {leakResult.explanation.map((exp, i) => (
+                          <li key={i}>{exp}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
           ) : (
             <div style={{ padding: 'var(--space-8)', textAlign: 'center', color: 'var(--text-tertiary)' }}>
-              Select a leak vector on the left and run analysis to inspect attribution findings.
+              Select a leak scenario on the left and run Bayesian Evidence Fusion to view the forensic attribution verdict.
             </div>
           )}
         </div>
@@ -668,8 +712,8 @@ export const LeakAnalysisTab: React.FC<LeakAnalysisTabProps> = ({
       <Drawer
         isOpen={selectedChannel !== null}
         onClose={() => setSelectedChannel(null)}
-        title={selectedChannel?.channel_name || 'Channel Evidence Inspector'}
-        subtitle={`Channel ID: ${selectedChannel?.channel_id} • Bayesian Multi-Channel Engine`}
+        title={selectedChannel?.channel_name || 'Evidence Channel Inspector'}
+        subtitle={`Channel ID: ${selectedChannel?.channel_id} • Multi-Channel Bayesian Engine`}
         width="520px"
       >
         {selectedChannel && (
@@ -723,12 +767,12 @@ export const LeakAnalysisTab: React.FC<LeakAnalysisTabProps> = ({
                   {selectedChannel.reliability.toFixed(2)}
                 </div>
                 <div style={{ fontSize: '10.5px', color: 'var(--text-secondary)', marginTop: '2px' }}>
-                  Down-weights distorted signals
+                  Down-weights degraded signals
                 </div>
               </div>
             </div>
 
-            {/* Channel Mathematical Properties */}
+            {/* Safeguards */}
             <div
               style={{
                 backgroundColor: 'var(--surface)',
@@ -741,7 +785,7 @@ export const LeakAnalysisTab: React.FC<LeakAnalysisTabProps> = ({
               }}
             >
               <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase' }}>
-                Channel Calibration & Safeguards
+                Channel Calibration & Safety Bounds
               </div>
 
               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text)', lineHeight: 1.5 }}>

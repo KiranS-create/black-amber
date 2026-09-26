@@ -26,6 +26,7 @@ import { SystemHealthTab } from './components/SystemHealthTab';
 import { SettingsTab } from './components/SettingsTab';
 import { JudgeWalkthroughModal } from './components/JudgeWalkthroughModal';
 import { ForensicReportModal } from './components/ForensicReportModal';
+import { SignatureIntro } from './components/common/SignatureIntro';
 import { computeMockAttribution } from './services/mockData';
 
 export function AppContent() {
@@ -42,6 +43,13 @@ export function AppContent() {
   const [forceOffline, setForceOffline] = useState<boolean>(false);
   const [walkthroughOpen, setWalkthroughOpen] = useState<boolean>(false);
   const [reportModalOpen, setReportModalOpen] = useState<boolean>(false);
+  const [introCompleted, setIntroCompleted] = useState<boolean>(() => {
+    try {
+      return sessionStorage.getItem('aegistrace_intro_seen') === 'true';
+    } catch {
+      return false;
+    }
+  });
 
   // Initial load
   useEffect(() => {
@@ -179,7 +187,18 @@ export function AppContent() {
   };
 
   return (
-    <AppShell
+    <>
+      {!introCompleted && (
+        <SignatureIntro
+          onComplete={() => {
+            setIntroCompleted(true);
+            try {
+              sessionStorage.setItem('aegistrace_intro_seen', 'true');
+            } catch {}
+          }}
+        />
+      )}
+      <AppShell
       activeTab={activeTab}
       setActiveTab={setActiveTab}
       isOnline={isOnline}
@@ -306,6 +325,7 @@ export function AppContent() {
         ledgerEvents={ledgerEvents}
       />
     </AppShell>
+    </>
   );
 }
 
