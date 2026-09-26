@@ -42,7 +42,9 @@ class RecipientDecryptionClient:
     def decrypt_package(
         self,
         package: ReleaseRecipientPackage,
-        recipient: Recipient
+        recipient: Recipient,
+        last_event_hash: Optional[str] = None,
+        record_to_ledger: bool = True
     ) -> Tuple[bytes, bytes, EvidenceEvent, str]:
         """
         Execute full recipient decryption flow:
@@ -125,7 +127,7 @@ class RecipientDecryptionClient:
         replay_nonce = os.urandom(16).hex()
         event_id = f"evt_dec_{package.release_id[:12]}_{recipient.recipient_id}_{os.urandom(3).hex()}"
         timestamp_now = datetime.now(timezone.utc).isoformat()
-        prev_event_hash = self.ledger.get_last_event_hash()
+        prev_event_hash = last_event_hash or (self.ledger.get_last_event_hash() if self.ledger else "0" * 64)
 
         # Sign event payload (anchored to previous event hash, document ID, release ID, recipient ID, traceable hash)
         sign_payload = (
@@ -163,7 +165,10 @@ class RecipientDecryptionClient:
         )
 
         # 8. Record in ledger
-        event_hash = self.ledger.append_event(event)
+        if record_to_ledger and self.ledger:
+            event_hash = self.ledger.append_event(event)
+        else:
+            event_hash = event.compute_event_hash()
 
         return (plaintext, traceable_doc_bytes, event, event_hash)
 

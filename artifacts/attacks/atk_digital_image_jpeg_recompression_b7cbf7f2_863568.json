@@ -1,0 +1,34 @@
+{
+  "attack_id": "atk_digital_image_jpeg_recompression_b7cbf7f2_863568",
+  "attack_family": "DIGITAL_IMAGE",
+  "attack_name": "jpeg_recompression",
+  "version": "1.0.0",
+  "input_hash": "b7cbf7f2579b003ee7ac7cb3bf7f3338e704347f46f2d28e8c5a0dbde6f43588",
+  "output_hash": "4de9bc841fea75ad16049234df6f127a7f531cc3db2aed92d7394a65d9d09f97",
+  "input_type": "IMAGE_PNG",
+  "output_type": "IMAGE_JPEG",
+  "parameters": {
+    "quality": 90,
+    "subsampling": 0
+  },
+  "seed": 42,
+  "tool": "Pillow",
+  "tool_version": "9.4.0",
+  "physical_or_simulated": "SIMULATED",
+  "expected_effect": "Apply jpeg_recompression with parameters {'quality': 90, 'subsampling': 0}",
+  "observed_effect": "Artifact transformed. Length changed from 13218 to 129644 bytes (ratio: 9.81).",
+  "success": true,
+  "execution_time_ms": 23.928,
+  "notes": null,
+  "metrics": {
+    "psnr": 56.35,
+    "ssim": 0.9997,
+    "mae": 0.05,
+    "file_size_ratio": 9.8081,
+    "symbol_survival_rate": null,
+    "bit_error_rate": null,
+    "hamming_distance": null,
+    "normalized_correlation": null,
+    "additional": {}
+  }
+}

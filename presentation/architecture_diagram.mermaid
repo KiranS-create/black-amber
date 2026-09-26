@@ -1,0 +1,63 @@
+flowchart TD
+    subgraph TrustLayer["1. Cryptographic Trust & Recipient Isolation Layer"]
+        DOC["Original Document<br/>(Master Defense Whitepaper)"] --> RM["ReleaseManager"]
+        KEY["Ephemeral Symmetric Key<br/>(K_doc : AES-256-GCM)"] --> RM
+        
+        RM --> ENCAP_A["ML-KEM-768 Encap<br/>(Alice Public Key)"]
+        RM --> ENCAP_B["ML-KEM-768 Encap<br/>(Bob Public Key)"]
+        RM --> ENCAP_C["ML-KEM-768 Encap<br/>(Charlie Public Key)"]
+        
+        ENCAP_B --> REL_B["Bob Encrypted Release Package<br/>(Target-Bound Envelope)"]
+    end
+
+    subgraph RecipientDecryption["2. Authorized Decryption & Provenance Signing"]
+        REL_B --> DECAP_B["Bob Private Key Decapsulate<br/>+ AES-GCM Decrypt"]
+        DECAP_B --> PROV_SIGN["ML-DSA-65 Signed Provenance Event<br/>(doc_id, release_id, bob, timestamp)"]
+        PROV_SIGN --> LEDGER["Tamper-Evident Audit Ledger<br/>(SHA-256 Hash Chain)"]
+    end
+
+    subgraph PhysicalCarrier["3. Traceability Code & Physical Carrier Embedding"]
+        TARDOS["Symmetric Tardos Codebook<br/>(Capacity-Planned Fingerprint)"] --> EMBED["Multi-Channel Watermark Modulation"]
+        ECC["Reed-Solomon ECC<br/>+ Bitstream Interleaving"] --> EMBED
+        ARUCO["ArUco Geometric Fiducials<br/>(4 Corner Synchronization)"] --> EMBED
+        DECAP_B --> EMBED
+        
+        EMBED --> PHYS_DOC["Watermarked Physical Document<br/>(Rendered / Printable)"]
+    end
+
+    subgraph PhysicalBoundary["4. The Physical Leakage Boundary & Threat Channel"]
+        PHYS_DOC --> CAPTURE["Physical Leakage & Attack Channel<br/>- Print & Smartphone Photography<br/>- Optical Perspective & Sensor Blur<br/>- Cropping / JPEG Recompression<br/>- Multi-Recipient Collusion Attempt"]
+        CAPTURE --> LEAK["Forensic Leak Artifact<br/>(Distorted Image / Scanned PDF)"]
+    end
+
+    subgraph SignalRecovery["5. Signal Recovery & Forensic Extraction"]
+        LEAK --> RECT["Perspective Homography Rectification<br/>(ArUco Fiducial Synchronization)"]
+        RECT --> DEMOD["DSSS Spatial Demodulation<br/>+ RS Error Correction"]
+        DEMOD --> OBS_WM["Watermark Payload Observation<br/>(Pre/Post-ECC BER, Conf)"]
+        DEMOD --> OBS_TARDOS["Tardos Fingerprint Observation<br/>(Normalized Score Accumulation)"]
+        
+        LEAK --> HASH_OBS["Artifact SHA-256 Digest"]
+        LEDGER --> PROV_OBS["Signed Provenance Verification"]
+        LEDGER --> LEDGER_OBS["Ledger Hash-Chain Verification"]
+    end
+
+    subgraph EvidenceFusion["6. Multi-Channel Evidence Fusion Engine"]
+        OBS_WM --> GRAPH["Evidence Dependency Graph<br/>(Transitive Lineage Bounding)"]
+        OBS_TARDOS --> GRAPH
+        HASH_OBS --> GRAPH
+        PROV_OBS --> GRAPH
+        LEDGER_OBS --> GRAPH
+        
+        GRAPH --> DEDUP["Adversarial Deduplication<br/>(Payload Fingerprint Collapse)"]
+        DEDUP --> REL_SCALE["Attack-Aware Reliability Attenuation<br/>(BER / SSIM / Crop Scaling)"]
+        REL_SCALE --> CONFLICT_DET["Conflict & Anomaly Detection<br/>(Candidate Separation Margin Δ ≥ 2.5)"]
+        CONFLICT_DET --> CORROB["Primary Marker Corroboration<br/>(Anti-Framing Guard)"]
+    end
+
+    subgraph DecisionStates["7. Fail-Closed Zero-Trust Decision Protocol"]
+        CORROB --> D1["ATTRIBUTED<br/>(Identified Bob with High Confidence)"]
+        CORROB --> D2["NO_SIGNAL<br/>(Untracked / Unwatermarked Document)"]
+        CORROB --> D3["INSUFFICIENT_EVIDENCE<br/>(Extreme Degradation / Signal Destroyed)"]
+        CORROB --> D4["CONFLICT<br/>(Contradictory Channel Observations)"]
+        CORROB --> D5["REVIEW_REQUIRED<br/>(Marginal Separation / Low Corroboration)"]
+    end

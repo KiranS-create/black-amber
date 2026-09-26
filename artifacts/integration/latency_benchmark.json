@@ -1,0 +1,18 @@
+{
+  "document_registration_ms": 40.11,
+  "release_creation_3_recipients_ms": 77.35,
+  "recipient_package_retrieval_ms": 9.85,
+  "client_side_decryption_and_signing_ms": 44.06,
+  "server_provenance_verification_and_append_ms": 26.72,
+  "end_to_end_verified_provenance_workflow_ms": 80.64,
+  "simulated_local_oracle_decrypt_ms": 55.72,
+  "leak_artifact_upload_ms": 29.52,
+  "complete_analysis_pipeline_ms": 39.77,
+  "isolated_ml_kem_encapsulate_ms": 7.289,
+  "isolated_ml_kem_decapsulate_ms": 9.627,
+  "isolated_aes_256_gcm_encrypt_ms": 0.175,
+  "isolated_ml_dsa_sign_ms": 71.017,
+  "isolated_ml_dsa_verify_ms": 19.327,
+  "isolated_traceability_extraction_ms": 0.833,
+  "isolated_evidence_fusion_ms": 21.05
+}

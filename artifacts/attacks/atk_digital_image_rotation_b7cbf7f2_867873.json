@@ -1,0 +1,38 @@
+{
+  "attack_id": "atk_digital_image_rotation_b7cbf7f2_867873",
+  "attack_family": "DIGITAL_IMAGE",
+  "attack_name": "rotation",
+  "version": "1.0.0",
+  "input_hash": "b7cbf7f2579b003ee7ac7cb3bf7f3338e704347f46f2d28e8c5a0dbde6f43588",
+  "output_hash": "fb750c77435c7ad523e1df8f8733728b8d06a33d95dbe45b292291b78e03e115",
+  "input_type": "IMAGE_PNG",
+  "output_type": "IMAGE_PNG",
+  "parameters": {
+    "angle": 5.0,
+    "fill_color": [
+      255,
+      255,
+      255
+    ]
+  },
+  "seed": 42,
+  "tool": "OpenCV",
+  "tool_version": "4.11.0",
+  "physical_or_simulated": "SIMULATED",
+  "expected_effect": "Apply rotation with parameters {'angle': 5.0, 'fill_color': [255, 255, 255]}",
+  "observed_effect": "Artifact transformed. Length changed from 13218 to 287164 bytes (ratio: 21.73).",
+  "success": true,
+  "execution_time_ms": 37.445,
+  "notes": null,
+  "metrics": {
+    "psnr": 16.97,
+    "ssim": 0.7903,
+    "mae": 6.66,
+    "file_size_ratio": 21.7252,
+    "symbol_survival_rate": null,
+    "bit_error_rate": null,
+    "hamming_distance": null,
+    "normalized_correlation": null,
+    "additional": {}
+  }
+}

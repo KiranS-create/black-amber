@@ -1,0 +1,221 @@
+{
+  "timestamp": "2026-09-26T06:24:29Z",
+  "laboratory": "SIH26237 Adversarial Attack & Robustness Lab",
+  "benchmarks": [
+    {
+      "attack_name": "jpeg_recompression",
+      "label": "JPEG Recompression (Q=75)",
+      "samples": 10,
+      "mean_ms": 304.242,
+      "median_ms": 299.2,
+      "p95_ms": 324.404,
+      "input_size_bytes": 13218,
+      "output_size_bytes": 64
+    },
+    {
+      "attack_name": "resizing",
+      "label": "Resize (50%)",
+      "samples": 10,
+      "mean_ms": 330.288,
+      "median_ms": 320.587,
+      "p95_ms": 371.12,
+      "input_size_bytes": 13218,
+      "output_size_bytes": 64
+    },
+    {
+      "attack_name": "crop",
+      "label": "Crop (10%)",
+      "samples": 10,
+      "mean_ms": 378.073,
+      "median_ms": 360.001,
+      "p95_ms": 469.406,
+      "input_size_bytes": 13218,
+      "output_size_bytes": 64
+    },
+    {
+      "attack_name": "perspective_transform",
+      "label": "Perspective Transform (s=0.05)",
+      "samples": 10,
+      "mean_ms": 342.876,
+      "median_ms": 329.204,
+      "p95_ms": 371.446,
+      "input_size_bytes": 13218,
+      "output_size_bytes": 64
+    },
+    {
+      "attack_name": "pdf_rewrite",
+      "label": "PDF Rewrite (Decompress/Re-serialize)",
+      "samples": 10,
+      "mean_ms": 1.68,
+      "median_ms": 1.576,
+      "p95_ms": 2.09,
+      "input_size_bytes": 1954,
+      "output_size_bytes": 64
+    },
+    {
+      "attack_name": "pdf_rasterization",
+      "label": "PDF Rasterization (150 DPI)",
+      "samples": 10,
+      "mean_ms": 39.706,
+      "median_ms": 38.276,
+      "p95_ms": 46.516,
+      "input_size_bytes": 1954,
+      "output_size_bytes": 64
+    },
+    {
+      "attack_name": "print_camera_simulation",
+      "label": "Print-Camera Simulation (Level 2)",
+      "samples": 10,
+      "mean_ms": 660.416,
+      "median_ms": 626.241,
+      "p95_ms": 734.222,
+      "input_size_bytes": 13218,
+      "output_size_bytes": 64
+    }
+  ],
+  "sweeps": {
+    "jpeg_quality": [
+      {
+        "quality": 95,
+        "attack_id": "atk_digital_image_jpeg_recompression_b7cbf7f2_863242",
+        "psnr": 62.27,
+        "ssim": 0.9999,
+        "file_size_ratio": 10.8863
+      },
+      {
+        "quality": 90,
+        "attack_id": "atk_digital_image_jpeg_recompression_b7cbf7f2_863568",
+        "psnr": 56.35,
+        "ssim": 0.9997,
+        "file_size_ratio": 9.8081
+      },
+      {
+        "quality": 80,
+        "attack_id": "atk_digital_image_jpeg_recompression_b7cbf7f2_863900",
+        "psnr": 50.76,
+        "ssim": 0.9989,
+        "file_size_ratio": 8.6925
+      },
+      {
+        "quality": 70,
+        "attack_id": "atk_digital_image_jpeg_recompression_b7cbf7f2_864241",
+        "psnr": 47.6,
+        "ssim": 0.9978,
+        "file_size_ratio": 8.1417
+      },
+      {
+        "quality": 50,
+        "attack_id": "atk_digital_image_jpeg_recompression_b7cbf7f2_864626",
+        "psnr": 43.04,
+        "ssim": 0.9938,
+        "file_size_ratio": 7.2923
+      },
+      {
+        "quality": 30,
+        "attack_id": "atk_digital_image_jpeg_recompression_b7cbf7f2_864930",
+        "psnr": 38.94,
+        "ssim": 0.9852,
+        "file_size_ratio": 6.5781
+      },
+      {
+        "quality": 10,
+        "attack_id": "atk_digital_image_jpeg_recompression_b7cbf7f2_865233",
+        "psnr": 33.59,
+        "ssim": 0.9566,
+        "file_size_ratio": 5.4008
+      }
+    ],
+    "resizing": [
+      {
+        "scale_factor": 1.0,
+        "attack_id": "atk_digital_image_resizing_b7cbf7f2_865534",
+        "psnr": 100.0,
+        "ssim": 1.0,
+        "file_size_ratio": 1.0
+      },
+      {
+        "scale_factor": 0.75,
+        "attack_id": "atk_digital_image_resizing_b7cbf7f2_865875",
+        "psnr": 27.8,
+        "ssim": 0.9617,
+        "file_size_ratio": 1.4697
+      },
+      {
+        "scale_factor": 0.5,
+        "attack_id": "atk_digital_image_resizing_b7cbf7f2_866239",
+        "psnr": 24.91,
+        "ssim": 0.9299,
+        "file_size_ratio": 0.8892
+      },
+      {
+        "scale_factor": 0.25,
+        "attack_id": "atk_digital_image_resizing_b7cbf7f2_866551",
+        "psnr": 22.21,
+        "ssim": 0.8898,
+        "file_size_ratio": 0.4399
+      }
+    ],
+    "rotation": [
+      {
+        "angle_degrees": 0.5,
+        "attack_id": "atk_digital_image_rotation_b7cbf7f2_866849",
+        "psnr": 18.03,
+        "ssim": 0.8522
+      },
+      {
+        "angle_degrees": 1.0,
+        "attack_id": "atk_digital_image_rotation_b7cbf7f2_867185",
+        "psnr": 17.43,
+        "ssim": 0.8299
+      },
+      {
+        "angle_degrees": 2.0,
+        "attack_id": "atk_digital_image_rotation_b7cbf7f2_867539",
+        "psnr": 17.06,
+        "ssim": 0.8048
+      },
+      {
+        "angle_degrees": 5.0,
+        "attack_id": "atk_digital_image_rotation_b7cbf7f2_867873",
+        "psnr": 16.97,
+        "ssim": 0.7903
+      }
+    ],
+    "crop": [
+      {
+        "crop_fraction": 0.05,
+        "attack_id": "atk_digital_image_crop_b7cbf7f2_868199",
+        "psnr": 16.5,
+        "ssim": 0.773,
+        "file_size_ratio": 0.9539
+      },
+      {
+        "crop_fraction": 0.1,
+        "attack_id": "atk_digital_image_crop_b7cbf7f2_868554",
+        "psnr": 18.58,
+        "ssim": 0.8198,
+        "file_size_ratio": 0.8813
+      },
+      {
+        "crop_fraction": 0.2,
+        "attack_id": "atk_digital_image_crop_b7cbf7f2_868941",
+        "psnr": 18.58,
+        "ssim": 0.8209,
+        "file_size_ratio": 0.7077
+      },
+      {
+        "crop_fraction": 0.3,
+        "attack_id": "atk_digital_image_crop_b7cbf7f2_869264",
+        "psnr": 18.61,
+        "ssim": 0.8141,
+        "file_size_ratio": 0.5706
+      }
+    ]
+  },
+  "robustness_outcomes_summary": {
+    "PASS": "High signal survival (>= 90%) and verifiable attribution with high confidence.",
+    "DEGRADE": "Partial signal survival (70% - 90%) with marginal attribution evidence.",
+    "FAIL": "False accusation of an innocent party or critical security violation.",
+    "ABSTAIN": "Signal destroyed (< 70%) or corrupted; attribution engine strictly abstains (NO_SIGNAL / INSUFFICIENT_EVIDENCE)."
+  }
+}

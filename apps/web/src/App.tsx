@@ -1,186 +1,318 @@
 import React, { useState, useEffect } from 'react';
-import { PublicRecipient, DocumentRelease, AttributionResult, EvidenceEvent } from './types';
+import { 
+  PublicRecipient, 
+  DocumentRelease, 
+  EvidenceEvent, 
+  AttributionResult, 
+  LedgerVerificationResult,
+  DocumentMetadata,
+  LeakMetadata,
+  AttackTelemetryInput
+} from './types';
+import { apiService } from './services/api';
+import { ThemeProvider } from './context/ThemeContext';
+import { motion, AnimatePresence } from 'framer-motion';
+import { AppShell } from './components/common/AppShell';
+import { TabId } from './components/common/Sidebar';
+import { DashboardTab } from './components/DashboardTab';
+import { RecipientsTab } from './components/RecipientsTab';
+import { ReleaseTab } from './components/ReleaseTab';
+import { DecryptionTab } from './components/DecryptionTab';
+import { LedgerTab } from './components/LedgerTab';
+import { LeakAnalysisTab } from './components/LeakAnalysisTab';
+import { AttackLabTab } from './components/AttackLabTab';
+import { TardosVisualizer } from './components/TardosVisualizer';
+import { SystemHealthTab } from './components/SystemHealthTab';
+import { SettingsTab } from './components/SettingsTab';
+import { JudgeWalkthroughModal } from './components/JudgeWalkthroughModal';
+import { ForensicReportModal } from './components/ForensicReportModal';
+import { computeMockAttribution } from './services/mockData';
 
-const API_BASE = 'http://localhost:8000';
+export function AppContent() {
+  const [activeTab, setActiveTab] = useState<TabId>('dashboard');
 
-export function App() {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'recipients' | 'release' | 'decrypt' | 'leak' | 'ledger'>('dashboard');
+  const [documents, setDocuments] = useState<DocumentMetadata[]>([]);
   const [recipients, setRecipients] = useState<PublicRecipient[]>([]);
   const [releases, setReleases] = useState<DocumentRelease[]>([]);
-  const [leakResult, setLeakResult] = useState<AttributionResult | null>(null);
   const [ledgerEvents, setLedgerEvents] = useState<EvidenceEvent[]>([]);
-  const [ledgerStatus, setLedgerStatus] = useState<{ is_valid: boolean; total_events: number } | null>(null);
+  const [ledgerStatus, setLedgerStatus] = useState<LedgerVerificationResult | null>(null);
+  const [leakResult, setLeakResult] = useState<AttributionResult | null>(null);
 
+  const [isOnline, setIsOnline] = useState<boolean>(false);
+  const [forceOffline, setForceOffline] = useState<boolean>(false);
+  const [walkthroughOpen, setWalkthroughOpen] = useState<boolean>(false);
+  const [reportModalOpen, setReportModalOpen] = useState<boolean>(false);
+
+  // Initial load
   useEffect(() => {
-    fetchRecipients();
-    fetchReleases();
-    fetchLedger();
+    const init = async () => {
+      const health = await apiService.checkHealth();
+      if (!health.online) {
+        setForceOffline(true);
+        apiService.setForceOffline(true);
+      }
+      await refreshAllData();
+      setLeakResult(computeMockAttribution('clean_bob'));
+    };
+    init();
+
+    const interval = setInterval(async () => {
+      if (!apiService.isForceOffline()) {
+        const health = await apiService.checkHealth();
+        setIsOnline(health.online);
+      }
+    }, 4000);
+
+    return () => clearInterval(interval);
   }, []);
 
-  const fetchRecipients = async () => {
+  const refreshAllData = async () => {
     try {
-      const res = await fetch(`${API_BASE}/recipients`);
-      if (res.ok) setRecipients(await res.json());
-    } catch (e) {
-      console.error(e);
+      const health = await apiService.checkHealth();
+      setIsOnline(health.online);
+
+      const [docList, recList, relList, evList, legStatus] = await Promise.all([
+        apiService.getDocuments(),
+        apiService.getRecipients(),
+        apiService.getReleases(),
+        apiService.getLedgerEvents(),
+        apiService.verifyLedger()
+      ]);
+
+      setDocuments(docList);
+      setRecipients(recList);
+      setReleases(relList);
+      setLedgerEvents(evList);
+      setLedgerStatus(legStatus);
+    } catch (err: any) {
+      console.warn('Live refresh encountered error, setting offline demo mode:', err);
+      setForceOffline(true);
+      apiService.setForceOffline(true);
+      setIsOnline(false);
+      const [docList, recList, relList, evList, legStatus] = await Promise.all([
+        apiService.getDocuments(),
+        apiService.getRecipients(),
+        apiService.getReleases(),
+        apiService.getLedgerEvents(),
+        apiService.verifyLedger()
+      ]);
+      setDocuments(docList);
+      setRecipients(recList);
+      setReleases(relList);
+      setLedgerEvents(evList);
+      setLedgerStatus(legStatus);
     }
   };
 
-  const fetchReleases = async () => {
-    try {
-      const res = await fetch(`${API_BASE}/releases`);
-      if (res.ok) setReleases(await res.json());
-    } catch (e) {
-      console.error(e);
-    }
+  const handleToggleForceOffline = async (val: boolean) => {
+    setForceOffline(val);
+    apiService.setForceOffline(val);
+    await refreshAllData();
   };
 
-  const fetchLedger = async () => {
-    try {
-      const res = await fetch(`${API_BASE}/ledger/verify`);
-      if (res.ok) setLedgerStatus(await res.json());
-    } catch (e) {
-      console.error(e);
-    }
+  const handleUploadDocument = async (file: File, name?: string) => {
+    const doc = await apiService.uploadDocument(file, name);
+    await refreshAllData();
+    return doc;
+  };
+
+  const handleEnrollRecipient = async (name: string, id?: string) => {
+    await apiService.enrollRecipient(name, id);
+    await refreshAllData();
+  };
+
+  const handleCreateRelease = async (
+    docName: string, 
+    docBase64: string, 
+    recipientIds: string[],
+    docId?: string,
+    tardosEnabled?: boolean
+  ) => {
+    await apiService.createRelease(docName, docBase64, recipientIds, docId, tardosEnabled);
+    await refreshAllData();
+  };
+
+  const handleDecrypt = async (releaseId: string, recipientId: string) => {
+    const res = await apiService.decryptPackage(releaseId, recipientId);
+    await refreshAllData();
+    return res;
+  };
+
+  const handleUploadLeakFile = async (file: File, suspectedReleaseId?: string): Promise<LeakMetadata> => {
+    const leakMeta = await apiService.uploadLeak(file, suspectedReleaseId);
+    return leakMeta;
+  };
+
+  const handleAnalyzeLeak = async (
+    scenarioIdOrBase64: string, 
+    releaseId?: string,
+    telemetry?: AttackTelemetryInput
+  ) => {
+    const res = await apiService.analyzeLeak(scenarioIdOrBase64, releaseId, telemetry);
+    setLeakResult(res);
+  };
+
+  const handleVerifyLedger = async () => {
+    const status = await apiService.verifyLedger();
+    setLedgerStatus(status);
+  };
+
+  const handleSimulateTamper = (blockIndex: number) => {
+    apiService.simulateTamperBlock(blockIndex);
+    refreshAllData();
+  };
+
+  const handleResetTamper = () => {
+    apiService.resetLedgerTamper();
+    refreshAllData();
+  };
+
+  const handleResetAll = () => {
+    apiService.resetAllToDefault();
+    setLeakResult(computeMockAttribution('clean_bob'));
+    refreshAllData();
+  };
+
+  const handleQuickScenario = async (scenarioId: string) => {
+    await handleAnalyzeLeak(scenarioId);
+    setActiveTab('leak');
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {/* Header */}
-      <header style={{ padding: '16px 24px', background: '#1e293b', borderBottom: '1px solid #334155', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div>
-          <h1 style={{ margin: 0, fontSize: '20px', color: '#38bdf8', fontWeight: 'bold' }}>SIH26237</h1>
-          <p style={{ margin: 0, fontSize: '12px', color: '#94a3b8' }}>Cryptographic Attribution & Immutable Decryption Provenance</p>
-        </div>
-        <div style={{ display: 'flex', gap: '8px' }}>
-          {(['dashboard', 'recipients', 'release', 'decrypt', 'leak', 'ledger'] as const).map(tab => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              style={{
-                padding: '8px 16px',
-                borderRadius: '6px',
-                border: 'none',
-                background: activeTab === tab ? '#38bdf8' : '#334155',
-                color: activeTab === tab ? '#0f172a' : '#f8fafc',
-                fontWeight: '600',
-                cursor: 'pointer',
-                textTransform: 'capitalize'
-              }}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
-      </header>
+    <AppShell
+      activeTab={activeTab}
+      setActiveTab={setActiveTab}
+      isOnline={isOnline}
+      forceOffline={forceOffline}
+      onToggleForceOffline={handleToggleForceOffline}
+      onOpenWalkthrough={() => setWalkthroughOpen(true)}
+      onResetDemo={handleResetAll}
+      onQuickScenario={handleQuickScenario}
+      onSimulateTamper={() => handleSimulateTamper(1)}
+      onExportReport={() => setReportModalOpen(true)}
+      recipientCount={recipients.length}
+      releaseCount={releases.length}
+      ledgerCount={ledgerStatus?.total_events ?? ledgerEvents.length}
+    >
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={activeTab}
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -6 }}
+          transition={{ duration: 0.15, ease: 'easeOut' }}
+          style={{ width: '100%' }}
+        >
+          {activeTab === 'dashboard' && (
+            <DashboardTab
+              documents={documents}
+              recipients={recipients}
+              releases={releases}
+              ledgerStatus={ledgerStatus}
+              isOnline={isOnline}
+              setActiveTab={setActiveTab}
+              onQuickScenario={handleQuickScenario}
+            />
+          )}
 
-      {/* Main Content Area */}
-      <main style={{ flex: 1, padding: '24px', maxWidth: '1200px', margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
-        {activeTab === 'dashboard' && (
-          <div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '16px', marginBottom: '24px' }}>
-              <div style={{ background: '#1e293b', padding: '20px', borderRadius: '8px', border: '1px solid #334155' }}>
-                <h3 style={{ margin: '0 0 8px 0', color: '#94a3b8', fontSize: '14px' }}>Active Recipients</h3>
-                <p style={{ fontSize: '28px', margin: 0, fontWeight: 'bold', color: '#38bdf8' }}>{recipients.length}</p>
-                <span style={{ fontSize: '12px', color: '#64748b' }}>Alice, Bob, Charlie enrolled</span>
-              </div>
+          {activeTab === 'recipients' && (
+            <RecipientsTab
+              recipients={recipients}
+              onEnroll={handleEnrollRecipient}
+            />
+          )}
 
-              <div style={{ background: '#1e293b', padding: '20px', borderRadius: '8px', border: '1px solid #334155' }}>
-                <h3 style={{ margin: '0 0 8px 0', color: '#94a3b8', fontSize: '14px' }}>Document Releases</h3>
-                <p style={{ fontSize: '28px', margin: 0, fontWeight: 'bold', color: '#a855f7' }}>{releases.length}</p>
-                <span style={{ fontSize: '12px', color: '#64748b' }}>ML-KEM-768 encapsulated</span>
-              </div>
+          {activeTab === 'release' && (
+            <ReleaseTab
+              documents={documents}
+              recipients={recipients}
+              releases={releases}
+              onCreateRelease={handleCreateRelease}
+              onUploadDocument={handleUploadDocument}
+              setActiveTab={setActiveTab}
+            />
+          )}
 
-              <div style={{ background: '#1e293b', padding: '20px', borderRadius: '8px', border: '1px solid #334155' }}>
-                <h3 style={{ margin: '0 0 8px 0', color: '#94a3b8', fontSize: '14px' }}>Ledger Integrity</h3>
-                <p style={{ fontSize: '28px', margin: 0, fontWeight: 'bold', color: ledgerStatus?.is_valid ? '#22c55e' : '#ef4444' }}>
-                  {ledgerStatus?.is_valid ? 'INTACT' : 'UNVERIFIED'}
-                </p>
-                <span style={{ fontSize: '12px', color: '#64748b' }}>{ledgerStatus?.total_events || 0} hash-chained events</span>
-              </div>
-            </div>
+          {activeTab === 'decrypt' && (
+            <DecryptionTab
+              recipients={recipients}
+              releases={releases}
+              onDecrypt={handleDecrypt}
+              setActiveTab={setActiveTab}
+            />
+          )}
 
-            {/* Core Vertical Slice Visual Flow */}
-            <div style={{ background: '#1e293b', padding: '24px', borderRadius: '8px', border: '1px solid #334155' }}>
-              <h2 style={{ marginTop: 0, color: '#f8fafc', fontSize: '18px' }}>Cryptographic Distribution & Attribution Flow</h2>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 0', gap: '12px', flexWrap: 'wrap' }}>
-                <div style={{ padding: '16px', background: '#0f172a', borderRadius: '8px', border: '1px solid #475569', textAlign: 'center', flex: 1, minWidth: '150px' }}>
-                  <div style={{ fontWeight: 'bold', color: '#38bdf8' }}>1. Document</div>
-                  <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '4px' }}>AES-256-GCM</div>
-                </div>
-                <div style={{ color: '#64748b' }}>➔</div>
-                <div style={{ padding: '16px', background: '#0f172a', borderRadius: '8px', border: '1px solid #475569', textAlign: 'center', flex: 1, minWidth: '150px' }}>
-                  <div style={{ fontWeight: 'bold', color: '#c084fc' }}>2. Recipients</div>
-                  <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '4px' }}>ML-KEM-768 Wrap</div>
-                </div>
-                <div style={{ color: '#64748b' }}>➔</div>
-                <div style={{ padding: '16px', background: '#0f172a', borderRadius: '8px', border: '1px solid #475569', textAlign: 'center', flex: 1, minWidth: '150px' }}>
-                  <div style={{ fontWeight: 'bold', color: '#fb923c' }}>3. Decrypt & Provenance</div>
-                  <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '4px' }}>Signed ML-DSA Event</div>
-                </div>
-                <div style={{ color: '#64748b' }}>➔</div>
-                <div style={{ padding: '16px', background: '#0f172a', borderRadius: '8px', border: '1px solid #475569', textAlign: 'center', flex: 1, minWidth: '150px' }}>
-                  <div style={{ fontWeight: 'bold', color: '#4ade80' }}>4. Leak Attribution</div>
-                  <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '4px' }}>Fail-Closed Engine</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+          {activeTab === 'ledger' && (
+            <LedgerTab
+              events={ledgerEvents}
+              ledgerStatus={ledgerStatus}
+              isOnline={isOnline}
+              onVerifyLedger={handleVerifyLedger}
+              onSimulateTamper={handleSimulateTamper}
+              onResetTamper={handleResetTamper}
+            />
+          )}
 
-        {activeTab === 'recipients' && (
-          <div style={{ background: '#1e293b', padding: '24px', borderRadius: '8px', border: '1px solid #334155' }}>
-            <h2 style={{ marginTop: 0, color: '#f8fafc' }}>Enrolled Recipient Identities</h2>
-            <div style={{ display: 'grid', gap: '12px' }}>
-              {recipients.map(r => (
-                <div key={r.recipient_id} style={{ background: '#0f172a', padding: '16px', borderRadius: '6px', border: '1px solid #334155', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <h4 style={{ margin: 0, color: '#38bdf8', fontSize: '16px' }}>{r.name} ({r.recipient_id})</h4>
-                    <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#94a3b8' }}>
-                      KEM: <code style={{ color: '#c084fc' }}>{r.algorithm_kem}</code> | Signature: <code style={{ color: '#34d399' }}>{r.algorithm_dsa}</code>
-                    </p>
-                  </div>
-                  <span style={{ background: '#166534', color: '#86efac', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold' }}>
-                    {r.status}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+          {activeTab === 'leak' && (
+            <LeakAnalysisTab
+              leakResult={leakResult}
+              onAnalyzeLeak={handleAnalyzeLeak}
+              onUploadLeakFile={handleUploadLeakFile}
+              onOpenReportModal={() => setReportModalOpen(true)}
+            />
+          )}
 
-        {activeTab === 'leak' && (
-          <div style={{ background: '#1e293b', padding: '24px', borderRadius: '8px', border: '1px solid #334155' }}>
-            <h2 style={{ marginTop: 0, color: '#f8fafc' }}>Leak Analysis & Attribution</h2>
-            <p style={{ color: '#94a3b8', fontSize: '14px' }}>
-              Upload or inspect a leaked document artifact. The fail-closed engine verifies cryptographic markers, recipient bindings, and tamper-evident audit ledger events.
-            </p>
-            <div style={{ marginTop: '16px', padding: '20px', background: '#0f172a', borderRadius: '8px', border: '1px solid #334155' }}>
-              <div style={{ fontWeight: 'bold', color: '#38bdf8', marginBottom: '8px' }}>Test with Automated Demo:</div>
-              <code style={{ background: '#1e293b', padding: '8px 12px', borderRadius: '4px', display: 'block', color: '#4ade80' }}>
-                python demo/end_to_end.py
-              </code>
-            </div>
-          </div>
-        )}
+          {activeTab === 'attack_lab' && (
+            <AttackLabTab />
+          )}
 
-        {activeTab === 'ledger' && (
-          <div style={{ background: '#1e293b', padding: '24px', borderRadius: '8px', border: '1px solid #334155' }}>
-            <h2 style={{ marginTop: 0, color: '#f8fafc' }}>Tamper-Evident Audit Ledger</h2>
-            <p style={{ color: '#94a3b8', fontSize: '14px' }}>
-              Cryptographic hash-chained records of all document releases and recipient-signed decryption provenance events.
-            </p>
-            <div style={{ padding: '16px', background: '#0f172a', borderRadius: '6px', border: '1px solid #334155', marginTop: '16px' }}>
-              <div style={{ color: '#4ade80', fontWeight: 'bold' }}>✓ Ledger Verification: PASSED</div>
-              <div style={{ color: '#94a3b8', fontSize: '12px', marginTop: '4px' }}>Tip Hash: {ledgerStatus?.is_valid ? 'Verified Chain Tip' : 'N/A'}</div>
-            </div>
-          </div>
-        )}
-      </main>
+          {activeTab === 'tardos' && (
+            <TardosVisualizer />
+          )}
 
-      <footer style={{ padding: '16px', textAlign: 'center', color: '#64748b', fontSize: '12px', borderTop: '1px solid #334155' }}>
-        SIH26237 Lead Engineering System • Post-Quantum Cryptographic Provenance Architecture
-      </footer>
-    </div>
+          {activeTab === 'health' && (
+            <SystemHealthTab isOnline={isOnline} onRefresh={refreshAllData} />
+          )}
+
+          {activeTab === 'settings' && (
+            <SettingsTab />
+          )}
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Guided Judge Walkthrough Modal */}
+      <JudgeWalkthroughModal
+        isOpen={walkthroughOpen}
+        onClose={() => setWalkthroughOpen(false)}
+        setActiveTab={setActiveTab}
+        onTriggerDecryption={async () => {
+          if (releases[0]) {
+            await handleDecrypt(releases[0].release_id, 'bob');
+          }
+        }}
+        onTriggerLeakAnalysis={async (scenarioId) => {
+          await handleAnalyzeLeak(scenarioId);
+        }}
+        onTriggerLedgerTamper={() => {
+          handleSimulateTamper(1);
+        }}
+      />
+
+      {/* Forensic Report Export Modal */}
+      <ForensicReportModal
+        isOpen={reportModalOpen}
+        onClose={() => setReportModalOpen(false)}
+        leakResult={leakResult}
+        ledgerEvents={ledgerEvents}
+      />
+    </AppShell>
+  );
+}
+
+export function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
   );
 }

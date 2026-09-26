@@ -1,0 +1,15 @@
+# SIH26237 Core Dependencies
+fastapi==0.115.6
+uvicorn[standard]==0.39.0
+pydantic==2.12.5
+pycryptodome==3.23.0
+reportlab==5.0.1
+pypdf==6.19.0
+python-multipart==0.0.20
+pytest==8.4.2
+httpx==0.28.1
+numpy==1.26.4
+opencv-python==4.13.0.92
+scipy==1.10.0
+Pillow==9.4.0
+requests==2.32.5

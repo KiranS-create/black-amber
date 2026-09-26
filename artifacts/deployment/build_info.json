@@ -1,0 +1,30 @@
+{
+  "application_name": "SIH26237 \u2014 Cryptographic Attribution Platform",
+  "version": "1.0.0",
+  "git_commit": "14c963ba5a61a70abe4d9c6f50d0a605186fb5cf",
+  "git_branch": "master",
+  "build_timestamp": "2026-09-26T09:41:17.140529+00:00",
+  "platform": {
+    "system": "Windows",
+    "release": "10",
+    "version": "10.0.26100",
+    "machine": "AMD64",
+    "python_version": "3.9.0",
+    "python_compiler": "MSC v.1927 64 bit (AMD64)",
+    "node_version": "v24.11.0",
+    "npm_version": "UNKNOWN"
+  },
+  "dependency_snapshot": {
+    "fastapi": "0.128.8",
+    "uvicorn": "0.39.0",
+    "pydantic": "2.12.5",
+    "pycryptodome": "3.23.0",
+    "reportlab": "5.0.1",
+    "pypdf": "6.19.0",
+    "pytest": "8.4.2",
+    "numpy": "1.26.4",
+    "opencv-python": "4.13.0.92",
+    "scipy": "1.10.0"
+  },
+  "offline_ready": true
+}

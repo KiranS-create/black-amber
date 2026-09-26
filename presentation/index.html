@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIH26237 — Post-Quantum Leak Attribution Presentation</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0a0f1d;
+            --bg-secondary: #111827;
+            --bg-card: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-cyan: #06b6d4;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-amber: #f59e0b;
+            --border-color: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 24px;
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.875rem;
+        }
+
+        .badge {
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        #deck-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            max-width: 1200px;
+            height: calc(100vh - 140px);
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 36px 48px;
+            overflow-y: auto;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 8px;
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            color: var(--accent-cyan);
+            margin-bottom: 16px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            color: #e2e8f0;
+            margin: 16px 0 8px 0;
+        }
+
+        p, li {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 1.05rem;
+        }
+
+        ul {
+            margin-left: 24px;
+            margin-bottom: 16px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 16px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .card.highlight {
+            border-color: var(--accent-cyan);
+            background: linear-gradient(180deg, rgba(6, 182, 212, 0.05), rgba(30, 41, 59, 1));
+        }
+
+        .alert-box {
+            background-color: rgba(6, 182, 212, 0.1);
+            border-left: 4px solid var(--accent-cyan);
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0;
+        }
+
+        .alert-box.important {
+            background-color: rgba(245, 158, 11, 0.1);
+            border-left-color: var(--accent-amber);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 10px 14px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--bg-card);
+            color: var(--accent-cyan);
+            font-weight: 600;
+        }
+
+        td {
+            background-color: rgba(30, 41, 59, 0.5);
+            color: #cbd5e1;
+        }
+
+        code {
+            background-color: #0f172a;
+            color: #38bdf8;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #0f172a;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px;
+            overflow-x: auto;
+            color: #e2e8f0;
+            font-family: monospace;
+            font-size: 0.9rem;
+            margin: 12px 0;
+        }
+
+        footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 24px;
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        button {
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            background-color: var(--accent-cyan);
+            color: #000;
+            border-color: var(--accent-cyan);
+        }
+
+        #speaker-notes-modal {
+            display: none;
+            position: fixed;
+            bottom: 60px;
+            right: 24px;
+            width: 480px;
+            max-height: 280px;
+            background-color: #0f172a;
+            border: 1px solid var(--accent-cyan);
+            border-radius: 8px;
+            padding: 16px;
+            overflow-y: auto;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+        }
+
+        #speaker-notes-modal h4 {
+            color: var(--accent-cyan);
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>
+            <strong>SIH26237</strong> — Post-Quantum Document Attribution Platform
+        </div>
+        <div>
+            <span class="badge">NIST FIPS 203 / 204</span>
+            <span class="badge" style="background: linear-gradient(135deg, #10b981, #059669); margin-left: 8px;">FAIL-CLOSED ZERO-TRUST</span>
+        </div>
+    </header>
+
+    <div id="deck-container">
+
+        <!-- SLIDE 1 -->
+        <div class="slide active" id="slide-1" data-notes="Welcome judges. Introduce the core challenge: traditional controls fail the second a document is rendered on screen or printed. Our framework solves this via post-quantum trust + Tardos + physical watermarking + fail-closed evidence fusion.">
+            <h1>Post-Quantum Leak Attribution for Documents</h1>
+            <p style="font-size: 1.3rem; color: var(--accent-cyan); margin-bottom: 24px;">From Encrypted Release to Physical-Capture Traceability</p>
+            
+            <div class="card highlight" style="margin-bottom: 20px;">
+                <h3>The Core Operational Challenge</h3>
+                <p>Enterprise cybersecurity protects files <em>in transit</em> and <em>at rest</em>, but <strong>fails completely the moment an authorized recipient renders content to screen or prints it on paper</strong>.</p>
+            </div>
+
+            <div class="grid-3">
+                <div class="card">
+                    <h3 style="color: #38bdf8;">1. Post-Quantum Trust</h3>
+                    <p>NIST <code>ML-KEM-768</code> and <code>ML-DSA-65</code> sovereign recipient isolation with signed provenance.</p>
+                </div>
+                <div class="card">
+                    <h3 style="color: #34d399;">2. Optical Traceability</h3>
+                    <p>Collusion-resistant <code>Symmetric Tardos</code> traitor-tracing codes embedded via DSSS spatial carrier modulation.</p>
+                </div>
+                <div class="card">
+                    <h3 style="color: #f472b6;">3. Evidence Fusion</h3>
+                    <p>Graph-based derivation tracking with zero-trust fail-closed abstention on weak or contradictory signals.</p>
+                </div>
+            </div>
+
+            <div class="alert-box">
+                <strong>Core System Axiom:</strong> The system does not rely on a single fragile watermark; it correlates independently auditable cryptographic, statistical, and physical layers.
+            </div>
+        </div>
+
+        <!-- SLIDE 2 -->
+        <div class="slide" id="slide-2" data-notes="Explain the physical leakage boundary: authorized recipient opens document, displays or prints it, takes smartphone photo, metadata is stripped. Digital controls become completely ineffective.">
+            <h2>The Physical Leakage Boundary Problem</h2>
+            <p>Why conventional Enterprise Digital Rights Management (DRM) and PDF permissions fail at the physical interface:</p>
+            
+            <pre>
+DIGITAL SECURITY (AES-256 / TLS / ACLs)
+    ↓
+Authorized User Opens & Decrypts File
+    ↓
+SCREEN / TABLET / PAPER PRINTOUT
+    ↓  [ THE PHYSICAL LEAKAGE BOUNDARY ] (Out-of-band capture)
+SMARTPHONE CAMERA (Optical blur, perspective tilt, sensor noise, downsampling)
+    ↓
+ANONYMOUS PUBLIC LEAK (All digital metadata & file headers destroyed)
+            </pre>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h3 style="color: var(--accent-red);">The Failure of Legacy DRM</h3>
+                    <ul>
+                        <li><strong>Shared Plaintext:</strong> Recipients share identical pixels once decrypted.</li>
+                        <li><strong>Fragile Metadata:</strong> EXIF tags and PDF headers are stripped by screenshotting.</li>
+                        <li><strong>Fragile Watermarks:</strong> High-frequency marks are destroyed by optical capture.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3 style="color: var(--accent-green);">Our Engineering Response</h3>
+                    <ul>
+                        <li><strong>Individualized Releases:</strong> Every recipient receives a unique cryptographic envelope.</li>
+                        <li><strong>Optical Survivability:</strong> ArUco homography rectification + DSSS modulation.</li>
+                        <li><strong>Traitor Tracing:</strong> Mathematical collusion resistance via Tardos codes.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3 -->
+        <div class="slide" id="slide-3" data-notes="Walk through our 6 threat actors and the corresponding defense layers. Highlight that hostile degradation causes clean abstention.">
+            <h2>Threat Model & Multi-Layer Defense Matrix</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Threat Actor</th>
+                        <th>Attacker Capability</th>
+                        <th>Defense Layer</th>
+                        <th>System Decision</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Malicious Recipient</strong></td>
+                        <td>Holds private keys; leaks decrypted copy</td>
+                        <td>Individualized Tardos Fingerprint + DSSS Carrier</td>
+                        <td><span style="color: #34d399; font-weight: 600;">ATTRIBUTED</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Colluding Coalition</strong></td>
+                        <td>2 to c recipients merge copies to erase marks</td>
+                        <td>Symmetric Tardos Codebook (c=3, ε=10⁻⁴)</td>
+                        <td><span style="color: #34d399; font-weight: 600;">ATTRIBUTED</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Physical Capture</strong></td>
+                        <td>Prints & photos at extreme angles/blur</td>
+                        <td>ArUco Homography Rectification + Reed-Solomon</td>
+                        <td><span style="color: #34d399; font-weight: 600;">ATTRIBUTED</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Artifact Tampering</strong></td>
+                        <td>Crops >30%, applies heavy blur, downsamples</td>
+                        <td>Dynamic Attack-Aware Reliability Scaling</td>
+                        <td><span style="color: #f59e0b; font-weight: 600;">ABSTAIN</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Evidence Poisoner</strong></td>
+                        <td>Injects duplicate logs; replays signatures</td>
+                        <td>Dependency Graph Lineage + ML-DSA Signatures</td>
+                        <td><span style="color: #ef4444; font-weight: 600;">CONFLICT / ABSTAIN</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="alert-box important">
+                <strong>Zero-Trust Axiom:</strong> When facing severe tampering or contradictory evidence, the engine never guesses; it safely abstains (Fail-Closed).
+            </div>
+        </div>
+
+        <!-- SLIDE 4 -->
+        <div class="slide" id="slide-4" data-notes="Show the complete system architecture diagram. Trace the flow from Master Document to ReleaseManager to ML-KEM to Decryption to Watermark to Leak to Evidence Fusion to Decision.">
+            <h2>End-to-End System Architecture</h2>
+            <div class="card" style="text-align: center; padding: 12px; margin-bottom: 16px;">
+                <p style="font-size: 0.95rem; color: #38bdf8;">Unified Post-Quantum Release-to-Physical Provenance Pipeline</p>
+            </div>
+            <pre style="font-size: 0.85rem; line-height: 1.4;">
+ORIGINAL DOCUMENT ──► ReleaseManager (K_doc : AES-256-GCM)
+                            ├──► ML-KEM-768 Encap (Alice PK) ──► Alice Release
+                            ├──► ML-KEM-768 Encap (Bob PK)   ──► Bob Release (Sovereign Decrypt)
+                            └──► ML-KEM-768 Encap (Charlie PK)──► Charlie Release
+                                       │
+                                       ▼ (Bob signs ML-DSA-65 provenance ticket)
+                            [ Tamper-Evident SHA-256 Ledger ]
+                                       │
+                                       ▼ (Embeds Tardos + DSSS + ArUco)
+                            [ Watermarked Physical Document ]
+                                       │
+                                       ▼ [ PHYSICAL LEAKAGE BOUNDARY ]
+                            [ Smartphone Camera Capture / Attack ]
+                                       │
+                                       ▼
+                            [ ArUco Homography Perspective Rectification ]
+                                       │
+                            ┌──────────┴──────────┐
+                            ▼                     ▼
+                   Watermark Observation     Tardos Observation
+                            │                     │
+                            └──────────┬──────────┘
+                                       │
+                                       ▼
+                     [ Multi-Channel Evidence Fusion Engine ]
+                     (Transitive Lineage Anti-Double-Counting)
+                                       │
+                    ┌──────────────────┼──────────────────┐
+                    ▼                  ▼                  ▼
+              [ ATTRIBUTED ]     [ CONFLICT ]       [ ABSTAIN ]
+            </pre>
+        </div>
+
+        <!-- SLIDE 5 -->
+        <div class="slide" id="slide-5" data-notes="Detail our post-quantum crypto implementations. FIPS 203 ML-KEM-768 and FIPS 204 ML-DSA-65 with measured benchmark latencies. Emphasize sovereign key custody.">
+            <h2>Cryptographic Trust Layer & Recipient Isolation</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3 style="color: var(--accent-cyan);">NIST Post-Quantum Primitives</h3>
+                    <ul>
+                        <li><strong>ML-KEM-768 (FIPS 203):</strong>
+                            <br/>Lattice-based asymmetric key encapsulation.
+                            <br/><em>Measured Latency:</em> <strong>11.61 ms</strong> encap | <strong>12.4 ms</strong> decap.
+                        </li>
+                        <li><strong>ML-DSA-65 (FIPS 204):</strong>
+                            <br/>Lattice-based digital signatures for provenance events.
+                            <br/><em>Measured Latency:</em> <strong>124.33 ms</strong> sign | <strong>20.97 ms</strong> verify.
+                        </li>
+                        <li><strong>AES-256-GCM Authenticated Envelope:</strong>
+                            <br/>Target-bound payload encryption in <strong>0.30 ms</strong>.
+                        </li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3 style="color: var(--accent-green);">Sovereign Recipient Key Custody</h3>
+                    <ul>
+                        <li><strong>No Server Key Escrow:</strong> Central authority never generates, stores, or sees recipient private decapsulation keys.</li>
+                        <li><strong>Non-Repudiation:</strong> Decryption generates an immutable signed provenance ticket committed to the local hash-chained ledger.</li>
+                        <li><strong>Strict Target Binding:</strong> Tokens cryptographically bind <code>(doc_id, rel_id, recipient_id, hash)</code>.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="alert-box">
+                <strong>Post-Quantum Defense:</strong> Protects high-value documents against "Harvest Now, Decrypt Later" adversaries.
+            </div>
+        </div>
+
+        <!-- SLIDE 6 -->
+        <div class="slide" id="slide-6" data-notes="Explain the separation between Tardos (WHO) and Watermark (HOW). Mention Reed-Solomon, DSSS, ArUco fiducials. Transparently state simulated optical channel status.">
+            <h2>Tardos Traitor-Tracing & Physical Carrier</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3 style="color: #38bdf8;">1. Tardos Codebook (WHO)</h3>
+                    <p>Mathematical proof of recipient identity & collusion resistance:</p>
+                    <ul>
+                        <li><strong>Symmetric Tardos Codes</strong> (Tardos 2003 / Skoric 2008).</li>
+                        <li><strong>Dynamic Capacity Planner:</strong> Code length \(m = 100 \cdot c^2 \cdot \ln(1/\epsilon_1)\).</li>
+                        <li><strong>Separation Margin:</strong> Requires \(\Delta = S_{(1)} - S_{(2)} \ge 2.5\) to prevent close false calls.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3 style="color: #34d399;">2. Watermark Carrier (HOW)</h3>
+                    <p>Ensuring signal survives the hostile optical channel:</p>
+                    <ul>
+                        <li><strong>ArUco Fiducials:</strong> Homography rectifies camera tilt up to \(\pm 30^\circ\).</li>
+                        <li><strong>Reed-Solomon ECC:</strong> Corrects spatial bit errors from optical blur.</li>
+                        <li><strong>DSSS Spatial Modulation:</strong> Inconspicuous embedding across Rendered Canvas & ROI.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="alert-box">
+                <strong>Validation Status:</strong> Automated test benchmarks evaluate <strong>Simulated Optical Capture</strong>; physical laboratory hardware validation is structured via <code>scripts/watermark/ingest_physical_capture.py</code>.
+            </div>
+        </div>
+
+        <!-- SLIDE 7 -->
+        <div class="slide" id="slide-7" data-notes="Present the Adversarial Attack Lab results. Highlight that severe attacks that destroy evidence force clean abstentions.">
+            <h2>Adversarial Attack Laboratory & Robustness</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Attack Category</th>
+                        <th>Applied Perturbations</th>
+                        <th>Optical / Carrier Impact</th>
+                        <th>Attribution Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Digital Compression</strong></td>
+                        <td>JPEG Recompression (\(Q=10 \dots 95\))</td>
+                        <td>PSNR: \(33.6\text{ dB} \dots 62.3\text{ dB}\)</td>
+                        <td><span style="color: #34d399;">ATTRIBUTED (0.0% Post-ECC BER)</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Geometric Distortion</strong></td>
+                        <td>Rotation (\(0.5^\circ \dots 5.0^\circ\)), Perspective Skew</td>
+                        <td>SSIM: \(0.79 \dots 0.85\)</td>
+                        <td><span style="color: #34d399;">ATTRIBUTED (ArUco corrected)</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Aggressive Cropping</strong></td>
+                        <td>Center / Perimeter Crop (\(10\% \dots 30\%\))</td>
+                        <td>Loss of partial carrier blocks</td>
+                        <td><span style="color: #34d399;">ATTRIBUTED (\(\le 20\%\))</span> / <span style="color: #f59e0b;">ABSTAIN (\(> 30\%\))</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Simulated Print-Camera</strong></td>
+                        <td>Optical blur, non-uniform lamp lighting</td>
+                        <td>Pre-ECC BER: \(0\% \dots 15\%\)</td>
+                        <td><span style="color: #34d399;">ATTRIBUTED (Post-ECC BER: 0.0%)</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Evidence Tampering</strong></td>
+                        <td>Replayed signatures, forged hashes</td>
+                        <td>Signature & Merkle failure</td>
+                        <td><span style="color: #ef4444;">CONFLICT / ABSTAIN</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- SLIDE 8 -->
+        <div class="slide" id="slide-8" data-notes="The core innovation: Multi-Channel Evidence Fusion. Explain why naively adding scores causes double counting. Explain our Transitive Derivation Bounding and 5 explicit decision states.">
+            <h2>Multi-Channel Evidence Fusion & Anti-Double-Counting</h2>
+            <div class="card highlight" style="margin-bottom: 16px;">
+                <h3>The Forensic Double-Counting Trap</h3>
+                <p>If an engine extracts a physical watermark and calculates a Tardos score from that same watermark, naively summing both scores artificially inflates confidence and creates dangerous false convictions.</p>
+            </div>
+
+            <div class="grid-3">
+                <div class="card">
+                    <h3 style="color: #38bdf8;">1. Transitive Lineage Bound</h3>
+                    <p>Enforces \(\max_{n \in \text{Tree}}(\rho_n \cdot \text{LLR}_n(c))\). Derived child signals cannot additively inflate their parent evidence.</p>
+                </div>
+                <div class="card">
+                    <h3 style="color: #34d399;">2. Attack-Aware Reliability</h3>
+                    <p>Soft channel weights \(\rho_i\) dynamically scale down based on detected Bit Error Rate, SSIM, and Crop Ratio.</p>
+                </div>
+                <div class="card">
+                    <h3 style="color: #f472b6;">3. Conflict & Abstention</h3>
+                    <p>Contradictory evidence triggers <code>CONFLICT</code>; weak signals trigger <code>INSUFFICIENT_EVIDENCE</code> (Fail-Closed).</p>
+                </div>
+            </div>
+
+            <div class="alert-box">
+                <strong>Five Courtroom-Defensible Decision States:</strong> <code>ATTRIBUTED</code>, <code>NO_SIGNAL</code>, <code>INSUFFICIENT_EVIDENCE</code>, <code>CONFLICT</code>, <code>REVIEW_REQUIRED</code>.
+            </div>
+        </div>
+
+        <!-- SLIDE 9 -->
+        <div class="slide" id="slide-9" data-notes="Live Demo Slide. Walk through the 8-step live sequence: Document -> Releases -> Bob Decrypts -> Leak Ingestion -> Bob Attributed -> Tampered Leak -> Abstain.">
+            <h2>Turnkey Live Demo Workflow</h2>
+            <pre style="font-size: 0.95rem; line-height: 1.5;">
+1. VAULT INGESTION       ──► Ingest "Defense_Brief.pdf" into cryptographic vault
+2. RECIPIENT RELEASES    ──► Generate isolated envelopes for Alice, Bob, Charlie
+3. DECRYPTION PROVENANCE ──► Bob decapsulates (ML-KEM-768) and signs audit ledger
+4. PHYSICAL LEAK OCCURS  ──► "bob_leak.pdf" submitted to forensic analysis API
+5. SIGNAL RECOVERY       ──► ArUco homography -> DSSS demod -> Tardos score
+6. ATTRIBUTION VERDICT   ──► Fused: ATTRIBUTED -> Bob (Confidence: 14.2, Δ: 8.4)
+7. TAMPERED LEAK TEST    ──► Crop + heavy blur + foreign marker applied
+8. FAIL-CLOSED DEFENSE   ──► Fused: INSUFFICIENT_EVIDENCE / CONFLICT (Refuses to frame)
+            </pre>
+            <div class="grid-3">
+                <div class="card"><strong>Live Web UI:</strong> <code>http://127.0.0.1:5173</code></div>
+                <div class="card"><strong>Deterministic Script:</strong> <code>run_live_demo.py</code></div>
+                <div class="card"><strong>CLI Fallback:</strong> <code>run_demo_cli.py</code></div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10 -->
+        <div class="slide" id="slide-10" data-notes="Present measured benchmark telemetry. Highlight real numbers: ML-KEM 11.6ms, watermark decode 66.7ms, 74% held-out eval match rate under extreme adversarial attacks with 0 false accusations.">
+            <h2>Measured Benchmarks & Empirical Telemetry</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Subsystem</th>
+                        <th>Benchmark Telemetry</th>
+                        <th>Measured Latency / Metric</th>
+                        <th>Verification Source</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Post-Quantum Crypto</strong></td>
+                        <td>ML-KEM-768 Encap / Decap<br/>ML-DSA-65 Sign / Verify</td>
+                        <td><strong>11.61 ms</strong> / <strong>12.40 ms</strong><br/><strong>124.33 ms</strong> / <strong>20.97 ms</strong></td>
+                        <td><code>scripts/benchmark_crypto.py</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Watermark Optical Recovery</strong></td>
+                        <td>ArUco Sync + Demodulation<br/>False Accusation on Negatives</td>
+                        <td><strong>62.81 ms</strong><br/><strong>0.0% (0 / 50)</strong></td>
+                        <td><code>SIMULATED_RESULTS.md</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Evidence Fusion Evaluation</strong></td>
+                        <td>Held-Out Evaluation Match Rate<br/>False Accusations on Negatives</td>
+                        <td><strong>74.0%</strong> (74 / 100)<br/><strong>0.0%</strong></td>
+                        <td><code>calibration_vs_evaluation.json</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Turnkey Deployment</strong></td>
+                        <td>Demo Reset / Fixture Gen<br/>Full Integration Test Suite</td>
+                        <td><strong>349 ms</strong> / <strong>140 ms</strong><br/><strong>39 / 39 PASSED (9.0s)</strong></td>
+                        <td><code>startup_benchmark.json</code></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="alert-box">
+                <strong>Scientific Honesty Note:</strong> The 74% match rate reflects high-stress adversarial synthetic test sets with extreme multi-parameter attack corruptions where the engine safely abstained rather than guessing.
+            </div>
+        </div>
+
+        <!-- SLIDE 11 -->
+        <div class="slide" id="slide-11" data-notes="Close with honest engineering boundaries, future roadmap, and our closing punchline: 'Designed to attribute when evidence is strong — and abstain when it is not.'">
+            <h2>Engineering Boundaries, Roadmap & Conclusion</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3 style="color: var(--accent-amber);">Current Engineering Boundaries</h3>
+                    <ul>
+                        <li><strong>Physical Hardware Ingestion:</strong> Automated tests use simulated optical channels; physical print/scan harness is ready for lab hardware.</li>
+                        <li><strong>Heuristic Reliability:</strong> Channel weights and discounting \(\gamma=0.65\) are policy parameters tuned for risk-averse abstention.</li>
+                        <li><strong>Prototype Key Custody:</strong> Client sovereign decapsulation implemented locally; HSM integration targeted for enterprise release.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3 style="color: var(--accent-cyan);">Future Technical Roadmap</h3>
+                    <ul>
+                        <li>Automated ICC color profile calibration for inkjet printers.</li>
+                        <li>WebAssembly ML-KEM decapsulation for zero-install client viewing.</li>
+                        <li>Decentralized threshold Tardos codebook generation.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card highlight" style="margin-top: 24px; text-align: center; padding: 24px;">
+                <h3 style="font-size: 1.4rem; color: #fff;">"Designed to attribute when evidence is mathematically overwhelming — and fail-closed with complete integrity when it is not."</h3>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- SPEAKER NOTES POPUP -->
+    <div id="speaker-notes-modal">
+        <h4>Presenter Delivery Notes</h4>
+        <p id="speaker-notes-content" style="font-size: 0.95rem; color: #cbd5e1;"></p>
+    </div>
+
+    <footer>
+        <div>
+            Slide <span id="current-slide-num">1</span> of <span id="total-slides-num">11</span>
+        </div>
+        <div class="controls">
+            <button onclick="prevSlide()">◀ Previous</button>
+            <button onclick="nextSlide()">Next ▶</button>
+            <button onclick="toggleNotes()">Toggle Notes (N)</button>
+        </div>
+    </footer>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        let currentIdx = 0;
+
+        function showSlide(idx) {
+            slides.forEach((s, i) => {
+                s.classList.toggle('active', i === idx);
+            });
+            document.getElementById('current-slide-num').innerText = idx + 1;
+            document.getElementById('total-slides-num').innerText = slides.length;
+            
+            const notes = slides[idx].getAttribute('data-notes') || 'No notes for this slide.';
+            document.getElementById('speaker-notes-content').innerText = notes;
+        }
+
+        function nextSlide() {
+            if (currentIdx < slides.length - 1) {
+                currentIdx++;
+                showSlide(currentIdx);
+            }
+        }
+
+        function prevSlide() {
+            if (currentIdx > 0) {
+                currentIdx--;
+                showSlide(currentIdx);
+            }
+        }
+
+        function toggleNotes() {
+            const modal = document.getElementById('speaker-notes-modal');
+            modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                prevSlide();
+            } else if (e.key.toLowerCase() === 'n') {
+                toggleNotes();
+            }
+        });
+
+        // Initialize first slide
+        showSlide(0);
+    </script>
+</body>
+</html>

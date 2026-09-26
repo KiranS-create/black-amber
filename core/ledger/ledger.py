@@ -122,6 +122,59 @@ class TamperEvidentLedger:
 
         return (len(errors) == 0, errors)
 
+    def verify_chain_and_signatures(
+        self,
+        recipient_public_keys: Optional[Dict[str, bytes]] = None
+    ) -> Tuple[bool, List[str]]:
+        """
+        Verify both hash-chain integrity and cryptographic authenticity of digital signatures:
+        1. Full verify_chain() structural, sequential, and hash validation
+        2. ML-DSA-65 post-quantum signature verification across all signed events
+        """
+        is_chain_valid, errors = self.verify_chain()
+        if not is_chain_valid:
+            return (False, errors)
+
+        from core.crypto.signatures import MLDSA65
+
+        for idx, event in enumerate(self.events):
+            if not event.signature:
+                continue
+
+            pub_bytes = None
+            if recipient_public_keys and event.recipient_id in recipient_public_keys:
+                pub_bytes = recipient_public_keys[event.recipient_id]
+            elif event.signer_public_key_b64:
+                try:
+                    pub_bytes = base64.b64decode(event.signer_public_key_b64)
+                except Exception:
+                    pub_bytes = None
+
+            if not pub_bytes:
+                errors.append(
+                    f"Missing public key for signature verification at index {idx} (event {event.event_id}, recipient {event.recipient_id})"
+                )
+                continue
+
+            try:
+                sig_bytes = base64.b64decode(event.signature)
+                sign_payload = (
+                    f"DECRYPTION_PROVENANCE:{event.event_id}:{event.document_id}:"
+                    f"{event.release_id}:{event.recipient_id}:{event.artifact_hash}:"
+                    f"{event.previous_event_hash}:{event.timestamp}"
+                ).encode('utf-8')
+
+                if not MLDSA65.verify(pub_bytes, sign_payload, sig_bytes):
+                    errors.append(
+                        f"Cryptographic signature mismatch at index {idx} (event {event.event_id}) for recipient '{event.recipient_id}'"
+                    )
+            except Exception as ex:
+                errors.append(
+                    f"Signature verification error at index {idx} (event {event.event_id}): {str(ex)}"
+                )
+
+        return (len(errors) == 0, errors)
+
     def get_events_for_release(self, release_id: str) -> List[EvidenceEvent]:
         return [e for e in self.events if e.release_id == release_id]
 

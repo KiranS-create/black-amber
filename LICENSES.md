@@ -18,3 +18,7 @@ This project is licensed under the Apache License 2.0.
 | `reportlab` | >=4.1.0 | Document synthesis and benchmark PDF generation | BSD | PyPI |
 | `pytest` | >=8.0.0 | Cryptographic and integration test framework | MIT | PyPI |
 | `React` / `TypeScript` | 18.2 / 5.2 | Frontend user interface | MIT | npm |
+| `Pillow` | 9.4.0 | Image encoding, decoding, resizing, cropping, color conversions (REUSE) | HPND | PyPI / python-pillow |
+| `OpenCV` (`opencv-python`) | 4.13.0 | Perspective homography, spatial filtering, lighting gradients (REUSE) | Apache 2.0 | PyPI / opencv |
+| `NumPy` | 1.26.4 | Deterministic array math, noise simulation, vector distance metrics (REUSE) | BSD 3-Clause | PyPI / numpy |
+| `SciPy` | 1.10.0 | Statistical correlation, signal convolution routines (REUSE) | BSD 3-Clause | PyPI / scipy |

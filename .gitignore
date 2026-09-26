@@ -50,6 +50,8 @@ data/
 storage/
 temp_leaks/
 keystore/
+.secrets/
+*.keystore
 *.key
 *.pem
 *.priv

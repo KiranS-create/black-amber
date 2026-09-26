@@ -1,6 +1,30 @@
-from enum import Enum
 from typing import List, Optional, Dict, Any
 from pydantic import BaseModel, Field
+import base64
+
+from core.attribution.evidence import (
+    AttributionState,
+    EvidenceFamily,
+    EvidenceConfidenceLevel,
+    EvidenceSource,
+    TargetBinding,
+    EvidenceObservation,
+    WatermarkObservation,
+    TraceabilityObservation,
+    ProvenanceObservation,
+    LedgerObservation,
+    IntegrityObservation,
+    AttackContextObservation,
+    EvidenceBundle,
+)
+from core.attribution.dependency import EvidenceDependencyGraph
+from core.attribution.reliability import AttackAwareReliabilityCalibrator
+from core.attribution.policy import DecisionPolicy
+from core.attribution.fusion import (
+    EvidenceFusionEngine,
+    FusedAttributionResult,
+    CandidateEvaluation,
+)
 
 from core.traceability.provider import (
     TraceabilityProvider,
@@ -10,19 +34,6 @@ from core.traceability.provider import (
 from core.ledger.ledger import TamperEvidentLedger, default_ledger, EvidenceEvent
 from core.recipient import RecipientRegistry, default_registry
 from core.crypto.signatures import MLDSA65
-import base64
-
-class AttributionState(str, Enum):
-    ATTRIBUTED = "ATTRIBUTED"
-    CONFLICT = "CONFLICT"
-    INSUFFICIENT_EVIDENCE = "INSUFFICIENT_EVIDENCE"
-    NO_SIGNAL = "NO_SIGNAL"
-
-class EvidenceSource(str, Enum):
-    TRACEABILITY_MARKER = "TRACEABILITY_MARKER"
-    AUDIT_LEDGER = "AUDIT_LEDGER"
-    DOCUMENT_INTEGRITY = "DOCUMENT_INTEGRITY"
-    RECIPIENT_SIGNATURE = "RECIPIENT_SIGNATURE"
 
 class EvidenceItem(BaseModel):
     source: EvidenceSource
@@ -45,28 +56,55 @@ class AttributionResult(BaseModel):
     evidence_items: List[EvidenceItem] = Field(default_factory=list)
     summary: str
     should_abstain: bool = True
+    fused_details: Optional[Dict[str, Any]] = None
 
 class AttributionEngine:
     """
-    Fail-Closed Attribution Engine for SIH26237.
-    Analyzes leaked document artifacts, extracts cryptographic markers,
-    correlates with tamper-evident ledger events, and verifies signatures.
+    Fail-Closed Attribution & Multi-Channel Evidence Fusion Engine for SIH26237.
+    
+    Provides:
+    1. Direct artifact analysis via `analyze_leak(leaked_document_bytes, ...)`
+    2. Multi-channel evidence bundle fusion via `analyze_evidence_bundle(bundle, ...)`
     """
     def __init__(
         self,
         traceability_provider: Optional[TraceabilityProvider] = None,
         ledger: Optional[TamperEvidentLedger] = None,
-        registry: Optional[RecipientRegistry] = None
+        registry: Optional[RecipientRegistry] = None,
+        fusion_engine: Optional[EvidenceFusionEngine] = None
     ):
         self.traceability_provider = traceability_provider or PrototypeTraceabilityProvider()
         self.ledger = ledger or default_ledger
         self.registry = registry or default_registry
+        self.fusion_engine = fusion_engine or EvidenceFusionEngine()
+
+    def analyze_evidence_bundle(
+        self,
+        bundle: EvidenceBundle,
+        policy: Optional[DecisionPolicy] = None
+    ) -> FusedAttributionResult:
+        """
+        Execute multi-channel evidence fusion across heterogeneous observations.
+        """
+        engine = self.fusion_engine
+        if policy:
+            engine = EvidenceFusionEngine(
+                dependency_graph=self.fusion_engine.dependency_graph,
+                calibrator=self.fusion_engine.calibrator,
+                policy=policy
+            )
+        return engine.fuse(bundle)
 
     def analyze_leak(
         self,
         leaked_document_bytes: bytes,
         expected_release_id: Optional[str] = None
     ) -> AttributionResult:
+        """
+        Analyze leaked document bytes, extract cryptographic markers,
+        correlate with tamper-evident ledger events, verify signatures,
+        and produce a fail-closed attribution result.
+        """
         evidence_items: List[EvidenceItem] = []
 
         # 1. Extract and verify traceability marker

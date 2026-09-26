@@ -1,0 +1,120 @@
+{
+  "timestamp": "2026-09-26T06:42:51Z",
+  "total_scenarios": 5,
+  "passed_scenarios": 5,
+  "accuracy_rate": 1.0,
+  "duration_seconds": 0.0,
+  "decision_policy": {
+    "min_attribution_score": 6.0,
+    "min_separation_margin": 2.5,
+    "high_confidence_score": 12.0,
+    "strict_provenance_required": false
+  },
+  "scenario_results": [
+    {
+      "scenario": "Clean Multi-Channel Leak",
+      "bundle_id": "SCENARIO_01_CLEAN_ALICE",
+      "category": "TRUE_POSITIVE",
+      "expected_state": "ATTRIBUTED",
+      "actual_state": "ATTRIBUTED",
+      "expected_candidate": "alice",
+      "actual_candidate": "alice",
+      "fused_score": 18.075,
+      "confidence": 1.0,
+      "confidence_level": "HIGH",
+      "should_abstain": false,
+      "passed": true,
+      "summary": "Successfully attributed leak to recipient 'alice' (HIGH confidence).",
+      "reasoning_steps": [
+        "Initiated multi-channel fusion for bundle 'SCENARIO_01_CLEAN_ALICE'.",
+        "Document and release target bindings validated successfully.",
+        "Calibrated 3 valid forensic observations (0 invalid/suppressed).",
+        "Candidate ranking computed: Top 'alice' (score=18.07), Runner-up 'None' (score=0.00), Margin=18.07.",
+        "Attribution criteria satisfied for 'alice' with fused score 18.07, confidence HIGH, posterior 1.0000."
+      ]
+    },
+    {
+      "scenario": "Severe Attack Fail-Closed Abstention",
+      "bundle_id": "SCENARIO_02_DEGRADED_BOB",
+      "category": "CORRECT_ABSTENTION",
+      "expected_state": "INSUFFICIENT_EVIDENCE",
+      "actual_state": "INSUFFICIENT_EVIDENCE",
+      "expected_candidate": "bob",
+      "actual_candidate": "bob",
+      "fused_score": 0.176,
+      "confidence": 0.5438,
+      "confidence_level": "LOW",
+      "should_abstain": true,
+      "passed": true,
+      "summary": "Abstain: Evidence strength (0.18) is insufficient for reliable attribution.",
+      "reasoning_steps": [
+        "Initiated multi-channel fusion for bundle 'SCENARIO_02_DEGRADED_BOB'.",
+        "Document and release target bindings validated successfully.",
+        "Calibrated 1 valid forensic observations (0 invalid/suppressed).",
+        "Candidate ranking computed: Top 'bob' (score=0.18), Runner-up 'None' (score=0.00), Margin=0.18.",
+        "Top score 0.18 is below minimum attribution threshold 6.0."
+      ]
+    },
+    {
+      "scenario": "Inter-Channel Conflict",
+      "bundle_id": "SCENARIO_03_CONFLICT",
+      "category": "CONFLICT_DETECTION",
+      "expected_state": "CONFLICT",
+      "actual_state": "CONFLICT",
+      "expected_candidate": null,
+      "actual_candidate": "charlie",
+      "fused_score": 6.912,
+      "confidence": 0.999,
+      "confidence_level": "LOW",
+      "should_abstain": true,
+      "passed": true,
+      "summary": "Abstain: Irreconcilable conflict between candidates 'charlie' and 'dave'.",
+      "reasoning_steps": [
+        "Initiated multi-channel fusion for bundle 'SCENARIO_03_CONFLICT'.",
+        "Document and release target bindings validated successfully.",
+        "Calibrated 2 valid forensic observations (0 invalid/suppressed).",
+        "Candidate ranking computed: Top 'charlie' (score=6.91), Runner-up 'dave' (score=6.24), Margin=0.67.",
+        "Conflict detected: Candidate 'charlie' (6.91) and 'dave' (6.24) both exceed threshold with insufficient separation (0.67 < 2.5)."
+      ]
+    },
+    {
+      "scenario": "Cross-Document Contamination",
+      "bundle_id": "SCENARIO_04_CROSS_CONTAMINATION",
+      "category": "CONTAMINATION_ISOLATION",
+      "expected_state": "CONFLICT",
+      "actual_state": "CONFLICT",
+      "expected_candidate": null,
+      "actual_candidate": null,
+      "fused_score": 0.0,
+      "confidence": 0.0,
+      "confidence_level": "NONE",
+      "should_abstain": true,
+      "passed": true,
+      "summary": "Abstain: Evidence bundle contains conflicting target bindings (cross-document contamination).",
+      "reasoning_steps": [
+        "Initiated multi-channel fusion for bundle 'SCENARIO_04_CROSS_CONTAMINATION'.",
+        "Binding check failed: Observation 'ledg_alien' document_id 'DOC_PUBLIC' does not match target document_id 'DOC_TOP_SECRET'; Observation 'ledg_alien' release_id 'REL_Y' does not match target release_id 'REL_X'"
+      ]
+    },
+    {
+      "scenario": "Empty Evidence No-Signal",
+      "bundle_id": "SCENARIO_05_NO_SIGNAL",
+      "category": "NO_SIGNAL",
+      "expected_state": "NO_SIGNAL",
+      "actual_state": "NO_SIGNAL",
+      "expected_candidate": null,
+      "actual_candidate": null,
+      "fused_score": 0.0,
+      "confidence": 0.0,
+      "confidence_level": "NONE",
+      "should_abstain": true,
+      "passed": true,
+      "summary": "Abstain: No valid forensic signal detected across any evidence channel.",
+      "reasoning_steps": [
+        "Initiated multi-channel fusion for bundle 'SCENARIO_05_NO_SIGNAL'.",
+        "Document and release target bindings validated successfully.",
+        "No valid forensic signals detected across any channel."
+      ]
+    }
+  ]
+}

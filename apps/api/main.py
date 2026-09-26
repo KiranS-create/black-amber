@@ -1,163 +1,129 @@
-import os
-import io
 import base64
-import hashlib
+import os
+import time
+import uuid
 from contextlib import asynccontextmanager
-from typing import List, Dict, Any, Optional
-from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Depends
+from typing import Any, Dict, List, Optional
+from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
-from core.recipient import RecipientRegistry, PublicRecipient, default_registry
-from core.release import ReleaseManager, DocumentRelease, ReleaseRecipientPackage, default_release_manager
-from core.provenance.decryption import RecipientDecryptionClient, default_decryption_client
-from core.traceability.provider import PrototypeTraceabilityProvider
-from core.ledger.ledger import TamperEvidentLedger, EvidenceEvent, default_ledger
-from core.attribution.engine import AttributionEngine, AttributionResult, default_attribution_engine
+# Python 3.9 typing compatibility: flatten nested Literal types for pydantic OpenAPI schema generation
+try:
+    import pydantic.json_schema as _pjs
+    _orig_get_literal_values = _pjs.get_literal_values
+    def _patched_get_literal_values(annotation, *args, **kwargs):
+        for val in _orig_get_literal_values(annotation, *args, **kwargs):
+            if hasattr(val, "__args__"):
+                yield from _patched_get_literal_values(val, *args, **kwargs)
+            else:
+                yield val
+    _pjs.get_literal_values = _patched_get_literal_values
+    import typing_inspection
+    typing_inspection.get_literal_values = _patched_get_literal_values
+except Exception:
+    pass
+
+from apps.api.config import config
+from apps.api.errors import register_error_handlers, APIException, ErrorCode
+from apps.api.orchestrator import default_orchestrator
+from apps.api.routers import (
+    analysis,
+    documents,
+    evidence,
+    leaks,
+    recipients,
+    releases,
+    system,
+)
+from core.recipient import default_registry
+from core.release import default_release_manager
+from core.provenance.decryption import default_decryption_client
+from core.ledger.ledger import default_ledger
+from core.attribution.engine import AttributionResult, default_attribution_engine
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup
+    # Startup: ensure demo recipients and initial storage
     default_registry.init_demo_recipients()
     yield
     # Shutdown
 
 app = FastAPI(
-    title="SIH26237 — Cryptographic Attribution & Provenance API",
-    version="0.1.0",
-    description="Post-quantum multi-recipient document distribution and tamper-evident decryption provenance API.",
+    title=config.title,
+    version=config.version,
+    description=config.description,
     lifespan=lifespan
 )
 
+# Request ID & Logging Middleware
+@app.middleware("http")
+async def correlation_and_audit_middleware(request: Request, call_next):
+    req_id = request.headers.get("X-Request-ID") or f"req_{uuid.uuid4().hex[:10]}"
+    request.state.request_id = req_id
+    start_time = time.perf_counter()
+
+    response = await call_next(request)
+    duration_ms = (time.perf_counter() - start_time) * 1000.0
+
+    response.headers["X-Request-ID"] = req_id
+    response.headers["X-Response-Time-MS"] = f"{duration_ms:.2f}"
+    return response
+
+# CORS Middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=config.allowed_cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Models
-class EnrollRecipientRequest(BaseModel):
-    name: str
-    recipient_id: Optional[str] = None
+# Register uniform error handlers
+register_error_handlers(app)
 
-class CreateReleaseRequest(BaseModel):
-    document_name: str
-    document_base64: str
-    issuer_id: str = "HQ_AUTHORITY"
-    recipient_ids: List[str]
+# Mount Modular Routers
+app.include_router(system.router)
+app.include_router(documents.router)
+app.include_router(recipients.router)
+app.include_router(releases.router)
+app.include_router(leaks.router)
+app.include_router(analysis.router)
+app.include_router(evidence.router)
 
-class DecryptRequest(BaseModel):
-    recipient_id: str
-
-class AnalyzeLeakRequest(BaseModel):
+# -------------------------------------------------------------
+# Backward-Compatibility Routes (v0.1 Contract Support)
+# -------------------------------------------------------------
+class LegacyAnalyzeLeakRequest(BaseModel):
     leaked_document_base64: str
     release_id: Optional[str] = None
 
-# Routes
-@app.get("/health", tags=["System"])
-def health_check():
-    return {
-        "status": "healthy",
-        "service": "SIH26237 API",
-        "version": "0.1.0",
-        "ledger_events_count": len(default_ledger.events)
-    }
-
-@app.post("/recipients", response_model=PublicRecipient, tags=["Recipients"])
-def enroll_recipient(req: EnrollRecipientRequest):
-    recipient = default_registry.enroll(name=req.name, recipient_id=req.recipient_id)
-    return recipient.to_public()
-
-@app.get("/recipients", response_model=List[PublicRecipient], tags=["Recipients"])
-def list_recipients():
-    return default_registry.list_public()
-
-@app.post("/releases", response_model=DocumentRelease, tags=["Releases"])
-def create_release(req: CreateReleaseRequest):
+@app.post(
+    "/leaks/analyze",
+    response_model=AttributionResult,
+    tags=["Attribution (Legacy)"],
+    summary="Legacy leak analysis endpoint (backward compatible)"
+)
+def legacy_analyze_leak(req: LegacyAnalyzeLeakRequest):
+    """
+    Direct synchronous leak analysis returning raw AttributionResult
+    for backward compatibility with v0.1 API clients.
+    """
+    from apps.api.security import validate_base64_payload
     try:
-        doc_bytes = base64.b64decode(req.document_base64)
-    except Exception:
-        raise HTTPException(status_code=400, detail="Invalid document base64 payload")
-
-    try:
-        release = default_release_manager.create_release(
-            document_bytes=doc_bytes,
-            document_name=req.document_name,
-            issuer_id=req.issuer_id,
-            recipient_ids=req.recipient_ids
+        leaked_bytes = validate_base64_payload(
+            req.leaked_document_base64,
+            max_size_bytes=config.max_upload_size_bytes
         )
-        return release
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-@app.get("/releases", response_model=List[DocumentRelease], tags=["Releases"])
-def list_releases():
-    return default_release_manager.list_releases()
-
-@app.get("/releases/{release_id}", response_model=DocumentRelease, tags=["Releases"])
-def get_release(release_id: str):
-    rel = default_release_manager.get_release(release_id)
-    if not rel:
-        raise HTTPException(status_code=404, detail="Release not found")
-    return rel
-
-@app.post("/releases/{release_id}/decrypt", tags=["Decryption"])
-def decrypt_release_package(release_id: str, req: DecryptRequest):
-    release = default_release_manager.get_release(release_id)
-    if not release:
-        raise HTTPException(status_code=404, detail="Release not found")
-    
-    package = default_release_manager.get_recipient_package(release_id, req.recipient_id)
-    if not package:
-        raise HTTPException(status_code=404, detail=f"No package found for recipient {req.recipient_id}")
-
-    recipient = default_registry.get(req.recipient_id)
-    if not recipient:
-        raise HTTPException(status_code=404, detail="Recipient not enrolled")
-
-    try:
-        plaintext, traceable_copy, event, event_hash = default_decryption_client.decrypt_package(
-            package=package,
-            recipient=recipient
-        )
-        return {
-            "status": "SUCCESS",
-            "release_id": release_id,
-            "recipient_id": req.recipient_id,
-            "document_hash": package.document_hash,
-            "traceable_document_base64": base64.b64encode(traceable_copy).decode('utf-8'),
-            "event_id": event.event_id,
-            "event_hash": event_hash,
-            "timestamp": event.timestamp
-        }
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Decryption failed: {str(e)}")
-
-@app.post("/leaks/analyze", response_model=AttributionResult, tags=["Attribution"])
-def analyze_leak(req: AnalyzeLeakRequest):
-    try:
-        leaked_bytes = base64.b64decode(req.leaked_document_base64)
-    except Exception:
-        raise HTTPException(status_code=400, detail="Invalid leaked document base64 payload")
+        raise APIException(
+            code=ErrorCode.INVALID_ANALYSIS_REQUEST,
+            message=f"Invalid or oversized base64 payload for leaked document: {str(e)}",
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
 
     result = default_attribution_engine.analyze_leak(
         leaked_document_bytes=leaked_bytes,
         expected_release_id=req.release_id
     )
     return result
-
-@app.get("/evidence/{release_id}", response_model=List[EvidenceEvent], tags=["Audit"])
-def get_release_evidence(release_id: str):
-    return default_ledger.get_events_for_release(release_id)
-
-@app.get("/ledger/verify", tags=["Audit"])
-def verify_ledger():
-    is_valid, errors = default_ledger.verify_chain()
-    return {
-        "is_valid": is_valid,
-        "total_events": len(default_ledger.events),
-        "chain_tip": default_ledger.get_last_event_hash(),
-        "errors": errors
-    }

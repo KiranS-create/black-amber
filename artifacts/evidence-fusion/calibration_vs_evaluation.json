@@ -1,0 +1,13 @@
+{
+  "timestamp": "2026-09-26T07:06:10Z",
+  "train_set": {
+    "sample_count": 100,
+    "decision_match_rate": 0.6,
+    "false_attribution_count": 7
+  },
+  "held_out_eval_set": {
+    "sample_count": 100,
+    "decision_match_rate": 0.74,
+    "false_attribution_count": 4
+  }
+}

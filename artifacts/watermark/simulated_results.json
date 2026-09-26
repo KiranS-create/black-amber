@@ -1,0 +1,5194 @@
+[
+  {
+    "test_id": "SIM-CALIB-01",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "Simulation Engine",
+    "printer_type": "Simulation",
+    "paper": "Synthetic Canvas (800x1000)",
+    "camera": "Simulated Optical Sensor",
+    "camera_model_if_known": null,
+    "lighting": "Gradient 20%",
+    "distance": "~30cm (canonical scale)",
+    "angle": "0.0 deg",
+    "document_id": "DOC_CALIB",
+    "release_id": "REL_1",
+    "artifact_hash": "0ec11a33f76752e4a4b31ee79b53fdcd32ff774e8a324e2dc51fa278e441217f",
+    "capture_hash": "f6ef3a4c7ff93ef5d2e353ed5a8bd0032ee0feef7780d1485439133a4749128b",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.3251,
+    "pre_ecc_ber": 0.0667,
+    "post_ecc_ber": 0.0,
+    "ecc_corrected": 4,
+    "watermark_status": "RECOVERED",
+    "recovered_bits": 125,
+    "expected_bits": 125,
+    "tardos_state": "ATTRIBUTED",
+    "candidate": "alice",
+    "abstention": false,
+    "sync_latency_ms": 55.76,
+    "demod_latency_ms": 45.26,
+    "ecc_latency_ms": 2.94,
+    "total_latency_ms": 106.51,
+    "notes": "Calibration run: angle=0.0deg, blur_sigma=0.6",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          0,
+          2,
+          3,
+          1
+        ],
+        "reprojection_error": 0.3250623345375061,
+        "homography_matrix": [
+          [
+            1.3331747105772238,
+            -0.034708931311535275,
+            13.825860196295515
+          ],
+          [
+            0.035156211641282985,
+            1.3332111443573742,
+            -9.709758336631218
+          ],
+          [
+            3.4832340882358603e-07,
+            2.0780117288852577e-07,
+            0.9999999999999999
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          1,
+          0
+        ],
+        "mean_absolute_score": 2.840524196624756,
+        "min_margin": 0.1504499763250351
+      },
+      "ecc": {
+        "ecc_success": true,
+        "crc_verified": true,
+        "binding_verified": true,
+        "length_verified": true,
+        "errata_count": 4,
+        "uncorrectable": false,
+        "codeword_length": 125
+      },
+      "image_resolution": "600x750",
+      "reprojection_error": 0.3250623345375061,
+      "sync_latency_ms": 55.76,
+      "demod_latency_ms": 45.26,
+      "ecc_latency_ms": 2.94,
+      "total_decode_latency_ms": 106.51
+    }
+  },
+  {
+    "test_id": "SIM-CALIB-02",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "Simulation Engine",
+    "printer_type": "Simulation",
+    "paper": "Synthetic Canvas (800x1000)",
+    "camera": "Simulated Optical Sensor",
+    "camera_model_if_known": null,
+    "lighting": "Gradient 20%",
+    "distance": "~30cm (canonical scale)",
+    "angle": "10.0 deg",
+    "document_id": "DOC_CALIB",
+    "release_id": "REL_2",
+    "artifact_hash": "d32b92619d08efc2e0a76a06b90ec29f90a64843cda35f2b5f47d7738dfc1ea0",
+    "capture_hash": "786972ed97a7ff2f37494f970d2dc3280861b705e8285238b9a33a16391860e9",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.4423,
+    "pre_ecc_ber": 0.0833,
+    "post_ecc_ber": 0.0,
+    "ecc_corrected": 5,
+    "watermark_status": "RECOVERED",
+    "recovered_bits": 125,
+    "expected_bits": 125,
+    "tardos_state": "ATTRIBUTED",
+    "candidate": "alice",
+    "abstention": false,
+    "sync_latency_ms": 42.58,
+    "demod_latency_ms": 45.27,
+    "ecc_latency_ms": 2.3,
+    "total_latency_ms": 94.14,
+    "notes": "Calibration run: angle=10.0deg, blur_sigma=0.8",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          1,
+          2,
+          0,
+          3
+        ],
+        "reprojection_error": 0.442268431186676,
+        "homography_matrix": [
+          [
+            1.4028306114181854,
+            -0.04931007575437576,
+            -0.8870085902975975
+          ],
+          [
+            0.07468674172189597,
+            1.3644094925964503,
+            -33.22746980925452
+          ],
+          [
+            2.045325089661844e-05,
+            -2.624281201896863e-06,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          1,
+          1
+        ],
+        "mean_absolute_score": 1.9912360906600952,
+        "min_margin": 0.30149900913238525
+      },
+      "ecc": {
+        "ecc_success": true,
+        "crc_verified": true,
+        "binding_verified": true,
+        "length_verified": true,
+        "errata_count": 5,
+        "uncorrectable": false,
+        "codeword_length": 125
+      },
+      "image_resolution": "600x750",
+      "reprojection_error": 0.442268431186676,
+      "sync_latency_ms": 42.58,
+      "demod_latency_ms": 45.27,
+      "ecc_latency_ms": 2.3,
+      "total_decode_latency_ms": 94.14
+    }
+  },
+  {
+    "test_id": "SIM-CALIB-03",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "Simulation Engine",
+    "printer_type": "Simulation",
+    "paper": "Synthetic Canvas (800x1000)",
+    "camera": "Simulated Optical Sensor",
+    "camera_model_if_known": null,
+    "lighting": "Gradient 20%",
+    "distance": "~30cm (canonical scale)",
+    "angle": "15.0 deg",
+    "document_id": "DOC_CALIB",
+    "release_id": "REL_3",
+    "artifact_hash": "03e0b859d20b7ca396770731af7f902d746fa6e016dba79e9abf5eb79a52c82d",
+    "capture_hash": "e16842e234cdbda63f587720e40f56c215f9fa9e4c07832415112ea4f6cb7ef6",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.4791,
+    "pre_ecc_ber": 0.0333,
+    "post_ecc_ber": 0.0,
+    "ecc_corrected": 2,
+    "watermark_status": "RECOVERED",
+    "recovered_bits": 125,
+    "expected_bits": 125,
+    "tardos_state": "ATTRIBUTED",
+    "candidate": "alice",
+    "abstention": false,
+    "sync_latency_ms": 35.57,
+    "demod_latency_ms": 45.59,
+    "ecc_latency_ms": 2.56,
+    "total_latency_ms": 86.26,
+    "notes": "Calibration run: angle=15.0deg, blur_sigma=1.0",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          0,
+          3,
+          1,
+          2
+        ],
+        "reprojection_error": 0.47905683517456055,
+        "homography_matrix": [
+          [
+            1.3820435007267247,
+            -0.05038705419567329,
+            -15.693446940329688
+          ],
+          [
+            -0.022505800564510618,
+            1.3577748627308523,
+            -30.62945883782717
+          ],
+          [
+            -5.662472468643245e-05,
+            -1.7203092983637887e-05,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          0,
+          0
+        ],
+        "mean_absolute_score": 1.8822396993637085,
+        "min_margin": 0.07089996337890625
+      },
+      "ecc": {
+        "ecc_success": true,
+        "crc_verified": true,
+        "binding_verified": true,
+        "length_verified": true,
+        "errata_count": 2,
+        "uncorrectable": false,
+        "codeword_length": 125
+      },
+      "image_resolution": "600x750",
+      "reprojection_error": 0.47905683517456055,
+      "sync_latency_ms": 35.57,
+      "demod_latency_ms": 45.59,
+      "ecc_latency_ms": 2.56,
+      "total_decode_latency_ms": 86.26
+    }
+  },
+  {
+    "test_id": "SIM-CALIB-04",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "Simulation Engine",
+    "printer_type": "Simulation",
+    "paper": "Synthetic Canvas (800x1000)",
+    "camera": "Simulated Optical Sensor",
+    "camera_model_if_known": null,
+    "lighting": "Gradient 20%",
+    "distance": "~30cm (canonical scale)",
+    "angle": "20.0 deg",
+    "document_id": "DOC_CALIB",
+    "release_id": "REL_4",
+    "artifact_hash": "e3d5a236cd8dddc68407046d90ca4c442e254d2bc276444a871c550900c8e869",
+    "capture_hash": "0b73db0901818a0eaf79298bda58ae84450cd799131656d09b32f33e33fd624c",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.4697,
+    "pre_ecc_ber": 0.05,
+    "post_ecc_ber": 0.0,
+    "ecc_corrected": 3,
+    "watermark_status": "RECOVERED",
+    "recovered_bits": 125,
+    "expected_bits": 125,
+    "tardos_state": "ATTRIBUTED",
+    "candidate": "alice",
+    "abstention": false,
+    "sync_latency_ms": 29.13,
+    "demod_latency_ms": 32.14,
+    "ecc_latency_ms": 1.56,
+    "total_latency_ms": 64.76,
+    "notes": "Calibration run: angle=20.0deg, blur_sigma=1.2",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          0,
+          1,
+          3,
+          2
+        ],
+        "reprojection_error": 0.46968793869018555,
+        "homography_matrix": [
+          [
+            1.3953948275688952,
+            -0.011654673978635907,
+            -30.0022027966617
+          ],
+          [
+            0.0463680059923729,
+            1.3427136023291266,
+            -19.111469499774152
+          ],
+          [
+            -2.290077717913209e-05,
+            -3.191140269221911e-05,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          0,
+          1
+        ],
+        "mean_absolute_score": 1.896297812461853,
+        "min_margin": 0.21742431819438934
+      },
+      "ecc": {
+        "ecc_success": true,
+        "crc_verified": true,
+        "binding_verified": true,
+        "length_verified": true,
+        "errata_count": 3,
+        "uncorrectable": false,
+        "codeword_length": 125
+      },
+      "image_resolution": "600x750",
+      "reprojection_error": 0.46968793869018555,
+      "sync_latency_ms": 29.13,
+      "demod_latency_ms": 32.14,
+      "ecc_latency_ms": 1.56,
+      "total_decode_latency_ms": 64.76
+    }
+  },
+  {
+    "test_id": "SIM-CALIB-05",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "Simulation Engine",
+    "printer_type": "Simulation",
+    "paper": "Synthetic Canvas (800x1000)",
+    "camera": "Simulated Optical Sensor",
+    "camera_model_if_known": null,
+    "lighting": "Gradient 20%",
+    "distance": "~30cm (canonical scale)",
+    "angle": "25.0 deg",
+    "document_id": "DOC_CALIB",
+    "release_id": "REL_5",
+    "artifact_hash": "3720704cda82cb7d3bcf459384a19dfba1e771023a7cd42dbf7a1b239aa7a8dc",
+    "capture_hash": "2c4740e2414483b74146a3a70b105ef78dee776ea6c0c8375b7b4617961da5da",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.421,
+    "pre_ecc_ber": 0.0833,
+    "post_ecc_ber": 0.0,
+    "ecc_corrected": 5,
+    "watermark_status": "RECOVERED",
+    "recovered_bits": 125,
+    "expected_bits": 125,
+    "tardos_state": "ATTRIBUTED",
+    "candidate": "alice",
+    "abstention": false,
+    "sync_latency_ms": 29.7,
+    "demod_latency_ms": 41.62,
+    "ecc_latency_ms": 1.78,
+    "total_latency_ms": 75.17,
+    "notes": "Calibration run: angle=25.0deg, blur_sigma=1.3",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          0,
+          1,
+          3,
+          2
+        ],
+        "reprojection_error": 0.4210013747215271,
+        "homography_matrix": [
+          [
+            1.3639336128851038,
+            -0.007540511940304568,
+            -12.852985247104971
+          ],
+          [
+            0.04418906872284062,
+            1.3331754909547289,
+            -45.56157471288635
+          ],
+          [
+            -1.5373027856743273e-05,
+            -7.245983962950993e-05,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          0,
+          0
+        ],
+        "mean_absolute_score": 1.8551361560821533,
+        "min_margin": 0.09460082650184631
+      },
+      "ecc": {
+        "ecc_success": true,
+        "crc_verified": true,
+        "binding_verified": true,
+        "length_verified": true,
+        "errata_count": 5,
+        "uncorrectable": false,
+        "codeword_length": 125
+      },
+      "image_resolution": "600x750",
+      "reprojection_error": 0.4210013747215271,
+      "sync_latency_ms": 29.7,
+      "demod_latency_ms": 41.62,
+      "ecc_latency_ms": 1.78,
+      "total_decode_latency_ms": 75.17
+    }
+  },
+  {
+    "test_id": "SIM-CALIB-06",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "Simulation Engine",
+    "printer_type": "Simulation",
+    "paper": "Synthetic Canvas (800x1000)",
+    "camera": "Simulated Optical Sensor",
+    "camera_model_if_known": null,
+    "lighting": "Gradient 20%",
+    "distance": "~30cm (canonical scale)",
+    "angle": "30.0 deg",
+    "document_id": "DOC_CALIB",
+    "release_id": "REL_6",
+    "artifact_hash": "544bc9b46fb491b2361db9d7e5e8aa9035e769ed9308b98ae25963c54144e1f9",
+    "capture_hash": "fafb8430a31512c90ac76bdde2fc31ed55e657ce59c35569322b0d97224570ea",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.5391,
+    "pre_ecc_ber": 0.05,
+    "post_ecc_ber": 0.0,
+    "ecc_corrected": 3,
+    "watermark_status": "RECOVERED",
+    "recovered_bits": 125,
+    "expected_bits": 125,
+    "tardos_state": "ATTRIBUTED",
+    "candidate": "alice",
+    "abstention": false,
+    "sync_latency_ms": 30.63,
+    "demod_latency_ms": 41.08,
+    "ecc_latency_ms": 2.38,
+    "total_latency_ms": 76.49,
+    "notes": "Calibration run: angle=30.0deg, blur_sigma=1.4",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          2,
+          1,
+          3,
+          0
+        ],
+        "reprojection_error": 0.5391249656677246,
+        "homography_matrix": [
+          [
+            1.5729904976108857,
+            0.0017125243518677524,
+            -38.35113624656463
+          ],
+          [
+            0.03686723833115145,
+            1.6269496681074542,
+            -98.05391579681661
+          ],
+          [
+            0.000129033960560555,
+            6.462209469894093e-05,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          1,
+          0
+        ],
+        "mean_absolute_score": 1.4010785818099976,
+        "min_margin": 0.07597412168979645
+      },
+      "ecc": {
+        "ecc_success": true,
+        "crc_verified": true,
+        "binding_verified": true,
+        "length_verified": true,
+        "errata_count": 3,
+        "uncorrectable": false,
+        "codeword_length": 125
+      },
+      "image_resolution": "600x750",
+      "reprojection_error": 0.5391249656677246,
+      "sync_latency_ms": 30.63,
+      "demod_latency_ms": 41.08,
+      "ecc_latency_ms": 2.38,
+      "total_decode_latency_ms": 76.49
+    }
+  },
+  {
+    "test_id": "SIM-CALIB-07",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "Simulation Engine",
+    "printer_type": "Simulation",
+    "paper": "Synthetic Canvas (800x1000)",
+    "camera": "Simulated Optical Sensor",
+    "camera_model_if_known": null,
+    "lighting": "Gradient 20%",
+    "distance": "~30cm (canonical scale)",
+    "angle": "10.0 deg",
+    "document_id": "DOC_CALIB",
+    "release_id": "REL_7",
+    "artifact_hash": "6ab360547841985921712916ed8e0afda00d011dc1899845736fc7ebde741690",
+    "capture_hash": "04c08d0a45d88d5a6014543d56d5d2a6c466de1fbcd65029cbf7623822f40d13",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.4691,
+    "pre_ecc_ber": 0.05,
+    "post_ecc_ber": 0.0,
+    "ecc_corrected": 3,
+    "watermark_status": "RECOVERED",
+    "recovered_bits": 125,
+    "expected_bits": 125,
+    "tardos_state": "ATTRIBUTED",
+    "candidate": "alice",
+    "abstention": false,
+    "sync_latency_ms": 29.19,
+    "demod_latency_ms": 40.41,
+    "ecc_latency_ms": 1.63,
+    "total_latency_ms": 73.17,
+    "notes": "Calibration run: angle=10.0deg, blur_sigma=1.2",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          1,
+          2,
+          0,
+          3
+        ],
+        "reprojection_error": 0.4691351652145386,
+        "homography_matrix": [
+          [
+            1.3882692739395086,
+            -0.0668307056706062,
+            12.295244988774177
+          ],
+          [
+            0.05175733836698946,
+            1.3543428475831027,
+            -21.997691351498457
+          ],
+          [
+            4.4530152384988724e-05,
+            -2.8596047965717585e-05,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          0,
+          0
+        ],
+        "mean_absolute_score": 1.907877802848816,
+        "min_margin": 0.008174972608685493
+      },
+      "ecc": {
+        "ecc_success": true,
+        "crc_verified": true,
+        "binding_verified": true,
+        "length_verified": true,
+        "errata_count": 3,
+        "uncorrectable": false,
+        "codeword_length": 125
+      },
+      "image_resolution": "600x750",
+      "reprojection_error": 0.4691351652145386,
+      "sync_latency_ms": 29.19,
+      "demod_latency_ms": 40.41,
+      "ecc_latency_ms": 1.63,
+      "total_decode_latency_ms": 73.17
+    }
+  },
+  {
+    "test_id": "SIM-CALIB-08",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "Simulation Engine",
+    "printer_type": "Simulation",
+    "paper": "Synthetic Canvas (800x1000)",
+    "camera": "Simulated Optical Sensor",
+    "camera_model_if_known": null,
+    "lighting": "Gradient 20%",
+    "distance": "~30cm (canonical scale)",
+    "angle": "20.0 deg",
+    "document_id": "DOC_CALIB",
+    "release_id": "REL_8",
+    "artifact_hash": "7bee79f524c2e2fbd7c54b3c3f37e7cedfe9a5224589996f9fe85c12b0771893",
+    "capture_hash": "2a754d9a4c03ae6d913b5e63b46149d3e039076c66af4ecc09f8f60cd957935a",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.4916,
+    "pre_ecc_ber": 0.0833,
+    "post_ecc_ber": 0.0,
+    "ecc_corrected": 5,
+    "watermark_status": "RECOVERED",
+    "recovered_bits": 125,
+    "expected_bits": 125,
+    "tardos_state": "ATTRIBUTED",
+    "candidate": "alice",
+    "abstention": false,
+    "sync_latency_ms": 29.54,
+    "demod_latency_ms": 35.43,
+    "ecc_latency_ms": 1.59,
+    "total_latency_ms": 68.73,
+    "notes": "Calibration run: angle=20.0deg, blur_sigma=0.8",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          0,
+          1,
+          3,
+          2
+        ],
+        "reprojection_error": 0.4916258454322815,
+        "homography_matrix": [
+          [
+            1.2607013593585419,
+            -0.08070278190720732,
+            6.1315369843139855
+          ],
+          [
+            -0.06940128452078012,
+            1.2553600866148364,
+            -10.149408828247651
+          ],
+          [
+            -0.00014838977545097125,
+            -0.00010480159982236382,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          0,
+          0
+        ],
+        "mean_absolute_score": 1.936821460723877,
+        "min_margin": 0.3104003965854645
+      },
+      "ecc": {
+        "ecc_success": true,
+        "crc_verified": true,
+        "binding_verified": true,
+        "length_verified": true,
+        "errata_count": 5,
+        "uncorrectable": false,
+        "codeword_length": 125
+      },
+      "image_resolution": "600x750",
+      "reprojection_error": 0.4916258454322815,
+      "sync_latency_ms": 29.54,
+      "demod_latency_ms": 35.43,
+      "ecc_latency_ms": 1.59,
+      "total_decode_latency_ms": 68.73
+    }
+  },
+  {
+    "test_id": "SIM-CALIB-09",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "Simulation Engine",
+    "printer_type": "Simulation",
+    "paper": "Synthetic Canvas (800x1000)",
+    "camera": "Simulated Optical Sensor",
+    "camera_model_if_known": null,
+    "lighting": "Gradient 20%",
+    "distance": "~30cm (canonical scale)",
+    "angle": "0.0 deg",
+    "document_id": "DOC_CALIB",
+    "release_id": "REL_9",
+    "artifact_hash": "37445c382a775a0c93ba437def5c7eab5cc09638a300caf8894448c518ef704a",
+    "capture_hash": "9919cba77dc62c4b952c0d2025657f7fc779d91c67b47cc68c164499c7170b2a",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.5223,
+    "pre_ecc_ber": 0.0667,
+    "post_ecc_ber": 0.0,
+    "ecc_corrected": 4,
+    "watermark_status": "RECOVERED",
+    "recovered_bits": 125,
+    "expected_bits": 125,
+    "tardos_state": "ATTRIBUTED",
+    "candidate": "alice",
+    "abstention": false,
+    "sync_latency_ms": 27.2,
+    "demod_latency_ms": 47.94,
+    "ecc_latency_ms": 3.5,
+    "total_latency_ms": 81.42,
+    "notes": "Calibration run: angle=0.0deg, blur_sigma=1.4",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          2,
+          3,
+          0,
+          1
+        ],
+        "reprojection_error": 0.5222800374031067,
+        "homography_matrix": [
+          [
+            1.3329600017324763,
+            -0.0349573385097095,
+            13.841422211293521
+          ],
+          [
+            0.03489581159871757,
+            1.3326220101407675,
+            -9.637373950901994
+          ],
+          [
+            2.417538391511028e-07,
+            -4.324485959214416e-07,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          0,
+          1
+        ],
+        "mean_absolute_score": 1.4986029863357544,
+        "min_margin": 0.05312500149011612
+      },
+      "ecc": {
+        "ecc_success": true,
+        "crc_verified": true,
+        "binding_verified": true,
+        "length_verified": true,
+        "errata_count": 4,
+        "uncorrectable": false,
+        "codeword_length": 125
+      },
+      "image_resolution": "600x750",
+      "reprojection_error": 0.5222800374031067,
+      "sync_latency_ms": 27.2,
+      "demod_latency_ms": 47.94,
+      "ecc_latency_ms": 3.5,
+      "total_decode_latency_ms": 81.42
+    }
+  },
+  {
+    "test_id": "SIM-CALIB-10",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "Simulation Engine",
+    "printer_type": "Simulation",
+    "paper": "Synthetic Canvas (800x1000)",
+    "camera": "Simulated Optical Sensor",
+    "camera_model_if_known": null,
+    "lighting": "Gradient 20%",
+    "distance": "~30cm (canonical scale)",
+    "angle": "15.0 deg",
+    "document_id": "DOC_CALIB",
+    "release_id": "REL_10",
+    "artifact_hash": "abf9f64d775d1689e8365c53c59960be22c8e2a882752255ea8e0ab1e9418273",
+    "capture_hash": "6b1a5ceeb7132f398e79a61053fae43769fb7cbb5db45ea979c90a4ed4704560",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.3432,
+    "pre_ecc_ber": 0.05,
+    "post_ecc_ber": 0.0,
+    "ecc_corrected": 3,
+    "watermark_status": "RECOVERED",
+    "recovered_bits": 125,
+    "expected_bits": 125,
+    "tardos_state": "ATTRIBUTED",
+    "candidate": "alice",
+    "abstention": false,
+    "sync_latency_ms": 41.57,
+    "demod_latency_ms": 37.04,
+    "ecc_latency_ms": 1.73,
+    "total_latency_ms": 82.52,
+    "notes": "Calibration run: angle=15.0deg, blur_sigma=0.6",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          0,
+          1,
+          3,
+          2
+        ],
+        "reprojection_error": 0.3432033658027649,
+        "homography_matrix": [
+          [
+            1.2771628819193044,
+            -0.07723517368995896,
+            14.429122012493083
+          ],
+          [
+            0.001988767964951064,
+            1.2908442513611242,
+            -26.006376005609646
+          ],
+          [
+            -7.536308651455824e-05,
+            -6.304252570905788e-05,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          0,
+          1
+        ],
+        "mean_absolute_score": 2.4604761600494385,
+        "min_margin": 0.3940010070800781
+      },
+      "ecc": {
+        "ecc_success": true,
+        "crc_verified": true,
+        "binding_verified": true,
+        "length_verified": true,
+        "errata_count": 3,
+        "uncorrectable": false,
+        "codeword_length": 125
+      },
+      "image_resolution": "600x750",
+      "reprojection_error": 0.3432033658027649,
+      "sync_latency_ms": 41.57,
+      "demod_latency_ms": 37.04,
+      "ecc_latency_ms": 1.73,
+      "total_decode_latency_ms": 82.52
+    }
+  },
+  {
+    "test_id": "SIM-EVAL-01",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "Simulation Engine",
+    "printer_type": "Simulation",
+    "paper": "Synthetic Canvas (800x1000)",
+    "camera": "Simulated Optical Sensor",
+    "camera_model_if_known": null,
+    "lighting": "Compound Indoor Gradient 25%",
+    "distance": "~35cm",
+    "angle": "~15 deg tilt",
+    "document_id": "DOC_EVAL",
+    "release_id": "REL_EVAL_1",
+    "artifact_hash": "fd89ede4981fcd0c87c9ce6587bf86a6a98a88fc29612b43ca785a8ca925bf24",
+    "capture_hash": "a1ea5bebdbe60f4068f5cb30acb891c78c5a2741c16c80d14f013a4523acccac",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.4295,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": -1,
+    "watermark_status": "PARTIAL",
+    "recovered_bits": 0,
+    "expected_bits": 125,
+    "tardos_state": "INSUFFICIENT_EVIDENCE",
+    "candidate": null,
+    "abstention": false,
+    "sync_latency_ms": 28.24,
+    "demod_latency_ms": 48.07,
+    "ecc_latency_ms": 1.61,
+    "total_latency_ms": 80.14,
+    "notes": "Evaluation run for alice with strategy RENDERED_PAGE_CANVAS",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          1,
+          2,
+          0,
+          3
+        ],
+        "reprojection_error": 0.42947062849998474,
+        "homography_matrix": [
+          [
+            1.3902708275317315,
+            -0.03005228583192334,
+            -5.0275605688533584
+          ],
+          [
+            0.09280066654793005,
+            1.3813736381268824,
+            -47.455697006236676
+          ],
+          [
+            2.3275940954060186e-05,
+            -1.640485965047658e-05,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          -2,
+          -2
+        ],
+        "mean_absolute_score": 0.4003690481185913,
+        "min_margin": 0.0008502197451889515
+      },
+      "ecc": {
+        "ecc_success": false,
+        "crc_verified": false,
+        "binding_verified": false,
+        "length_verified": false,
+        "errata_count": -1,
+        "uncorrectable": true,
+        "error": "Too many (or few) errors found by Chien Search for the errata locator polynomial!"
+      },
+      "image_resolution": "600x750",
+      "reprojection_error": 0.42947062849998474,
+      "sync_latency_ms": 28.24,
+      "demod_latency_ms": 48.07,
+      "ecc_latency_ms": 1.61,
+      "total_decode_latency_ms": 80.14
+    }
+  },
+  {
+    "test_id": "SIM-EVAL-02",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "Simulation Engine",
+    "printer_type": "Simulation",
+    "paper": "Synthetic Canvas (800x1000)",
+    "camera": "Simulated Optical Sensor",
+    "camera_model_if_known": null,
+    "lighting": "Compound Indoor Gradient 25%",
+    "distance": "~35cm",
+    "angle": "~15 deg tilt",
+    "document_id": "DOC_EVAL",
+    "release_id": "REL_EVAL_2",
+    "artifact_hash": "db7a1515d83aa6f78b02abe52084d6c39edfd11133063ac9d45754caedbdfb19",
+    "capture_hash": "be4fc2a20e8ec0b859fded316c65fce9f28a58855d96649235535a27f305fa25",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.4212,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": -1,
+    "watermark_status": "PARTIAL",
+    "recovered_bits": 0,
+    "expected_bits": 125,
+    "tardos_state": "INSUFFICIENT_EVIDENCE",
+    "candidate": null,
+    "abstention": false,
+    "sync_latency_ms": 27.35,
+    "demod_latency_ms": 36.76,
+    "ecc_latency_ms": 1.56,
+    "total_latency_ms": 67.69,
+    "notes": "Evaluation run for bob with strategy RENDERED_PAGE_CANVAS",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          3,
+          2,
+          0,
+          1
+        ],
+        "reprojection_error": 0.42115533351898193,
+        "homography_matrix": [
+          [
+            1.4132404640092295,
+            -0.021957048451445874,
+            -22.632025399180375
+          ],
+          [
+            0.049707767275116214,
+            1.353781514448129,
+            -19.315608181009885
+          ],
+          [
+            -1.992599315331787e-05,
+            7.67079936942949e-06,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          2,
+          -2
+        ],
+        "mean_absolute_score": 0.4612153470516205,
+        "min_margin": 0.0004241943242959678
+      },
+      "ecc": {
+        "ecc_success": false,
+        "crc_verified": false,
+        "binding_verified": false,
+        "length_verified": false,
+        "errata_count": -1,
+        "uncorrectable": true,
+        "error": "Too many (or few) errors found by Chien Search for the errata locator polynomial!"
+      },
+      "image_resolution": "600x750",
+      "reprojection_error": 0.42115533351898193,
+      "sync_latency_ms": 27.35,
+      "demod_latency_ms": 36.76,
+      "ecc_latency_ms": 1.56,
+      "total_decode_latency_ms": 67.69
+    }
+  },
+  {
+    "test_id": "SIM-EVAL-03",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "Simulation Engine",
+    "printer_type": "Simulation",
+    "paper": "Synthetic Canvas (800x1000)",
+    "camera": "Simulated Optical Sensor",
+    "camera_model_if_known": null,
+    "lighting": "Compound Indoor Gradient 25%",
+    "distance": "~35cm",
+    "angle": "~15 deg tilt",
+    "document_id": "DOC_EVAL",
+    "release_id": "REL_EVAL_3",
+    "artifact_hash": "5c18ff3d0aada9481656494f743c05f1da8d2783b3eee3184a264ad068d4d836",
+    "capture_hash": "5653aef5d569debb323ffc37fed8e17ee88c2c4fff6f63e621485165534b2006",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.4585,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": -1,
+    "watermark_status": "PARTIAL",
+    "recovered_bits": 0,
+    "expected_bits": 125,
+    "tardos_state": "INSUFFICIENT_EVIDENCE",
+    "candidate": null,
+    "abstention": false,
+    "sync_latency_ms": 28.99,
+    "demod_latency_ms": 36.62,
+    "ecc_latency_ms": 2.11,
+    "total_latency_ms": 69.87,
+    "notes": "Evaluation run for charlie with strategy RENDERED_PAGE_CANVAS",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          1,
+          0,
+          2,
+          3
+        ],
+        "reprojection_error": 0.45854490995407104,
+        "homography_matrix": [
+          [
+            1.3763425275358272,
+            -0.06788693714981553,
+            -0.7135249554791425
+          ],
+          [
+            0.06706192676058342,
+            1.3595686929454296,
+            -48.8295238001716
+          ],
+          [
+            1.0198684154491961e-05,
+            -4.359177069012925e-05,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          -2,
+          -1
+        ],
+        "mean_absolute_score": 0.4566589295864105,
+        "min_margin": 0.00017501831462141126
+      },
+      "ecc": {
+        "ecc_success": false,
+        "crc_verified": false,
+        "binding_verified": false,
+        "length_verified": false,
+        "errata_count": -1,
+        "uncorrectable": true,
+        "error": "Too many (or few) errors found by Chien Search for the errata locator polynomial!"
+      },
+      "image_resolution": "600x750",
+      "reprojection_error": 0.45854490995407104,
+      "sync_latency_ms": 28.99,
+      "demod_latency_ms": 36.62,
+      "ecc_latency_ms": 2.11,
+      "total_decode_latency_ms": 69.87
+    }
+  },
+  {
+    "test_id": "SIM-EVAL-04",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "Simulation Engine",
+    "printer_type": "Simulation",
+    "paper": "Synthetic Canvas (800x1000)",
+    "camera": "Simulated Optical Sensor",
+    "camera_model_if_known": null,
+    "lighting": "Compound Indoor Gradient 25%",
+    "distance": "~35cm",
+    "angle": "~15 deg tilt",
+    "document_id": "DOC_EVAL",
+    "release_id": "REL_EVAL_4",
+    "artifact_hash": "0779fffd5d9f2da1d8c65fa0003165e0cd02ef26d712f758f0ca09b521cd3baa",
+    "capture_hash": "d005d0951effd508d4a9960408f32dbfcb65663939c988581bff875352f023c1",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.4305,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": -1,
+    "watermark_status": "PARTIAL",
+    "recovered_bits": 0,
+    "expected_bits": 125,
+    "tardos_state": "INSUFFICIENT_EVIDENCE",
+    "candidate": null,
+    "abstention": false,
+    "sync_latency_ms": 27.81,
+    "demod_latency_ms": 34.02,
+    "ecc_latency_ms": 1.44,
+    "total_latency_ms": 65.22,
+    "notes": "Evaluation run for david with strategy RENDERED_PAGE_CANVAS",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          1,
+          0,
+          2,
+          3
+        ],
+        "reprojection_error": 0.43054264783859253,
+        "homography_matrix": [
+          [
+            1.403868201297221,
+            -0.10152152077435735,
+            13.028045405487356
+          ],
+          [
+            0.04223056427633728,
+            1.3219700414829783,
+            -39.287468795607296
+          ],
+          [
+            3.241656426674929e-05,
+            -0.00010750308175322355,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          -2,
+          0
+        ],
+        "mean_absolute_score": 0.6349630951881409,
+        "min_margin": 0.0027000426780432463
+      },
+      "ecc": {
+        "ecc_success": false,
+        "crc_verified": false,
+        "binding_verified": false,
+        "length_verified": false,
+        "errata_count": -1,
+        "uncorrectable": true,
+        "error": "Too many (or few) errors found by Chien Search for the errata locator polynomial!"
+      },
+      "image_resolution": "600x750",
+      "reprojection_error": 0.43054264783859253,
+      "sync_latency_ms": 27.81,
+      "demod_latency_ms": 34.02,
+      "ecc_latency_ms": 1.44,
+      "total_decode_latency_ms": 65.22
+    }
+  },
+  {
+    "test_id": "SIM-EVAL-05",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "Simulation Engine",
+    "printer_type": "Simulation",
+    "paper": "Synthetic Canvas (800x1000)",
+    "camera": "Simulated Optical Sensor",
+    "camera_model_if_known": null,
+    "lighting": "Compound Indoor Gradient 25%",
+    "distance": "~35cm",
+    "angle": "~15 deg tilt",
+    "document_id": "DOC_EVAL",
+    "release_id": "REL_EVAL_5",
+    "artifact_hash": "7b9ad23126c759d11bee679d98ab82aba063d5b1d27a045f55dd39381a9ab9e5",
+    "capture_hash": "e40ea5b5f2dc40f2eaad0dddcbe73f12f464adb0e33cb82475a0d872bd2bdd83",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.4393,
+    "pre_ecc_ber": 0.1333,
+    "post_ecc_ber": 0.0,
+    "ecc_corrected": 8,
+    "watermark_status": "RECOVERED",
+    "recovered_bits": 125,
+    "expected_bits": 125,
+    "tardos_state": "ATTRIBUTED",
+    "candidate": "eve",
+    "abstention": false,
+    "sync_latency_ms": 26.22,
+    "demod_latency_ms": 32.89,
+    "ecc_latency_ms": 1.82,
+    "total_latency_ms": 62.85,
+    "notes": "Evaluation run for eve with strategy RENDERED_PAGE_CANVAS",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          3,
+          2,
+          0,
+          1
+        ],
+        "reprojection_error": 0.4393031895160675,
+        "homography_matrix": [
+          [
+            1.358028341857243,
+            -0.014334365013386037,
+            -2.454018148717501
+          ],
+          [
+            -0.06893988811157134,
+            1.4412691956736938,
+            -10.58745087213873
+          ],
+          [
+            -4.122726542760531e-05,
+            5.253715900708799e-05,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          -1,
+          1
+        ],
+        "mean_absolute_score": 1.187286615371704,
+        "min_margin": 0.005800170823931694
+      },
+      "ecc": {
+        "ecc_success": true,
+        "crc_verified": true,
+        "binding_verified": true,
+        "length_verified": true,
+        "errata_count": 8,
+        "uncorrectable": false,
+        "codeword_length": 125
+      },
+      "image_resolution": "600x750",
+      "reprojection_error": 0.4393031895160675,
+      "sync_latency_ms": 26.22,
+      "demod_latency_ms": 32.89,
+      "ecc_latency_ms": 1.82,
+      "total_decode_latency_ms": 62.85
+    }
+  },
+  {
+    "test_id": "SIM-EVAL-06",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "Simulation Engine",
+    "printer_type": "Simulation",
+    "paper": "Synthetic Canvas (800x1000)",
+    "camera": "Simulated Optical Sensor",
+    "camera_model_if_known": null,
+    "lighting": "Compound Indoor Gradient 25%",
+    "distance": "~35cm",
+    "angle": "~15 deg tilt",
+    "document_id": "DOC_EVAL",
+    "release_id": "REL_EVAL_6",
+    "artifact_hash": "7a91dae32bad7accb83fc98f5b1099c33c46277867979026801c7dee8183ff32",
+    "capture_hash": "d1f1269db9f3e03dc463dc5261d4921c3e229dff895f33bb3d76006a5b0f868a",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.4111,
+    "pre_ecc_ber": 0.0167,
+    "post_ecc_ber": 0.0,
+    "ecc_corrected": 1,
+    "watermark_status": "RECOVERED",
+    "recovered_bits": 125,
+    "expected_bits": 125,
+    "tardos_state": "ATTRIBUTED",
+    "candidate": "alice",
+    "abstention": false,
+    "sync_latency_ms": 24.48,
+    "demod_latency_ms": 22.67,
+    "ecc_latency_ms": 1.4,
+    "total_latency_ms": 50.58,
+    "notes": "Evaluation run for alice with strategy GRAPHICAL_ROI",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          3,
+          0,
+          2,
+          1
+        ],
+        "reprojection_error": 0.4110729694366455,
+        "homography_matrix": [
+          [
+            1.2890293179833598,
+            -0.04595368269320536,
+            9.41394301986519
+          ],
+          [
+            -0.050843812206246806,
+            1.3596460014109382,
+            -11.577647050892038
+          ],
+          [
+            -0.00011026192446206786,
+            2.073455464507087e-05,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 1,
+        "fine_offset": [
+          0,
+          1
+        ],
+        "mean_absolute_score": 2.078033208847046,
+        "min_margin": 0.002449951134622097
+      },
+      "ecc": {
+        "ecc_success": true,
+        "crc_verified": true,
+        "binding_verified": true,
+        "length_verified": true,
+        "errata_count": 1,
+        "uncorrectable": false,
+        "codeword_length": 125
+      },
+      "image_resolution": "600x750",
+      "reprojection_error": 0.4110729694366455,
+      "sync_latency_ms": 24.48,
+      "demod_latency_ms": 22.67,
+      "ecc_latency_ms": 1.4,
+      "total_decode_latency_ms": 50.58
+    }
+  },
+  {
+    "test_id": "SIM-EVAL-07",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "Simulation Engine",
+    "printer_type": "Simulation",
+    "paper": "Synthetic Canvas (800x1000)",
+    "camera": "Simulated Optical Sensor",
+    "camera_model_if_known": null,
+    "lighting": "Compound Indoor Gradient 25%",
+    "distance": "~35cm",
+    "angle": "~15 deg tilt",
+    "document_id": "DOC_EVAL",
+    "release_id": "REL_EVAL_7",
+    "artifact_hash": "936376c3fbe1b9b50e453e4e86d501dd22098a3aeefd330a99028fc010deddc1",
+    "capture_hash": "306a867659650f2f0c0afeb7fe47cdd1e5942ed46088d950fd69aae319092d22",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.4521,
+    "pre_ecc_ber": 0.0167,
+    "post_ecc_ber": 0.0,
+    "ecc_corrected": 1,
+    "watermark_status": "RECOVERED",
+    "recovered_bits": 125,
+    "expected_bits": 125,
+    "tardos_state": "ATTRIBUTED",
+    "candidate": "bob",
+    "abstention": false,
+    "sync_latency_ms": 25.56,
+    "demod_latency_ms": 33.93,
+    "ecc_latency_ms": 1.7,
+    "total_latency_ms": 63.73,
+    "notes": "Evaluation run for bob with strategy GRAPHICAL_ROI",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          0,
+          1,
+          3,
+          2
+        ],
+        "reprojection_error": 0.45209556818008423,
+        "homography_matrix": [
+          [
+            1.353167704293547,
+            -0.0803637732977919,
+            12.920217730234539
+          ],
+          [
+            0.020204818954214315,
+            1.3249278297184004,
+            -44.964700194482496
+          ],
+          [
+            -3.557274086296351e-05,
+            -5.8770070046390964e-05,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 1,
+        "fine_offset": [
+          1,
+          0
+        ],
+        "mean_absolute_score": 2.0220608711242676,
+        "min_margin": 0.008450012654066086
+      },
+      "ecc": {
+        "ecc_success": true,
+        "crc_verified": true,
+        "binding_verified": true,
+        "length_verified": true,
+        "errata_count": 1,
+        "uncorrectable": false,
+        "codeword_length": 125
+      },
+      "image_resolution": "600x750",
+      "reprojection_error": 0.45209556818008423,
+      "sync_latency_ms": 25.56,
+      "demod_latency_ms": 33.93,
+      "ecc_latency_ms": 1.7,
+      "total_decode_latency_ms": 63.73
+    }
+  },
+  {
+    "test_id": "SIM-EVAL-08",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "Simulation Engine",
+    "printer_type": "Simulation",
+    "paper": "Synthetic Canvas (800x1000)",
+    "camera": "Simulated Optical Sensor",
+    "camera_model_if_known": null,
+    "lighting": "Compound Indoor Gradient 25%",
+    "distance": "~35cm",
+    "angle": "~15 deg tilt",
+    "document_id": "DOC_EVAL",
+    "release_id": "REL_EVAL_8",
+    "artifact_hash": "68c97dd9cbfbabc2f3002cd1f7d19929b5aa4969299536a21da411fa513c43fb",
+    "capture_hash": "6349dcf023b5d57b020a0c3f1af7142bbdc04607e21e892bd0d359a8f6ee0e29",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.5053,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 0.0,
+    "ecc_corrected": 0,
+    "watermark_status": "RECOVERED",
+    "recovered_bits": 125,
+    "expected_bits": 125,
+    "tardos_state": "ATTRIBUTED",
+    "candidate": "charlie",
+    "abstention": false,
+    "sync_latency_ms": 30.44,
+    "demod_latency_ms": 39.01,
+    "ecc_latency_ms": 1.28,
+    "total_latency_ms": 73.44,
+    "notes": "Evaluation run for charlie with strategy GRAPHICAL_ROI",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          1,
+          0,
+          2,
+          3
+        ],
+        "reprojection_error": 0.5052659511566162,
+        "homography_matrix": [
+          [
+            1.3910197471049626,
+            -0.07217981147505698,
+            -6.570978653512436
+          ],
+          [
+            0.07637657715689386,
+            1.3661308681773223,
+            -56.69725020046693
+          ],
+          [
+            1.0927054895425364e-05,
+            -5.4848628277809336e-05,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 1,
+        "fine_offset": [
+          0,
+          0
+        ],
+        "mean_absolute_score": 2.069749116897583,
+        "min_margin": 0.008299560286104679
+      },
+      "ecc": {
+        "ecc_success": true,
+        "crc_verified": true,
+        "binding_verified": true,
+        "length_verified": true,
+        "errata_count": 0,
+        "uncorrectable": false,
+        "codeword_length": 125
+      },
+      "image_resolution": "600x750",
+      "reprojection_error": 0.5052659511566162,
+      "sync_latency_ms": 30.44,
+      "demod_latency_ms": 39.01,
+      "ecc_latency_ms": 1.28,
+      "total_decode_latency_ms": 73.44
+    }
+  },
+  {
+    "test_id": "SIM-EVAL-09",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "Simulation Engine",
+    "printer_type": "Simulation",
+    "paper": "Synthetic Canvas (800x1000)",
+    "camera": "Simulated Optical Sensor",
+    "camera_model_if_known": null,
+    "lighting": "Compound Indoor Gradient 25%",
+    "distance": "~35cm",
+    "angle": "~15 deg tilt",
+    "document_id": "DOC_EVAL",
+    "release_id": "REL_EVAL_9",
+    "artifact_hash": "833c95cb83e31793b81b0bfd3dda549a1de6d9268f3356efdac41d757301e2fc",
+    "capture_hash": "d73bd24bf74d47d5f42949771a2926d70573c6a49f03a63910fd2499ce6b149f",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.4583,
+    "pre_ecc_ber": 0.0333,
+    "post_ecc_ber": 0.0,
+    "ecc_corrected": 2,
+    "watermark_status": "RECOVERED",
+    "recovered_bits": 125,
+    "expected_bits": 125,
+    "tardos_state": "ATTRIBUTED",
+    "candidate": "david",
+    "abstention": false,
+    "sync_latency_ms": 26.4,
+    "demod_latency_ms": 27.16,
+    "ecc_latency_ms": 1.78,
+    "total_latency_ms": 57.5,
+    "notes": "Evaluation run for david with strategy GRAPHICAL_ROI",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "reprojection_error": 0.4582797586917877,
+        "homography_matrix": [
+          [
+            1.467187240047093,
+            0.002301409815936269,
+            -24.053794655076523
+          ],
+          [
+            0.02536241320374748,
+            1.5033765111581843,
+            -62.277129977311034
+          ],
+          [
+            3.600894311989165e-05,
+            5.782128349646694e-05,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 1,
+        "fine_offset": [
+          1,
+          0
+        ],
+        "mean_absolute_score": 2.1162540912628174,
+        "min_margin": 0.0007000732584856451
+      },
+      "ecc": {
+        "ecc_success": true,
+        "crc_verified": true,
+        "binding_verified": true,
+        "length_verified": true,
+        "errata_count": 2,
+        "uncorrectable": false,
+        "codeword_length": 125
+      },
+      "image_resolution": "600x750",
+      "reprojection_error": 0.4582797586917877,
+      "sync_latency_ms": 26.4,
+      "demod_latency_ms": 27.16,
+      "ecc_latency_ms": 1.78,
+      "total_decode_latency_ms": 57.5
+    }
+  },
+  {
+    "test_id": "SIM-EVAL-10",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "Simulation Engine",
+    "printer_type": "Simulation",
+    "paper": "Synthetic Canvas (800x1000)",
+    "camera": "Simulated Optical Sensor",
+    "camera_model_if_known": null,
+    "lighting": "Compound Indoor Gradient 25%",
+    "distance": "~35cm",
+    "angle": "~15 deg tilt",
+    "document_id": "DOC_EVAL",
+    "release_id": "REL_EVAL_10",
+    "artifact_hash": "83454628bb0284b6b7afda9104a5a2fcf1da789734f7923ef1d3b83cf8b29e01",
+    "capture_hash": "c6784495c2d210165246ff8f0adb2772749e81f2cf6a947c99dae0ff908cc2ec",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.4225,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 0.0,
+    "ecc_corrected": 0,
+    "watermark_status": "RECOVERED",
+    "recovered_bits": 125,
+    "expected_bits": 125,
+    "tardos_state": "ATTRIBUTED",
+    "candidate": "eve",
+    "abstention": false,
+    "sync_latency_ms": 26.44,
+    "demod_latency_ms": 26.32,
+    "ecc_latency_ms": 0.97,
+    "total_latency_ms": 55.79,
+    "notes": "Evaluation run for eve with strategy GRAPHICAL_ROI",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          3,
+          2,
+          1,
+          0
+        ],
+        "reprojection_error": 0.42253589630126953,
+        "homography_matrix": [
+          [
+            1.4424182963704346,
+            0.01800447085136533,
+            -29.0460220849723
+          ],
+          [
+            0.04366636577473952,
+            1.4660728846002662,
+            -14.696930034157113
+          ],
+          [
+            2.177569590044168e-06,
+            9.399713014561023e-05,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 1,
+        "fine_offset": [
+          0,
+          0
+        ],
+        "mean_absolute_score": 2.1510722637176514,
+        "min_margin": 0.045749206095933914
+      },
+      "ecc": {
+        "ecc_success": true,
+        "crc_verified": true,
+        "binding_verified": true,
+        "length_verified": true,
+        "errata_count": 0,
+        "uncorrectable": false,
+        "codeword_length": 125
+      },
+      "image_resolution": "600x750",
+      "reprojection_error": 0.42253589630126953,
+      "sync_latency_ms": 26.44,
+      "demod_latency_ms": 26.32,
+      "ecc_latency_ms": 0.97,
+      "total_decode_latency_ms": 55.79
+    }
+  },
+  {
+    "test_id": "SIM-EVAL-11",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "Simulation Engine",
+    "printer_type": "Simulation",
+    "paper": "Synthetic Canvas (800x1000)",
+    "camera": "Simulated Optical Sensor",
+    "camera_model_if_known": null,
+    "lighting": "Compound Indoor Gradient 25%",
+    "distance": "~35cm",
+    "angle": "~15 deg tilt",
+    "document_id": "DOC_EVAL",
+    "release_id": "REL_EVAL_11",
+    "artifact_hash": "564aa7266ba6970fd5d7d514d4d1b8e13f7fed3aa413761354dd0e0af3e05f3a",
+    "capture_hash": "a8206747500caafea1aaa8df6c4f9de2eb9a6867cb51ec3b9b13732bfb7db4ec",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.4584,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": -1,
+    "watermark_status": "PARTIAL",
+    "recovered_bits": 0,
+    "expected_bits": 125,
+    "tardos_state": "INSUFFICIENT_EVIDENCE",
+    "candidate": null,
+    "abstention": false,
+    "sync_latency_ms": 28.57,
+    "demod_latency_ms": 44.13,
+    "ecc_latency_ms": 2.03,
+    "total_latency_ms": 76.72,
+    "notes": "Evaluation run for alice with strategy SECURITY_BACKGROUND_TEXTURE",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          1,
+          2,
+          0,
+          3
+        ],
+        "reprojection_error": 0.458424836397171,
+        "homography_matrix": [
+          [
+            1.412149739853967,
+            -0.03456140419244903,
+            6.44509758683597
+          ],
+          [
+            0.07497895887990734,
+            1.394152847114949,
+            -48.09362862392968
+          ],
+          [
+            4.528154202589709e-05,
+            -1.963067982214919e-05,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          1,
+          -2
+        ],
+        "mean_absolute_score": 0.6053858399391174,
+        "min_margin": 0.00047470093704760075
+      },
+      "ecc": {
+        "ecc_success": false,
+        "crc_verified": false,
+        "binding_verified": false,
+        "length_verified": false,
+        "errata_count": -1,
+        "uncorrectable": true,
+        "error": "Too many (or few) errors found by Chien Search for the errata locator polynomial!"
+      },
+      "image_resolution": "600x750",
+      "reprojection_error": 0.458424836397171,
+      "sync_latency_ms": 28.57,
+      "demod_latency_ms": 44.13,
+      "ecc_latency_ms": 2.03,
+      "total_decode_latency_ms": 76.72
+    }
+  },
+  {
+    "test_id": "SIM-EVAL-12",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "Simulation Engine",
+    "printer_type": "Simulation",
+    "paper": "Synthetic Canvas (800x1000)",
+    "camera": "Simulated Optical Sensor",
+    "camera_model_if_known": null,
+    "lighting": "Compound Indoor Gradient 25%",
+    "distance": "~35cm",
+    "angle": "~15 deg tilt",
+    "document_id": "DOC_EVAL",
+    "release_id": "REL_EVAL_12",
+    "artifact_hash": "0e5ddd1e80237c0ab49d69b443bd8cda746adf6a89b3fabfc6a0258183aea16e",
+    "capture_hash": "0116fdef892d530e155f6385f117fbf31da2fbfcd2344cf611800b179f92d83b",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.4632,
+    "pre_ecc_ber": 0.0833,
+    "post_ecc_ber": 0.0,
+    "ecc_corrected": 5,
+    "watermark_status": "RECOVERED",
+    "recovered_bits": 125,
+    "expected_bits": 125,
+    "tardos_state": "ATTRIBUTED",
+    "candidate": "bob",
+    "abstention": false,
+    "sync_latency_ms": 27.71,
+    "demod_latency_ms": 38.46,
+    "ecc_latency_ms": 1.87,
+    "total_latency_ms": 70.36,
+    "notes": "Evaluation run for bob with strategy SECURITY_BACKGROUND_TEXTURE",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          1,
+          0,
+          2,
+          3
+        ],
+        "reprojection_error": 0.4631534218788147,
+        "homography_matrix": [
+          [
+            1.3900086438890893,
+            -0.039851186996999306,
+            -3.951365991951421
+          ],
+          [
+            0.07854220118113074,
+            1.3325918187280381,
+            -36.88068385902244
+          ],
+          [
+            3.3666575203696705e-05,
+            -7.087395159705124e-05,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          0,
+          0
+        ],
+        "mean_absolute_score": 1.6826050281524658,
+        "min_margin": 0.006624908652156591
+      },
+      "ecc": {
+        "ecc_success": true,
+        "crc_verified": true,
+        "binding_verified": true,
+        "length_verified": true,
+        "errata_count": 5,
+        "uncorrectable": false,
+        "codeword_length": 125
+      },
+      "image_resolution": "600x750",
+      "reprojection_error": 0.4631534218788147,
+      "sync_latency_ms": 27.71,
+      "demod_latency_ms": 38.46,
+      "ecc_latency_ms": 1.87,
+      "total_decode_latency_ms": 70.36
+    }
+  },
+  {
+    "test_id": "SIM-EVAL-13",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "Simulation Engine",
+    "printer_type": "Simulation",
+    "paper": "Synthetic Canvas (800x1000)",
+    "camera": "Simulated Optical Sensor",
+    "camera_model_if_known": null,
+    "lighting": "Compound Indoor Gradient 25%",
+    "distance": "~35cm",
+    "angle": "~15 deg tilt",
+    "document_id": "DOC_EVAL",
+    "release_id": "REL_EVAL_13",
+    "artifact_hash": "456bcd446e1923a325996d536be26175bdfd19fdca75be2d7530de2e2fdc927d",
+    "capture_hash": "8fa91c8c6c69ee20b2b2f79fc6f42b1865dea19f8e870da988c67b9cd575e20d",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.4651,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": -1,
+    "watermark_status": "PARTIAL",
+    "recovered_bits": 0,
+    "expected_bits": 125,
+    "tardos_state": "INSUFFICIENT_EVIDENCE",
+    "candidate": null,
+    "abstention": false,
+    "sync_latency_ms": 23.15,
+    "demod_latency_ms": 42.34,
+    "ecc_latency_ms": 1.95,
+    "total_latency_ms": 69.68,
+    "notes": "Evaluation run for charlie with strategy SECURITY_BACKGROUND_TEXTURE",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          1,
+          2,
+          0,
+          3
+        ],
+        "reprojection_error": 0.46512386202812195,
+        "homography_matrix": [
+          [
+            1.4741355082676593,
+            -0.03741779857778054,
+            -10.933043574904541
+          ],
+          [
+            0.10352452612561915,
+            1.419890560770117,
+            -63.08061116447754
+          ],
+          [
+            0.00010143699088823969,
+            -2.677965440496946e-05,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          -2,
+          -2
+        ],
+        "mean_absolute_score": 0.40793532133102417,
+        "min_margin": 0.0007000732584856451
+      },
+      "ecc": {
+        "ecc_success": false,
+        "crc_verified": false,
+        "binding_verified": false,
+        "length_verified": false,
+        "errata_count": -1,
+        "uncorrectable": true,
+        "error": "Too many (or few) errors found by Chien Search for the errata locator polynomial!"
+      },
+      "image_resolution": "600x750",
+      "reprojection_error": 0.46512386202812195,
+      "sync_latency_ms": 23.15,
+      "demod_latency_ms": 42.34,
+      "ecc_latency_ms": 1.95,
+      "total_decode_latency_ms": 69.68
+    }
+  },
+  {
+    "test_id": "SIM-EVAL-14",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "Simulation Engine",
+    "printer_type": "Simulation",
+    "paper": "Synthetic Canvas (800x1000)",
+    "camera": "Simulated Optical Sensor",
+    "camera_model_if_known": null,
+    "lighting": "Compound Indoor Gradient 25%",
+    "distance": "~35cm",
+    "angle": "~15 deg tilt",
+    "document_id": "DOC_EVAL",
+    "release_id": "REL_EVAL_14",
+    "artifact_hash": "7f7683c7ce2bf0b79ad44b92cc57351bdefd387810c6a393f658aab0339654d2",
+    "capture_hash": "d37f0973cd06f74703d2dc4c96b92028804d05679ed948e1a859963732ca1fac",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.4798,
+    "pre_ecc_ber": 0.15,
+    "post_ecc_ber": 0.0,
+    "ecc_corrected": 9,
+    "watermark_status": "RECOVERED",
+    "recovered_bits": 125,
+    "expected_bits": 125,
+    "tardos_state": "ATTRIBUTED",
+    "candidate": "david",
+    "abstention": false,
+    "sync_latency_ms": 23.12,
+    "demod_latency_ms": 38.79,
+    "ecc_latency_ms": 2.19,
+    "total_latency_ms": 66.41,
+    "notes": "Evaluation run for david with strategy SECURITY_BACKGROUND_TEXTURE",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          1,
+          2,
+          0,
+          3
+        ],
+        "reprojection_error": 0.479789137840271,
+        "homography_matrix": [
+          [
+            1.3875709399477845,
+            -0.021606404195011815,
+            -6.382896207989669
+          ],
+          [
+            0.03541057050450568,
+            1.4442547029383568,
+            -49.87069863510561
+          ],
+          [
+            2.192654062945375e-05,
+            -4.741139696605998e-06,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          -1,
+          2
+        ],
+        "mean_absolute_score": 0.8450348973274231,
+        "min_margin": 0.010299377143383026
+      },
+      "ecc": {
+        "ecc_success": true,
+        "crc_verified": true,
+        "binding_verified": true,
+        "length_verified": true,
+        "errata_count": 9,
+        "uncorrectable": false,
+        "codeword_length": 125
+      },
+      "image_resolution": "600x750",
+      "reprojection_error": 0.479789137840271,
+      "sync_latency_ms": 23.12,
+      "demod_latency_ms": 38.79,
+      "ecc_latency_ms": 2.19,
+      "total_decode_latency_ms": 66.41
+    }
+  },
+  {
+    "test_id": "SIM-EVAL-15",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "Simulation Engine",
+    "printer_type": "Simulation",
+    "paper": "Synthetic Canvas (800x1000)",
+    "camera": "Simulated Optical Sensor",
+    "camera_model_if_known": null,
+    "lighting": "Compound Indoor Gradient 25%",
+    "distance": "~35cm",
+    "angle": "~15 deg tilt",
+    "document_id": "DOC_EVAL",
+    "release_id": "REL_EVAL_15",
+    "artifact_hash": "9d4921fc78bb65665d9fda1ed11f420895f5fda2e57e14f353dd0e4bea8da97c",
+    "capture_hash": "a4b832b4f8fb73195561ca70c289a51a1a497414709cbc1539993eeae63e848e",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.4833,
+    "pre_ecc_ber": 0.1333,
+    "post_ecc_ber": 0.0,
+    "ecc_corrected": 8,
+    "watermark_status": "RECOVERED",
+    "recovered_bits": 125,
+    "expected_bits": 125,
+    "tardos_state": "ATTRIBUTED",
+    "candidate": "eve",
+    "abstention": false,
+    "sync_latency_ms": 23.05,
+    "demod_latency_ms": 43.46,
+    "ecc_latency_ms": 2.3,
+    "total_latency_ms": 71.04,
+    "notes": "Evaluation run for eve with strategy SECURITY_BACKGROUND_TEXTURE",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          0,
+          3,
+          1,
+          2
+        ],
+        "reprojection_error": 0.48331350088119507,
+        "homography_matrix": [
+          [
+            1.3870394420467294,
+            -0.024944142528526215,
+            -19.09265282600904
+          ],
+          [
+            0.03315112557274529,
+            1.4416536280527759,
+            -62.762327530132225
+          ],
+          [
+            -1.7577718373664484e-05,
+            -7.02591592276427e-06,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          0,
+          2
+        ],
+        "mean_absolute_score": 1.0543245077133179,
+        "min_margin": 0.012524872086942196
+      },
+      "ecc": {
+        "ecc_success": true,
+        "crc_verified": true,
+        "binding_verified": true,
+        "length_verified": true,
+        "errata_count": 8,
+        "uncorrectable": false,
+        "codeword_length": 125
+      },
+      "image_resolution": "600x750",
+      "reprojection_error": 0.48331350088119507,
+      "sync_latency_ms": 23.05,
+      "demod_latency_ms": 43.46,
+      "ecc_latency_ms": 2.3,
+      "total_decode_latency_ms": 71.04
+    }
+  },
+  {
+    "test_id": "SIM-NEG-01",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "43632e96076d343d8de6fb86cdb0110a2001181ee357d97a9bf8ac3a1d4bc551",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 3.87,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 4.46,
+    "notes": "Negative test: solid_pure_white",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "no_fiducial_markers_found"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 3.87,
+      "total_decode_latency_ms": 4.46
+    }
+  },
+  {
+    "test_id": "SIM-NEG-02",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "2a638511358c57fd3502715df9f97f6be12b5bea719df0dc39185e291832cce8",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 3.82,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 4.22,
+    "notes": "Negative test: solid_pure_black",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "no_fiducial_markers_found"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 3.82,
+      "total_decode_latency_ms": 4.22
+    }
+  },
+  {
+    "test_id": "SIM-NEG-03",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "2918cb4b0ec9a001b2471524457fce54635b563f9e87a722693e941fb4fa50da",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 3.94,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 4.38,
+    "notes": "Negative test: solid_medium_gray",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "no_fiducial_markers_found"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 3.94,
+      "total_decode_latency_ms": 4.38
+    }
+  },
+  {
+    "test_id": "SIM-NEG-04",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "5c1aae17194f00a5aa793615acd4c20d329a42f0266fe4adc41f953019c24bdd",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 4.4,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 4.84,
+    "notes": "Negative test: solid_off_white",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "no_fiducial_markers_found"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 4.4,
+      "total_decode_latency_ms": 4.84
+    }
+  },
+  {
+    "test_id": "SIM-NEG-05",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "81c060cf111750eaa11898b908922601292df7201922e0a2543f61a10919ac3d",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 4.66,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 5.1,
+    "notes": "Negative test: solid_dark_gray",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "no_fiducial_markers_found"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 4.66,
+      "total_decode_latency_ms": 5.1
+    }
+  },
+  {
+    "test_id": "SIM-NEG-06",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "129035fc5cc5c209238b9e194de446706d1a8a945bb376b36c82eb8a7e9de1f1",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 213.55,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 214.0,
+    "notes": "Negative test: gaussian_noise_seed_0",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "no_fiducial_markers_found"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 213.55,
+      "total_decode_latency_ms": 214.0
+    }
+  },
+  {
+    "test_id": "SIM-NEG-07",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "bd3383411e60e85b033190e3384aaeaf614435825ee08af0e0dc60ace0f65f14",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 202.3,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 202.8,
+    "notes": "Negative test: gaussian_noise_seed_1",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "no_fiducial_markers_found"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 202.3,
+      "total_decode_latency_ms": 202.8
+    }
+  },
+  {
+    "test_id": "SIM-NEG-08",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "05e5b670f5f789937826f6975adc86460a211338a56890a6072cd49cf22571cd",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 190.07,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 190.62,
+    "notes": "Negative test: gaussian_noise_seed_2",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "no_fiducial_markers_found"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 190.07,
+      "total_decode_latency_ms": 190.62
+    }
+  },
+  {
+    "test_id": "SIM-NEG-09",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "6a4aa40817b234636832a15b03492cbd8eef0abd960754d6ac08531307b23687",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 189.54,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 190.07,
+    "notes": "Negative test: gaussian_noise_seed_3",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "no_fiducial_markers_found"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 189.54,
+      "total_decode_latency_ms": 190.07
+    }
+  },
+  {
+    "test_id": "SIM-NEG-10",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "5376337fadb8ca8573d1f3ce47ead1f683159b4b2a6ede0a46d8d3b8be451454",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 166.37,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 166.84,
+    "notes": "Negative test: gaussian_noise_seed_4",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "no_fiducial_markers_found"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 166.37,
+      "total_decode_latency_ms": 166.84
+    }
+  },
+  {
+    "test_id": "SIM-NEG-11",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "0b6f01185e7f138131e462362b8a64c725d2bb50996bf3af670fa558641dbdc4",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 171.62,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 172.08,
+    "notes": "Negative test: gaussian_noise_seed_5",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [
+          37
+        ],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "insufficient_markers_detected (0 < 3)"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 171.62,
+      "total_decode_latency_ms": 172.08
+    }
+  },
+  {
+    "test_id": "SIM-NEG-12",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "eb663c53b0543c4d5476adef6457bba425d3fa8b39a91f3b480022fb938df49c",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 193.22,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 193.72,
+    "notes": "Negative test: gaussian_noise_seed_6",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "no_fiducial_markers_found"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 193.22,
+      "total_decode_latency_ms": 193.72
+    }
+  },
+  {
+    "test_id": "SIM-NEG-13",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "a643d7ccb2debbc8aa07fc228a2c009c26c46a4dc6836e8975a7fbbf7a1db0cf",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 182.6,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 183.1,
+    "notes": "Negative test: gaussian_noise_seed_7",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "no_fiducial_markers_found"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 182.6,
+      "total_decode_latency_ms": 183.1
+    }
+  },
+  {
+    "test_id": "SIM-NEG-14",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "4cf0fd691d41461e9efd8cae85a35310a221115094a539b0a5c998848fd877dc",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 191.0,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 191.43,
+    "notes": "Negative test: gaussian_noise_seed_8",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "no_fiducial_markers_found"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 191.0,
+      "total_decode_latency_ms": 191.43
+    }
+  },
+  {
+    "test_id": "SIM-NEG-15",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "7eccbfcd68981657b251020cfacb188e7636a139fcadf79d025f779ae01087ba",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 202.26,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 202.74,
+    "notes": "Negative test: gaussian_noise_seed_9",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "no_fiducial_markers_found"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 202.26,
+      "total_decode_latency_ms": 202.74
+    }
+  },
+  {
+    "test_id": "SIM-NEG-16",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "24d10966bf7200527cd9dedb15983154010ca750e7d1c973e2725d9bc90f8520",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 15.86,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 16.28,
+    "notes": "Negative test: unwatermarked_doc_0",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "no_fiducial_markers_found"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 15.86,
+      "total_decode_latency_ms": 16.28
+    }
+  },
+  {
+    "test_id": "SIM-NEG-17",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "3c9d11347af5a858f706bab1b3aceb7b96e00f5debc90c18bb650f666f77c95d",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 7.23,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 7.72,
+    "notes": "Negative test: unwatermarked_doc_1",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "no_fiducial_markers_found"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 7.23,
+      "total_decode_latency_ms": 7.72
+    }
+  },
+  {
+    "test_id": "SIM-NEG-18",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "ca6ae60f6a052740e4655f70c312775eb71af6e8c9b9deb55bf7b818882a1916",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 7.1,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 7.65,
+    "notes": "Negative test: unwatermarked_doc_2",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "no_fiducial_markers_found"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 7.1,
+      "total_decode_latency_ms": 7.65
+    }
+  },
+  {
+    "test_id": "SIM-NEG-19",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "d20f9b4883229f1e2e6aeb3fac4319637d83b2a94e15a55411d9203fb0fca7fc",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 6.85,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 7.29,
+    "notes": "Negative test: unwatermarked_doc_3",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "no_fiducial_markers_found"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 6.85,
+      "total_decode_latency_ms": 7.29
+    }
+  },
+  {
+    "test_id": "SIM-NEG-20",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "f816eee4eefd331bac58d2157182a7aa02b23ce866585e1394c2e155a8a6f9e1",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 6.54,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 6.99,
+    "notes": "Negative test: unwatermarked_doc_4",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "no_fiducial_markers_found"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 6.54,
+      "total_decode_latency_ms": 6.99
+    }
+  },
+  {
+    "test_id": "SIM-NEG-21",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "51c8d01577fbcd006bb453ff4d96fcca7f9421a2c82be4be4d8cd75bdd6ae872",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 6.7,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 7.13,
+    "notes": "Negative test: unwatermarked_doc_5",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "no_fiducial_markers_found"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 6.7,
+      "total_decode_latency_ms": 7.13
+    }
+  },
+  {
+    "test_id": "SIM-NEG-22",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "4def190ae437ff45a0da7e8d89f62a37d14ef036da28d934cd9028cfb7fb02e4",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 6.85,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 7.27,
+    "notes": "Negative test: unwatermarked_doc_6",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "no_fiducial_markers_found"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 6.85,
+      "total_decode_latency_ms": 7.27
+    }
+  },
+  {
+    "test_id": "SIM-NEG-23",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "a25eb9d73522b79e3e4a09973ccbc053690d64f9b6d9db709853364af83e907f",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 6.72,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 7.14,
+    "notes": "Negative test: unwatermarked_doc_7",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "no_fiducial_markers_found"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 6.72,
+      "total_decode_latency_ms": 7.14
+    }
+  },
+  {
+    "test_id": "SIM-NEG-24",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "b4c20d7a7f158ce4034f5d7dc755716e48df6a464e370f4e980201fc9a0e74e0",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 6.95,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 7.42,
+    "notes": "Negative test: unwatermarked_doc_8",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "no_fiducial_markers_found"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 6.95,
+      "total_decode_latency_ms": 7.42
+    }
+  },
+  {
+    "test_id": "SIM-NEG-25",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "f50e22ac08f40bc48232ed19f48c845bbad5bb061ef65b6b49374132cf19b8ba",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 6.74,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 7.16,
+    "notes": "Negative test: unwatermarked_doc_9",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "no_fiducial_markers_found"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 6.74,
+      "total_decode_latency_ms": 7.16
+    }
+  },
+  {
+    "test_id": "SIM-NEG-26",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "d3c7301900d7f4677cb910775f93b4ec3c58b2a742f7684c2ca0623d5ab02a9b",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 5.83,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 6.24,
+    "notes": "Negative test: partial_aruco_0",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [
+          3,
+          1
+        ],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "insufficient_markers_detected (2 < 3)"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 5.83,
+      "total_decode_latency_ms": 6.24
+    }
+  },
+  {
+    "test_id": "SIM-NEG-27",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "41284474359f697db075efe1a9ae232f0ae8a0d0e15fad15d7524825da87f1d2",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 6.86,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 7.43,
+    "notes": "Negative test: partial_aruco_1",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [
+          2
+        ],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "insufficient_markers_detected (1 < 3)"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 6.86,
+      "total_decode_latency_ms": 7.43
+    }
+  },
+  {
+    "test_id": "SIM-NEG-28",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "d3c7301900d7f4677cb910775f93b4ec3c58b2a742f7684c2ca0623d5ab02a9b",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 8.5,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 9.16,
+    "notes": "Negative test: partial_aruco_2",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [
+          3,
+          1
+        ],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "insufficient_markers_detected (2 < 3)"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 8.5,
+      "total_decode_latency_ms": 9.16
+    }
+  },
+  {
+    "test_id": "SIM-NEG-29",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "41284474359f697db075efe1a9ae232f0ae8a0d0e15fad15d7524825da87f1d2",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 8.62,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 9.31,
+    "notes": "Negative test: partial_aruco_3",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [
+          2
+        ],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "insufficient_markers_detected (1 < 3)"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 8.62,
+      "total_decode_latency_ms": 9.31
+    }
+  },
+  {
+    "test_id": "SIM-NEG-30",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "d3c7301900d7f4677cb910775f93b4ec3c58b2a742f7684c2ca0623d5ab02a9b",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 8.32,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 8.97,
+    "notes": "Negative test: partial_aruco_4",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [
+          3,
+          1
+        ],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "insufficient_markers_detected (2 < 3)"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 8.32,
+      "total_decode_latency_ms": 8.97
+    }
+  },
+  {
+    "test_id": "SIM-NEG-31",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "41284474359f697db075efe1a9ae232f0ae8a0d0e15fad15d7524825da87f1d2",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 7.87,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 8.56,
+    "notes": "Negative test: partial_aruco_5",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [
+          2
+        ],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "insufficient_markers_detected (1 < 3)"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 7.87,
+      "total_decode_latency_ms": 8.56
+    }
+  },
+  {
+    "test_id": "SIM-NEG-32",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "d3c7301900d7f4677cb910775f93b4ec3c58b2a742f7684c2ca0623d5ab02a9b",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 9.46,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 10.21,
+    "notes": "Negative test: partial_aruco_6",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [
+          3,
+          1
+        ],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "insufficient_markers_detected (2 < 3)"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 9.46,
+      "total_decode_latency_ms": 10.21
+    }
+  },
+  {
+    "test_id": "SIM-NEG-33",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "41284474359f697db075efe1a9ae232f0ae8a0d0e15fad15d7524825da87f1d2",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 7.32,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 8.01,
+    "notes": "Negative test: partial_aruco_7",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [
+          2
+        ],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "insufficient_markers_detected (1 < 3)"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 7.32,
+      "total_decode_latency_ms": 8.01
+    }
+  },
+  {
+    "test_id": "SIM-NEG-34",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "d3c7301900d7f4677cb910775f93b4ec3c58b2a742f7684c2ca0623d5ab02a9b",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 8.01,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 8.66,
+    "notes": "Negative test: partial_aruco_8",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [
+          3,
+          1
+        ],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "insufficient_markers_detected (2 < 3)"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 8.01,
+      "total_decode_latency_ms": 8.66
+    }
+  },
+  {
+    "test_id": "SIM-NEG-35",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "41284474359f697db075efe1a9ae232f0ae8a0d0e15fad15d7524825da87f1d2",
+    "image_resolution": "800x1000",
+    "sync_status": "NO_MARK",
+    "marker_count": 0,
+    "reprojection_error": 0.0,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "NO_SIGNAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "NO_SIGNAL",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 8.29,
+    "demod_latency_ms": 0.0,
+    "ecc_latency_ms": 0.0,
+    "total_latency_ms": 8.97,
+    "notes": "Negative test: partial_aruco_9",
+    "telemetry": {
+      "stage": "synchronization",
+      "sync_telemetry": {
+        "sync_success": false,
+        "detected_markers": [
+          2
+        ],
+        "reprojection_error": 0.0,
+        "homography_matrix": null,
+        "reason": "insufficient_markers_detected (1 < 3)"
+      },
+      "image_resolution": "800x1000",
+      "sync_latency_ms": 8.29,
+      "total_decode_latency_ms": 8.97
+    }
+  },
+  {
+    "test_id": "SIM-NEG-36",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "f57fc0ee3c0e860ffa987cb60514640717114f1dfa57502f3ca5ac9b8f844f32",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.1199,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "INVALID",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "INSUFFICIENT_EVIDENCE",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 74.12,
+    "demod_latency_ms": 51.34,
+    "ecc_latency_ms": 0.94,
+    "total_latency_ms": 127.15,
+    "notes": "Negative test: transplanted_doc_0",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "reprojection_error": 0.11992475390434265,
+        "homography_matrix": [
+          [
+            1.0000232275284817,
+            3.7175348883088695e-09,
+            0.4907225504721059
+          ],
+          [
+            3.6129801194742876e-09,
+            1.00001373225178,
+            0.49314478814300755
+          ],
+          [
+            7.225960426827306e-12,
+            9.293837211789982e-12,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          1,
+          1
+        ],
+        "mean_absolute_score": 7.707053184509277,
+        "min_margin": 6.419002056121826
+      },
+      "ecc": {
+        "ecc_success": true,
+        "crc_verified": true,
+        "binding_verified": false,
+        "length_verified": true,
+        "errata_count": 0,
+        "uncorrectable": false,
+        "error": "Document-release binding mismatch (transplantation detected)"
+      },
+      "image_resolution": "800x1000",
+      "reprojection_error": 0.11992475390434265,
+      "sync_latency_ms": 74.12,
+      "demod_latency_ms": 51.34,
+      "ecc_latency_ms": 0.94,
+      "total_decode_latency_ms": 127.15
+    }
+  },
+  {
+    "test_id": "SIM-NEG-37",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "ab99c3692942399caf55110f5eac44d296e75f869ca25e78224398d4a29e922c",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.1199,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "INVALID",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "INSUFFICIENT_EVIDENCE",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 59.89,
+    "demod_latency_ms": 47.97,
+    "ecc_latency_ms": 0.9,
+    "total_latency_ms": 109.26,
+    "notes": "Negative test: transplanted_doc_1",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "reprojection_error": 0.11992475390434265,
+        "homography_matrix": [
+          [
+            1.0000232275284817,
+            3.7175348883088695e-09,
+            0.4907225504721059
+          ],
+          [
+            3.6129801194742876e-09,
+            1.00001373225178,
+            0.49314478814300755
+          ],
+          [
+            7.225960426827306e-12,
+            9.293837211789982e-12,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          0,
+          0
+        ],
+        "mean_absolute_score": 7.708919048309326,
+        "min_margin": 6.490750789642334
+      },
+      "ecc": {
+        "ecc_success": true,
+        "crc_verified": true,
+        "binding_verified": false,
+        "length_verified": true,
+        "errata_count": 0,
+        "uncorrectable": false,
+        "error": "Document-release binding mismatch (transplantation detected)"
+      },
+      "image_resolution": "800x1000",
+      "reprojection_error": 0.11992475390434265,
+      "sync_latency_ms": 59.89,
+      "demod_latency_ms": 47.97,
+      "ecc_latency_ms": 0.9,
+      "total_decode_latency_ms": 109.26
+    }
+  },
+  {
+    "test_id": "SIM-NEG-38",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "a2346d82cbc2bdcfa0ca610f0b7e9844209c3a9fb70142fee9f92389bb4f5075",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.1199,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "INVALID",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "INSUFFICIENT_EVIDENCE",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 56.81,
+    "demod_latency_ms": 39.89,
+    "ecc_latency_ms": 1.02,
+    "total_latency_ms": 98.19,
+    "notes": "Negative test: transplanted_doc_2",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "reprojection_error": 0.11992475390434265,
+        "homography_matrix": [
+          [
+            1.0000232275284817,
+            3.7175348883088695e-09,
+            0.4907225504721059
+          ],
+          [
+            3.6129801194742876e-09,
+            1.00001373225178,
+            0.49314478814300755
+          ],
+          [
+            7.225960426827306e-12,
+            9.293837211789982e-12,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          0,
+          0
+        ],
+        "mean_absolute_score": 7.708162784576416,
+        "min_margin": 6.63075065612793
+      },
+      "ecc": {
+        "ecc_success": true,
+        "crc_verified": true,
+        "binding_verified": false,
+        "length_verified": true,
+        "errata_count": 0,
+        "uncorrectable": false,
+        "error": "Document-release binding mismatch (transplantation detected)"
+      },
+      "image_resolution": "800x1000",
+      "reprojection_error": 0.11992475390434265,
+      "sync_latency_ms": 56.81,
+      "demod_latency_ms": 39.89,
+      "ecc_latency_ms": 1.02,
+      "total_decode_latency_ms": 98.19
+    }
+  },
+  {
+    "test_id": "SIM-NEG-39",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "5ff247171dcb523ee4d3722d6349c3b1f72ba8d58a59c44dd6ad956ce82c8a7e",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.1199,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "INVALID",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "INSUFFICIENT_EVIDENCE",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 58.34,
+    "demod_latency_ms": 46.41,
+    "ecc_latency_ms": 1.29,
+    "total_latency_ms": 106.57,
+    "notes": "Negative test: transplanted_doc_3",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "reprojection_error": 0.11992475390434265,
+        "homography_matrix": [
+          [
+            1.0000232275284817,
+            3.7175348883088695e-09,
+            0.4907225504721059
+          ],
+          [
+            3.6129801194742876e-09,
+            1.00001373225178,
+            0.49314478814300755
+          ],
+          [
+            7.225960426827306e-12,
+            9.293837211789982e-12,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          1,
+          1
+        ],
+        "mean_absolute_score": 7.705771446228027,
+        "min_margin": 6.37349796295166
+      },
+      "ecc": {
+        "ecc_success": true,
+        "crc_verified": true,
+        "binding_verified": false,
+        "length_verified": true,
+        "errata_count": 0,
+        "uncorrectable": false,
+        "error": "Document-release binding mismatch (transplantation detected)"
+      },
+      "image_resolution": "800x1000",
+      "reprojection_error": 0.11992475390434265,
+      "sync_latency_ms": 58.34,
+      "demod_latency_ms": 46.41,
+      "ecc_latency_ms": 1.29,
+      "total_decode_latency_ms": 106.57
+    }
+  },
+  {
+    "test_id": "SIM-NEG-40",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "9a790051fe03b9d3032f71f8455471c41b9a062e830807b5592aa2314ae72ddc",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.1199,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "INVALID",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "INSUFFICIENT_EVIDENCE",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 58.05,
+    "demod_latency_ms": 37.04,
+    "ecc_latency_ms": 0.88,
+    "total_latency_ms": 96.49,
+    "notes": "Negative test: transplanted_doc_4",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "reprojection_error": 0.11992475390434265,
+        "homography_matrix": [
+          [
+            1.0000232275284817,
+            3.7175348883088695e-09,
+            0.4907225504721059
+          ],
+          [
+            3.6129801194742876e-09,
+            1.00001373225178,
+            0.49314478814300755
+          ],
+          [
+            7.225960426827306e-12,
+            9.293837211789982e-12,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          0,
+          0
+        ],
+        "mean_absolute_score": 7.713244438171387,
+        "min_margin": 6.514201641082764
+      },
+      "ecc": {
+        "ecc_success": true,
+        "crc_verified": true,
+        "binding_verified": false,
+        "length_verified": true,
+        "errata_count": 0,
+        "uncorrectable": false,
+        "error": "Document-release binding mismatch (transplantation detected)"
+      },
+      "image_resolution": "800x1000",
+      "reprojection_error": 0.11992475390434265,
+      "sync_latency_ms": 58.05,
+      "demod_latency_ms": 37.04,
+      "ecc_latency_ms": 0.88,
+      "total_decode_latency_ms": 96.49
+    }
+  },
+  {
+    "test_id": "SIM-NEG-41",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "9e118788b004dd75c4a013bb0853bd75a3a527ab6212d68912ec93749edf6c98",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.1199,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "INVALID",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "INSUFFICIENT_EVIDENCE",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 51.45,
+    "demod_latency_ms": 34.81,
+    "ecc_latency_ms": 0.87,
+    "total_latency_ms": 87.68,
+    "notes": "Negative test: transplanted_doc_5",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "reprojection_error": 0.11992475390434265,
+        "homography_matrix": [
+          [
+            1.0000232275284817,
+            3.7175348883088695e-09,
+            0.4907225504721059
+          ],
+          [
+            3.6129801194742876e-09,
+            1.00001373225178,
+            0.49314478814300755
+          ],
+          [
+            7.225960426827306e-12,
+            9.293837211789982e-12,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          0,
+          0
+        ],
+        "mean_absolute_score": 7.704672336578369,
+        "min_margin": 6.63075065612793
+      },
+      "ecc": {
+        "ecc_success": true,
+        "crc_verified": true,
+        "binding_verified": false,
+        "length_verified": true,
+        "errata_count": 0,
+        "uncorrectable": false,
+        "error": "Document-release binding mismatch (transplantation detected)"
+      },
+      "image_resolution": "800x1000",
+      "reprojection_error": 0.11992475390434265,
+      "sync_latency_ms": 51.45,
+      "demod_latency_ms": 34.81,
+      "ecc_latency_ms": 0.87,
+      "total_decode_latency_ms": 87.68
+    }
+  },
+  {
+    "test_id": "SIM-NEG-42",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "3b7921bb7c67664a536cf91812110ce6cf05dff78506f0574db417b2760f6f27",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.1199,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "INVALID",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "INSUFFICIENT_EVIDENCE",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 48.87,
+    "demod_latency_ms": 35.35,
+    "ecc_latency_ms": 0.89,
+    "total_latency_ms": 85.62,
+    "notes": "Negative test: transplanted_doc_6",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "reprojection_error": 0.11992475390434265,
+        "homography_matrix": [
+          [
+            1.0000232275284817,
+            3.7175348883088695e-09,
+            0.4907225504721059
+          ],
+          [
+            3.6129801194742876e-09,
+            1.00001373225178,
+            0.49314478814300755
+          ],
+          [
+            7.225960426827306e-12,
+            9.293837211789982e-12,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          0,
+          0
+        ],
+        "mean_absolute_score": 7.715543746948242,
+        "min_margin": 6.490750789642334
+      },
+      "ecc": {
+        "ecc_success": true,
+        "crc_verified": true,
+        "binding_verified": false,
+        "length_verified": true,
+        "errata_count": 0,
+        "uncorrectable": false,
+        "error": "Document-release binding mismatch (transplantation detected)"
+      },
+      "image_resolution": "800x1000",
+      "reprojection_error": 0.11992475390434265,
+      "sync_latency_ms": 48.87,
+      "demod_latency_ms": 35.35,
+      "ecc_latency_ms": 0.89,
+      "total_decode_latency_ms": 85.62
+    }
+  },
+  {
+    "test_id": "SIM-NEG-43",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "527e7ca204c6031e2d6e87c3f96c0124038efeca3e1e6a677dd137a649d78e8f",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.1199,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "INVALID",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "INSUFFICIENT_EVIDENCE",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 48.55,
+    "demod_latency_ms": 34.88,
+    "ecc_latency_ms": 0.86,
+    "total_latency_ms": 84.75,
+    "notes": "Negative test: transplanted_doc_7",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "reprojection_error": 0.11992475390434265,
+        "homography_matrix": [
+          [
+            1.0000232275284817,
+            3.7175348883088695e-09,
+            0.4907225504721059
+          ],
+          [
+            3.6129801194742876e-09,
+            1.00001373225178,
+            0.49314478814300755
+          ],
+          [
+            7.225960426827306e-12,
+            9.293837211789982e-12,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          0,
+          0
+        ],
+        "mean_absolute_score": 7.713576793670654,
+        "min_margin": 6.651402473449707
+      },
+      "ecc": {
+        "ecc_success": true,
+        "crc_verified": true,
+        "binding_verified": false,
+        "length_verified": true,
+        "errata_count": 0,
+        "uncorrectable": false,
+        "error": "Document-release binding mismatch (transplantation detected)"
+      },
+      "image_resolution": "800x1000",
+      "reprojection_error": 0.11992475390434265,
+      "sync_latency_ms": 48.55,
+      "demod_latency_ms": 34.88,
+      "ecc_latency_ms": 0.86,
+      "total_decode_latency_ms": 84.75
+    }
+  },
+  {
+    "test_id": "SIM-NEG-44",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "638eec0870390b0f8a2d7d602dd6fffbbaaa68b2add21f4d0b3d31ae9a253d4a",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.1199,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "INVALID",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "INSUFFICIENT_EVIDENCE",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 50.34,
+    "demod_latency_ms": 35.86,
+    "ecc_latency_ms": 0.87,
+    "total_latency_ms": 87.55,
+    "notes": "Negative test: transplanted_doc_8",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "reprojection_error": 0.11992475390434265,
+        "homography_matrix": [
+          [
+            1.0000232275284817,
+            3.7175348883088695e-09,
+            0.4907225504721059
+          ],
+          [
+            3.6129801194742876e-09,
+            1.00001373225178,
+            0.49314478814300755
+          ],
+          [
+            7.225960426827306e-12,
+            9.293837211789982e-12,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          0,
+          0
+        ],
+        "mean_absolute_score": 7.70990514755249,
+        "min_margin": 6.674847602844238
+      },
+      "ecc": {
+        "ecc_success": true,
+        "crc_verified": true,
+        "binding_verified": false,
+        "length_verified": true,
+        "errata_count": 0,
+        "uncorrectable": false,
+        "error": "Document-release binding mismatch (transplantation detected)"
+      },
+      "image_resolution": "800x1000",
+      "reprojection_error": 0.11992475390434265,
+      "sync_latency_ms": 50.34,
+      "demod_latency_ms": 35.86,
+      "ecc_latency_ms": 0.87,
+      "total_decode_latency_ms": 87.55
+    }
+  },
+  {
+    "test_id": "SIM-NEG-45",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "b89d6088256caf40013098ba51fb62a04a04f50b0a457e001c9b028c5087f607",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.1199,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "INVALID",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "INSUFFICIENT_EVIDENCE",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 49.82,
+    "demod_latency_ms": 34.45,
+    "ecc_latency_ms": 0.86,
+    "total_latency_ms": 85.58,
+    "notes": "Negative test: transplanted_doc_9",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "reprojection_error": 0.11992475390434265,
+        "homography_matrix": [
+          [
+            1.0000232275284817,
+            3.7175348883088695e-09,
+            0.4907225504721059
+          ],
+          [
+            3.6129801194742876e-09,
+            1.00001373225178,
+            0.49314478814300755
+          ],
+          [
+            7.225960426827306e-12,
+            9.293837211789982e-12,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          0,
+          0
+        ],
+        "mean_absolute_score": 7.695253372192383,
+        "min_margin": 6.470099925994873
+      },
+      "ecc": {
+        "ecc_success": true,
+        "crc_verified": true,
+        "binding_verified": false,
+        "length_verified": true,
+        "errata_count": 0,
+        "uncorrectable": false,
+        "error": "Document-release binding mismatch (transplantation detected)"
+      },
+      "image_resolution": "800x1000",
+      "reprojection_error": 0.11992475390434265,
+      "sync_latency_ms": 49.82,
+      "demod_latency_ms": 34.45,
+      "ecc_latency_ms": 0.86,
+      "total_decode_latency_ms": 85.58
+    }
+  },
+  {
+    "test_id": "SIM-NEG-46",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "985342940def8b3393e35437a9ed8cb42501b1e6328a2c9971d4b987032f38cf",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.1199,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "PARTIAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "INSUFFICIENT_EVIDENCE",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 17.83,
+    "demod_latency_ms": 34.49,
+    "ecc_latency_ms": 1.35,
+    "total_latency_ms": 54.15,
+    "notes": "Negative test: scrubbed_doc_0",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "reprojection_error": 0.11992475390434265,
+        "homography_matrix": [
+          [
+            1.0000232275284817,
+            3.7175348883088695e-09,
+            0.4907225504721059
+          ],
+          [
+            3.6129801194742876e-09,
+            1.00001373225178,
+            0.49314478814300755
+          ],
+          [
+            7.225960426827306e-12,
+            9.293837211789982e-12,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          1,
+          1
+        ],
+        "mean_absolute_score": 1.6772656440734863,
+        "min_margin": 0.0
+      },
+      "ecc": {
+        "ecc_success": false,
+        "crc_verified": false,
+        "binding_verified": false,
+        "length_verified": false,
+        "errata_count": -1,
+        "uncorrectable": true,
+        "error": "Too many (or few) errors found by Chien Search for the errata locator polynomial!"
+      },
+      "image_resolution": "800x1000",
+      "reprojection_error": 0.11992475390434265,
+      "sync_latency_ms": 17.83,
+      "demod_latency_ms": 34.49,
+      "ecc_latency_ms": 1.35,
+      "total_decode_latency_ms": 54.15
+    }
+  },
+  {
+    "test_id": "SIM-NEG-47",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "985342940def8b3393e35437a9ed8cb42501b1e6328a2c9971d4b987032f38cf",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.1199,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "PARTIAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "INSUFFICIENT_EVIDENCE",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 19.46,
+    "demod_latency_ms": 35.0,
+    "ecc_latency_ms": 1.42,
+    "total_latency_ms": 56.31,
+    "notes": "Negative test: scrubbed_doc_1",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "reprojection_error": 0.11992475390434265,
+        "homography_matrix": [
+          [
+            1.0000232275284817,
+            3.7175348883088695e-09,
+            0.4907225504721059
+          ],
+          [
+            3.6129801194742876e-09,
+            1.00001373225178,
+            0.49314478814300755
+          ],
+          [
+            7.225960426827306e-12,
+            9.293837211789982e-12,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          1,
+          1
+        ],
+        "mean_absolute_score": 1.6772656440734863,
+        "min_margin": 0.0
+      },
+      "ecc": {
+        "ecc_success": false,
+        "crc_verified": false,
+        "binding_verified": false,
+        "length_verified": false,
+        "errata_count": -1,
+        "uncorrectable": true,
+        "error": "Too many (or few) errors found by Chien Search for the errata locator polynomial!"
+      },
+      "image_resolution": "800x1000",
+      "reprojection_error": 0.11992475390434265,
+      "sync_latency_ms": 19.46,
+      "demod_latency_ms": 35.0,
+      "ecc_latency_ms": 1.42,
+      "total_decode_latency_ms": 56.31
+    }
+  },
+  {
+    "test_id": "SIM-NEG-48",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "985342940def8b3393e35437a9ed8cb42501b1e6328a2c9971d4b987032f38cf",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.1199,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "PARTIAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "INSUFFICIENT_EVIDENCE",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 16.38,
+    "demod_latency_ms": 34.04,
+    "ecc_latency_ms": 1.44,
+    "total_latency_ms": 52.33,
+    "notes": "Negative test: scrubbed_doc_2",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "reprojection_error": 0.11992475390434265,
+        "homography_matrix": [
+          [
+            1.0000232275284817,
+            3.7175348883088695e-09,
+            0.4907225504721059
+          ],
+          [
+            3.6129801194742876e-09,
+            1.00001373225178,
+            0.49314478814300755
+          ],
+          [
+            7.225960426827306e-12,
+            9.293837211789982e-12,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          1,
+          1
+        ],
+        "mean_absolute_score": 1.6772656440734863,
+        "min_margin": 0.0
+      },
+      "ecc": {
+        "ecc_success": false,
+        "crc_verified": false,
+        "binding_verified": false,
+        "length_verified": false,
+        "errata_count": -1,
+        "uncorrectable": true,
+        "error": "Too many (or few) errors found by Chien Search for the errata locator polynomial!"
+      },
+      "image_resolution": "800x1000",
+      "reprojection_error": 0.11992475390434265,
+      "sync_latency_ms": 16.38,
+      "demod_latency_ms": 34.04,
+      "ecc_latency_ms": 1.44,
+      "total_decode_latency_ms": 52.33
+    }
+  },
+  {
+    "test_id": "SIM-NEG-49",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "985342940def8b3393e35437a9ed8cb42501b1e6328a2c9971d4b987032f38cf",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.1199,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "PARTIAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "INSUFFICIENT_EVIDENCE",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 16.17,
+    "demod_latency_ms": 33.03,
+    "ecc_latency_ms": 1.37,
+    "total_latency_ms": 51.05,
+    "notes": "Negative test: scrubbed_doc_3",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "reprojection_error": 0.11992475390434265,
+        "homography_matrix": [
+          [
+            1.0000232275284817,
+            3.7175348883088695e-09,
+            0.4907225504721059
+          ],
+          [
+            3.6129801194742876e-09,
+            1.00001373225178,
+            0.49314478814300755
+          ],
+          [
+            7.225960426827306e-12,
+            9.293837211789982e-12,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          1,
+          1
+        ],
+        "mean_absolute_score": 1.6772656440734863,
+        "min_margin": 0.0
+      },
+      "ecc": {
+        "ecc_success": false,
+        "crc_verified": false,
+        "binding_verified": false,
+        "length_verified": false,
+        "errata_count": -1,
+        "uncorrectable": true,
+        "error": "Too many (or few) errors found by Chien Search for the errata locator polynomial!"
+      },
+      "image_resolution": "800x1000",
+      "reprojection_error": 0.11992475390434265,
+      "sync_latency_ms": 16.17,
+      "demod_latency_ms": 33.03,
+      "ecc_latency_ms": 1.37,
+      "total_decode_latency_ms": 51.05
+    }
+  },
+  {
+    "test_id": "SIM-NEG-50",
+    "physical_or_simulated": "SIMULATED",
+    "printer": "None (Negative Corpus)",
+    "printer_type": "Simulation",
+    "paper": "Negative / Distorted Canvas",
+    "camera": "None",
+    "camera_model_if_known": null,
+    "lighting": "Variable",
+    "distance": "N/A",
+    "angle": "N/A",
+    "document_id": "DOC_TARGET",
+    "release_id": "REL_01",
+    "artifact_hash": "N/A",
+    "capture_hash": "985342940def8b3393e35437a9ed8cb42501b1e6328a2c9971d4b987032f38cf",
+    "image_resolution": "800x1000",
+    "sync_status": "OK",
+    "marker_count": 4,
+    "reprojection_error": 0.1199,
+    "pre_ecc_ber": 0.0,
+    "post_ecc_ber": 1.0,
+    "ecc_corrected": 0,
+    "watermark_status": "PARTIAL",
+    "recovered_bits": 0,
+    "expected_bits": 128,
+    "tardos_state": "INSUFFICIENT_EVIDENCE",
+    "candidate": null,
+    "abstention": true,
+    "sync_latency_ms": 16.18,
+    "demod_latency_ms": 34.87,
+    "ecc_latency_ms": 1.48,
+    "total_latency_ms": 53.01,
+    "notes": "Negative test: scrubbed_doc_4",
+    "telemetry": {
+      "sync": {
+        "sync_success": true,
+        "detected_markers": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "reprojection_error": 0.11992475390434265,
+        "homography_matrix": [
+          [
+            1.0000232275284817,
+            3.7175348883088695e-09,
+            0.4907225504721059
+          ],
+          [
+            3.6129801194742876e-09,
+            1.00001373225178,
+            0.49314478814300755
+          ],
+          [
+            7.225960426827306e-12,
+            9.293837211789982e-12,
+            1.0
+          ]
+        ]
+      },
+      "demod": {
+        "demodulated_bits": 480,
+        "tile_count": 2,
+        "fine_offset": [
+          1,
+          1
+        ],
+        "mean_absolute_score": 1.6772656440734863,
+        "min_margin": 0.0
+      },
+      "ecc": {
+        "ecc_success": false,
+        "crc_verified": false,
+        "binding_verified": false,
+        "length_verified": false,
+        "errata_count": -1,
+        "uncorrectable": true,
+        "error": "Too many (or few) errors found by Chien Search for the errata locator polynomial!"
+      },
+      "image_resolution": "800x1000",
+      "reprojection_error": 0.11992475390434265,
+      "sync_latency_ms": 16.18,
+      "demod_latency_ms": 34.87,
+      "ecc_latency_ms": 1.48,
+      "total_decode_latency_ms": 53.01
+    }
+  }
+]

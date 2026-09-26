@@ -1,0 +1,37 @@
+{
+  "timestamp": "2026-09-26T09:41:16Z",
+  "status": "PASS",
+  "checks": {
+    "python_runtime": {
+      "version": "3.9.0",
+      "status": "PASS",
+      "details": "Python 3.9.0 (required: >= 3.9)"
+    },
+    "crypto_primitives": {
+      "status": "PASS",
+      "details": "ML-KEM-768, ML-DSA-65, AES-256-GCM validated"
+    },
+    "storage_writable": {
+      "status": "PASS",
+      "path": "C:\\Projects\\SIH26237\\data\\artifacts"
+    },
+    "api_endpoints": {
+      "status": "PASS",
+      "health_response": {
+        "status": "healthy",
+        "service": "SIH26237 API",
+        "version": "1.0.0",
+        "ledger_events_count": 1,
+        "registered_documents_count": 64,
+        "enrolled_recipients_count": 3,
+        "releases_count": 1,
+        "active_jobs_count": 2
+      },
+      "ledger_valid": true
+    },
+    "frontend_build": {
+      "status": "PASS",
+      "details": "Production distribution present"
+    }
+  }
+}
