@@ -115,7 +115,14 @@ async def correlation_and_audit_middleware(request: Request, call_next):
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
-    response.headers["Content-Security-Policy"] = "default-src 'self'"
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'self'; "
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+        "font-src 'self' https://fonts.gstatic.com data:; "
+        "img-src 'self' data: blob:; "
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval'; "
+        "connect-src 'self' https: http:;"
+    )
 
     # Enforce no-store on sensitive artifact downloads, packages, and decryption responses
     if any(k in request.url.path for k in ["/download", "/packages", "/decrypt", "/provenance"]):
