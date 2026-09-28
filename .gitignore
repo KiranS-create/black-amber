@@ -69,3 +69,7 @@ Thumbs.db
 cloudflared.exe
 *.exe
 
+# Ephemeral Demo Runs
+artifacts/demo/golden_run/
+
+
