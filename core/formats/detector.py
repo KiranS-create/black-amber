@@ -326,6 +326,25 @@ class FormatDetector:
                         confidence=0.9
                     )
 
+        # Check for JSON structure
+        stripped = sample_text.strip()
+        if (stripped.startswith('{') and stripped.endswith('}')) or (stripped.startswith('[') and stripped.endswith(']')):
+            try:
+                import json
+                json.loads(sample_text)
+                return FormatIdentificationResult(
+                    detected_format="JSON",
+                    mime_type="application/json",
+                    extension="json",
+                    format_tier=FormatTier.TIER_3,
+                    magic_bytes_hex=magic_hex,
+                    is_extension_consistent=(declared_ext == "json"),
+                    is_mime_consistent=(declared_mime == "application/json" if declared_mime else True),
+                    confidence=0.95
+                )
+            except Exception:
+                pass
+
         # Generic Plaintext
         return FormatIdentificationResult(
             detected_format="TXT",
@@ -333,8 +352,8 @@ class FormatDetector:
             extension="txt",
             format_tier=FormatTier.TIER_2,
             magic_bytes_hex=magic_hex,
-            is_extension_consistent=(declared_ext in ["txt", "text", "log"]),
-            is_mime_consistent=(declared_mime in ["text/plain"] if declared_mime else True),
+            is_extension_consistent=(declared_ext in ["txt", "text", "log", "md", "markdown", "py", "yaml", "yml", "json", "xml", "tsv", "ini", "conf"] if declared_ext else True),
+            is_mime_consistent=(declared_mime in ["text/plain", "text/markdown", "application/json", "text/x-python"] if declared_mime else True),
             confidence=0.85
         )
 

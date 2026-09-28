@@ -19,13 +19,46 @@ import {
 } from '../types';
 import { 
   DEMO_FIXTURES,
-  computeMockAttribution 
+  computeMockAttribution,
+  ATTACK_SCENARIOS
 } from './mockData';
 
-const API_BASE = (import.meta as any).env?.VITE_API_URL || 
-  (typeof window !== 'undefined' && window.location.origin.includes(':5173') 
-    ? 'http://localhost:8000' 
-    : (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:8000'));
+const resolveApiBase = (): string => {
+  const envUrl = (import.meta as any).env?.VITE_API_URL;
+  if (envUrl) return envUrl;
+  if (typeof window !== 'undefined') {
+    const { hostname, port, origin } = window.location;
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      if (port === '8000') return origin;
+      return 'http://localhost:8000';
+    }
+    return origin;
+  }
+  return 'http://localhost:8000';
+};
+
+export const API_BASE = resolveApiBase();
+
+export const CANONICAL_SUPPORTED_EXTENSIONS = '.pdf,.docx,.pptx,.xlsx,.png,.jpg,.jpeg,.txt,.csv,.rtf,.odt,.ods,.odp,.zip,.json';
+
+export const CANONICAL_SUPPORTED_MIMES = [
+  'application/pdf',
+  'image/png',
+  'image/jpeg',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'text/plain',
+  'text/csv',
+  'application/rtf',
+  'application/vnd.oasis.opendocument.text',
+  'application/vnd.oasis.opendocument.spreadsheet',
+  'application/vnd.oasis.opendocument.presentation',
+  'application/zip',
+  'application/x-zip-compressed',
+  'application/json',
+  'application/octet-stream'
+];
 
 class ApiService {
   private isLiveBackend: boolean = false;
@@ -77,7 +110,7 @@ class ApiService {
       anti_double_counting: 'EvidenceDependencyGraph with Max Evidentiary Bound',
       decision_policy: 'Fail-Closed (Never Force an Attribution)'
     },
-    supported_formats: ['application/pdf', 'image/png', 'image/jpeg']
+    supported_formats: CANONICAL_SUPPORTED_MIMES
   };
 
   constructor() {
@@ -460,8 +493,13 @@ class ApiService {
         this.localDocuments.unshift(resultDoc);
         return resultDoc;
       }
-      throw new Error(`HTTP ${res.status}: Failed to upload document`);
+      const err = await res.json().catch(() => ({}));
+      const msg = err?.error?.message || err?.detail || `HTTP ${res.status}: Failed to upload document`;
+      throw new Error(msg);
     } catch (e: any) {
+      if (e?.message && !e.message.includes('Failed to fetch') && !e.message.includes('NetworkError') && !e.message.includes('timeout')) {
+        throw e;
+      }
       this.isLiveBackend = false;
       throw new Error(`Backend unreachable at POST ${API_BASE}/documents: ${e?.message || e}`);
     }
@@ -625,14 +663,28 @@ class ApiService {
     }
 
     try {
+      const payload: any = {
+        recipient_ids: recipientIds,
+        tardos_enabled: tardosEnabled ?? true
+      };
+      if (documentId) {
+        payload.document_id = documentId;
+      }
+      if (documentName) {
+        payload.document_name = documentName;
+      }
+      if (documentBase64) {
+        payload.document_base64 = documentBase64;
+      }
+      if (targets && targets.length > 0) {
+        payload.target_type = targets[0].target_type === 'GROUP' ? 'groups' : 'recipients';
+        payload.target_ids = targets.map(t => t.target_id);
+      }
+
       const res = await fetch(`${API_BASE}/releases`, {
         method: 'POST',
         headers: this.getAuthHeaders({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({
-          document_id: documentId,
-          recipient_ids: recipientIds,
-          enable_tardos: tardosEnabled ?? true
-        }),
+        body: JSON.stringify(payload),
         signal: AbortSignal.timeout(8000)
       });
       if (res.ok) {
@@ -641,8 +693,12 @@ class ApiService {
         this.localReleases.unshift(release);
         return release;
       }
-      throw new Error(`HTTP ${res.status}: Failed to create release`);
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err?.error?.message || err?.detail || `HTTP ${res.status}: Failed to create release`);
     } catch (e: any) {
+      if (e?.message && !e.message.includes('Failed to fetch') && !e.message.includes('NetworkError') && !e.message.includes('timeout')) {
+        throw e;
+      }
       this.isLiveBackend = false;
       throw new Error(`Backend unreachable: ${e?.message || e}`);
     }
@@ -711,6 +767,22 @@ class ApiService {
   // -------------------------------------------------------------
   // 4. Investigations & Forensic Analysis API
   // -------------------------------------------------------------
+  public async getLeaks(): Promise<LeakMetadata[]> {
+    if (this.forceOffline) {
+      return [];
+    }
+    try {
+      const res = await fetch(`${API_BASE}/leaks`, {
+        headers: this.getAuthHeaders(),
+        signal: AbortSignal.timeout(3000)
+      });
+      if (res.ok) {
+        return await res.json();
+      }
+    } catch {}
+    return [];
+  }
+
   public async uploadLeak(file: File, suspectedReleaseId?: string): Promise<LeakMetadata> {
     if (this.forceOffline) {
       const hashBuffer = await crypto.subtle.digest('SHA-256', await file.arrayBuffer());
@@ -736,7 +808,16 @@ class ApiService {
       headers: this.getAuthHeaders(),
       body: formData
     });
-    return await res.json();
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err?.error?.message || err?.detail || `HTTP ${res.status}: Leak upload failed`);
+    }
+    const data: LeakMetadata = await res.json();
+    this.isLiveBackend = true;
+    return {
+      ...data,
+      original_filename: file.name
+    };
   }
 
   public async analyzeLeak(
@@ -744,8 +825,10 @@ class ApiService {
     releaseId?: string,
     telemetry?: AttackTelemetryInput
   ): Promise<AttributionResult> {
-    // If it is a known benchmark scenario ID, run the deterministic benchmark
-    if (scenarioIdOrBase64.length < 50 && !scenarioIdOrBase64.includes(';base64,')) {
+    const isBenchmark = ATTACK_SCENARIOS.some(s => s.id === scenarioIdOrBase64);
+    const isLeakId = scenarioIdOrBase64.startsWith('leak_');
+
+    if (isBenchmark) {
       const res = computeMockAttribution(scenarioIdOrBase64);
       // Record in local investigations
       const invRecord: InvestigationRecord = {
@@ -769,16 +852,28 @@ class ApiService {
       return computeMockAttribution('clean_bob');
     }
 
+    const reqBody: any = {
+      expected_release_id: releaseId,
+      attack_telemetry: telemetry
+    };
+
+    if (isLeakId) {
+      reqBody.leak_id = scenarioIdOrBase64;
+    } else {
+      reqBody.leaked_document_base64 = scenarioIdOrBase64;
+    }
+
     const res = await fetch(`${API_BASE}/analyze`, {
       method: 'POST',
       headers: this.getAuthHeaders({ 'Content-Type': 'application/json' }),
-      body: JSON.stringify({
-        leaked_document_base64: scenarioIdOrBase64,
-        expected_release_id: releaseId,
-        attack_telemetry: telemetry
-      })
+      body: JSON.stringify(reqBody)
     });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err?.error?.message || err?.detail || `HTTP ${res.status}: Leak analysis failed`);
+    }
     const job = await res.json();
+    this.isLiveBackend = true;
     return job.result || computeMockAttribution('clean_bob');
   }
 

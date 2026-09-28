@@ -30,8 +30,13 @@ class AppConfig(BaseModel):
         "text/plain",
         "text/csv",
         "application/rtf",
-        "application/octet-stream",
+        "application/vnd.oasis.opendocument.text",
+        "application/vnd.oasis.opendocument.spreadsheet",
+        "application/vnd.oasis.opendocument.presentation",
         "application/zip",
+        "application/x-zip-compressed",
+        "application/json",
+        "application/octet-stream",
     ]
     
     # Cryptographic & Traceability Defaults
@@ -76,7 +81,7 @@ class AppConfig(BaseModel):
     rate_limit_enabled: bool = True
     rate_limit_default: int = 100       # General API requests per minute
     rate_limit_crypto: int = 20         # Crypto/Attribution intensive requests per minute
-    rate_limit_upload: int = 10         # Artifact uploads per minute
+    rate_limit_upload: int = Field(default_factory=lambda: int(os.getenv("RATE_LIMIT_UPLOAD", "60")))
     rate_limit_window_seconds: int = 60
 
     # Anti-Replay Protection Configuration

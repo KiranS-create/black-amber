@@ -139,15 +139,20 @@ def sanitize_path(filename: str, base_dir: Path) -> Path:
         )
     return resolved
 
-def sniff_mime_type(data: bytes) -> str:
+def sniff_mime_type(
+    data: bytes,
+    filename: Optional[str] = None,
+    declared_mime: Optional[str] = None
+) -> str:
     """
     Sniff MIME type from raw magic bytes and container structure to prevent Content-Type spoofing.
+    Cross-validates against declared filename extension and MIME when provided.
     """
     if len(data) == 0:
         return "application/octet-stream"
     try:
         from core.formats.detector import FormatDetector
-        res = FormatDetector.identify_format(data)
+        res = FormatDetector.identify_format(data, filename=filename, declared_mime=declared_mime)
         return res.mime_type
     except Exception:
         if data.startswith(b"%PDF"):
@@ -156,12 +161,17 @@ def sniff_mime_type(data: bytes) -> str:
             return "image/png"
         if data.startswith(b"\xff\xd8\xff"):
             return "image/jpeg"
+        if data.startswith(b"{\\rtf"):
+            return "application/rtf"
+        if data.startswith(b"PK\x03\x04"):
+            return "application/zip"
         return "application/octet-stream"
 
 def validate_uploaded_payload(
     payload: bytes,
     declared_content_type: Optional[str] = None,
-    max_size: Optional[int] = None
+    max_size: Optional[int] = None,
+    filename: Optional[str] = None
 ) -> str:
     """
     Validates uploaded file size, magic-byte MIME type, and checks for polyglot/executable hazards.
@@ -211,7 +221,7 @@ def validate_uploaded_payload(
             details={"detected_mime": detected_mime, "allowed": config.allowed_mime_types}
         )
 
-    sniffed = sniff_mime_type(payload)
+    sniffed = sniff_mime_type(payload, filename=filename, declared_mime=declared_content_type)
     if sniffed not in config.allowed_mime_types and sniffed != "application/octet-stream":
         raise APIException(
             code=ErrorCode.UNSUPPORTED_ARTIFACT_TYPE,

@@ -18,7 +18,11 @@ import {
   Check,
   Play,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  FileSpreadsheet,
+  FileImage,
+  Layers,
+  HelpCircle
 } from 'lucide-react';
 import { 
   AttributionResult, 
@@ -59,12 +63,9 @@ export const InvestigationsTab: React.FC<InvestigationsTabProps> = ({
   const handleRunAnalysis = async (scenarioId: string) => {
     setLoading(true);
     setSelectedScenarioId(scenarioId);
+    setCustomUpload(null);
     try {
-      if (customUpload) {
-        await onAnalyzeLeak(customUpload.leak_id, customUpload.suspected_release_id);
-      } else {
-        await onAnalyzeLeak(scenarioId);
-      }
+      await onAnalyzeLeak(scenarioId);
     } finally {
       setTimeout(() => setLoading(false), 200);
     }
@@ -82,6 +83,7 @@ export const InvestigationsTab: React.FC<InvestigationsTabProps> = ({
       console.error('Leak upload failed:', err);
     } finally {
       setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
 
@@ -132,19 +134,19 @@ export const InvestigationsTab: React.FC<InvestigationsTabProps> = ({
   };
   const presentationState = getPresentationState();
 
-  // Dynamic Investigation Timeline
+  // Vertical Investigation Timeline (Left Zone)
   const timelineEvents = leakResult ? [
-    { time: 'Genesis', title: 'Release boundary', desc: 'Protected payload encapsulated under NIST FIPS 203 ML-KEM-768', status: 'verified', phase: 'genesis' },
-    { time: 'Auth', title: 'Principals authorized', desc: 'Recipient post-quantum identities enrolled in key registry', status: 'verified', phase: 'auth' },
-    { time: 'Capsule', title: 'Cryptographic capsule sealed', desc: `ML-KEM ciphertext bound to designated recipient (${candidateId})`, status: 'verified', phase: 'kem' },
-    { time: 'Signed', title: 'Provenance receipt recorded', desc: 'Decryption event signed with ML-DSA-65 and appended to ledger', status: 'verified', phase: 'ledger' },
-    { time: 'Recovered', title: 'Suspect artifact ingested', desc: `Payload intercepted: ${artifactDisplayName}`, status: 'warning', phase: 'recovery' },
-    { time: 'Extraction', title: 'Traceability extraction', desc: `Watermark signal status: ${leakResult.watermark_status}`, status: 'verified', phase: 'extract' },
-    { time: 'Fusion', title: 'Bayesian evidence fusion', desc: `Combined score: +${fusedScore.toFixed(2)} LLR (Margin: Δ = ${separationMargin.toFixed(2)})`, status: 'verified', phase: 'correlation' },
-    { time: 'Verdict', title: 'Attribution verdict', desc: leakResult.should_abstain ? 'Fail-closed: Signal insufficient to accuse candidate' : `Attribution verified for candidate ${candidateName}`, status: leakResult.should_abstain ? 'warning' : 'verified', phase: 'attribution' }
+    { time: '00:00', title: 'Artifact Encapsulation', desc: 'Payload encapsulated under NIST FIPS 203 ML-KEM-768', status: 'verified' },
+    { time: '00:02', title: 'Recipient Enrolled', desc: `Post-quantum key bound to principal (${candidateId})`, status: 'verified' },
+    { time: '00:05', title: 'Cryptographic Release', desc: 'Dynamic decryption watermark generated via 2D DSSS', status: 'verified' },
+    { time: '00:08', title: 'Provenance Committed', desc: 'Decryption event signed with ML-DSA-65 and appended to ledger', status: 'verified' },
+    { time: '00:14', title: 'Suspect Artifact Intercepted', desc: `Interception of carrier payload: ${artifactDisplayName}`, status: 'warning' },
+    { time: '00:16', title: 'Signal Extraction', desc: `Demodulation complete. Watermark signal: ${leakResult.watermark_status}`, status: 'verified' },
+    { time: '00:19', title: 'Bayesian Fusion', desc: `Score: +${fusedScore.toFixed(2)} LLR (Separation margin: Δ = ${separationMargin.toFixed(2)})`, status: 'verified' },
+    { time: '00:21', title: 'Final Verdict', desc: leakResult.should_abstain ? 'Fail-closed: Insufficient evidence to accuse candidate' : `Attribution verified for candidate ${candidateName}`, status: leakResult.should_abstain ? 'warning' : 'verified' }
   ] : [];
 
-  // Dynamic Evidence Chain Graph Nodes
+  // Evidence Chain Graph Nodes (Bottom Zone)
   const evidenceChainNodes = leakResult ? [
     { id: 'artifact', label: 'Artifact', sub: artifactDisplayName, status: 'Verified', icon: FileText, detail: 'Master document registered in repository.' },
     { id: 'release', label: 'Release', sub: customUpload?.suspected_release_id || 'rel_active', status: 'Verified', icon: Package, detail: 'Multi-recipient release package with post-quantum key capsules.' },
@@ -173,14 +175,14 @@ export const InvestigationsTab: React.FC<InvestigationsTabProps> = ({
       >
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', fontWeight: 600 }}>
-              Forensic analysis
+            <span style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              Forensic Analysis Workstation
             </span>
             {leakResult && (
               <>
-                <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>•</span>
-                <span style={{ fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)', color: 'var(--primary-text)', fontWeight: 600 }}>
-                  Active case
+                <span style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>•</span>
+                <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--primary)', fontWeight: 600 }}>
+                  Active Case
                 </span>
               </>
             )}
@@ -188,16 +190,16 @@ export const InvestigationsTab: React.FC<InvestigationsTabProps> = ({
           <h1
             style={{
               margin: 0,
-              fontSize: 'var(--text-2xl)',
+              fontSize: '20px',
               fontWeight: 700,
               color: 'var(--text)',
               letterSpacing: '-0.02em',
               lineHeight: 1.2
             }}
           >
-            {leakResult ? `Leaked artifact: ${artifactDisplayName}` : 'Investigations'}
+            {leakResult ? `Forensic Case: ${artifactDisplayName}` : 'Investigations'}
           </h1>
-          <p style={{ margin: '4px 0 0 0', fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>
+          <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: 'var(--text-secondary)' }}>
             Autonomous multi-channel Bayesian evidence fusion with fail-closed decision guard.
           </p>
         </div>
@@ -222,7 +224,7 @@ export const InvestigationsTab: React.FC<InvestigationsTabProps> = ({
         )}
       </div>
 
-      {/* Benchmark Scenario Selector & File Ingestion Bar */}
+      {/* Benchmark Scenario Selector & Ingestion Bar */}
       <div
         className="workstation-card"
         style={{
@@ -236,8 +238,8 @@ export const InvestigationsTab: React.FC<InvestigationsTabProps> = ({
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-          <span style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text-tertiary)' }}>
-            Evaluate benchmark:
+          <span style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            Benchmark scenarios:
           </span>
 
           {ATTACK_SCENARIOS.map(scen => {
@@ -252,13 +254,13 @@ export const InvestigationsTab: React.FC<InvestigationsTabProps> = ({
                   padding: '4px 10px',
                   fontSize: '11.5px',
                   height: '28px',
-                  backgroundColor: isSelected ? 'var(--primary-subtle)' : 'var(--surface)',
-                  borderColor: isSelected ? 'var(--primary-border)' : 'var(--border)',
+                  backgroundColor: isSelected ? 'var(--surface-elevated)' : 'var(--surface)',
+                  borderColor: isSelected ? 'var(--primary)' : 'var(--border)',
                   color: isSelected ? 'var(--text)' : 'var(--text-secondary)',
                   fontWeight: isSelected ? 600 : 500
                 }}
               >
-                <Play size={10} style={{ color: isSelected ? 'var(--primary-text)' : 'inherit' }} />
+                <Play size={10} style={{ color: isSelected ? 'var(--primary)' : 'inherit' }} />
                 <span>{scen.name}</span>
               </button>
             );
@@ -272,13 +274,14 @@ export const InvestigationsTab: React.FC<InvestigationsTabProps> = ({
             id="leak-file-input"
             onChange={handleFileUpload}
             style={{ display: 'none' }}
+            accept=".pdf,.docx,.pptx,.xlsx,.png,.jpg,.jpeg,.txt,.csv,.rtf,.odt,.ods,.odp,.zip,.json"
           />
           <button
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
-            className="btn-secondary"
+            className="btn-primary"
             style={{
-              padding: '0 12px',
+              padding: '0 14px',
               height: '32px',
               fontSize: '12px',
               display: 'flex',
@@ -292,7 +295,6 @@ export const InvestigationsTab: React.FC<InvestigationsTabProps> = ({
         </div>
       </div>
 
-      {/* If No Investigation Run Yet: Honest Empty State */}
       {!leakResult ? (
         <EmptyState
           icon={Search}
@@ -309,13 +311,13 @@ export const InvestigationsTab: React.FC<InvestigationsTabProps> = ({
         />
       ) : (
         <>
-          {/* Presentation State & Hardware Modality Ribbon */}
+          {/* Epistemic Transparency & Hardware Modality Ribbon */}
           <div
             className="workstation-card"
             style={{
-              padding: '14px 18px',
+              padding: '12px 16px',
               backgroundColor: 'var(--surface-elevated)',
-              border: '1px solid var(--border-subtle)',
+              border: '1px solid var(--border)',
               display: 'flex',
               flexDirection: 'column',
               gap: '10px'
@@ -334,10 +336,10 @@ export const InvestigationsTab: React.FC<InvestigationsTabProps> = ({
                 />
               </div>
 
-              {/* Primary Multi-Format Emphasis */}
+              {/* Verified Multi-Format Badge */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <span style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginRight: '4px' }}>
-                  Forensic Multi-Format Pipeline:
+                  Supported Tier-1 Formats:
                 </span>
                 {['PDF', 'DOCX', 'PPTX', 'XLSX', 'PNG', 'JPEG'].map(fmt => (
                   <span
@@ -348,7 +350,7 @@ export const InvestigationsTab: React.FC<InvestigationsTabProps> = ({
                       padding: '2px 7px',
                       borderRadius: 'var(--radius-xs)',
                       backgroundColor: 'var(--surface)',
-                      border: '1px solid var(--border-subtle)',
+                      border: '1px solid var(--border)',
                       color: 'var(--text-secondary)',
                       fontWeight: 600
                     }}
@@ -359,64 +361,68 @@ export const InvestigationsTab: React.FC<InvestigationsTabProps> = ({
               </div>
             </div>
 
-            {/* Modality-Honest Physical Hardware Statuses */}
+            {/* Epistemic Physical Validation Statuses */}
             <div
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
                 gap: '8px',
                 paddingTop: '8px',
-                borderTop: '1px solid var(--border-subtle)'
+                borderTop: '1px solid var(--border)'
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 10px', backgroundColor: 'var(--surface)', borderRadius: 'var(--radius-xs)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 10px', backgroundColor: 'var(--surface)', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border)' }}>
                 <span style={{ fontSize: '11.5px', color: 'var(--text-secondary)' }}>Device-in-loop</span>
-                <StatusBadge label="Verified" variant="success" size="xs" dot />
+                <StatusBadge label="VERIFIED" variant="success" size="xs" dot />
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 10px', backgroundColor: 'var(--surface)', borderRadius: 'var(--radius-xs)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 10px', backgroundColor: 'var(--surface)', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border)' }}>
                 <span style={{ fontSize: '11.5px', color: 'var(--text-secondary)' }}>Camera Capture</span>
-                <StatusBadge label="Not verified" variant="neutral" size="xs" dot />
+                <StatusBadge label="NOT VERIFIED" variant="neutral" size="xs" dot />
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 10px', backgroundColor: 'var(--surface)', borderRadius: 'var(--radius-xs)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 10px', backgroundColor: 'var(--surface)', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border)' }}>
                 <span style={{ fontSize: '11.5px', color: 'var(--text-secondary)' }}>Physical Printer</span>
-                <StatusBadge label="Unavailable" variant="neutral" size="xs" dot />
+                <StatusBadge label="UNAVAILABLE" variant="neutral" size="xs" dot />
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 10px', backgroundColor: 'var(--surface)', borderRadius: 'var(--radius-xs)' }}>
-                <span style={{ fontSize: '11.5px', color: 'var(--text-secondary)' }}>Flatbed Scanner</span>
-                <StatusBadge label="Unavailable" variant="neutral" size="xs" dot />
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 10px', backgroundColor: 'var(--surface)', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border)' }}>
+                <span style={{ fontSize: '11.5px', color: 'var(--text-secondary)' }}>Optical print/scan</span>
+                <StatusBadge label="SIMULATION CALIBRATION" variant="warning" size="xs" dot />
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 10px', backgroundColor: 'var(--surface)', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border)' }}>
+                <span style={{ fontSize: '11.5px', color: 'var(--text-secondary)' }}>Downstream actor</span>
+                <StatusBadge label="DOWNSTREAM GAP" variant="warning" size="xs" dot />
               </div>
             </div>
           </div>
 
-          {/* Main 2-Column Investigative Layout */}
+          {/* Asymmetric 3-Zone Workstation Layout */}
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'minmax(320px, 420px) 1fr',
-              gap: 'var(--space-6)',
+              gridTemplateColumns: '260px 1fr 340px',
+              gap: 'var(--space-5)',
               alignItems: 'start'
             }}
           >
-            {/* Column 1: Investigation Timeline */}
-            <div className="workstation-card" style={{ padding: 'var(--space-5)' }}>
+            {/* Zone 1 (Left): Vertical Investigation Timeline */}
+            <div className="workstation-card" style={{ padding: 'var(--space-4)' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--space-4)' }}>
-                <h2 style={{ margin: 0, fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)' }}>
-                  Investigation timeline
+                <h2 style={{ margin: 0, fontSize: '13px', fontWeight: 600, color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  Incident Timeline
                 </h2>
-                <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>
+                <span style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}>
                   {timelineEvents.length} events
                 </span>
               </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', position: 'relative' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', position: 'relative' }}>
                 <div
                   style={{
                     position: 'absolute',
                     top: '8px',
                     bottom: '8px',
-                    left: '7px',
+                    left: '6px',
                     width: '1px',
-                    backgroundColor: 'var(--border-subtle)',
+                    backgroundColor: 'var(--border)',
                     zIndex: 0
                   }}
                 />
@@ -430,7 +436,7 @@ export const InvestigationsTab: React.FC<InvestigationsTabProps> = ({
                       style={{
                         display: 'flex',
                         alignItems: 'flex-start',
-                        gap: '12px',
+                        gap: '10px',
                         position: 'relative',
                         zIndex: 1,
                         cursor: 'pointer',
@@ -442,25 +448,25 @@ export const InvestigationsTab: React.FC<InvestigationsTabProps> = ({
                     >
                       <div
                         style={{
-                          width: '14px',
-                          height: '14px',
+                          width: '13px',
+                          height: '13px',
                           borderRadius: '50%',
                           backgroundColor: evt.status === 'verified' ? 'var(--success)' : 'var(--warning)',
-                          border: '3px solid var(--surface)',
+                          border: '2px solid var(--surface)',
                           flexShrink: 0,
                           marginTop: '2px'
                         }}
                       />
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px' }}>
-                          <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--text-tertiary)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '1px' }}>
+                          <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: 'var(--text-tertiary)' }}>
                             {evt.time}
                           </span>
-                          <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text)' }}>
+                          <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text)' }}>
                             {evt.title}
                           </span>
                         </div>
-                        <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+                        <p style={{ margin: 0, fontSize: '11.5px', color: 'var(--text-secondary)', lineHeight: 1.35 }}>
                           {evt.desc}
                         </p>
                       </div>
@@ -470,263 +476,322 @@ export const InvestigationsTab: React.FC<InvestigationsTabProps> = ({
               </div>
             </div>
 
-            {/* Column 2: Case Facts & Structured Findings */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
-              <div className="workstation-card" style={{ padding: 'var(--space-5)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--space-4)' }}>
-                  <h2 style={{ margin: 0, fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)' }}>
-                    Case facts & findings
-                  </h2>
-                  <StatusBadge
-                    label={leakResult.should_abstain ? 'Abstained' : 'Attribution verified'}
-                    variant={leakResult.should_abstain ? 'warning' : 'success'}
-                    size="xs"
-                    dot
-                  />
+            {/* Zone 2 (Center): Recovered Artifact Examination Canvas */}
+            <div className="workstation-card" style={{ padding: 'var(--space-5)', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <h2 style={{ margin: 0, fontSize: '14px', fontWeight: 600, color: 'var(--text)' }}>
+                  Recovered Suspect Carrier
+                </h2>
+                <span
+                  style={{
+                    fontSize: '11px',
+                    fontFamily: 'var(--font-mono)',
+                    padding: '2px 6px',
+                    borderRadius: 'var(--radius-xs)',
+                    backgroundColor: 'var(--surface-elevated)',
+                    border: '1px solid var(--border)',
+                    color: 'var(--primary)'
+                  }}
+                >
+                  Carrier ID: {customUpload?.leak_id || 'BENCHMARK_CARRIER'}
+                </span>
+              </div>
+
+              {/* Carrier Canvas Frame */}
+              <div
+                style={{
+                  height: '240px',
+                  backgroundColor: 'var(--surface-subtle)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 'var(--radius-sm)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '12px',
+                  padding: 'var(--space-6)',
+                  position: 'relative'
+                }}
+              >
+                <div
+                  style={{
+                    width: '56px',
+                    height: '56px',
+                    borderRadius: 'var(--radius-md)',
+                    backgroundColor: 'var(--surface-elevated)',
+                    border: '1px solid var(--border)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'var(--primary)'
+                  }}
+                >
+                  <FileText size={28} />
                 </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border-subtle)', fontSize: '12.5px' }}>
-                    <span style={{ color: 'var(--text-secondary)' }}>Artifact</span>
-                    <span style={{ color: 'var(--text)', fontWeight: 500 }}>{artifactDisplayName}</span>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text)' }}>
+                    {artifactDisplayName}
                   </div>
-
-                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border-subtle)', fontSize: '12.5px' }}>
-                    <span style={{ color: 'var(--text-secondary)' }}>Attributed candidate</span>
-                    <span style={{ color: 'var(--text)', fontWeight: 600 }}>{candidateName} ({candidateId})</span>
-                  </div>
-
-                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border-subtle)', fontSize: '12.5px' }}>
-                    <span style={{ color: 'var(--text-secondary)' }}>Confidence tier</span>
-                    <span style={{ color: 'var(--text)' }}>
-                      {leakResult.confidence_level} (LLR +{fusedScore.toFixed(2)}, margin Δ = {separationMargin.toFixed(2)})
-                    </span>
-                  </div>
-
-                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', fontSize: '12.5px' }}>
-                    <span style={{ color: 'var(--text-secondary)' }}>Watermark signal</span>
-                    <span style={{ color: 'var(--text-secondary)' }}>{leakResult.watermark_status}</span>
+                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>
+                    Watermark Status: <span style={{ color: 'var(--success)' }}>{leakResult.watermark_status}</span>
                   </div>
                 </div>
 
-                {/* Progressive Disclosure: Technical Details */}
-                <div style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: '12px', marginTop: '14px' }}>
-                  <button
-                    type="button"
-                    onClick={() => setShowTechDetails(!showTechDetails)}
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', padding: '2px 6px', borderRadius: '3px', backgroundColor: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text-secondary)' }}>
+                    DEMODULATED: 2D DSSS
+                  </span>
+                  <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', padding: '2px 6px', borderRadius: '3px', backgroundColor: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text-secondary)' }}>
+                    ECC: RS(255, 223)
+                  </span>
+                </div>
+              </div>
+
+              {/* Evaluated Evidence Channels */}
+              {leakResult.channels && leakResult.channels.length > 0 && (
+                <div>
+                  <h3 style={{ margin: '0 0 10px 0', fontSize: '11.5px', fontWeight: 600, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                    Corroborating Evidence Channels
+                  </h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '8px' }}>
+                    {leakResult.channels.map(chan => (
+                      <div
+                        key={chan.channel_id}
+                        onClick={() => setActiveChannelDrawer(chan)}
+                        className="workstation-card"
+                        style={{
+                          padding: '10px 12px',
+                          cursor: 'pointer',
+                          backgroundColor: 'var(--surface-elevated)',
+                          border: '1px solid var(--border)'
+                        }}
+                      >
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                          <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text)' }}>
+                            {chan.channel_name}
+                          </span>
+                          <StatusBadge label={chan.status} variant={chan.status === 'VALID' ? 'success' : 'warning'} size="xs" dot />
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-tertiary)' }}>
+                          <span>Contribution</span>
+                          <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--primary)', fontWeight: 600 }}>
+                            +{chan.llr?.toFixed(2)} LLR
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Zone 3 (Right): Case Facts, Findings & Epistemic Boundaries */}
+            <div className="workstation-card" style={{ padding: 'var(--space-5)', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <h2 style={{ margin: 0, fontSize: '13px', fontWeight: 600, color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  Case Findings
+                </h2>
+                <StatusBadge
+                  label={leakResult.should_abstain ? 'Abstained' : 'Attributed'}
+                  variant={leakResult.should_abstain ? 'warning' : 'success'}
+                  size="xs"
+                  dot
+                />
+              </div>
+
+              {/* Structured Forensic Answers */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '12.5px' }}>
+                <div style={{ paddingBottom: '8px', borderBottom: '1px solid var(--border)' }}>
+                  <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>What happened?</div>
+                  <div style={{ color: 'var(--text)', fontWeight: 500, marginTop: '2px' }}>
+                    {leakResult.should_abstain 
+                      ? 'Leak artifact intercepted, but evidence margin falls below fail-closed threshold.' 
+                      : `Decrypted copy leaked; attribution matches enrolled principal ${candidateName}.`}
+                  </div>
+                </div>
+
+                <div style={{ paddingBottom: '8px', borderBottom: '1px solid var(--border)' }}>
+                  <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>Attributed Candidate</div>
+                  <div style={{ color: 'var(--text)', fontWeight: 600, marginTop: '2px' }}>
+                    {candidateName} <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)' }}>({candidateId})</span>
+                  </div>
+                </div>
+
+                <div style={{ paddingBottom: '8px', borderBottom: '1px solid var(--border)' }}>
+                  <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>Posterior Confidence</div>
+                  <div style={{ color: 'var(--text)', marginTop: '2px' }}>
+                    {leakResult.confidence_level} (Joint LLR: +{fusedScore.toFixed(2)}, Margin: Δ = {separationMargin.toFixed(2)})
+                  </div>
+                </div>
+
+                <div style={{ paddingBottom: '8px', borderBottom: '1px solid var(--border)' }}>
+                  <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>Known Limitations</div>
+                  <div style={{ color: 'var(--text-secondary)', marginTop: '2px', lineHeight: 1.35 }}>
+                    Downstream analog dissemination beyond recipient device screen unmonitored.
+                  </div>
+                </div>
+              </div>
+
+              {/* Progressive Disclosure: Technical Details Drawer Button */}
+              <div style={{ borderTop: '1px solid var(--border)', paddingTop: '10px' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowTechDetails(!showTechDetails)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    padding: 0,
+                    color: 'var(--primary)',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                >
+                  <span>Technical details</span>
+                  {showTechDetails ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                </button>
+
+                {showTechDetails && (
+                  <div
                     style={{
-                      background: 'none',
-                      border: 'none',
-                      padding: 0,
-                      color: 'var(--primary)',
-                      fontSize: '12px',
-                      fontWeight: 600,
-                      cursor: 'pointer',
+                      marginTop: '10px',
+                      padding: '10px',
+                      backgroundColor: 'var(--surface-elevated)',
+                      border: '1px solid var(--border)',
+                      borderRadius: 'var(--radius-xs)',
+                      fontSize: '11px',
                       display: 'flex',
-                      alignItems: 'center',
+                      flexDirection: 'column',
                       gap: '6px'
                     }}
                   >
-                    <span>Technical details</span>
-                    {showTechDetails ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-                  </button>
-
-                  {showTechDetails && (
-                    <div
-                      style={{
-                        marginTop: '10px',
-                        padding: '12px',
-                        backgroundColor: 'var(--surface-elevated)',
-                        border: '1px solid var(--border)',
-                        borderRadius: 'var(--radius-xs)',
-                        fontSize: '11.5px',
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                        gap: '8px'
-                      }}
-                    >
-                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span style={{ color: 'var(--text-secondary)' }}>Bayesian Prior:</span>
-                        <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--text)' }}>Dirichlet (α=1.0 uniform)</span>
-                      </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span style={{ color: 'var(--text-secondary)' }}>Decision Threshold:</span>
-                        <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--text)' }}>Δ ≥ 2.50 LLR</span>
-                      </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span style={{ color: 'var(--text-secondary)' }}>Abstention Guard:</span>
-                        <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--text)' }}>Fail-closed on Δ &lt; 2.50</span>
-                      </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span style={{ color: 'var(--text-secondary)' }}>Fusion Topology:</span>
-                        <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--text)' }}>DAG Anti-Double-Counting</span>
-                      </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ color: 'var(--text-secondary)' }}>Bayesian Prior:</span>
+                      <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--text)' }}>Dirichlet (α=1.0)</span>
                     </div>
-                  )}
-                </div>
-
-                {/* Evidence Channels Breakdown */}
-                {leakResult.channels && leakResult.channels.length > 0 && (
-                  <div style={{ marginTop: 'var(--space-5)' }}>
-                    <h3 style={{ margin: '0 0 10px 0', fontSize: '12px', fontWeight: 600, color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>
-                      Evaluated evidence channels
-                    </h3>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '10px' }}>
-                      {leakResult.channels.map(chan => (
-                        <div
-                          key={chan.channel_id}
-                          onClick={() => setActiveChannelDrawer(chan)}
-                          className="workstation-card"
-                          style={{
-                            padding: '10px 12px',
-                            cursor: 'pointer',
-                            backgroundColor: 'var(--surface-elevated)'
-                          }}
-                        >
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                            <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text)' }}>
-                              {chan.channel_name}
-                            </span>
-                            <StatusBadge label={chan.status} variant={chan.status === 'VALID' ? 'success' : 'warning'} size="xs" dot />
-                          </div>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-tertiary)' }}>
-                            <span>Contribution</span>
-                            <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--primary-text)', fontWeight: 600 }}>
-                              +{chan.llr?.toFixed(2)} LLR
-                            </span>
-                          </div>
-                        </div>
-                      ))}
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ color: 'var(--text-secondary)' }}>Decision Threshold:</span>
+                      <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--text)' }}>Δ ≥ 2.50 LLR</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ color: 'var(--text-secondary)' }}>Abstention Guard:</span>
+                      <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--text)' }}>Fail-closed</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ color: 'var(--text-secondary)' }}>Fusion Topology:</span>
+                      <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--text)' }}>DAG Anti-Double-Counting</span>
                     </div>
                   </div>
                 )}
               </div>
+            </div>
+          </div>
 
-              {/* 3. Evidence Chain & Causal Provenance */}
-              <div className="workstation-card" style={{ padding: 'var(--space-5)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--space-2)' }}>
-                  <div>
-                    <h2 style={{ margin: 0, fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)' }}>
-                      Evidence chain & causal provenance
-                    </h2>
-                    <p style={{ margin: '2px 0 0 0', fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
-                      End-to-end causal path from document genesis through decapsulation to cryptographic attribution.
-                    </p>
-                  </div>
-                  <span style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>
-                    Select node to inspect
-                  </span>
-                </div>
-
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
-                    gap: '8px',
-                    marginTop: 'var(--space-4)'
-                  }}
-                >
-                  {evidenceChainNodes.map((node, idx) => {
-                    const NodeIcon = node.icon;
-                    const isSelected = selectedChainNode?.id === node.id;
-                    return (
-                      <div
-                        key={node.id}
-                        onClick={() => setSelectedChainNode(isSelected ? null : node)}
-                        className="workstation-card"
-                        style={{
-                          padding: '10px',
-                          cursor: 'pointer',
-                          backgroundColor: isSelected ? 'var(--surface-elevated)' : 'var(--surface)',
-                          borderColor: isSelected ? 'var(--primary-border)' : 'var(--border-subtle)',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          gap: '6px'
-                        }}
-                      >
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <NodeIcon size={14} style={{ color: 'var(--text-secondary)' }} />
-                          <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: 'var(--text-tertiary)' }}>
-                            0{idx + 1}
-                          </span>
-                        </div>
-                        <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text)' }}>
-                          {node.label}
-                        </div>
-                        <div style={{ fontSize: '11px', color: 'var(--text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                          {node.sub}
-                        </div>
-                        <StatusBadge label={node.status} variant="success" size="xs" />
-                      </div>
-                    );
-                  })}
-                </div>
+          {/* Zone 4 (Bottom): Evidence Chain & Causal Lineage */}
+          <div className="workstation-card" style={{ padding: 'var(--space-5)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--space-2)' }}>
+              <div>
+                <h2 style={{ margin: 0, fontSize: '14px', fontWeight: 600, color: 'var(--text)' }}>
+                  Evidence Relationship Chain
+                </h2>
+                <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: 'var(--text-secondary)' }}>
+                  Deterministic causal path connecting original artifact, recipient release, watermark signal, and verification.
+                </p>
               </div>
+              <span style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>
+                Click node to examine
+              </span>
+            </div>
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
+                gap: '8px',
+                marginTop: 'var(--space-4)'
+              }}
+            >
+              {evidenceChainNodes.map((node, idx) => {
+                const NodeIcon = node.icon;
+                const isSelected = selectedChainNode?.id === node.id;
+                return (
+                  <div
+                    key={node.id}
+                    onClick={() => setSelectedChainNode(isSelected ? null : node)}
+                    className="workstation-card"
+                    style={{
+                      padding: '10px',
+                      cursor: 'pointer',
+                      backgroundColor: isSelected ? 'var(--surface-elevated)' : 'var(--surface)',
+                      borderColor: isSelected ? 'var(--primary)' : 'var(--border)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '6px'
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <NodeIcon size={14} style={{ color: 'var(--text-secondary)' }} />
+                      <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: 'var(--text-tertiary)' }}>
+                        0{idx + 1}
+                      </span>
+                    </div>
+                    <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text)' }}>
+                      {node.label}
+                    </div>
+                    <div
+                      style={{
+                        fontSize: '11px',
+                        color: 'var(--text-tertiary)',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap'
+                      }}
+                    >
+                      {node.sub}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </>
       )}
 
-      {/* Channel Details Drawer */}
-      {activeChannelDrawer && (
-        <Drawer
-          isOpen={true}
-          onClose={() => setActiveChannelDrawer(null)}
-          title={`Channel: ${activeChannelDrawer.channel_name}`}
-        >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
-            <div className="workstation-card" style={{ padding: 'var(--space-4)' }}>
-              <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginBottom: '4px' }}>
-                Status & Type
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <StatusBadge label={activeChannelDrawer.status} variant={activeChannelDrawer.status === 'VALID' ? 'success' : 'warning'} size="sm" dot />
-                <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Type: {activeChannelDrawer.type}</span>
-              </div>
+      {/* Channel Detail Drawer */}
+      <Drawer
+        isOpen={!!activeChannelDrawer}
+        onClose={() => setActiveChannelDrawer(null)}
+        title={activeChannelDrawer?.channel_name || 'Channel Details'}
+        subtitle={`Channel ID: ${activeChannelDrawer?.channel_id || ''}`}
+        width="440px"
+      >
+        {activeChannelDrawer && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Status:</span>
+              <StatusBadge label={activeChannelDrawer.status} variant={activeChannelDrawer.status === 'VALID' ? 'success' : 'warning'} size="sm" />
             </div>
-
-            <div className="workstation-card" style={{ padding: 'var(--space-4)' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '130px 1fr', gap: '8px', fontSize: '12px' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>Raw Measurement:</span>
-                <span style={{ color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>{activeChannelDrawer.raw_measurement}</span>
-
-                <span style={{ color: 'var(--text-secondary)' }}>LLR Contribution:</span>
-                <span style={{ color: 'var(--primary-text)', fontFamily: 'var(--font-mono)', fontWeight: 600 }}>
-                  +{activeChannelDrawer.llr?.toFixed(2)} LLR
-                </span>
-
-                <span style={{ color: 'var(--text-secondary)' }}>Reliability Factor:</span>
-                <span style={{ color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>{activeChannelDrawer.reliability}</span>
-
-                <span style={{ color: 'var(--text-secondary)' }}>Effective LLR:</span>
-                <span style={{ color: 'var(--text)', fontFamily: 'var(--font-mono)', fontWeight: 600 }}>
-                  +{activeChannelDrawer.effective_llr?.toFixed(2)} LLR
-                </span>
-              </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>LLR Contribution:</span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', fontWeight: 600, color: 'var(--primary)' }}>
+                +{activeChannelDrawer.llr?.toFixed(2)} LLR
+              </span>
             </div>
-          </div>
-        </Drawer>
-      )}
-
-      {/* Node Details Drawer */}
-      {selectedChainNode && (
-        <Drawer
-          isOpen={true}
-          onClose={() => setSelectedChainNode(null)}
-          title={`Provenance Node: ${selectedChainNode.label}`}
-        >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
-            <div className="workstation-card" style={{ padding: 'var(--space-4)' }}>
-              <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text)', marginBottom: '4px' }}>
-                {selectedChainNode.sub}
+            <div style={{ borderTop: '1px solid var(--border)', paddingTop: '12px' }}>
+              <div style={{ fontSize: '11px', textTransform: 'uppercase', color: 'var(--text-tertiary)', fontWeight: 600, marginBottom: '6px' }}>
+                Channel Observation
               </div>
-              <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
-                {selectedChainNode.detail}
+              <p style={{ margin: 0, fontSize: '12px', color: 'var(--text)', lineHeight: 1.5 }}>
+                {activeChannelDrawer.notes || 'Signal corroborates candidate identity with independent evidentiary weight.'}
               </p>
             </div>
           </div>
-        </Drawer>
-      )}
+        )}
+      </Drawer>
     </div>
   );
 };

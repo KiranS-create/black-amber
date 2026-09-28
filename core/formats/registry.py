@@ -75,6 +75,9 @@ class FormatAdapterRegistry:
             # Fallback check by extension or generic tier-3 adapter
             adapter = self.get_adapter_for_extension(id_result.extension)
 
+        if not adapter and (id_result.detected_format in ["JSON", "HTML", "TXT"] or id_result.mime_type in ["application/json", "text/plain"]):
+            adapter = self.get_adapter("TXT")
+
         if not adapter:
             raise FormatSecurityException(
                 failure_class=SecurityFailureClass.UNSUPPORTED_FORMAT,

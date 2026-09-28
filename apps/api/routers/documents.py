@@ -1,3 +1,4 @@
+import os
 from typing import List, Optional
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Response, UploadFile, status
 
@@ -32,8 +33,9 @@ async def upload_document(
         validate_id_format(document_id, "document_id")
 
     content = await file.read()
-    sniffed_mime = validate_uploaded_payload(content, file.content_type)
-    doc_name = document_name or file.filename or "Untitled.pdf"
+    sniffed_mime = validate_uploaded_payload(content, file.content_type, filename=file.filename)
+    raw_name = document_name or file.filename or "Untitled.pdf"
+    doc_name = os.path.basename(raw_name).replace("..", "").strip() or "Untitled.pdf"
 
     meta = default_orchestrator.register_document(
         document_bytes=content,

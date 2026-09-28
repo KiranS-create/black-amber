@@ -184,6 +184,7 @@ export interface ChannelFusionScore {
   effective_llr: number;
   status: 'VALID' | 'DEGRADED' | 'NO_SIGNAL' | 'FORGED' | 'UNAVAILABLE';
   type: 'INDEPENDENT' | 'PARTIAL_DEPENDENT' | 'DERIVED';
+  notes?: string;
 }
 
 export interface AttributionResult {

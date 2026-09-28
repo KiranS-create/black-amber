@@ -1,88 +1,88 @@
 {
   "metadata": {
     "title": "AegisTrace API Security & Zero-Trust Benchmark",
-    "timestamp": "2026-09-28T05:56:56.438214+00:00",
+    "timestamp": "2026-09-28T19:22:56.450252+00:00",
     "python_version": "3.9.0 (tags/v3.9.0:9cf6752, Oct  5 2020, 15:34:40) [MSC v.1927 64 bit (AMD64)]",
     "platform": "win32",
     "air_gapped": true
   },
   "authentication_and_authorization": {
     "iterations": 20000,
-    "token_resolution_ops_sec": 549752.61,
-    "token_resolution_latency_us": 1.819,
-    "role_hierarchy_eval_ops_sec": 5087505.09,
-    "role_hierarchy_eval_latency_us": 0.197,
-    "tenant_boundary_check_ops_sec": 6429627.72,
-    "tenant_boundary_check_latency_us": 0.156,
-    "composite_zero_trust_overhead_us": 2.171,
+    "token_resolution_ops_sec": 555759.33,
+    "token_resolution_latency_us": 1.799,
+    "role_hierarchy_eval_ops_sec": 5121464.06,
+    "role_hierarchy_eval_latency_us": 0.195,
+    "tenant_boundary_check_ops_sec": 6174173.43,
+    "tenant_boundary_check_latency_us": 0.162,
+    "composite_zero_trust_overhead_us": 2.157,
     "composite_zero_trust_overhead_ms": 0.0022,
     "meets_sub_millisecond_sla": true
   },
   "input_validation_and_sanitization": {
-    "id_format_validation_ops_sec": 1807713.51,
-    "hash_validation_ops_sec": 1687450.43,
-    "header_sanitization_ops_sec": 811378.78,
+    "id_format_validation_ops_sec": 1824867.47,
+    "hash_validation_ops_sec": 1590583.74,
+    "header_sanitization_ops_sec": 792261.19,
     "payload_validation_by_size": {
       "10_KB": {
         "size_bytes": 10240,
-        "validation_throughput_mb_s": 7.09,
-        "latency_ms": 1.378
+        "validation_throughput_mb_s": 5.5,
+        "latency_ms": 1.777
       },
       "100_KB": {
         "size_bytes": 102400,
-        "validation_throughput_mb_s": 1116.02,
-        "latency_ms": 0.088
+        "validation_throughput_mb_s": 529.79,
+        "latency_ms": 0.184
       },
       "1_MB": {
         "size_bytes": 1048576,
-        "validation_throughput_mb_s": 1278.38,
-        "latency_ms": 0.782
+        "validation_throughput_mb_s": 623.38,
+        "latency_ms": 1.604
       },
       "10_MB": {
         "size_bytes": 10485760,
-        "validation_throughput_mb_s": 1307.51,
-        "latency_ms": 7.648
+        "validation_throughput_mb_s": 535.02,
+        "latency_ms": 18.691
       }
     }
   },
   "rate_limiting_and_replay_protection": {
-    "rate_limiter_sequential_ops_sec": 1265146.97,
-    "rate_limiter_concurrent_ops_sec": 1040433.86,
+    "rate_limiter_sequential_ops_sec": 963392.99,
+    "rate_limiter_concurrent_ops_sec": 882788.82,
     "rate_limiter_threads": 8,
-    "anti_replay_cache_ops_sec": 1601178.47
+    "anti_replay_cache_ops_sec": 1040524.26
   },
   "endpoint_latencies": {
     "GET /health (unauthenticated)": {
       "samples": 100,
-      "min_latency_ms": 4.377,
-      "median_latency_ms": 5.281,
-      "p95_latency_ms": 6.606,
-      "p99_latency_ms": 13.665,
-      "max_latency_ms": 13.665
+      "min_latency_ms": 5.664,
+      "median_latency_ms": 6.952,
+      "p95_latency_ms": 10.425,
+      "p99_latency_ms": 19.782,
+      "max_latency_ms": 19.782
     },
     "GET /documents (authenticated, tenant-scoped)": {
       "samples": 100,
-      "min_latency_ms": 5.54,
-      "median_latency_ms": 6.435,
-      "p95_latency_ms": 7.423,
-      "p99_latency_ms": 8.734,
-      "max_latency_ms": 8.734
+      "min_latency_ms": 5.927,
+      "median_latency_ms": 7.51,
+      "p95_latency_ms": 10.236,
+      "p99_latency_ms": 12.442,
+      "max_latency_ms": 12.442
     },
     "GET /releases (authenticated, tenant-scoped)": {
       "samples": 100,
-      "min_latency_ms": 5.753,
-      "median_latency_ms": 6.673,
-      "p95_latency_ms": 8.249,
-      "p99_latency_ms": 8.545,
-      "max_latency_ms": 8.545
+      "min_latency_ms": 6.171,
+      "median_latency_ms": 7.465,
+      "p95_latency_ms": 8.518,
+      "p99_latency_ms": 8.901,
+      "max_latency_ms": 8.901
     },
     "GET /ledger/verify (tamper-evident audit)": {
       "samples": 100,
-      "min_latency_ms": 5.109,
-      "median_latency_ms": 5.881,
-      "p95_latency_ms": 7.281,
-      "p99_latency_ms": 8.248,
-      "max_latency_ms": 8.248
+      "min_latency_ms": 5.329,
+      "median_latency_ms": 6.57,
+      "p95_latency_ms": 7.876,
+      "p99_latency_ms": 8.578,
+      "max_latency_ms": 8.578
     }
   }
 }

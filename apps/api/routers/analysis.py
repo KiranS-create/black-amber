@@ -21,7 +21,7 @@ router = APIRouter(tags=["Analysis"])
 @router.post("/analyze", response_model=AnalysisJobResponse, status_code=status.HTTP_200_OK)
 def analyze_leak(
     req: AnalyzeRequest,
-    actor: SecurityPrincipal = Depends(require_role(["investigator", "administrator", "authority", "auditor", "system"]))
+    actor: SecurityPrincipal = Depends(require_role(["investigator", "administrator", "operator", "authority", "auditor", "system"]))
 ):
     """
     Execute forensic leak analysis:

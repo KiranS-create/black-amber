@@ -223,8 +223,15 @@ class SystemOrchestrator:
                     message=f"Invalid or oversized base64 payload for document: {str(e)}"
                 )
             doc_name = req.document_name or "Untitled.pdf"
-            # Auto-register document
-            doc_meta = self.register_document(doc_bytes, doc_name)
+            # Auto-register document with detected mime and tenant
+            from core.formats.detector import FormatDetector
+            fmt_res = FormatDetector.identify_format(doc_bytes, filename=doc_name)
+            doc_meta = self.register_document(
+                document_bytes=doc_bytes,
+                document_name=doc_name,
+                mime_type=fmt_res.mime_type,
+                tenant_id=req.tenant_id or "default_tenant"
+            )
             doc_id = doc_meta.document_id
         else:
             raise APIException(

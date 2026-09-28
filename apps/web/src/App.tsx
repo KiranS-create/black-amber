@@ -76,10 +76,7 @@ export function AppContent() {
   useEffect(() => {
     const init = async () => {
       const health = await apiService.checkHealth();
-      if (!health.online) {
-        setForceOffline(true);
-        apiService.setForceOffline(true);
-      }
+      setIsOnline(health.online);
       await refreshAllData();
     };
     init();
@@ -122,9 +119,7 @@ export function AppContent() {
       setInvestigations(invList);
       setIsDemoMode(apiService.isDemoMode());
     } catch (err: any) {
-      console.warn('Live refresh encountered error, setting offline simulation mode:', err);
-      setForceOffline(true);
-      apiService.setForceOffline(true);
+      console.warn('Live refresh encountered error, falling back to local view:', err);
       setIsOnline(false);
       const [docList, recList, relList, evList, legStatus, dirList, grpList, evRecList, invList] = await Promise.all([
         apiService.getDocuments(),

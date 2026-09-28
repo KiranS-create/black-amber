@@ -174,7 +174,24 @@ def safe_mime_check(payload: bytes, allowed_mimes: Optional[List[str]] = None) -
     """
     Sniffs magic bytes and verifies that executable/PE headers are rejected.
     """
-    allowed = allowed_mimes or ["application/pdf", "image/png", "image/jpeg"]
+    allowed = allowed_mimes or [
+        "application/pdf",
+        "image/png",
+        "image/jpeg",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "text/plain",
+        "text/csv",
+        "application/rtf",
+        "application/vnd.oasis.opendocument.text",
+        "application/vnd.oasis.opendocument.spreadsheet",
+        "application/vnd.oasis.opendocument.presentation",
+        "application/zip",
+        "application/x-zip-compressed",
+        "application/json",
+        "application/octet-stream",
+    ]
     if len(payload) == 0:
         return False, "empty"
 
@@ -184,14 +201,26 @@ def safe_mime_check(payload: bytes, allowed_mimes: Optional[List[str]] = None) -
     # Reject ELF binaries
     if payload.startswith(b"\x7fELF"):
         return False, "application/x-executable"
+    if payload.startswith(b"#!"):
+        return False, "text/x-shellscript"
 
-    if payload.startswith(b"%PDF"):
-        detected = "application/pdf"
-    elif payload.startswith(b"\x89PNG\r\n\x1a\n"):
-        detected = "image/png"
-    elif payload.startswith(b"\xff\xd8\xff"):
-        detected = "image/jpeg"
-    else:
-        detected = "application/octet-stream"
+    try:
+        from core.formats.detector import FormatDetector
+        res = FormatDetector.identify_format(payload)
+        detected = res.mime_type
+    except Exception:
+        if payload.startswith(b"%PDF"):
+            detected = "application/pdf"
+        elif payload.startswith(b"\x89PNG\r\n\x1a\n"):
+            detected = "image/png"
+        elif payload.startswith(b"\xff\xd8\xff"):
+            detected = "image/jpeg"
+        elif payload.startswith(b"{\\rtf"):
+            detected = "application/rtf"
+        elif payload.startswith(b"PK\x03\x04"):
+            detected = "application/zip"
+        else:
+            detected = "application/octet-stream"
 
-    return (detected in allowed), detected
+    return (detected in allowed or "application/octet-stream" in allowed), detected
+

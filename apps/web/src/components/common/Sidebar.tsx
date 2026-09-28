@@ -281,7 +281,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               AegisTrace 1.0
             </span>
             <span style={{ fontSize: '10px', color: 'var(--text-tertiary)' }}>
-              PQC Workstation
+              Forensic Instrument
             </span>
           </div>
         )}

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 from fastapi import APIRouter, Depends, File, Form, Response, UploadFile, status
 
 from apps.api.models import LeakMetadata
@@ -32,7 +32,7 @@ async def upload_leak(
         validate_id_format(suspected_release_id, "suspected_release_id")
 
     content = await file.read()
-    sniffed_mime = validate_uploaded_payload(content, file.content_type)
+    sniffed_mime = validate_uploaded_payload(content, file.content_type, filename=file.filename)
 
     meta = default_orchestrator.ingest_leak(
         leak_bytes=content,
@@ -42,6 +42,14 @@ async def upload_leak(
         tenant_id=actor.tenant_id
     )
     return meta
+
+@router.get("", response_model=List[LeakMetadata])
+def list_leaks(
+    actor: SecurityPrincipal = Depends(require_role(["investigator", "administrator", "viewer", "operator", "authority", "auditor", "system"]))
+):
+    """List all ingested leak artifacts scoped to tenant."""
+    tenant = None if actor.role == "system" else actor.tenant_id
+    return default_orchestrator.metadata_repo.list_leaks(tenant_id=tenant)
 
 @router.get("/{leak_id}", response_model=LeakMetadata)
 def get_leak(
@@ -57,7 +65,7 @@ def get_leak(
 @router.get("/{leak_id}/download")
 def download_leak(
     leak_id: str,
-    actor: SecurityPrincipal = Depends(require_role(["investigator", "administrator", "authority", "auditor", "system"]))
+    actor: SecurityPrincipal = Depends(require_role(["investigator", "administrator", "operator", "authority", "auditor", "system"]))
 ):
     """Download raw leak bytes from Data Plane storage."""
     validate_id_format(leak_id, "leak_id")

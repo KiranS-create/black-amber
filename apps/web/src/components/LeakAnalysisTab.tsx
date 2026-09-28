@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Search,
   Building, 
@@ -49,6 +49,7 @@ export const LeakAnalysisTab: React.FC<LeakAnalysisTabProps> = ({
   const [loadingStage, setLoadingStage] = useState<number>(0);
   const [uploading, setUploading] = useState(false);
   const [showTechnicalDetails, setShowTechnicalDetails] = useState(false);
+  const leakFileInputRef = useRef<HTMLInputElement>(null);
 
   const handleRunAnalysis = async () => {
     setLoading(true);
@@ -85,6 +86,7 @@ export const LeakAnalysisTab: React.FC<LeakAnalysisTabProps> = ({
       console.error('Leak upload failed:', err);
     } finally {
       setUploading(false);
+      if (leakFileInputRef.current) leakFileInputRef.current.value = '';
     }
   };
 
@@ -267,7 +269,10 @@ export const LeakAnalysisTab: React.FC<LeakAnalysisTabProps> = ({
                 )}
               </div>
             </div>
-            <label
+            <button
+              type="button"
+              onClick={() => leakFileInputRef.current?.click()}
+              disabled={uploading}
               style={{
                 backgroundColor: 'var(--surface)',
                 color: 'var(--primary-text)',
@@ -280,8 +285,14 @@ export const LeakAnalysisTab: React.FC<LeakAnalysisTabProps> = ({
               }}
             >
               {uploading ? 'Uploading...' : 'Browse'}
-              <input type="file" onChange={handleFileUpload} style={{ display: 'none' }} accept=".pdf,.png,.jpg,.jpeg" />
-            </label>
+            </button>
+            <input
+              ref={leakFileInputRef}
+              type="file"
+              onChange={handleFileUpload}
+              style={{ display: 'none' }}
+              accept=".pdf,.docx,.pptx,.xlsx,.png,.jpg,.jpeg,.txt,.csv,.rtf,.odt,.ods,.odp,.zip,.json"
+            />
           </div>
 
           <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>

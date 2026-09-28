@@ -69,6 +69,7 @@ export const VerifyTab: React.FC<VerifyTabProps> = ({
     if (file) {
       handleFileDrop(file);
     }
+    e.target.value = '';
   };
 
   return (

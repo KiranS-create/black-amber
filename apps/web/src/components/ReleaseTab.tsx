@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   FileText, 
   Lock, 
@@ -54,6 +54,7 @@ export const ReleaseTab: React.FC<ReleaseTabProps> = ({
   const [activeReleaseView, setActiveReleaseView] = useState<DocumentRelease | null>(releases[0] || null);
   const [uploadingDoc, setUploadingDoc] = useState(false);
   const [copiedHash, setCopiedHash] = useState(false);
+  const releaseFileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     apiService.getDirectoryGroups().then(groups => {
@@ -107,6 +108,7 @@ export const ReleaseTab: React.FC<ReleaseTabProps> = ({
       console.error('File upload failed:', err);
     } finally {
       setUploadingDoc(false);
+      if (releaseFileInputRef.current) releaseFileInputRef.current.value = '';
     }
   };
 
@@ -137,11 +139,11 @@ export const ReleaseTab: React.FC<ReleaseTabProps> = ({
       {/* Release Creator Card */}
       <div className="workstation-card" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <div>
-          <h2 style={{ margin: 0, fontSize: '16px', fontWeight: 600, color: 'var(--text-ivory)' }}>
-            Authorize Document Release
+          <h2 style={{ margin: 0, fontSize: '16px', fontWeight: 600, color: 'var(--text)' }}>
+            Create Release
           </h2>
-          <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: 'var(--text-slate)' }}>
-            Encapsulate symmetric AES-256-GCM payload keys into individual post-quantum ML-KEM-768 recipient capsules.
+          <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: 'var(--text-secondary)' }}>
+            Distribute protected document artifact to authorized recipients with cryptographic custody.
           </p>
         </div>
 
@@ -152,11 +154,17 @@ export const ReleaseTab: React.FC<ReleaseTabProps> = ({
               <label style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-graphite)', fontWeight: 600 }}>
                 Master Document Asset
               </label>
-              <label
+              <button
+                type="button"
+                onClick={() => releaseFileInputRef.current?.click()}
+                disabled={uploadingDoc}
                 style={{
+                  background: 'none',
+                  border: 'none',
+                  padding: 0,
                   fontSize: '11px',
                   fontWeight: 500,
-                  color: 'var(--petrol)',
+                  color: 'var(--primary)',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
@@ -165,8 +173,14 @@ export const ReleaseTab: React.FC<ReleaseTabProps> = ({
               >
                 <UploadCloud size={13} />
                 <span>{uploadingDoc ? 'Uploading…' : 'Upload file'}</span>
-                <input type="file" onChange={handleFileUpload} accept=".pdf,.doc,.docx" style={{ display: 'none' }} />
-              </label>
+              </button>
+              <input
+                ref={releaseFileInputRef}
+                type="file"
+                onChange={handleFileUpload}
+                accept=".pdf,.docx,.pptx,.xlsx,.png,.jpg,.jpeg,.txt,.csv,.rtf,.odt,.ods,.odp,.zip,.json"
+                style={{ display: 'none' }}
+              />
             </div>
 
             <select
@@ -441,7 +455,7 @@ export const ReleaseTab: React.FC<ReleaseTabProps> = ({
             }}
           >
             <Send size={15} />
-            <span>{loading ? 'Encapsulating capsules…' : `Encapsulate & distribute (${selectedRecipients.length} capsules)`}</span>
+            <span>{loading ? 'Creating release…' : `Create release (${selectedRecipients.length} ${selectedRecipients.length === 1 ? 'recipient' : 'recipients'})`}</span>
           </button>
         </form>
       </div>
