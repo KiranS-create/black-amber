@@ -45,7 +45,8 @@ def test_cli_demo():
         cwd=str(PROJECT_ROOT)
     )
     assert res.returncode == 0
-    assert "ALL POST-QUANTUM PROVENANCE & ATTRIBUTION CHECKS VERIFIED" in res.stdout
+    assert "GOLDEN INVESTIGATION OUTCOME SUMMARY" in res.stdout
+    assert "12-Pillar Verification: VERIFIED" in res.stdout
 
 
 def test_cli_benchmark_api():
