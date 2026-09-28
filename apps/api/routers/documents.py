@@ -34,8 +34,11 @@ async def upload_document(
 
     content = await file.read()
     sniffed_mime = validate_uploaded_payload(content, file.content_type, filename=file.filename)
-    raw_name = document_name or file.filename or "Untitled.pdf"
-    doc_name = os.path.basename(raw_name).replace("..", "").strip() or "Untitled.pdf"
+    safe_file_name = os.path.basename(file.filename).replace("..", "").strip() if file.filename else "Untitled.pdf"
+    if document_name:
+        doc_name = document_name.replace("..", "").strip() or safe_file_name or "Untitled.pdf"
+    else:
+        doc_name = safe_file_name or "Untitled.pdf"
 
     meta = default_orchestrator.register_document(
         document_bytes=content,
