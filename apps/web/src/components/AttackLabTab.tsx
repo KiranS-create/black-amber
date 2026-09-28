@@ -3,24 +3,17 @@ import { animate } from 'animejs';
 import { 
   Zap, 
   ShieldAlert, 
-  Camera, 
-  Image, 
-  FileWarning, 
-  RotateCcw, 
-  CheckCircle, 
-  AlertCircle, 
-  Play, 
   Sliders, 
-  Activity, 
-  Layers 
+  Activity
 } from 'lucide-react';
 import { ATTACK_SCENARIOS, computeMockAttribution } from '../services/mockData';
 import { AttackTestScenario, AttributionResult } from '../types';
-import { StatusBadge, OriginBadge } from './common/StatusBadge';
+import { StatusBadge } from './common/StatusBadge';
+import { EmptyState } from './common/EmptyState';
 
 export const AttackLabTab: React.FC = () => {
-  const [selectedAttack, setSelectedAttack] = useState<AttackTestScenario>(ATTACK_SCENARIOS[6]); // print-scan camera default
-  const [attackResult, setAttackResult] = useState<AttributionResult | null>(computeMockAttribution(ATTACK_SCENARIOS[6].id));
+  const [selectedAttack, setSelectedAttack] = useState<AttackTestScenario | null>(null);
+  const [attackResult, setAttackResult] = useState<AttributionResult | null>(null);
   const [evaluating, setEvaluating] = useState(false);
   const [activeCategory, setActiveCategory] = useState<'ALL' | 'PHYSICAL' | 'DIGITAL' | 'FORGERY'>('ALL');
 
@@ -29,7 +22,7 @@ export const AttackLabTab: React.FC = () => {
   const berRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || !selectedAttack) return;
     try {
       const obj = {
         psnr: 0,
@@ -49,8 +42,8 @@ export const AttackLabTab: React.FC = () => {
         }
       });
       animate('.telemetry-metric-box', {
-        scale: [0.97, 1],
-        opacity: [0.8, 1],
+        scale: [0.98, 1],
+        opacity: [0.85, 1],
         duration: 250,
         ease: 'outQuad'
       });
@@ -79,62 +72,36 @@ export const AttackLabTab: React.FC = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
       {/* Workstation Header */}
-      <div
-        style={{
-          backgroundColor: 'var(--surface)',
-          border: '1px solid var(--border)',
-          borderRadius: 'var(--radius-lg)',
-          padding: 'var(--space-4) var(--space-6)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: 'var(--space-3)',
-          boxShadow: 'var(--shadow-sm)'
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <div
-            style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: 'var(--radius-md)',
-              backgroundColor: 'var(--primary-subtle)',
-              color: 'var(--primary-text)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-          >
-            <Zap size={16} />
-          </div>
-          <div>
-            <h2 style={{ margin: 0, fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--text)' }}>
-              Adversarial Attack Laboratory & Robustness Verification
-            </h2>
-            <p style={{ margin: '2px 0 0 0', fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
-              Stress-testing against physical print-camera capture, digital compression, token forgeries, and framing attacks.
-            </p>
-          </div>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
+        <div>
+          <h1 style={{ margin: 0, fontSize: '20px', fontWeight: 600, color: 'var(--text-ivory)', letterSpacing: '-0.01em' }}>
+            Adversarial Attack Lab
+          </h1>
+          <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: 'var(--text-slate)', maxWidth: '640px' }}>
+            Robustness stress-testing against print-capture distortion, JPEG compression, geometric crops, and coalition forgery attacks.
+          </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '6px' }}>
+        {/* Category Filter */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '3px', backgroundColor: 'var(--bg-elevated)', padding: '3px', borderRadius: '4px', border: '1px solid var(--border-subtle)' }}>
           {(['ALL', 'PHYSICAL', 'DIGITAL', 'FORGERY'] as const).map(cat => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
               style={{
-                padding: '4px 10px',
-                borderRadius: 'var(--radius-md)',
-                backgroundColor: activeCategory === cat ? 'var(--primary-subtle)' : 'var(--surface-subtle)',
-                border: `1px solid ${activeCategory === cat ? 'var(--primary-border)' : 'var(--border)'}`,
-                color: activeCategory === cat ? 'var(--primary-text)' : 'var(--text-secondary)',
+                height: '28px',
+                padding: '0 10px',
+                borderRadius: '3px',
+                border: 'none',
+                backgroundColor: activeCategory === cat ? 'var(--bg-surface)' : 'transparent',
+                color: activeCategory === cat ? 'var(--text-ivory)' : 'var(--text-slate)',
                 fontSize: '11px',
-                fontWeight: 600,
-                cursor: 'pointer'
+                fontWeight: activeCategory === cat ? 600 : 400,
+                cursor: 'pointer',
+                transition: 'background var(--transition-fast)'
               }}
             >
-              {cat}
+              {cat === 'ALL' ? 'All vectors' : cat.charAt(0) + cat.slice(1).toLowerCase()}
             </button>
           ))}
         </div>
@@ -143,61 +110,49 @@ export const AttackLabTab: React.FC = () => {
       {/* Main Two Columns */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: 'var(--space-6)', alignItems: 'start' }}>
         {/* Left Column: Attack Scenario Picker */}
-        <div
-          style={{
-            backgroundColor: 'var(--surface)',
-            border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-lg)',
-            padding: 'var(--space-6)',
-            boxShadow: 'var(--shadow-sm)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 'var(--space-4)'
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <Sliders size={16} style={{ color: 'var(--primary-text)' }} />
-            <h3 style={{ margin: 0, fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--text)' }}>
+        <div className="workstation-card" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <h2 style={{ margin: 0, fontSize: '15px', fontWeight: 600, color: 'var(--text-ivory)' }}>
               Adversarial Vectors ({filteredScenarios.length})
-            </h3>
+            </h2>
+            <span style={{ fontSize: '11px', color: 'var(--text-graphite)' }}>Click to evaluate</span>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '520px', overflowY: 'auto' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '560px', overflowY: 'auto' }}>
             {filteredScenarios.map(sc => {
-              const isSelected = selectedAttack.id === sc.id;
+              const isSelected = selectedAttack?.id === sc.id;
               return (
                 <div
                   key={sc.id}
                   onClick={() => handleRunAttack(sc)}
                   style={{
                     padding: '12px 14px',
-                    borderRadius: 'var(--radius-md)',
-                    backgroundColor: isSelected ? 'var(--primary-subtle)' : 'var(--surface-subtle)',
-                    border: `1px solid ${isSelected ? 'var(--primary-border)' : 'var(--border)'}`,
+                    borderRadius: '4px',
+                    backgroundColor: isSelected ? 'rgba(76, 154, 154, 0.08)' : 'var(--bg-elevated)',
+                    border: `1px solid ${isSelected ? 'var(--petrol)' : 'var(--border-subtle)'}`,
                     cursor: 'pointer',
-                    transition: 'all var(--transition-fast)'
+                    transition: 'border-color var(--transition-fast)'
                   }}
                 >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3px' }}>
-                    <span style={{ fontWeight: 600, fontSize: 'var(--text-xs)', color: isSelected ? 'var(--primary-text)' : 'var(--text)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                    <span style={{ fontWeight: 500, fontSize: '13px', color: isSelected ? 'var(--text-ivory)' : 'var(--text-slate)' }}>
                       {sc.name}
                     </span>
                     <StatusBadge
-                      label={sc.expected_state}
+                      label={sc.expected_state === 'ATTRIBUTED' ? 'Attributed' : 'Inconclusive'}
                       variant={sc.expected_state === 'ATTRIBUTED' ? 'success' : 'warning'}
                       size="xs"
-                      dot
                     />
                   </div>
 
-                  <p style={{ fontSize: '11px', color: 'var(--text-secondary)', margin: '0 0 6px 0', lineHeight: 1.35 }}>
+                  <p style={{ fontSize: '12px', color: 'var(--text-graphite)', margin: '0 0 8px 0', lineHeight: 1.4 }}>
                     {sc.description}
                   </p>
 
-                  <div style={{ display: 'flex', gap: '12px', fontSize: '10.5px', color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}>
-                    <span>PSNR: <strong style={{ color: 'var(--text)' }}>{sc.attack_params.psnr} dB</strong></span>
-                    <span>SSIM: <strong style={{ color: 'var(--text)' }}>{sc.attack_params.ssim}</strong></span>
-                    <span>BER: <strong style={{ color: sc.attack_params.ber > 0.2 ? 'var(--danger-text)' : 'var(--success-text)' }}>{Math.round(sc.attack_params.ber * 100)}%</strong></span>
+                  <div style={{ display: 'flex', gap: '14px', fontSize: '11px', color: 'var(--text-graphite)', fontFamily: 'var(--font-mono)' }}>
+                    <span>PSNR: <strong style={{ color: 'var(--text-slate)' }}>{sc.attack_params.psnr} dB</strong></span>
+                    <span>SSIM: <strong style={{ color: 'var(--text-slate)' }}>{sc.attack_params.ssim}</strong></span>
+                    <span>BER: <strong style={{ color: sc.attack_params.ber > 0.2 ? 'var(--crimson)' : 'var(--jade)' }}>{Math.round(sc.attack_params.ber * 100)}%</strong></span>
                   </div>
                 </div>
               );
@@ -206,103 +161,100 @@ export const AttackLabTab: React.FC = () => {
         </div>
 
         {/* Right Column: Live Telemetry & Decision Proof */}
-        <div
-          style={{
-            backgroundColor: 'var(--surface)',
-            border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-lg)',
-            padding: 'var(--space-6)',
-            boxShadow: 'var(--shadow-sm)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 'var(--space-4)'
-          }}
-        >
+        <div className="workstation-card" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <ShieldAlert size={16} style={{ color: 'var(--primary-text)' }} />
-              <h3 style={{ margin: 0, fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--text)' }}>
-                Adversarial Telemetry & Decision Proof
-              </h3>
-            </div>
-            <StatusBadge
-              label={`${selectedAttack.attack_params.execution_mode} VECTOR`}
-              variant="neutral"
-              size="xs"
-            />
+            <h2 style={{ margin: 0, fontSize: '15px', fontWeight: 600, color: 'var(--text-ivory)' }}>
+              Vector Telemetry & Decision Proof
+            </h2>
+            {selectedAttack && (
+              <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', padding: '2px 8px', borderRadius: '4px', backgroundColor: 'var(--bg-elevated)', color: 'var(--text-slate)', border: '1px solid var(--border-subtle)' }}>
+                {selectedAttack.attack_params.execution_mode}
+              </span>
+            )}
           </div>
 
-          {attackResult && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+          {!selectedAttack || !attackResult ? (
+            <EmptyState
+              icon={Zap}
+              title="No Security Tests Executed Yet"
+              description="Select a distortion or coalition test scenario to evaluate bit error rate (BER), signal-to-noise ratio (PSNR), and watermark detector resilience."
+              primaryAction={{
+                label: 'Run benchmark scenario',
+                onClick: () => handleRunAttack(ATTACK_SCENARIOS[0]),
+                icon: Zap
+              }}
+            />
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               {/* Metadata Card */}
               <div
                 style={{
-                  backgroundColor: 'var(--surface-subtle)',
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-md)',
-                  padding: 'var(--space-3) var(--space-4)',
+                  backgroundColor: 'var(--bg-elevated)',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: '4px',
+                  padding: '12px 14px',
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: '4px',
-                  fontSize: 'var(--text-xs)'
+                  gap: '6px',
+                  fontSize: '12px'
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: 'var(--text-tertiary)' }}>Attack Vector ID:</span>
-                  <code style={{ color: 'var(--text)', fontWeight: 600 }}>{selectedAttack.id} ({selectedAttack.category})</code>
+                  <span style={{ color: 'var(--text-graphite)' }}>Vector ID</span>
+                  <code style={{ color: 'var(--text-ivory)', fontWeight: 500 }}>{selectedAttack.id} ({selectedAttack.category})</code>
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ color: 'var(--text-tertiary)' }}>ORIGINAL_DOC_HASH:</span>
-                  <code style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)', fontSize: '10.5px' }}>
-                    {selectedAttack.input_artifact_hash.substring(0, 16)}...
+                  <span style={{ color: 'var(--text-graphite)' }}>Master Digest</span>
+                  <code style={{ color: 'var(--text-slate)', fontFamily: 'var(--font-mono)', fontSize: '11px' }}>
+                    {selectedAttack.input_artifact_hash.substring(0, 16)}…
                   </code>
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ color: 'var(--text-tertiary)' }}>LEAK_ARTIFACT_HASH:</span>
-                  <code style={{ color: 'var(--primary-text)', fontFamily: 'var(--font-mono)', fontSize: '10.5px' }}>
-                    {selectedAttack.output_artifact_hash.substring(0, 16)}...
+                  <span style={{ color: 'var(--text-graphite)' }}>Distorted Digest</span>
+                  <code style={{ color: 'var(--petrol)', fontFamily: 'var(--font-mono)', fontSize: '11px' }}>
+                    {selectedAttack.output_artifact_hash.substring(0, 16)}…
                   </code>
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2px' }}>
-                  <span style={{ color: 'var(--text-tertiary)' }}>Distortion Type & Intensity:</span>
-                  <span style={{ color: 'var(--text)' }}>{selectedAttack.attack_params.distortion_type} ({selectedAttack.attack_params.intensity})</span>
+                  <span style={{ color: 'var(--text-graphite)' }}>Distortion Type</span>
+                  <span style={{ color: 'var(--text-ivory)' }}>{selectedAttack.attack_params.distortion_type} ({selectedAttack.attack_params.intensity})</span>
                 </div>
               </div>
 
               {/* Degradation Metrics Row */}
               <div
                 style={{
-                  backgroundColor: 'var(--surface-subtle)',
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-md)',
-                  padding: 'var(--space-3)'
+                  backgroundColor: 'var(--bg-elevated)',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: '4px',
+                  padding: '12px 14px'
                 }}
               >
-                <div style={{ fontSize: '10.5px', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase', marginBottom: '8px' }}>
-                  Distortion Telemetry ({selectedAttack.attack_params.distortion_type})
+                <div style={{ fontSize: '11px', color: 'var(--text-graphite)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '8px' }}>
+                  Physical Degradation Metrics
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', textAlign: 'center' }}>
-                  <div className="telemetry-metric-box" style={{ backgroundColor: 'var(--surface)', padding: '8px', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border)' }}>
-                    <div style={{ fontSize: '10px', color: 'var(--text-tertiary)' }}>PSNR</div>
-                    <div ref={psnrRef} style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>
+                  <div className="telemetry-metric-box" style={{ backgroundColor: 'var(--bg-surface)', padding: '10px 8px', borderRadius: '4px', border: '1px solid var(--border-subtle)' }}>
+                    <div style={{ fontSize: '10px', color: 'var(--text-graphite)', textTransform: 'uppercase' }}>PSNR</div>
+                    <div ref={psnrRef} style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-ivory)', fontFamily: 'var(--font-mono)', marginTop: '2px' }}>
                       {selectedAttack.attack_params.psnr} dB
                     </div>
                   </div>
 
-                  <div className="telemetry-metric-box" style={{ backgroundColor: 'var(--surface)', padding: '8px', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border)' }}>
-                    <div style={{ fontSize: '10px', color: 'var(--text-tertiary)' }}>SSIM</div>
-                    <div ref={ssimRef} style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>
+                  <div className="telemetry-metric-box" style={{ backgroundColor: 'var(--bg-surface)', padding: '10px 8px', borderRadius: '4px', border: '1px solid var(--border-subtle)' }}>
+                    <div style={{ fontSize: '10px', color: 'var(--text-graphite)', textTransform: 'uppercase' }}>SSIM</div>
+                    <div ref={ssimRef} style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-ivory)', fontFamily: 'var(--font-mono)', marginTop: '2px' }}>
                       {selectedAttack.attack_params.ssim}
                     </div>
                   </div>
 
-                  <div className="telemetry-metric-box" style={{ backgroundColor: 'var(--surface)', padding: '8px', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border)' }}>
-                    <div style={{ fontSize: '10px', color: 'var(--text-tertiary)' }}>Bit Error Rate</div>
-                    <div ref={berRef} style={{ fontSize: '14px', fontWeight: 700, color: selectedAttack.attack_params.ber > 0.2 ? 'var(--danger-text)' : 'var(--success-text)', fontFamily: 'var(--font-mono)' }}>
+                  <div className="telemetry-metric-box" style={{ backgroundColor: 'var(--bg-surface)', padding: '10px 8px', borderRadius: '4px', border: '1px solid var(--border-subtle)' }}>
+                    <div style={{ fontSize: '10px', color: 'var(--text-graphite)', textTransform: 'uppercase' }}>Bit Error Rate</div>
+                    <div ref={berRef} style={{ fontSize: '14px', fontWeight: 600, color: selectedAttack.attack_params.ber > 0.2 ? 'var(--crimson)' : 'var(--jade)', fontFamily: 'var(--font-mono)', marginTop: '2px' }}>
                       {Math.round(selectedAttack.attack_params.ber * 100)}%
                     </div>
                   </div>
@@ -312,19 +264,19 @@ export const AttackLabTab: React.FC = () => {
               {/* Decision State Card */}
               <div
                 style={{
-                  backgroundColor: attackResult.state === 'ATTRIBUTED' ? 'var(--success-subtle)' : 'var(--warning-subtle)',
-                  border: `1px solid ${attackResult.state === 'ATTRIBUTED' ? 'var(--success-border)' : 'var(--warning-border)'}`,
-                  borderRadius: 'var(--radius-md)',
-                  padding: 'var(--space-4)'
+                  backgroundColor: attackResult.state === 'ATTRIBUTED' ? 'var(--jade-bg)' : 'var(--amber-bg)',
+                  border: `1px solid ${attackResult.state === 'ATTRIBUTED' ? 'var(--jade-border)' : 'var(--amber-border)'}`,
+                  borderRadius: '4px',
+                  padding: '12px 14px'
                 }}
               >
-                <div style={{ fontSize: '10.5px', fontWeight: 700, textTransform: 'uppercase', color: attackResult.state === 'ATTRIBUTED' ? 'var(--success-text)' : 'var(--warning-text)', letterSpacing: '0.04em' }}>
-                  Engine Decision State
+                <div style={{ fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', color: attackResult.state === 'ATTRIBUTED' ? 'var(--jade-text)' : 'var(--amber-text)' }}>
+                  Decision Outcome
                 </div>
-                <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--text)', marginTop: '2px' }}>
+                <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-ivory)', marginTop: '2px' }}>
                   {attackResult.state}
                 </div>
-                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', marginTop: '4px' }}>
+                <div style={{ fontSize: '12px', color: 'var(--text-slate)', marginTop: '4px', lineHeight: 1.4 }}>
                   {attackResult.summary}
                 </div>
               </div>
@@ -332,16 +284,16 @@ export const AttackLabTab: React.FC = () => {
               {/* Proofs & Rationale */}
               <div
                 style={{
-                  backgroundColor: 'var(--surface-subtle)',
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-md)',
-                  padding: 'var(--space-3) var(--space-4)'
+                  backgroundColor: 'var(--bg-elevated)',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: '4px',
+                  padding: '12px 14px'
                 }}
               >
-                <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase', marginBottom: '4px' }}>
-                  Fail-Closed Robustness Analysis
+                <div style={{ fontSize: '11px', color: 'var(--text-graphite)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '6px' }}>
+                  Fail-Closed Verification Analysis
                 </div>
-                <ul style={{ margin: 0, paddingLeft: '18px', fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                <ul style={{ margin: 0, paddingLeft: '18px', fontSize: '12px', color: 'var(--text-slate)', display: 'flex', flexDirection: 'column', gap: '4px', lineHeight: 1.4 }}>
                   {attackResult.explanation?.map((exp, i) => (
                     <li key={i}>{exp}</li>
                   ))}

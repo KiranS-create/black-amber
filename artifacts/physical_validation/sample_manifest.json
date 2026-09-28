@@ -1,0 +1,78 @@
+{
+  "manifest_version": "1.0.0",
+  "generated_at": "2026-09-26T12:49:09.950127+00:00",
+  "dataset_category": "PHYSICAL",
+  "hardware_environment_connected": true,
+  "total_captures": 1,
+  "records": [
+    {
+      "capture_id": "PHYS-1790426949-sample_watermarked_document",
+      "physical_or_simulated": "PHYSICAL",
+      "document_id": "DOC_BENCHMARK_2026",
+      "release_id": "REL_01",
+      "artifact_hash": "N/A (physical acquisition)",
+      "capture_hash": "bccfbebaabb5edd5a8170ed01bb540ce83781d7bcff87eafc0672c4d47106bea",
+      "image_metadata": {
+        "resolution": "800x1000",
+        "channels": 3,
+        "format": "PNG",
+        "file_size_bytes": 195622,
+        "sharpness_laplacian_var": 1626.46,
+        "mean_luminance": 237.03
+      },
+      "hardware_metadata": {
+        "printer_model": "HP LaserJet Pro M404n",
+        "printer_type": "Laser",
+        "printer_dpi": 600,
+        "paper_stock": "Standard 80gsm A4",
+        "camera_make": "Apple",
+        "camera_model": "iPhone 15 Pro"
+      },
+      "environmental_metadata": {
+        "lighting_condition": "Normal indoor office (400-600 lux)",
+        "lux_level": 500.0,
+        "capture_distance_cm": 35.0,
+        "capture_angle_deg": 15.0,
+        "physical_degradation": "None"
+      },
+      "synchronization_metrics": {
+        "sync_status": "OK",
+        "detected_markers": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "marker_count": 4,
+        "reprojection_error_px": 0.1199,
+        "homography_inliers": 16
+      },
+      "ecc_and_payload_metrics": {
+        "pre_ecc_ber": 0.0,
+        "post_ecc_ber": 1.0,
+        "errata_bytes_corrected": 0,
+        "preamble_matched": false,
+        "crc32_verified": true,
+        "binding_verified": false,
+        "recovered_bits": 0,
+        "expected_bits": 128
+      },
+      "forensic_status": "CONFLICT_MULTI_SIGNAL",
+      "forensic_outcome": {
+        "confidence_score": 0.0,
+        "tardos_state": "NO_SIGNAL",
+        "accused_candidate": null,
+        "fused_confidence": 0.0,
+        "abstention_enforced": true,
+        "rejection_reason": "Codeword length mismatch against release specification"
+      },
+      "timing_telemetry_ms": {
+        "sync_ms": 89.69,
+        "demod_ms": 52.02,
+        "ecc_ms": 1.16,
+        "total_ms": 143.82
+      },
+      "operator_notes": ""
+    }
+  ]
+}

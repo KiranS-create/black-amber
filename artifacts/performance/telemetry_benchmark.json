@@ -1,0 +1,23 @@
+{
+  "1000_events": {
+    "ingest_throughput_ops_sec": 32284.83,
+    "ingest_duration_ms": 30.97,
+    "temporal_range_query_ms": 0.573,
+    "temporal_matched_count": 251,
+    "classification": "MEASURED"
+  },
+  "10000_events": {
+    "ingest_throughput_ops_sec": 27803.32,
+    "ingest_duration_ms": 359.67,
+    "temporal_range_query_ms": 10.386,
+    "temporal_matched_count": 2501,
+    "classification": "MEASURED"
+  },
+  "100000_events": {
+    "ingest_throughput_ops_sec": 32188.76,
+    "ingest_duration_ms": 3106.67,
+    "temporal_range_query_ms": 52.519,
+    "temporal_matched_count": 25001,
+    "classification": "MEASURED"
+  }
+}

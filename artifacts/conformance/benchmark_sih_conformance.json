@@ -1,0 +1,107 @@
+{
+  "benchmark_id": "bm_sih_20260927152322",
+  "timestamp": "2026-09-27T15:23:22.165831+00:00",
+  "hardware_environment": "AIRGAP_CONTAINER_HOST",
+  "cpu_profile": "AMD64 Family 23 Model 96 Stepping 1, AuthenticAMD",
+  "algorithms": {
+    "kem": "ML-KEM-768 (NIST FIPS 203)",
+    "signature": "ML-DSA-65 (NIST FIPS 204)",
+    "symmetric": "AES-256-GCM",
+    "watermark_carrier": "DSSS 2D Spatial + Reed-Solomon (255, 223)",
+    "ledger": "Offline Permissioned Replicated Validator DLT (BFT Quorum)"
+  },
+  "component_latencies": {
+    "watermark_generation": {
+      "mean_ms": 0.15,
+      "p50_ms": 0.15,
+      "p95_ms": 0.22,
+      "p99_ms": 0.26
+    },
+    "watermark_embedding": {
+      "mean_ms": 147.69,
+      "p50_ms": 134.79,
+      "p95_ms": 195.23,
+      "p99_ms": 229.85
+    },
+    "watermark_extraction": {
+      "mean_ms": 94.95,
+      "p50_ms": 88.08,
+      "p95_ms": 112.32,
+      "p99_ms": 114.89
+    },
+    "mldsa65_signing": {
+      "mean_ms": 111.95,
+      "p50_ms": 60.76,
+      "p95_ms": 337.68,
+      "p99_ms": 430.35
+    },
+    "mldsa65_verification": {
+      "mean_ms": 21.13,
+      "p50_ms": 20.64,
+      "p95_ms": 28.6,
+      "p99_ms": 28.74
+    },
+    "dlt_append_consensus": {
+      "mean_ms": 719.68,
+      "p50_ms": 655.91,
+      "p95_ms": 977.93,
+      "p99_ms": 978.06
+    },
+    "dlt_lookup": {
+      "mean_ms": 0.0,
+      "p50_ms": 0.0,
+      "p95_ms": 0.01,
+      "p99_ms": 0.01
+    },
+    "merkle_proof_verification": {
+      "mean_ms": 0.0,
+      "p50_ms": 0.0,
+      "p95_ms": 0.0,
+      "p99_ms": 0.0
+    }
+  },
+  "scales": {
+    "1": {
+      "scale_recipients_count": 1,
+      "release_generation_latency_ms": 46.37,
+      "individual_decryption_latency_ms": 988.44,
+      "controlled_export_and_dlt_ms": 1077.46,
+      "total_e2e_workflow_latency_ms": 2112.27,
+      "per_recipient_release_amortized_ms": 46.3665,
+      "storage_model": "Individual Packages"
+    },
+    "10": {
+      "scale_recipients_count": 10,
+      "release_generation_latency_ms": 106.1,
+      "individual_decryption_latency_ms": 880.89,
+      "controlled_export_and_dlt_ms": 1030.23,
+      "total_e2e_workflow_latency_ms": 2017.23,
+      "per_recipient_release_amortized_ms": 10.6103,
+      "storage_model": "Individual Packages"
+    },
+    "100": {
+      "scale_recipients_count": 100,
+      "release_generation_latency_ms": 780.45,
+      "individual_decryption_latency_ms": 913.94,
+      "controlled_export_and_dlt_ms": 811.61,
+      "total_e2e_workflow_latency_ms": 2506.01,
+      "per_recipient_release_amortized_ms": 7.8045,
+      "storage_model": "O(1) Shared Ciphertext + O(N) KEM Capsules"
+    },
+    "1000": {
+      "scale_recipients_count": 1000,
+      "release_generation_latency_ms": 7808.7,
+      "individual_decryption_latency_ms": 1164.44,
+      "controlled_export_and_dlt_ms": 945.15,
+      "total_e2e_workflow_latency_ms": 9918.29,
+      "per_recipient_release_amortized_ms": 7.8087,
+      "storage_model": "O(1) Shared Ciphertext + O(N) KEM Capsules"
+    }
+  },
+  "conformance_declaration": {
+    "part_18_requirement": "P50, P95, P99, mean across 1, 10, 100, 1000 recipients",
+    "status": "VERIFIED",
+    "no_public_blockchain": true,
+    "no_cloud_kms": true
+  }
+}

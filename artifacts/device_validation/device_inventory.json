@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0.0",
+  "host_name": "MSI",
+  "timestamp": "2026-09-27T23:01:48.788551+00:00",
+  "phones": [
+    {
+      "device_id": "phone_rf8n927pm9n",
+      "serial": "RF8N927PM9N",
+      "role": "PHONE_A_RECIPIENT",
+      "platform": "Android",
+      "model": "Galaxy Note10 Lite (SM-N770F)",
+      "os_version": "UNKNOWN",
+      "manufacturer": "Samsung",
+      "pnp_name": "Galaxy Note10 Lite Endpoint A",
+      "usb_connection_state": "CONNECTED",
+      "adb_state": "UNAVAILABLE",
+      "mtp_state": "AVAILABLE",
+      "network_state": "LAN_ACCESSIBLE",
+      "browser_availability": true,
+      "camera_capability": "NOT_VERIFIED",
+      "storage_capability": true,
+      "transfer_capability": true,
+      "metadata": {
+        "adb_details": {},
+        "pnp_instance": "RF8N927PM9N"
+      },
+      "timestamp": "2026-09-27T23:01:48.787549+00:00"
+    },
+    {
+      "device_id": "phone_rzcy9396agx",
+      "serial": "RZCY9396AGX",
+      "role": "PHONE_B_INDEPENDENT",
+      "platform": "Android",
+      "model": "Galaxy A55 5G",
+      "os_version": "UNKNOWN",
+      "manufacturer": "Samsung",
+      "pnp_name": "Galaxy A55 Endpoint B",
+      "usb_connection_state": "CONNECTED",
+      "adb_state": "UNAVAILABLE",
+      "mtp_state": "AVAILABLE",
+      "network_state": "LAN_ACCESSIBLE",
+      "browser_availability": true,
+      "camera_capability": "NOT_VERIFIED",
+      "storage_capability": true,
+      "transfer_capability": true,
+      "metadata": {
+        "adb_details": {},
+        "pnp_instance": "RZCY9396AGX"
+      },
+      "timestamp": "2026-09-27T23:01:48.788551+00:00"
+    }
+  ],
+  "displays": [
+    {
+      "device_id": "display_0edb24",
+      "name": "AMD Radeon(TM) Graphics",
+      "horizontal_resolution": 1920,
+      "vertical_resolution": 1080,
+      "resolution_str": "1920x1080",
+      "refresh_rate_hz": 144,
+      "driver_name": "AMD Radeon(TM) Graphics",
+      "is_physical": true,
+      "metadata": {
+        "refresh_rate_hz": 144
+      }
+    }
+  ]
+}

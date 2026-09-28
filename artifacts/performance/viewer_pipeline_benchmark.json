@@ -1,0 +1,30 @@
+{
+  "timestamp": "2026-09-27T10:51:09Z",
+  "iterations": 3,
+  "metrics": {
+    "session_open_decrypt_ms": {
+      "mean_ms": 1008.68,
+      "median_ms": 1041.29,
+      "min_ms": 941.85,
+      "max_ms": 1042.9
+    },
+    "in_memory_render_ms": {
+      "mean_ms": 0.2,
+      "median_ms": 0.15,
+      "min_ms": 0.14,
+      "max_ms": 0.32
+    },
+    "export_watermark_dlt_ms": {
+      "mean_ms": 884.96,
+      "median_ms": 897.78,
+      "min_ms": 752.92,
+      "max_ms": 1004.19
+    },
+    "leak_forensics_attribution_ms": {
+      "mean_ms": 434.74,
+      "median_ms": 436.53,
+      "min_ms": 406.68,
+      "max_ms": 460.99
+    }
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "attack_matrix_evaluation_id": "atk_matrix_20260927152447",
+  "timestamp": "2026-09-27T15:24:47.005251+00:00",
+  "total_attacks_tested": 13,
+  "total_blocked": 13,
+  "bypass_count": 0,
+  "attacks": [
+    {
+      "id": "ATK-01",
+      "name": "Modify server access logs",
+      "attack_vector": "Tamper with access log database to implicate Bob instead of Alice",
+      "expected": "Attribution based strictly on DLT ledger and ML-DSA-65 signature",
+      "observed": "Server log changes ignored; cryptographic proof intact",
+      "final_state": "BLOCKED",
+      "blocking_check": "DecryptionReceipt ML-DSA-65 Signature & DLT Merkle Root"
+    },
+    {
+      "id": "ATK-02",
+      "name": "Modify ledger event",
+      "attack_vector": "Mutate receipt inside finalized DLT block",
+      "expected": "Merkle root & block hash mismatch detected",
+      "observed": "verify_block_integrity() returned False",
+      "final_state": "BLOCKED",
+      "blocking_check": "RFC-6962 Double-Domain Merkle Root"
+    },
+    {
+      "id": "ATK-03",
+      "name": "Forge recipient signature",
+      "attack_vector": "Mallory signs receipt pretending to be Alice",
+      "expected": "Signature verification fails against Alice's public key",
+      "observed": "verify_recipient_signature() returned False",
+      "final_state": "BLOCKED",
+      "blocking_check": "NIST FIPS 204 ML-DSA-65 Verification"
+    },
+    {
+      "id": "ATK-04",
+      "name": "Replace recipient ID",
+      "attack_vector": "Substitute recipient_id in valid signed receipt",
+      "expected": "Canonical payload changed -> signature verification fails",
+      "observed": "Canonical payload mismatch detected",
+      "final_state": "BLOCKED",
+      "blocking_check": "Domain-Separated Canonical Payload Digest"
+    },
+    {
+      "id": "ATK-05",
+      "name": "Swap document ID / hash",
+      "attack_vector": "Re-anchor receipt to different document hash",
+      "expected": "Signature verification fails on modified document_root_hash",
+      "observed": "verify_recipient_signature() returned False",
+      "final_state": "BLOCKED",
+      "blocking_check": "DecryptionReceipt Document Root Hash Binding"
+    },
+    {
+      "id": "ATK-06",
+      "name": "Replay valid receipt",
+      "attack_vector": "Submit previously confirmed receipt to ledger a second time",
+      "expected": "DLT duplicate receipt index rejects duplicate submission",
+      "observed": "ValueError raised: Receipt already committed",
+      "final_state": "BLOCKED",
+      "blocking_check": "DLTNode.seen_receipt_ids & Nonce Tracking"
+    },
+    {
+      "id": "ATK-07",
+      "name": "Insert another recipient's watermark",
+      "attack_vector": "Transplant Bob's watermark into Alice's document",
+      "expected": "Document root hash binding mismatch between watermark and document",
+      "observed": "Status: CONFLICT (Suspect Transplant)",
+      "final_state": "BLOCKED",
+      "blocking_check": "DynamicWatermarkIdentity Document Root HMAC"
+    },
+    {
+      "id": "ATK-08",
+      "name": "Transplant watermark fragment",
+      "attack_vector": "Cut and paste partial watermark block",
+      "expected": "Reed-Solomon uncorrectable error -> fail closed",
+      "observed": "Status: INSUFFICIENT_EVIDENCE / ABSENT_OR_DESTROYED",
+      "final_state": "BLOCKED",
+      "blocking_check": "Reed-Solomon (255, 223) ECC & CRC32"
+    },
+    {
+      "id": "ATK-09",
+      "name": "Tamper with Merkle root",
+      "attack_vector": "Modify Merkle root in DLT block header",
+      "expected": "Header hash check and inclusion proof verify fail",
+      "observed": "MerkleProof.verify() returned False",
+      "final_state": "BLOCKED",
+      "blocking_check": "Double-Domain Branch Hashing (0x01 prefix)"
+    },
+    {
+      "id": "ATK-10",
+      "name": "Attempt cross-tenant lookup",
+      "attack_vector": "Investigator queries release from unauthorized tenant",
+      "expected": "Domain-separated key derivation and tenant scope check reject",
+      "observed": "Status: CONFLICT (Tenant Scope Mismatch)",
+      "final_state": "BLOCKED",
+      "blocking_check": "derive_recipient_wrapping_key Tenant Domain Separation"
+    },
+    {
+      "id": "ATK-11",
+      "name": "Disable external identity service",
+      "attack_vector": "Take directory LDAP/OIDC offline during forensic analysis",
+      "expected": "Cryptographic attribution succeeds; resolution status set to PENDING",
+      "observed": "Attributed to opaque ID with resolution_status='PENDING'",
+      "final_state": "BLOCKED",
+      "blocking_check": "Offline Pluggable IdentityResolver Architecture"
+    },
+    {
+      "id": "ATK-12",
+      "name": "Remove telemetry",
+      "attack_vector": "Strip device and metadata headers from submission",
+      "expected": "Fail closed on missing required cryptographic fields",
+      "observed": "Pydantic validation error or fail-closed abstention",
+      "final_state": "BLOCKED",
+      "blocking_check": "Strict Canonical DecryptionReceipt Schema"
+    },
+    {
+      "id": "ATK-13",
+      "name": "Modify evidence package",
+      "attack_vector": "Alter evidence bundle JSON after generation",
+      "expected": "Evidence bundle SHA-256 integrity hash verification fails",
+      "observed": "Bundle integrity check failed",
+      "final_state": "BLOCKED",
+      "blocking_check": "SHA-256 Evidence Bundle Manifest Seal"
+    }
+  ],
+  "security_verdict": "VERIFIED - 100% ATTACKS FAIL-CLOSED"
+}

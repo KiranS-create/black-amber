@@ -1,0 +1,12 @@
+{
+  "sample_count": 3,
+  "ssim_median": 0.985,
+  "ssim_p95": 0.9877,
+  "ssim_p99": 0.98794,
+  "ssim_min": 0.982,
+  "ssim_max": 0.988,
+  "psnr_median_db": 41.2,
+  "psnr_min_db": 40.8,
+  "max_pixel_delta": 6,
+  "ocr_text_equality": 1.0
+}

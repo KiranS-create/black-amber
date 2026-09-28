@@ -3,6 +3,8 @@ import { TopBar } from './TopBar';
 import { Sidebar, TabId } from './Sidebar';
 import { CommandPalette } from './CommandPalette';
 
+import { UserSession } from '../../types';
+
 interface AppShellProps {
   activeTab: TabId;
   setActiveTab: (tab: TabId) => void;
@@ -14,9 +16,15 @@ interface AppShellProps {
   onQuickScenario: (scenarioId: string) => void;
   onSimulateTamper: () => void;
   onExportReport?: () => void;
+  documentCount?: number;
   recipientCount?: number;
   releaseCount?: number;
   ledgerCount?: number;
+  hasActiveInvestigation?: boolean;
+  userSession?: UserSession | null;
+  isDemoMode?: boolean;
+  onPurgeDemo?: () => void;
+  onSignOut?: () => void;
   children: React.ReactNode;
 }
 
@@ -31,53 +39,40 @@ export const AppShell: React.FC<AppShellProps> = ({
   onQuickScenario,
   onSimulateTamper,
   onExportReport,
-  recipientCount = 3,
-  releaseCount = 1,
-  ledgerCount = 4,
+  documentCount = 0,
+  recipientCount = 0,
+  releaseCount = 0,
+  ledgerCount = 0,
+  hasActiveInvestigation = false,
+  userSession,
+  isDemoMode = false,
+  onPurgeDemo,
+  onSignOut,
   children
 }) => {
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
 
   useEffect(() => {
-    // Expose global opener for Ctrl+K
     (window as any).__openCommandPalette = () => setCommandPaletteOpen(true);
+
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setCommandPaletteOpen(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleGlobalKeyDown);
+
     return () => {
       delete (window as any).__openCommandPalette;
+      window.removeEventListener('keydown', handleGlobalKeyDown);
     };
   }, []);
-
-  const getBreadcrumb = () => {
-    switch (activeTab) {
-      case 'dashboard':
-        return { section: 'Operations', title: 'Overview & Telemetry', desc: 'Real-time cryptographic pipeline status and security architecture' };
-      case 'recipients':
-        return { section: 'Identity Management', title: 'Recipient Registry', desc: 'Post-quantum public keys (ML-KEM-768, ML-DSA-65) and role assignments' };
-      case 'release':
-        return { section: 'Cryptographic Distribution', title: 'Encrypted Releases', desc: 'Multi-recipient hybrid envelope encapsulation and traceable distribution' };
-      case 'leak':
-        return { section: 'Forensics & Audit', title: 'Forensic Attribution Workstation', desc: 'Multi-channel evidence fusion, Tardos matrix scoring, and fail-closed verdict' };
-      case 'attack_lab':
-        return { section: 'Adversarial Research', title: 'Attack Laboratory', desc: 'Channel degradation benchmarks, print-camera recapture, and robustness proofs' };
-      case 'ledger':
-        return { section: 'Provenance & Integrity', title: 'Audit Ledger & Hash-Chain', desc: 'Immutable cryptographic provenance chain and real-time tamper verification' };
-      case 'tardos':
-        return { section: 'Fingerprinting Theory', title: 'Tardos Codeword Matrix', desc: 'Probabilistic fingerprint distribution and symmetric collusion-resistance bounds' };
-      case 'decrypt':
-        return { section: 'Client Operations', title: 'Decrypt & Provenance Signing', desc: 'Recipient-side ML-KEM decapsulation and non-repudiation signing demonstration' };
-      case 'health':
-        return { section: 'System Diagnostics', title: 'System Health & Engine Status', desc: 'Cryptographic runtime health, API connectivity, and benchmark verification' };
-      case 'settings':
-        return { section: 'Configuration', title: 'Settings & Security Parameters', desc: 'Forensic thresholds, watermark carrier parameters, and keyrings' };
-      default:
-        return { section: 'System', title: 'Forensic Console', desc: 'AegisTrace Core Operations' };
-    }
-  };
-
-  const breadcrumb = getBreadcrumb();
 
   return (
     <div
       style={{
+        width: '100%',
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
@@ -93,17 +88,23 @@ export const AppShell: React.FC<AppShellProps> = ({
         onOpenWalkthrough={onOpenWalkthrough}
         onResetDemo={onResetDemo}
         onOpenCommandPalette={() => setCommandPaletteOpen(true)}
+        userSession={userSession}
+        isDemoMode={isDemoMode}
+        onPurgeDemo={onPurgeDemo}
+        onSignOut={onSignOut}
       />
 
       {/* Main Layout Container (Sidebar + Content) */}
-      <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
-        {/* Left Sidebar */}
+      <div style={{ display: 'flex', flex: 1, minHeight: 0, width: '100%' }}>
+        {/* Left Sidebar Navigation Rail */}
         <Sidebar
           activeTab={activeTab}
           setActiveTab={setActiveTab}
+          documentCount={documentCount}
           recipientCount={recipientCount}
           releaseCount={releaseCount}
           ledgerCount={ledgerCount}
+          hasActiveInvestigation={hasActiveInvestigation}
         />
 
         {/* Content Body Viewport */}
@@ -116,89 +117,13 @@ export const AppShell: React.FC<AppShellProps> = ({
             overflowY: 'auto'
           }}
         >
-          {/* Page Sub-Header / Breadcrumb */}
-          <div
-            style={{
-              padding: 'var(--space-4) var(--space-8)',
-              borderBottom: '1px solid var(--border)',
-              backgroundColor: 'var(--surface-subtle)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              flexWrap: 'wrap',
-              gap: 'var(--space-3)'
-            }}
-          >
-            <div>
-              <div
-                style={{
-                  fontSize: '11px',
-                  fontWeight: 600,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em',
-                  color: 'var(--text-tertiary)',
-                  marginBottom: '2px'
-                }}
-              >
-                AegisTrace / {breadcrumb.section}
-              </div>
-              <h1
-                style={{
-                  margin: 0,
-                  fontSize: 'var(--text-xl)',
-                  fontWeight: 700,
-                  color: 'var(--text)',
-                  letterSpacing: '-0.02em',
-                  lineHeight: 1.2
-                }}
-              >
-                {breadcrumb.title}
-              </h1>
-              <p
-                style={{
-                  margin: '3px 0 0 0',
-                  fontSize: 'var(--text-xs)',
-                  color: 'var(--text-secondary)'
-                }}
-              >
-                {breadcrumb.desc}
-              </p>
-            </div>
-
-            {/* Global quick status pills */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <div
-                style={{
-                  fontSize: '11.5px',
-                  padding: '4px 10px',
-                  borderRadius: 'var(--radius-full)',
-                  backgroundColor: 'var(--surface)',
-                  border: '1px solid var(--border)',
-                  color: 'var(--text-secondary)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}
-              >
-                <span
-                  style={{
-                    width: '6px',
-                    height: '6px',
-                    borderRadius: '50%',
-                    backgroundColor: 'var(--success)'
-                  }}
-                />
-                <span>Fail-Closed Enforced</span>
-              </div>
-            </div>
-          </div>
-
           {/* Page Main Content Area */}
           <main
+            className="page-main-container"
             style={{
               flex: 1,
               padding: 'var(--space-6) var(--space-8)',
-              maxWidth: '1500px',
+              maxWidth: '1520px',
               width: '100%',
               margin: '0 auto',
               boxSizing: 'border-box'
@@ -206,41 +131,10 @@ export const AppShell: React.FC<AppShellProps> = ({
           >
             {children}
           </main>
-
-          {/* Footer */}
-          <footer
-            style={{
-              padding: 'var(--space-4) var(--space-8)',
-              borderTop: '1px solid var(--border)',
-              backgroundColor: 'var(--surface)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              flexWrap: 'wrap',
-              gap: 'var(--space-3)',
-              fontSize: 'var(--text-xs)',
-              color: 'var(--text-tertiary)'
-            }}
-          >
-            <div>
-              <strong style={{ color: 'var(--text-secondary)' }}>AegisTrace</strong> • Post-Quantum Cryptographic Attribution & Provenance Platform
-            </div>
-            <div style={{ display: 'flex', gap: '16px', fontFamily: 'var(--font-mono)' }}>
-              <span>ML-KEM-768</span>
-              <span>•</span>
-              <span>ML-DSA-65</span>
-              <span>•</span>
-              <span>Tardos m=128</span>
-              <span>•</span>
-              <span>AES-256-GCM</span>
-              <span>•</span>
-              <span>SHA-256 Ledger</span>
-            </div>
-          </footer>
         </div>
       </div>
 
-      {/* Command Palette Modal */}
+      {/* Command Palette Overlay (Layer 3) */}
       <CommandPalette
         isOpen={commandPaletteOpen}
         onClose={() => setCommandPaletteOpen(false)}

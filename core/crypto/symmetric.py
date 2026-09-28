@@ -1,5 +1,5 @@
 import os
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Any
 from Crypto.Cipher import AES
 from core.crypto.models import SymmetricCiphertext
 
@@ -40,20 +40,42 @@ def encrypt_aes_gcm(
 
 def decrypt_aes_gcm(
     key: bytes,
-    encrypted: SymmetricCiphertext
+    encrypted: Optional[Any] = None,
+    tag_or_ciphertext: Optional[bytes] = None,
+    associated_data: Optional[bytes] = None,
+    nonce: Optional[bytes] = None
 ) -> bytes:
     """
     Decrypt ciphertext using AES-256-GCM and verify tag authentication.
+    Supports either SymmetricCiphertext object or raw (ciphertext, tag, associated_data=..., nonce=...).
     Raises ValueError if authentication fails or tag is invalid.
     """
     if len(key) != 32:
         raise ValueError(f"AES-256 key must be exactly 32 bytes, got {len(key)}")
     
-    cipher = AES.new(key, AES.MODE_GCM, nonce=encrypted.nonce)
-    if encrypted.associated_data:
-        cipher.update(encrypted.associated_data)
+    if isinstance(encrypted, SymmetricCiphertext):
+        _nonce = encrypted.nonce
+        _ct = encrypted.ciphertext
+        _tag = encrypted.tag
+        _aad = encrypted.associated_data
+    elif isinstance(encrypted, (bytes, bytearray)):
+        _ct = encrypted
+        _tag = tag_or_ciphertext
+        _nonce = nonce
+        _aad = associated_data
+    else:
+        raise TypeError("Invalid argument types for decrypt_aes_gcm")
+
+    if _nonce is None or len(_nonce) != 12:
+        raise ValueError(f"AES-GCM nonce must be 12 bytes, got {_nonce}")
+    if _tag is None or len(_tag) != 16:
+        raise ValueError(f"AES-GCM tag must be 16 bytes, got {_tag}")
+
+    cipher = AES.new(key, AES.MODE_GCM, nonce=_nonce)
+    if _aad:
+        cipher.update(_aad)
     
-    return cipher.decrypt_and_verify(encrypted.ciphertext, encrypted.tag)
+    return cipher.decrypt_and_verify(_ct, _tag)
 
 def wrap_key_aes_kw(
     wrapping_key: bytes,

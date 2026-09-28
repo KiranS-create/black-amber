@@ -1,0 +1,12 @@
+{
+  "chain_id": "CHAIN_D",
+  "chain_name": "Post-Revocation Replay & Stale Key Replay",
+  "description": "Attacker replays receipt signed by revoked key",
+  "verdict": "DETECTED",
+  "security_maintained": true,
+  "evidence_errors": [
+    "MERKLE_ROOT_MISMATCH: Recomputed f885a69c6b27a9414a9017c725f86b4b001871b18a99823fdc272b306315b7c6 != Manifest 2aa055b6da117f259d63e59e3f3ee04d7b74f7902c040efaf3dbee0196b69db3",
+    "POST_REVOCATION_REJECTION: Receipt 'rcpt_evt_dec_rel_20260927_alice_c30d46ef' timestamp 2026-09-27T22:30:28.547170+00:00 occurs after key revocation at 2026-09-22T22:30:33.821662+00:00"
+  ],
+  "mitigating_pillar": "Pillar 7 (Key Lifecycle & Revocation Boundary)"
+}

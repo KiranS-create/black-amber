@@ -1,0 +1,1002 @@
+[
+  {
+    "sample_id": "neg_solid_255",
+    "category": "SOLID_COLOR",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_solid_250",
+    "category": "SOLID_COLOR",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_solid_240",
+    "category": "SOLID_COLOR",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_solid_220",
+    "category": "SOLID_COLOR",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_solid_180",
+    "category": "SOLID_COLOR",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_solid_128",
+    "category": "SOLID_COLOR",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_solid_090",
+    "category": "SOLID_COLOR",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_solid_050",
+    "category": "SOLID_COLOR",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_solid_020",
+    "category": "SOLID_COLOR",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_solid_000",
+    "category": "SOLID_COLOR",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_noise_00",
+    "category": "RANDOM_NOISE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_noise_01",
+    "category": "RANDOM_NOISE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_noise_02",
+    "category": "RANDOM_NOISE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_noise_03",
+    "category": "RANDOM_NOISE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_noise_04",
+    "category": "RANDOM_NOISE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_noise_05",
+    "category": "RANDOM_NOISE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_noise_06",
+    "category": "RANDOM_NOISE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_noise_07",
+    "category": "RANDOM_NOISE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_noise_08",
+    "category": "RANDOM_NOISE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_noise_09",
+    "category": "RANDOM_NOISE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_noise_10",
+    "category": "RANDOM_NOISE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_noise_11",
+    "category": "RANDOM_NOISE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_noise_12",
+    "category": "RANDOM_NOISE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_noise_13",
+    "category": "RANDOM_NOISE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_noise_14",
+    "category": "RANDOM_NOISE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_noise_15",
+    "category": "RANDOM_NOISE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_noise_16",
+    "category": "RANDOM_NOISE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_noise_17",
+    "category": "RANDOM_NOISE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_noise_18",
+    "category": "RANDOM_NOISE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_noise_19",
+    "category": "RANDOM_NOISE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_unwatermarked_00",
+    "category": "UNWATERMARKED_DOCUMENT",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_unwatermarked_01",
+    "category": "UNWATERMARKED_DOCUMENT",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_unwatermarked_02",
+    "category": "UNWATERMARKED_DOCUMENT",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_unwatermarked_03",
+    "category": "UNWATERMARKED_DOCUMENT",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_unwatermarked_04",
+    "category": "UNWATERMARKED_DOCUMENT",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_unwatermarked_05",
+    "category": "UNWATERMARKED_DOCUMENT",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_unwatermarked_06",
+    "category": "UNWATERMARKED_DOCUMENT",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_unwatermarked_07",
+    "category": "UNWATERMARKED_DOCUMENT",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_unwatermarked_08",
+    "category": "UNWATERMARKED_DOCUMENT",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_unwatermarked_09",
+    "category": "UNWATERMARKED_DOCUMENT",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_unwatermarked_10",
+    "category": "UNWATERMARKED_DOCUMENT",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_unwatermarked_11",
+    "category": "UNWATERMARKED_DOCUMENT",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_unwatermarked_12",
+    "category": "UNWATERMARKED_DOCUMENT",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_unwatermarked_13",
+    "category": "UNWATERMARKED_DOCUMENT",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_unwatermarked_14",
+    "category": "UNWATERMARKED_DOCUMENT",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_unwatermarked_15",
+    "category": "UNWATERMARKED_DOCUMENT",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_unwatermarked_16",
+    "category": "UNWATERMARKED_DOCUMENT",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_unwatermarked_17",
+    "category": "UNWATERMARKED_DOCUMENT",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_unwatermarked_18",
+    "category": "UNWATERMARKED_DOCUMENT",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_unwatermarked_19",
+    "category": "UNWATERMARKED_DOCUMENT",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_damaged_fiducial_00",
+    "category": "DAMAGED_FIDUCIALS",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_damaged_fiducial_01",
+    "category": "DAMAGED_FIDUCIALS",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_damaged_fiducial_02",
+    "category": "DAMAGED_FIDUCIALS",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_damaged_fiducial_03",
+    "category": "DAMAGED_FIDUCIALS",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_damaged_fiducial_04",
+    "category": "DAMAGED_FIDUCIALS",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_damaged_fiducial_05",
+    "category": "DAMAGED_FIDUCIALS",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_damaged_fiducial_06",
+    "category": "DAMAGED_FIDUCIALS",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_damaged_fiducial_07",
+    "category": "DAMAGED_FIDUCIALS",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_damaged_fiducial_08",
+    "category": "DAMAGED_FIDUCIALS",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_damaged_fiducial_09",
+    "category": "DAMAGED_FIDUCIALS",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_damaged_fiducial_10",
+    "category": "DAMAGED_FIDUCIALS",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_damaged_fiducial_11",
+    "category": "DAMAGED_FIDUCIALS",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_damaged_fiducial_12",
+    "category": "DAMAGED_FIDUCIALS",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_damaged_fiducial_13",
+    "category": "DAMAGED_FIDUCIALS",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_damaged_fiducial_14",
+    "category": "DAMAGED_FIDUCIALS",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_damaged_fiducial_15",
+    "category": "DAMAGED_FIDUCIALS",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_damaged_fiducial_16",
+    "category": "DAMAGED_FIDUCIALS",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_damaged_fiducial_17",
+    "category": "DAMAGED_FIDUCIALS",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_damaged_fiducial_18",
+    "category": "DAMAGED_FIDUCIALS",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_damaged_fiducial_19",
+    "category": "DAMAGED_FIDUCIALS",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_transplant_token_00",
+    "category": "CROSS_RELEASE_TRANSPLANT",
+    "ground_truth": "TRANSPLANTED",
+    "decision": "CONFLICT",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": true,
+    "status": "INVALID"
+  },
+  {
+    "sample_id": "neg_transplant_token_01",
+    "category": "CROSS_RELEASE_TRANSPLANT",
+    "ground_truth": "TRANSPLANTED",
+    "decision": "CONFLICT",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": true,
+    "status": "INVALID"
+  },
+  {
+    "sample_id": "neg_transplant_token_02",
+    "category": "CROSS_RELEASE_TRANSPLANT",
+    "ground_truth": "TRANSPLANTED",
+    "decision": "CONFLICT",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": true,
+    "status": "INVALID"
+  },
+  {
+    "sample_id": "neg_transplant_token_03",
+    "category": "CROSS_RELEASE_TRANSPLANT",
+    "ground_truth": "TRANSPLANTED",
+    "decision": "CONFLICT",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": true,
+    "status": "INVALID"
+  },
+  {
+    "sample_id": "neg_transplant_token_04",
+    "category": "CROSS_RELEASE_TRANSPLANT",
+    "ground_truth": "TRANSPLANTED",
+    "decision": "CONFLICT",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": true,
+    "status": "INVALID"
+  },
+  {
+    "sample_id": "neg_transplant_token_05",
+    "category": "CROSS_RELEASE_TRANSPLANT",
+    "ground_truth": "TRANSPLANTED",
+    "decision": "CONFLICT",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": true,
+    "status": "INVALID"
+  },
+  {
+    "sample_id": "neg_transplant_token_06",
+    "category": "CROSS_RELEASE_TRANSPLANT",
+    "ground_truth": "TRANSPLANTED",
+    "decision": "CONFLICT",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": true,
+    "status": "INVALID"
+  },
+  {
+    "sample_id": "neg_transplant_token_07",
+    "category": "CROSS_RELEASE_TRANSPLANT",
+    "ground_truth": "TRANSPLANTED",
+    "decision": "CONFLICT",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": true,
+    "status": "INVALID"
+  },
+  {
+    "sample_id": "neg_transplant_token_08",
+    "category": "CROSS_RELEASE_TRANSPLANT",
+    "ground_truth": "TRANSPLANTED",
+    "decision": "CONFLICT",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": true,
+    "status": "INVALID"
+  },
+  {
+    "sample_id": "neg_transplant_token_09",
+    "category": "CROSS_RELEASE_TRANSPLANT",
+    "ground_truth": "TRANSPLANTED",
+    "decision": "CONFLICT",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": true,
+    "status": "INVALID"
+  },
+  {
+    "sample_id": "neg_transplant_token_10",
+    "category": "CROSS_RELEASE_TRANSPLANT",
+    "ground_truth": "TRANSPLANTED",
+    "decision": "CONFLICT",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": true,
+    "status": "INVALID"
+  },
+  {
+    "sample_id": "neg_transplant_token_11",
+    "category": "CROSS_RELEASE_TRANSPLANT",
+    "ground_truth": "TRANSPLANTED",
+    "decision": "CONFLICT",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": true,
+    "status": "INVALID"
+  },
+  {
+    "sample_id": "neg_transplant_token_12",
+    "category": "CROSS_RELEASE_TRANSPLANT",
+    "ground_truth": "TRANSPLANTED",
+    "decision": "CONFLICT",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": true,
+    "status": "INVALID"
+  },
+  {
+    "sample_id": "neg_transplant_token_13",
+    "category": "CROSS_RELEASE_TRANSPLANT",
+    "ground_truth": "TRANSPLANTED",
+    "decision": "CONFLICT",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": true,
+    "status": "INVALID"
+  },
+  {
+    "sample_id": "neg_transplant_token_14",
+    "category": "CROSS_RELEASE_TRANSPLANT",
+    "ground_truth": "TRANSPLANTED",
+    "decision": "CONFLICT",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": true,
+    "status": "INVALID"
+  },
+  {
+    "sample_id": "neg_transplant_token_15",
+    "category": "CROSS_RELEASE_TRANSPLANT",
+    "ground_truth": "TRANSPLANTED",
+    "decision": "CONFLICT",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": true,
+    "status": "INVALID"
+  },
+  {
+    "sample_id": "neg_transplant_token_16",
+    "category": "CROSS_RELEASE_TRANSPLANT",
+    "ground_truth": "TRANSPLANTED",
+    "decision": "CONFLICT",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": true,
+    "status": "INVALID"
+  },
+  {
+    "sample_id": "neg_transplant_token_17",
+    "category": "CROSS_RELEASE_TRANSPLANT",
+    "ground_truth": "TRANSPLANTED",
+    "decision": "CONFLICT",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": true,
+    "status": "INVALID"
+  },
+  {
+    "sample_id": "neg_transplant_token_18",
+    "category": "CROSS_RELEASE_TRANSPLANT",
+    "ground_truth": "TRANSPLANTED",
+    "decision": "CONFLICT",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": true,
+    "status": "INVALID"
+  },
+  {
+    "sample_id": "neg_transplant_token_19",
+    "category": "CROSS_RELEASE_TRANSPLANT",
+    "ground_truth": "TRANSPLANTED",
+    "decision": "CONFLICT",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": true,
+    "status": "INVALID"
+  },
+  {
+    "sample_id": "neg_scrubbed_page_00",
+    "category": "SCRUBBED_PAGE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_scrubbed_page_01",
+    "category": "SCRUBBED_PAGE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_scrubbed_page_02",
+    "category": "SCRUBBED_PAGE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_scrubbed_page_03",
+    "category": "SCRUBBED_PAGE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_scrubbed_page_04",
+    "category": "SCRUBBED_PAGE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_scrubbed_page_05",
+    "category": "SCRUBBED_PAGE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_scrubbed_page_06",
+    "category": "SCRUBBED_PAGE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_scrubbed_page_07",
+    "category": "SCRUBBED_PAGE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_scrubbed_page_08",
+    "category": "SCRUBBED_PAGE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  },
+  {
+    "sample_id": "neg_scrubbed_page_09",
+    "category": "SCRUBBED_PAGE",
+    "ground_truth": "UNMARKED",
+    "decision": "NO_SIGNAL",
+    "is_false_positive": false,
+    "confidence": 0.0,
+    "sync_success": false,
+    "status": "NO_SIGNAL"
+  }
+]

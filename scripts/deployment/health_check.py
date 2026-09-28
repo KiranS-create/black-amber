@@ -38,7 +38,15 @@ def run_health_check() -> dict:
 
     # Check 2: Core Cryptographic Self-Test (Post-Quantum & Symmetric)
     crypto_ok = False
+    kem_meta = MLKEM768.get_metadata()
+    dsa_meta = MLDSA65.get_metadata()
     try:
+        # Enforce that active providers are genuine production-safe PQC
+        if not MLKEM768.is_production_safe():
+            raise RuntimeError(f"ML-KEM-768 provider is NOT production-safe: {kem_meta.get('provider')}")
+        if not MLDSA65.is_production_safe():
+            raise RuntimeError(f"ML-DSA-65 provider is NOT production-safe: {dsa_meta.get('provider')}")
+
         # KEM
         kem_kp = MLKEM768.generate_keypair()
         encap = MLKEM768.encapsulate(kem_kp.public_key_bytes)
@@ -62,9 +70,13 @@ def run_health_check() -> dict:
 
     report["checks"]["crypto_primitives"] = {
         "status": "PASS" if crypto_ok else "FAIL",
-        "details": "ML-KEM-768, ML-DSA-65, AES-256-GCM validated" if crypto_ok else crypto_err
+        "kem_provider": kem_meta.get("provider", "UNKNOWN"),
+        "dsa_provider": dsa_meta.get("provider", "UNKNOWN"),
+        "is_post_quantum": kem_meta.get("is_post_quantum", False) and dsa_meta.get("is_post_quantum", False),
+        "details": f"ML-KEM-768 ({kem_meta.get('provider')}), ML-DSA-65 ({dsa_meta.get('provider')}), AES-256-GCM validated" if crypto_ok else crypto_err
     }
-    print(f"[{'PASS' if crypto_ok else 'FAIL'}] Cryptographic Primitives: ML-KEM-768, ML-DSA-65, AES-256-GCM")
+    print(f"[{'PASS' if crypto_ok else 'FAIL'}] Cryptographic Primitives: ML-KEM-768 ({kem_meta.get('provider')}), ML-DSA-65 ({dsa_meta.get('provider')}), AES-256-GCM")
+
 
     # Check 3: Storage & Writable Data Plane
     storage_ok = False

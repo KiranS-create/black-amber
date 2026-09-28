@@ -235,7 +235,7 @@ class TraceabilityKeystore:
             if custom_path and os.path.exists(custom_path):
                 try:
                     with open(custom_path, "rb") as f:
-                        stored_secret = f.read().strip()
+                        stored_secret = f.read()
                     if len(stored_secret) >= 16:
                         return stored_secret
                 except Exception:
@@ -250,7 +250,7 @@ class TraceabilityKeystore:
         if os.path.exists(keystore_path):
             try:
                 with open(keystore_path, "rb") as f:
-                    stored_secret = f.read().strip()
+                    stored_secret = f.read()
                 if len(stored_secret) >= 16:
                     return stored_secret
             except Exception:
@@ -300,3 +300,7 @@ class TraceabilityKeystore:
         
         mode = "PRODUCTION" if cls.is_production_mode() else "DEVELOPMENT_DEMO"
         return f"TRACEABILITY KEY CUSTODY: [{source}] | Mode: {mode} | KeyID: {key_id}"
+
+
+# Backward compatibility alias
+TraceabilityKeyStore = TraceabilityKeystore

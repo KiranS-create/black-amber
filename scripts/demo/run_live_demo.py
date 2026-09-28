@@ -235,7 +235,7 @@ def run_interactive_demo(auto_mode: bool = False, step_delay: float = 0.8):
     print(f"\n  {BOLD}--- TAMPERED LEAK RESULT ---{RESET}")
     print(f"  Attribution State:   {BOLD}{YELLOW}{neg_result['state']}{RESET}")
     print(f"  Identified Culprit:  {BOLD}{neg_result['candidate']['name'] if neg_result['candidate'] else 'None (Refused Accusation)'}{RESET}")
-    print(f"  Should Abstain:      {BOLD}{GREEN}{neg_result['should_abstain']}{RESET} (Guarantees zero false accusation)")
+    print(f"  Should Abstain:      {BOLD}{GREEN}{neg_result['should_abstain']}{RESET} (Empirically verified zero false accusation on negative corpus)")
     print(f"  Analysis Latency:    {tampered_elapsed:.2f} ms")
     print(f"  {GREEN}[PASS]{RESET} {BOLD}Fail-Closed Zero-Trust Verified: System refused to frame innocent parties.{RESET}")
 

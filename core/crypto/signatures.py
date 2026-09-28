@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 import os
 import hashlib
 import warnings
+import threading
 from typing import Optional, Dict, Any
 from core.crypto.models import KeyPair
 
@@ -96,13 +97,15 @@ class StandardMLDSA65Provider(MLDSAProvider):
     Module-Lattice Digital Signature Algorithm (ML-DSA-65) mathematics.
     """
     ALGORITHM_NAME = "ML-DSA-65"
+    _lock = threading.Lock()
 
     def __init__(self):
         if not _DILITHIUM_PY_AVAILABLE:
             raise RuntimeError("NIST FIPS 204 Dilithium engine is not available")
 
     def generate_keypair(self) -> KeyPair:
-        pk, sk = _Dilithium3_Engine.keygen()
+        with self._lock:
+            pk, sk = _Dilithium3_Engine.keygen()
         if len(pk) != 1952 or len(sk) != 4000:
             raise ValueError(f"Invalid ML-DSA-65 key dimensions: pk={len(pk)}, sk={len(sk)}")
         return KeyPair(
@@ -115,14 +118,16 @@ class StandardMLDSA65Provider(MLDSAProvider):
         if len(private_key_bytes) != 4000:
             raise ValueError(f"ML-DSA-65 secret key must be exactly 4000 bytes, got {len(private_key_bytes)}")
         # FIPS 204 sign
-        signature = _Dilithium3_Engine.sign(private_key_bytes, message)
+        with self._lock:
+            signature = _Dilithium3_Engine.sign(private_key_bytes, message)
         return signature
 
     def verify(self, public_key_bytes: bytes, message: bytes, signature: bytes) -> bool:
         if len(public_key_bytes) != 1952 or len(signature) != 3293:
             return False
         try:
-            return _Dilithium3_Engine.verify(public_key_bytes, message, signature)
+            with self._lock:
+                return _Dilithium3_Engine.verify(public_key_bytes, message, signature)
         except Exception:
             return False
 
@@ -199,7 +204,7 @@ class DevFallbackDSAProvider(MLDSAProvider):
         }
 
 
-def get_default_dsa_provider() -> MLDSAProvider:
+def get_default_dsa_provider(fail_closed: Optional[bool] = None) -> MLDSAProvider:
     if _OQS_AVAILABLE:
         try:
             return OQSMLDSAProvider()
@@ -207,7 +212,22 @@ def get_default_dsa_provider() -> MLDSAProvider:
             pass
     if _DILITHIUM_PY_AVAILABLE:
         return StandardMLDSA65Provider()
+    
+    # Check if production mode or explicit strictness requires fail-closed behavior
+    is_prod = (
+        os.environ.get("SIH26237_ENV", "").strip().lower() in ("production", "prod") or
+        os.environ.get("AEGISTRACE_ENV", "").strip().lower() in ("production", "prod") or
+        os.environ.get("SIH26237_STRICT_PQC", "").strip().lower() in ("1", "true", "yes")
+    )
+    should_fail_closed = fail_closed if fail_closed is not None else is_prod
+
+    if should_fail_closed:
+        raise RuntimeError(
+            "FATAL [ML-DSA-65]: No genuine post-quantum lattice provider (liboqs or dilithium-py) is available. "
+            "Insecure DevFallbackDSAProvider is strictly blocked in production mode."
+        )
     return DevFallbackDSAProvider()
+
 
 
 class MLDSA65:

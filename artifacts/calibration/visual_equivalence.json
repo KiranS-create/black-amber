@@ -1,0 +1,18 @@
+{
+  "sample_count": 40,
+  "ssim_median": 0.7149,
+  "ssim_p95": 0.7151,
+  "ssim_p99": 0.7151,
+  "ssim_min": 0.7146,
+  "ssim_max": 0.7151,
+  "psnr_median_db": 29.57,
+  "psnr_p95_db": 29.58,
+  "psnr_p99_db": 29.58,
+  "psnr_min_db": 29.55,
+  "psnr_max_db": 29.59,
+  "max_pixel_delta_median": 14.0,
+  "max_pixel_delta_p99": 14.0,
+  "max_pixel_delta_worst": 14.0,
+  "text_equality_pass_rate": 1.0,
+  "hardware_status": "NOT_VERIFIED"
+}

@@ -2,7 +2,10 @@
 fastapi==0.115.6
 uvicorn[standard]==0.39.0
 pydantic==2.12.5
+cryptography==42.0.8
 pycryptodome==3.23.0
+kyber-py==1.2.0
+dilithium-py==1.4.0
 reportlab==5.0.1
 pypdf==6.19.0
 python-multipart==0.0.20
@@ -13,3 +16,4 @@ opencv-python==4.13.0.92
 scipy==1.10.0
 Pillow==9.4.0
 requests==2.32.5
+

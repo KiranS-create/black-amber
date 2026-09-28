@@ -1,0 +1,174 @@
+{
+  "inventory_id": "HWINV-e13414210bb3",
+  "host_name": "MSI",
+  "timestamp": "2026-09-27T23:01:48.788551+00:00",
+  "cameras": [],
+  "printers": [],
+  "scanners": [],
+  "displays": [
+    {
+      "device_id": "display_0edb24",
+      "name": "AMD Radeon(TM) Graphics",
+      "horizontal_resolution": 1920,
+      "vertical_resolution": 1080,
+      "resolution_str": "1920x1080",
+      "refresh_rate_hz": 144,
+      "driver_name": "AMD Radeon(TM) Graphics",
+      "is_physical": true,
+      "metadata": {
+        "refresh_rate_hz": 144
+      }
+    }
+  ],
+  "phones": [
+    {
+      "device_id": "phone_rf8n927pm9n",
+      "serial": "RF8N927PM9N",
+      "role": "PHONE_A_RECIPIENT",
+      "platform": "Android",
+      "model": "Galaxy Note10 Lite (SM-N770F)",
+      "os_version": "UNKNOWN",
+      "manufacturer": "Samsung",
+      "pnp_name": "Galaxy Note10 Lite Endpoint A",
+      "usb_connection_state": "CONNECTED",
+      "adb_state": "UNAVAILABLE",
+      "mtp_state": "AVAILABLE",
+      "network_state": "LAN_ACCESSIBLE",
+      "browser_availability": true,
+      "camera_capability": "NOT_VERIFIED",
+      "storage_capability": true,
+      "transfer_capability": true,
+      "metadata": {
+        "adb_details": {},
+        "pnp_instance": "RF8N927PM9N"
+      },
+      "timestamp": "2026-09-27T23:01:48.787549+00:00"
+    },
+    {
+      "device_id": "phone_rzcy9396agx",
+      "serial": "RZCY9396AGX",
+      "role": "PHONE_B_INDEPENDENT",
+      "platform": "Android",
+      "model": "Galaxy A55 5G",
+      "os_version": "UNKNOWN",
+      "manufacturer": "Samsung",
+      "pnp_name": "Galaxy A55 Endpoint B",
+      "usb_connection_state": "CONNECTED",
+      "adb_state": "UNAVAILABLE",
+      "mtp_state": "AVAILABLE",
+      "network_state": "LAN_ACCESSIBLE",
+      "browser_availability": true,
+      "camera_capability": "NOT_VERIFIED",
+      "storage_capability": true,
+      "transfer_capability": true,
+      "metadata": {
+        "adb_details": {},
+        "pnp_instance": "RZCY9396AGX"
+      },
+      "timestamp": "2026-09-27T23:01:48.788551+00:00"
+    }
+  ],
+  "network_interfaces": [
+    {
+      "interface_alias": "vEthernet (WSL (Hyper-V firewall))",
+      "ip_address": "172.20.128.1",
+      "interface_index": 59,
+      "is_loopback": false,
+      "is_active": true,
+      "subnet": null
+    },
+    {
+      "interface_alias": "Local Area Connection* 12",
+      "ip_address": "169.254.43.37",
+      "interface_index": 3,
+      "is_loopback": false,
+      "is_active": true,
+      "subnet": null
+    },
+    {
+      "interface_alias": "Local Area Connection* 3",
+      "ip_address": "169.254.77.170",
+      "interface_index": 22,
+      "is_loopback": false,
+      "is_active": true,
+      "subnet": null
+    },
+    {
+      "interface_alias": "Ethernet",
+      "ip_address": "169.254.74.15",
+      "interface_index": 16,
+      "is_loopback": false,
+      "is_active": true,
+      "subnet": null
+    },
+    {
+      "interface_alias": "Wi-Fi",
+      "ip_address": "10.114.31.4",
+      "interface_index": 10,
+      "is_loopback": false,
+      "is_active": true,
+      "subnet": null
+    },
+    {
+      "interface_alias": "Local Area Connection",
+      "ip_address": "169.254.243.182",
+      "interface_index": 6,
+      "is_loopback": false,
+      "is_active": true,
+      "subnet": null
+    }
+  ],
+  "phone_a": {
+    "device_id": "phone_rf8n927pm9n",
+    "serial": "RF8N927PM9N",
+    "role": "PHONE_A_RECIPIENT",
+    "platform": "Android",
+    "model": "Galaxy Note10 Lite (SM-N770F)",
+    "os_version": "UNKNOWN",
+    "manufacturer": "Samsung",
+    "pnp_name": "Galaxy Note10 Lite Endpoint A",
+    "usb_connection_state": "CONNECTED",
+    "adb_state": "UNAVAILABLE",
+    "mtp_state": "AVAILABLE",
+    "network_state": "LAN_ACCESSIBLE",
+    "browser_availability": true,
+    "camera_capability": "NOT_VERIFIED",
+    "storage_capability": true,
+    "transfer_capability": true,
+    "metadata": {
+      "adb_details": {},
+      "pnp_instance": "RF8N927PM9N"
+    },
+    "timestamp": "2026-09-27T23:01:48.787549+00:00"
+  },
+  "phone_b": {
+    "device_id": "phone_rzcy9396agx",
+    "serial": "RZCY9396AGX",
+    "role": "PHONE_B_INDEPENDENT",
+    "platform": "Android",
+    "model": "Galaxy A55 5G",
+    "os_version": "UNKNOWN",
+    "manufacturer": "Samsung",
+    "pnp_name": "Galaxy A55 Endpoint B",
+    "usb_connection_state": "CONNECTED",
+    "adb_state": "UNAVAILABLE",
+    "mtp_state": "AVAILABLE",
+    "network_state": "LAN_ACCESSIBLE",
+    "browser_availability": true,
+    "camera_capability": "NOT_VERIFIED",
+    "storage_capability": true,
+    "transfer_capability": true,
+    "metadata": {
+      "adb_details": {},
+      "pnp_instance": "RZCY9396AGX"
+    },
+    "timestamp": "2026-09-27T23:01:48.788551+00:00"
+  },
+  "camera_status": "UNAVAILABLE",
+  "printer_status": "UNAVAILABLE",
+  "scanner_status": "UNAVAILABLE",
+  "display_status": "DEVICE_IN_LOOP",
+  "phone_status": "DEVICE_IN_LOOP",
+  "network_status": "DEVICE_IN_LOOP",
+  "overall_status": "DEVICE_IN_LOOP"
+}

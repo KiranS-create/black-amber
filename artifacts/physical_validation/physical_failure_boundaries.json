@@ -1,0 +1,11 @@
+{
+  "max_safe_angle_deg": 20.0,
+  "max_tolerable_blur_sigma": 1.5,
+  "min_jpeg_quality_factor": 50,
+  "min_resolution_px": [
+    600,
+    600
+  ],
+  "operating_envelope_status": "MEASURED_SIMULATION",
+  "out_of_envelope_guarantee": "Mandatory fail-closed abstention (NO_SIGNAL / INSUFFICIENT_EVIDENCE)"
+}

@@ -1,6 +1,7 @@
 import json
 import hashlib
 import base64
+import threading
 from datetime import datetime, timezone
 from typing import List, Optional, Dict, Any, Tuple, Set
 from pydantic import BaseModel, Field
@@ -51,15 +52,35 @@ class TamperEvidentLedger:
     GENESIS_HASH = "0" * 64
 
     def __init__(self, storage_file: Optional[str] = None):
+        self._lock = threading.RLock()
         self.storage_file = storage_file
         self.events: List[EvidenceEvent] = []
         self._event_hashes: List[str] = []
         self._seen_event_ids: Set[str] = set()
+        self._by_recipient: Dict[str, List[EvidenceEvent]] = {}
+        self._by_release: Dict[str, List[EvidenceEvent]] = {}
+        self._by_document: Dict[str, List[EvidenceEvent]] = {}
+
+    def clear(self):
+        """Reset ledger to zero events and remove any backing persistence file."""
+        with self._lock:
+            self.events.clear()
+            self._event_hashes.clear()
+            self._seen_event_ids.clear()
+            self._by_recipient.clear()
+            self._by_release.clear()
+            self._by_document.clear()
+            if self.storage_file and os.path.exists(self.storage_file):
+                try:
+                    os.remove(self.storage_file)
+                except Exception:
+                    pass
 
     def get_last_event_hash(self) -> str:
-        if not self._event_hashes:
-            return self.GENESIS_HASH
-        return self._event_hashes[-1]
+        with self._lock:
+            if not self._event_hashes:
+                return self.GENESIS_HASH
+            return self._event_hashes[-1]
 
     def append_event(self, event: EvidenceEvent) -> str:
         """
@@ -67,21 +88,42 @@ class TamperEvidentLedger:
         1. event_id is unique (anti-duplicate/anti-replay)
         2. previous_event_hash matches the current tip of the hash chain.
         """
-        if event.event_id in self._seen_event_ids:
-            raise ValueError(f"Replay detected: duplicate event_id '{event.event_id}' rejected")
+        with self._lock:
+            if event.event_id in self._seen_event_ids:
+                raise ValueError(f"Replay detected: duplicate event_id '{event.event_id}' rejected")
 
-        expected_prev = self.get_last_event_hash()
-        if event.previous_event_hash != expected_prev:
-            raise ValueError(
-                f"Invalid previous_event_hash in event {event.event_id}. "
-                f"Expected: {expected_prev}, Got: {event.previous_event_hash}"
-            )
-        
-        event_hash = event.compute_event_hash()
-        self.events.append(event)
-        self._event_hashes.append(event_hash)
-        self._seen_event_ids.add(event.event_id)
-        return event_hash
+            expected_prev = self.get_last_event_hash()
+            if event.previous_event_hash != expected_prev:
+                raise ValueError(
+                    f"Invalid previous_event_hash in event {event.event_id}. "
+                    f"Expected: {expected_prev}, Got: {event.previous_event_hash}"
+                )
+            
+            event_hash = event.compute_event_hash()
+            self.events.append(event)
+            self._event_hashes.append(event_hash)
+            self._seen_event_ids.add(event.event_id)
+
+            # Update O(1) indexes
+            self._by_recipient.setdefault(event.recipient_id, []).append(event)
+            self._by_release.setdefault(event.release_id, []).append(event)
+            self._by_document.setdefault(event.document_id, []).append(event)
+
+            return event_hash
+
+    def find_decryption_event(
+        self,
+        recipient_id: str,
+        release_id: str,
+        document_id: Optional[str] = None
+    ) -> Optional[EvidenceEvent]:
+        """O(1) indexed lookup for decryption provenance event."""
+        candidates = self._by_recipient.get(recipient_id, [])
+        for ev in candidates:
+            if ev.event_type == "DECRYPTION_EVENT" and ev.release_id == release_id:
+                if not document_id or ev.document_id == document_id:
+                    return ev
+        return None
 
     def verify_chain(self) -> Tuple[bool, List[str]]:
         """

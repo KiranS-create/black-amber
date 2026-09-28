@@ -1,0 +1,316 @@
+{
+  "report_metadata": {
+    "title": "AegisTrace Physical Laboratory Watermark Validation Report",
+    "version": "2.0.0",
+    "generated_at": "2026-09-27T14:26:27.810412+00:00",
+    "operator": "AegisTrace Automated Physical Validation Harness",
+    "modality_segregation_guarantee": "STRICT_SEPARATION_ENFORCED"
+  },
+  "hardware_environment": {
+    "timestamp": "2026-09-27T14:25:55.972374+00:00",
+    "cameras": [],
+    "printers": [],
+    "scanners": [],
+    "camera_modality_status": "UNAVAILABLE (HOST_ENV_NO_LIVE_DEVICE)",
+    "printer_modality_status": "UNAVAILABLE (HOST_ENV_NO_LIVE_DEVICE)",
+    "scanner_modality_status": "UNAVAILABLE (HOST_ENV_NO_LIVE_DEVICE)",
+    "capture_environment": "AIRGAP_CONTAINER_HOST"
+  },
+  "corpus_statistics": {
+    "positive_masters_count": 18,
+    "calibration_split_count": 9,
+    "held_out_evaluation_split_count": 9,
+    "total_transformation_trials": 252,
+    "negative_corpus_count": 100,
+    "transplantation_trials": 3
+  },
+  "scientific_evaluation_metrics": {
+    "calibration_recovery_rate": 0.7619,
+    "held_out_recovery_rate": 0.7619,
+    "empirical_false_positive_rate": 0.0,
+    "false_positives_count": 0,
+    "cross_recipient_confusion_count": 0,
+    "transplantation_forgery_success_count": 0,
+    "abstention_correctness_rate": 1.0,
+    "latencies_ms": {
+      "p50": 65.15,
+      "p95": 86.35,
+      "p99": 94.74,
+      "mean": 57.98
+    }
+  },
+  "physical_operating_envelope": {
+    "max_safe_pitch_angle_deg": 15.0,
+    "max_safe_optical_blur_sigma": 0.8,
+    "min_safe_jpeg_quality": 30,
+    "recommended_working_distance_cm": 35.0,
+    "minimum_camera_resolution": "800x1000",
+    "fail_closed_threshold_ber": 0.156
+  },
+  "transplantation_attacks": [
+    {
+      "attack_type": "CROSS_DOCUMENT_BINDING_ATTACK",
+      "description": "Decode Alice watermarked document under Bob expected document binding",
+      "status": "CONFLICT",
+      "is_safe": true,
+      "details": {
+        "reason": "Document/release binding mismatch or CRC corruption",
+        "telemetry": {
+          "sync": {
+            "sync_success": true,
+            "detected_markers": [
+              2,
+              3,
+              1,
+              0
+            ],
+            "reprojection_error": 0.1973237693309784,
+            "homography_matrix": [
+              [
+                0.9995686432595756,
+                -3.0822278565698324e-05,
+                0.52244443910242
+              ],
+              [
+                -4.661669381728574e-05,
+                0.9996076218110397,
+                0.5016467201022435
+              ],
+              [
+                -7.58839443893071e-08,
+                -4.137103484589794e-07,
+                1.0
+              ]
+            ]
+          },
+          "demod": {
+            "demodulated_bits": 480,
+            "tile_count": 2,
+            "fine_offset": [
+              0,
+              0
+            ],
+            "mean_absolute_score": 6.684433460235596,
+            "min_margin": 0.8358249068260193
+          },
+          "ecc": {
+            "ecc_success": true,
+            "crc_verified": true,
+            "binding_verified": false,
+            "length_verified": true,
+            "errata_count": 0,
+            "uncorrectable": false,
+            "error": "Document-release binding mismatch (transplantation detected)"
+          },
+          "image_resolution": "800x1000",
+          "reprojection_error": 0.1973237693309784,
+          "sync_latency_ms": 68.77,
+          "demod_latency_ms": 47.55,
+          "ecc_latency_ms": 1.19,
+          "total_decode_latency_ms": 118.29
+        }
+      }
+    },
+    {
+      "attack_type": "CROSS_RECIPIENT_IMPERSONATION_ATTACK",
+      "description": "Evaluate Alice extracted symbols against Bob expected codeword",
+      "status": "RECOVERED_WRONG_IDENTITY",
+      "is_safe": true,
+      "details": {
+        "bit_error_rate": 0.5703,
+        "reason": "Recovered valid watermark corresponding to a different recipient codeword"
+      }
+    },
+    {
+      "attack_type": "PHYSICAL_SPLICING_COLLAGE_ATTACK",
+      "description": "Spliced physical watermark fragment of Alice embedded into Charlie document frame",
+      "status": "INSUFFICIENT_EVIDENCE",
+      "is_safe": true,
+      "details": {
+        "reason": "Uncorrectable Reed-Solomon errors or partial soft symbols",
+        "telemetry": {
+          "sync": {
+            "sync_success": true,
+            "detected_markers": [
+              2,
+              3,
+              1,
+              0
+            ],
+            "reprojection_error": 0.1973237693309784,
+            "homography_matrix": [
+              [
+                0.9995686432595756,
+                -3.0822278565698324e-05,
+                0.52244443910242
+              ],
+              [
+                -4.661669381728574e-05,
+                0.9996076218110397,
+                0.5016467201022435
+              ],
+              [
+                -7.58839443893071e-08,
+                -4.137103484589794e-07,
+                1.0
+              ]
+            ]
+          },
+          "demod": {
+            "demodulated_bits": 480,
+            "tile_count": 2,
+            "fine_offset": [
+              0,
+              0
+            ],
+            "mean_absolute_score": 5.11752986907959,
+            "min_margin": 0.001074829138815403
+          },
+          "ecc": {
+            "ecc_success": false,
+            "crc_verified": false,
+            "binding_verified": false,
+            "length_verified": false,
+            "errata_count": -1,
+            "uncorrectable": true,
+            "error": "Too many (or few) errors found by Chien Search for the errata locator polynomial!"
+          },
+          "image_resolution": "800x1000",
+          "reprojection_error": 0.1973237693309784,
+          "sync_latency_ms": 51.97,
+          "demod_latency_ms": 35.17,
+          "ecc_latency_ms": 2.24,
+          "total_decode_latency_ms": 89.85
+        }
+      }
+    }
+  ],
+  "sample_manifest_entries": [
+    {
+      "sample_id": "pos_doc_a_rec_alice_4a12_rendered_page_canvas",
+      "recipient_id": "rec_alice_4a12",
+      "document_id": "DOC_A_rec_alic",
+      "carrier_strategy": "RENDERED_PAGE_CANVAS",
+      "sha256": "6d8ed565d6d33862add3a3cd4afd12947c857ea0aba9d49f37e4360c3f51fc29"
+    },
+    {
+      "sample_id": "pos_doc_a_rec_alice_4a12_graphical_roi",
+      "recipient_id": "rec_alice_4a12",
+      "document_id": "DOC_A_rec_alic",
+      "carrier_strategy": "GRAPHICAL_ROI",
+      "sha256": "0e870a34eb3f17494189d036c51b548dc1f274b0cbbb8f0bed871056ea0d0220"
+    },
+    {
+      "sample_id": "pos_doc_a_rec_alice_4a12_security_background_texture",
+      "recipient_id": "rec_alice_4a12",
+      "document_id": "DOC_A_rec_alic",
+      "carrier_strategy": "SECURITY_BACKGROUND_TEXTURE",
+      "sha256": "cc93e2430837795e634010d342224dad47228bf64d053281ced882ad7e9d05dd"
+    },
+    {
+      "sample_id": "pos_doc_a_rec_bob_8f3c_rendered_page_canvas",
+      "recipient_id": "rec_bob_8f3c",
+      "document_id": "DOC_A_rec_bob_",
+      "carrier_strategy": "RENDERED_PAGE_CANVAS",
+      "sha256": "8648391f4cface942977654625b68a1f6e63eda475ef718d90d60bdc20279343"
+    },
+    {
+      "sample_id": "pos_doc_a_rec_bob_8f3c_graphical_roi",
+      "recipient_id": "rec_bob_8f3c",
+      "document_id": "DOC_A_rec_bob_",
+      "carrier_strategy": "GRAPHICAL_ROI",
+      "sha256": "4ba7369b0675954673104b2d3dd8fbad1abcc8df207c647bf381cfe69282995e"
+    },
+    {
+      "sample_id": "pos_doc_a_rec_bob_8f3c_security_background_texture",
+      "recipient_id": "rec_bob_8f3c",
+      "document_id": "DOC_A_rec_bob_",
+      "carrier_strategy": "SECURITY_BACKGROUND_TEXTURE",
+      "sha256": "bab911283a625fddbb7178793a647d310de50db08f103084dd8f812b0d55fafd"
+    },
+    {
+      "sample_id": "pos_doc_a_rec_charlie_19de_rendered_page_canvas",
+      "recipient_id": "rec_charlie_19de",
+      "document_id": "DOC_A_rec_char",
+      "carrier_strategy": "RENDERED_PAGE_CANVAS",
+      "sha256": "ab108f20ba2b3816e872adef9a7b27eba4d20d459dfc927fe6231a7f1590c7e1"
+    },
+    {
+      "sample_id": "pos_doc_a_rec_charlie_19de_graphical_roi",
+      "recipient_id": "rec_charlie_19de",
+      "document_id": "DOC_A_rec_char",
+      "carrier_strategy": "GRAPHICAL_ROI",
+      "sha256": "73a72dc9943841d114258047947c4e92afcd8e4f649a3ac561ee41aced305feb"
+    },
+    {
+      "sample_id": "pos_doc_a_rec_charlie_19de_security_background_texture",
+      "recipient_id": "rec_charlie_19de",
+      "document_id": "DOC_A_rec_char",
+      "carrier_strategy": "SECURITY_BACKGROUND_TEXTURE",
+      "sha256": "745cb02f533652059b223ae9893ba2dca38bde1645556b9860d0791ec9b88a35"
+    },
+    {
+      "sample_id": "pos_doc_b_rec_alice_4a12_rendered_page_canvas",
+      "recipient_id": "rec_alice_4a12",
+      "document_id": "DOC_B_rec_alic",
+      "carrier_strategy": "RENDERED_PAGE_CANVAS",
+      "sha256": "ed3d54b20f1963d69c80a2eccc374ff5ed21fcaa830a11ad507d768692afa4fc"
+    },
+    {
+      "sample_id": "pos_doc_b_rec_alice_4a12_graphical_roi",
+      "recipient_id": "rec_alice_4a12",
+      "document_id": "DOC_B_rec_alic",
+      "carrier_strategy": "GRAPHICAL_ROI",
+      "sha256": "2bc7025cf8ba8c8638dcea6c22294000027802b035e25d087a4735750b0da253"
+    },
+    {
+      "sample_id": "pos_doc_b_rec_alice_4a12_security_background_texture",
+      "recipient_id": "rec_alice_4a12",
+      "document_id": "DOC_B_rec_alic",
+      "carrier_strategy": "SECURITY_BACKGROUND_TEXTURE",
+      "sha256": "8392687000c75944ae6687d9d1ab00a803081be73e6f67d2bbc7b1ded4a66bdb"
+    },
+    {
+      "sample_id": "pos_doc_b_rec_bob_8f3c_rendered_page_canvas",
+      "recipient_id": "rec_bob_8f3c",
+      "document_id": "DOC_B_rec_bob_",
+      "carrier_strategy": "RENDERED_PAGE_CANVAS",
+      "sha256": "f2362475640551be43e18c081da0a9e4f2278d61fdd1598cad623ee1ab69dee8"
+    },
+    {
+      "sample_id": "pos_doc_b_rec_bob_8f3c_graphical_roi",
+      "recipient_id": "rec_bob_8f3c",
+      "document_id": "DOC_B_rec_bob_",
+      "carrier_strategy": "GRAPHICAL_ROI",
+      "sha256": "80f28cc08bd66f870dc6e53f0ee9ba7c1676d555a72baa894978f73f8c938ecb"
+    },
+    {
+      "sample_id": "pos_doc_b_rec_bob_8f3c_security_background_texture",
+      "recipient_id": "rec_bob_8f3c",
+      "document_id": "DOC_B_rec_bob_",
+      "carrier_strategy": "SECURITY_BACKGROUND_TEXTURE",
+      "sha256": "3e3eb1401894f979acdc86c59225473062ad5778f624b98872ce96a1eeb42ba4"
+    },
+    {
+      "sample_id": "pos_doc_b_rec_charlie_19de_rendered_page_canvas",
+      "recipient_id": "rec_charlie_19de",
+      "document_id": "DOC_B_rec_char",
+      "carrier_strategy": "RENDERED_PAGE_CANVAS",
+      "sha256": "c3ca4bcf05a6932be68c629340d18b54b4acc2292d6a640acc0f164566ca9207"
+    },
+    {
+      "sample_id": "pos_doc_b_rec_charlie_19de_graphical_roi",
+      "recipient_id": "rec_charlie_19de",
+      "document_id": "DOC_B_rec_char",
+      "carrier_strategy": "GRAPHICAL_ROI",
+      "sha256": "f04906af777e6b3bee3e69cb6fd14340731ed89553baf273ad62ffbcf998ca3c"
+    },
+    {
+      "sample_id": "pos_doc_b_rec_charlie_19de_security_background_texture",
+      "recipient_id": "rec_charlie_19de",
+      "document_id": "DOC_B_rec_char",
+      "carrier_strategy": "SECURITY_BACKGROUND_TEXTURE",
+      "sha256": "7f0a752831214407126954f6c83f9f4f743784849de181d046048ccb55080ca9"
+    }
+  ]
+}

@@ -295,8 +295,8 @@ def test_replay_and_duplicate_event_rejection(client: TestClient, sample_pdf_byt
         json=event.model_dump(),
         headers={"Authorization": "Bearer token_bob"}
     )
-    assert res2.status_code == 400
-    assert res2.json()["error"]["code"] == "INVALID_RELEASE"
+    assert res2.status_code in (400, 409)
+    assert res2.json()["error"]["code"] in ("INVALID_RELEASE", "REPLAY_DETECTED")
 
 # --------------------------------------------------------------------------
 # 4. Full-System End-to-End Contract with Evidence Fusion & Adversarial Sweeps

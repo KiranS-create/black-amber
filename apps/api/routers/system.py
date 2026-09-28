@@ -20,6 +20,67 @@ def health_check():
         active_jobs_count=len(default_orchestrator.job_manager.list_jobs())
     )
 
+@router.get("/ready")
+def readiness_check():
+    """
+    Deep dependency and readiness check for load balancers and orchestrators.
+    Never reports READY when required dependencies are degraded or storage is unwritable.
+    """
+    from fastapi import HTTPException, status
+    from core.crypto.provider_verification import CryptoProviderVerifier, CryptoProviderStatus
+
+    checks = {}
+    is_ready = True
+
+    # 1. Database & Metadata Repo check
+    try:
+        default_orchestrator.metadata_repo.list_documents()
+        checks["database"] = "OK"
+    except Exception as e:
+        checks["database"] = f"FAIL: {str(e)}"
+        is_ready = False
+
+    # 2. Storage Writability check
+    try:
+        probe_file = config.artifacts_dir / ".ready_write_probe"
+        probe_file.write_text("ok", encoding="utf-8")
+        probe_file.unlink()
+        checks["storage"] = "OK"
+    except Exception as e:
+        checks["storage"] = f"FAIL: {str(e)}"
+        is_ready = False
+
+    # 3. Cryptographic Providers check
+    try:
+        res = CryptoProviderVerifier.verify_all_providers(fail_closed=False)
+        if res["overall_status"] == CryptoProviderStatus.CRYPTO_PROVIDER_VALID.value:
+            checks["cryptography"] = "OK"
+        else:
+            checks["cryptography"] = f"DEGRADED: {res.get('overall_status')}"
+    except Exception as e:
+        checks["cryptography"] = f"FAIL: {str(e)}"
+        is_ready = False
+
+    # 4. Orchestrator Initialization check
+    if default_orchestrator and default_orchestrator.ledger and default_orchestrator.release_manager:
+        checks["orchestrator"] = "OK"
+    else:
+        checks["orchestrator"] = "FAIL: Orchestrator uninitialized"
+        is_ready = False
+
+    if not is_ready:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail={"status": "NOT_READY", "dependencies": checks}
+        )
+
+    return {
+        "status": "READY",
+        "service": "AegisTrace API",
+        "version": config.version,
+        "dependencies": checks
+    }
+
 @router.get("/capabilities", response_model=CapabilitiesResponse)
 def get_capabilities():
     """
@@ -89,3 +150,13 @@ def verify_ledger():
         chain_tip=tip,
         errors=errors
     )
+
+@router.post("/demo/reset")
+def reset_demo_state():
+    """Reset all isolated demo state to zero across documents, releases, recipients, investigations, evidence, and ledger."""
+    counts = default_orchestrator.reset_demo_state()
+    return {
+        "status": "RESET_SUCCESS",
+        "counts": counts
+    }
+

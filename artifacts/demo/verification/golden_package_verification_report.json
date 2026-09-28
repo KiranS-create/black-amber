@@ -1,0 +1,60 @@
+{
+  "package_id": "pkg_CASE_SIH_rel_2026_20260927223032",
+  "overall_status": "VERIFIED",
+  "verified_at": "2026-09-27T22:30:34.349994+00:00",
+  "manifest_signature_valid": true,
+  "merkle_root_valid": true,
+  "object_hashes_valid": true,
+  "dependency_graph_valid": true,
+  "recipient_signature_valid": true,
+  "historical_keys_valid": true,
+  "ledger_proof_valid": true,
+  "watermark_binding_valid": true,
+  "lineage_valid": true,
+  "custody_chain_valid": true,
+  "decision_consistent": true,
+  "step_details": {
+    "pillar_1_structure": {
+      "passed": true
+    },
+    "pillar_2_manifest_signature": {
+      "passed": true
+    },
+    "pillar_3_merkle_root": {
+      "passed": true
+    },
+    "pillar_4_object_hashes": {
+      "passed": true,
+      "object_count": 12
+    },
+    "pillar_5_dag": {
+      "passed": true
+    },
+    "pillar_6_receipt_signatures": {
+      "passed": true,
+      "receipt_count": 1
+    },
+    "pillar_7_historical_keys": {
+      "passed": true
+    },
+    "pillar_8_ledger_proofs": {
+      "passed": true,
+      "proof_count": 1
+    },
+    "pillar_9_watermark_binding": {
+      "passed": true
+    },
+    "pillar_10_lineage": {
+      "passed": true
+    },
+    "pillar_11_custody_chain": {
+      "passed": true,
+      "event_count": 1
+    },
+    "pillar_12_decision": {
+      "passed": true
+    }
+  },
+  "errors": [],
+  "warnings": []
+}

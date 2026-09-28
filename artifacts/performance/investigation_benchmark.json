@@ -1,0 +1,14 @@
+{
+  "scale": 10000,
+  "queries_evaluated": 100,
+  "join_latency_ms": {
+    "min": 0.116,
+    "max": 0.372,
+    "mean": 0.141,
+    "p50": 0.124,
+    "p95": 0.227,
+    "p99": 0.275,
+    "stddev": 0.042
+  },
+  "classification": "MEASURED"
+}

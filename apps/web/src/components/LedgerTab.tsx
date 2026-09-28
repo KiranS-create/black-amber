@@ -1,22 +1,21 @@
 import React, { useState } from 'react';
 import { 
-  Database, 
   ShieldCheck, 
   AlertTriangle, 
   RotateCcw, 
-  Link, 
-  CheckCircle, 
+  Link2, 
+  CheckCircle2, 
   XCircle, 
-  Lock, 
   FileCheck, 
   Bug,
-  Eye,
   Copy,
-  Check
+  Check,
+  ExternalLink
 } from 'lucide-react';
 import { EvidenceEvent, LedgerVerificationResult } from '../types';
-import { StatusBadge, OriginBadge } from './common/StatusBadge';
+import { StatusBadge } from './common/StatusBadge';
 import { Drawer } from './common/Drawer';
+import { EmptyState } from './common/EmptyState';
 
 interface LedgerTabProps {
   events: EvidenceEvent[];
@@ -55,278 +54,221 @@ export const LedgerTab: React.FC<LedgerTabProps> = ({
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
-      {/* Integrity Summary Header */}
-      <div
-        style={{
-          backgroundColor: 'var(--surface)',
-          border: `1px solid ${isValid ? 'var(--border)' : 'var(--danger-border)'}`,
-          borderRadius: 'var(--radius-lg)',
-          padding: 'var(--space-5) var(--space-6)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: 'var(--space-4)',
-          boxShadow: 'var(--shadow-sm)'
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
-          <div
-            style={{
-              width: '42px',
-              height: '42px',
-              borderRadius: 'var(--radius-md)',
-              backgroundColor: isValid ? 'var(--success-subtle)' : 'var(--danger-subtle)',
-              color: isValid ? 'var(--success-text)' : 'var(--danger-text)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0
-            }}
-          >
-            {isValid ? <ShieldCheck size={24} /> : <AlertTriangle size={24} />}
+      {/* Page Header */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <h1 style={{ margin: 0, fontSize: '20px', fontWeight: 600, color: 'var(--text-ivory)', letterSpacing: '-0.01em' }}>
+              Ledger Explorer
+            </h1>
+            <StatusBadge
+              label={isValid ? 'Chain intact' : 'Tamper detected'}
+              variant={isValid ? 'success' : 'danger'}
+              size="sm"
+            />
           </div>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <h2 style={{ margin: 0, fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--text)' }}>
-                Audit Ledger & Provenance Hash-Chain
-              </h2>
-              <StatusBadge
-                label={isValid ? 'CHAIN INTACT' : 'TAMPER DETECTED'}
-                variant={isValid ? 'success' : 'danger'}
-                size="sm"
-                dot
-              />
-              <span style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}>
-                {events.length} Blocks Linked
-              </span>
-            </div>
-            <p style={{ margin: '3px 0 0 0', fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
-              Strict SHA-256 hash chains with non-repudiation ML-DSA-65 signatures preventing retroactive log alteration.
-            </p>
-          </div>
+          <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: 'var(--text-slate)', maxWidth: '640px' }}>
+            Append-only cryptographic event sequence. Each block is cryptographically bound to its predecessor via SHA-256 and authenticated with ML-DSA-65 post-quantum signatures.
+          </p>
         </div>
 
         {/* Action Controls */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <button
             onClick={handleVerify}
             disabled={verifying}
-            style={{
-              height: '34px',
-              padding: '0 12px',
-              borderRadius: 'var(--radius-md)',
-              backgroundColor: 'var(--surface-subtle)',
-              border: '1px solid var(--border)',
-              color: 'var(--text)',
-              fontSize: 'var(--text-xs)',
-              fontWeight: 600,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}
+            className="btn-secondary"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
           >
-            <FileCheck size={14} style={{ color: 'var(--primary-text)' }} />
-            <span>{verifying ? 'Auditing...' : 'Verify Entire Chain'}</span>
+            <FileCheck size={14} />
+            <span>{verifying ? 'Auditing chain…' : 'Verify ledger'}</span>
           </button>
 
           {isValid ? (
-            <button
-              onClick={() => onSimulateTamper(1)}
-              style={{
-                height: '34px',
-                padding: '0 12px',
-                borderRadius: 'var(--radius-md)',
-                backgroundColor: 'var(--danger-subtle)',
-                border: '1px solid var(--danger-border)',
-                color: 'var(--danger-text)',
-                fontSize: 'var(--text-xs)',
-                fontWeight: 600,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-            >
-              <Bug size={14} />
-              <span>Simulate Tamper (Block #1)</span>
-            </button>
+            events.length > 0 && (
+              <button
+                onClick={() => onSimulateTamper(1)}
+                className="btn-danger"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+              >
+                <Bug size={14} />
+                <span>Simulate block tamper</span>
+              </button>
+            )
           ) : (
             <button
               onClick={onResetTamper}
-              style={{
-                height: '34px',
-                padding: '0 12px',
-                borderRadius: 'var(--radius-md)',
-                backgroundColor: 'var(--success)',
-                color: '#ffffff',
-                border: 'none',
-                fontSize: 'var(--text-xs)',
-                fontWeight: 600,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
+              className="btn-primary"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
             >
               <RotateCcw size={14} />
-              <span>Restore Chain Integrity</span>
+              <span>Restore chain integrity</span>
             </button>
           )}
         </div>
       </div>
 
-      {/* Tamper Alert Details if Broken */}
+      {/* Restrained Tamper Alert Banner */}
       {!isValid && ledgerStatus?.errors && (
         <div
           style={{
-            backgroundColor: 'var(--danger-subtle)',
-            border: '1px solid var(--danger-border)',
-            borderRadius: 'var(--radius-md)',
-            padding: 'var(--space-4)',
-            color: 'var(--danger-text)',
-            fontSize: 'var(--text-xs)'
+            backgroundColor: 'var(--crimson-bg)',
+            border: '1px solid var(--crimson-border)',
+            borderRadius: '6px',
+            padding: '16px 20px',
+            color: 'var(--crimson-text)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '8px'
           }}
         >
-          <div style={{ fontWeight: 700, fontSize: 'var(--text-base)', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-            <XCircle size={16} />
-            <span>Cryptographic Integrity Audit Failed</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <AlertTriangle size={18} style={{ color: 'var(--crimson)', flexShrink: 0 }} />
+            <span style={{ fontWeight: 600, fontSize: '14px', color: 'var(--text-ivory)' }}>
+              Cryptographic verification failed — fail-closed policy active
+            </span>
           </div>
-          <ul style={{ margin: 0, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-            {ledgerStatus.errors.map((err, idx) => (
-              <li key={idx} style={{ fontFamily: 'var(--font-mono)' }}>{err}</li>
-            ))}
-          </ul>
+          <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-slate)', lineHeight: 1.5 }}>
+            One or more blocks in the chain have failed cryptographic hash verification or contain invalid signatures. Provenance records cannot be certified until the hash chain is restored.
+          </p>
+          <div style={{ marginTop: '4px', paddingLeft: '28px' }}>
+            <ul style={{ margin: 0, padding: 0, listStyleType: 'disc', fontSize: '12px', fontFamily: 'var(--font-mono)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              {ledgerStatus.errors.map((err, idx) => (
+                <li key={idx} style={{ color: 'var(--crimson-text)' }}>{err}</li>
+              ))}
+            </ul>
+          </div>
         </div>
       )}
 
-      {/* Chronological Ledger Table */}
-      <div
-        style={{
-          backgroundColor: 'var(--surface)',
-          border: '1px solid var(--border)',
-          borderRadius: 'var(--radius-lg)',
-          overflow: 'hidden',
-          boxShadow: 'var(--shadow-sm)'
-        }}
-      >
+      {/* Chronological Ledger Table or Empty State */}
+      {events.length === 0 ? (
+        <div className="workstation-card">
+          <EmptyState
+            icon={Link2}
+            title="No Cryptographic Ledger Blocks"
+            description="The immutable ledger records SHA-256 hash chains and ML-DSA-65 signatures upon document release, access, and leak verification events."
+          />
+        </div>
+      ) : (
+        <div className="workstation-card" style={{ padding: 0, overflow: 'hidden' }}>
+        <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-ivory)' }}>
+              Cryptographic Event Chain
+            </span>
+            <span style={{ marginLeft: '10px', fontSize: '12px', color: 'var(--text-graphite)' }}>
+              {events.length} blocks committed
+            </span>
+          </div>
+          <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--text-graphite)' }}>
+            ML-DSA-65 signed
+          </span>
+        </div>
+
         <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: 'var(--text-base)' }}>
+          <table className="evidence-table">
             <thead>
-              <tr style={{ borderBottom: '1px solid var(--border)', backgroundColor: 'var(--surface-subtle)' }}>
-                <th style={{ padding: '12px 18px', fontWeight: 600, fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>Block #</th>
-                <th style={{ padding: '12px 18px', fontWeight: 600, fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>Event Type</th>
-                <th style={{ padding: '12px 18px', fontWeight: 600, fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>Actor / Recipient</th>
-                <th style={{ padding: '12px 18px', fontWeight: 600, fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>Timestamp</th>
-                <th style={{ padding: '12px 18px', fontWeight: 600, fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>Previous Block Hash</th>
-                <th style={{ padding: '12px 18px', fontWeight: 600, fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>Artifact Hash</th>
-                <th style={{ padding: '12px 18px', fontWeight: 600, fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>Status</th>
-                <th style={{ padding: '12px 18px', fontWeight: 600, fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', textTransform: 'uppercase', textAlign: 'right' }}>Actions</th>
+              <tr>
+                <th style={{ width: '80px' }}>Block</th>
+                <th>Event Type</th>
+                <th>Principal</th>
+                <th>Timestamp</th>
+                <th>Previous Hash</th>
+                <th>Content Hash</th>
+                <th>Status</th>
+                <th style={{ textAlign: 'right' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
               {events.map((evt, idx) => {
                 const isCorrupted = evt.is_tampered;
+                const blockNum = (evt as any).block_index !== undefined ? (evt as any).block_index : idx;
                 return (
                   <tr
                     key={evt.event_id}
                     style={{
-                      borderBottom: '1px solid var(--border)',
-                      backgroundColor: isCorrupted ? 'var(--danger-subtle)' : (idx % 2 === 0 ? 'transparent' : 'var(--surface-subtle)'),
-                      transition: 'background var(--transition-fast)'
-                    }}
-                    onMouseEnter={e => {
-                      if (!isCorrupted) (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--surface-hover)';
-                    }}
-                    onMouseLeave={e => {
-                      if (!isCorrupted) (e.currentTarget as HTMLElement).style.backgroundColor = idx % 2 === 0 ? 'transparent' : 'var(--surface-subtle)';
+                      backgroundColor: isCorrupted ? 'rgba(200, 100, 100, 0.08)' : undefined
                     }}
                   >
-                    <td style={{ padding: '14px 18px' }}>
+                    <td>
                       <span
                         style={{
                           fontFamily: 'var(--font-mono)',
                           fontSize: '11px',
-                          fontWeight: 700,
-                          padding: '2px 6px',
-                          borderRadius: 'var(--radius-xs)',
-                          backgroundColor: isCorrupted ? 'var(--danger)' : 'var(--surface)',
-                          color: isCorrupted ? '#ffffff' : 'var(--text)',
-                          border: `1px solid ${isCorrupted ? 'var(--danger)' : 'var(--border)'}`
+                          fontWeight: 600,
+                          color: isCorrupted ? 'var(--crimson)' : 'var(--text-slate)'
                         }}
                       >
-                        #{idx + 1}
+                        #{blockNum}
                       </span>
                     </td>
 
-                    <td style={{ padding: '14px 18px', fontWeight: 600, color: 'var(--text)', fontSize: 'var(--text-base)' }}>
-                      {evt.event_type}
-                    </td>
-
-                    <td style={{ padding: '14px 18px' }}>
-                      <span style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)', fontSize: 'var(--text-xs)' }}>
-                        {evt.recipient_id}
+                    <td>
+                      <span style={{ fontWeight: 500, color: 'var(--text-ivory)' }}>
+                        {evt.event_type}
                       </span>
                     </td>
 
-                    <td style={{ padding: '14px 18px', color: 'var(--text-tertiary)', fontSize: 'var(--text-xs)' }}>
-                      {new Date(evt.timestamp).toLocaleTimeString()}
+                    <td>
+                      {evt.recipient_id ? (
+                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-slate)' }}>
+                          {evt.recipient_id}
+                        </span>
+                      ) : (
+                        <span style={{ color: 'var(--text-graphite)', fontSize: '12px' }}>System</span>
+                      )}
                     </td>
 
-                    <td style={{ padding: '14px 18px' }}>
-                      <code
-                        style={{
-                          fontFamily: 'var(--font-mono)',
-                          fontSize: '11px',
-                          color: 'var(--text-tertiary)'
-                        }}
-                      >
-                        {evt.previous_event_hash ? `${evt.previous_event_hash.substring(0, 12)}...` : '000000000000...'}
+                    <td style={{ color: 'var(--text-graphite)', fontFamily: 'var(--font-mono)', fontSize: '12px' }}>
+                      {new Date(evt.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                    </td>
+
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <Link2 size={12} style={{ color: isCorrupted ? 'var(--crimson)' : 'var(--text-graphite)', flexShrink: 0 }} />
+                        <code style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: isCorrupted ? 'var(--crimson-text)' : 'var(--text-slate)' }}>
+                          {evt.previous_event_hash ? `${evt.previous_event_hash.substring(0, 10)}…` : 'Genesis'}
+                        </code>
+                      </div>
+                    </td>
+
+                    <td>
+                      <code style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-slate)' }}>
+                        {evt.artifact_hash ? `${evt.artifact_hash.substring(0, 10)}…` : '—'}
                       </code>
                     </td>
 
-                    <td style={{ padding: '14px 18px' }}>
-                      <code
-                        style={{
-                          fontFamily: 'var(--font-mono)',
-                          fontSize: '11px',
-                          color: isCorrupted ? 'var(--danger-text)' : 'var(--success-text)',
-                          fontWeight: 600
-                        }}
-                      >
-                        {evt.artifact_hash?.substring(0, 12)}...
-                      </code>
-                    </td>
-
-                    <td style={{ padding: '14px 18px' }}>
+                    <td>
                       <StatusBadge
-                        label={isCorrupted ? 'TAMPERED' : 'VALID'}
+                        label={isCorrupted ? 'Tampered' : 'Sealed'}
                         variant={isCorrupted ? 'danger' : 'success'}
                         size="xs"
-                        dot
                       />
                     </td>
 
-                    <td style={{ padding: '14px 18px', textAlign: 'right' }}>
+                    <td style={{ textAlign: 'right' }}>
                       <button
                         onClick={() => setSelectedEvent(evt)}
                         style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '4px',
                           padding: '4px 10px',
-                          backgroundColor: 'transparent',
-                          border: '1px solid var(--border)',
-                          borderRadius: 'var(--radius-md)',
-                          color: 'var(--text)',
-                          fontSize: 'var(--text-xs)',
-                          fontWeight: 600,
+                          borderRadius: '4px',
+                          backgroundColor: 'var(--bg-elevated)',
+                          border: '1px solid var(--border-subtle)',
+                          color: 'var(--text-slate)',
+                          fontSize: '11px',
                           cursor: 'pointer'
                         }}
+                        onMouseEnter={e => {
+                          e.currentTarget.style.color = 'var(--text-ivory)';
+                          e.currentTarget.style.borderColor = 'var(--border-strong)';
+                        }}
+                        onMouseLeave={e => {
+                          e.currentTarget.style.color = 'var(--text-slate)';
+                          e.currentTarget.style.borderColor = 'var(--border-subtle)';
+                        }}
                       >
-                        <Eye size={12} />
-                        <span>Inspect</span>
+                        Inspect
                       </button>
                     </td>
                   </tr>
@@ -336,155 +278,168 @@ export const LedgerTab: React.FC<LedgerTabProps> = ({
           </table>
         </div>
       </div>
+      )}
 
-      {/* Block Evidence Inspector Drawer */}
+      {/* Block Detail Drawer */}
       <Drawer
-        isOpen={selectedEvent !== null}
+        isOpen={!!selectedEvent}
         onClose={() => setSelectedEvent(null)}
-        title={selectedEvent ? `Block #${events.findIndex(e => e.event_id === selectedEvent.event_id) + 1} Inspector` : 'Block Inspector'}
-        subtitle={`Event: ${selectedEvent?.event_type} • ${selectedEvent ? new Date(selectedEvent.timestamp).toLocaleString() : ''}`}
-        width="540px"
+        title={`Audit Block #${(selectedEvent as any)?.block_index ?? ''}`}
+        subtitle={`Event ID: ${selectedEvent?.event_id || ''}`}
+        width="500px"
       >
         {selectedEvent && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            {/* Block Status Strip */}
             <div
               style={{
-                backgroundColor: selectedEvent.is_tampered ? 'var(--danger-subtle)' : 'var(--surface-subtle)',
-                border: `1px solid ${selectedEvent.is_tampered ? 'var(--danger-border)' : 'var(--border)'}`,
-                borderRadius: 'var(--radius-md)',
-                padding: 'var(--space-4)',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'space-between'
+                justifyContent: 'space-between',
+                padding: '12px 14px',
+                borderRadius: '6px',
+                backgroundColor: selectedEvent.is_tampered ? 'var(--crimson-bg)' : 'var(--jade-bg)',
+                border: `1px solid ${selectedEvent.is_tampered ? 'var(--crimson-border)' : 'var(--jade-border)'}`
               }}
             >
-              <div>
-                <div style={{ fontWeight: 700, fontSize: 'var(--text-base)', color: selectedEvent.is_tampered ? 'var(--danger-text)' : 'var(--text)' }}>
-                  {selectedEvent.is_tampered ? 'Tampered Block Detected' : 'Verified Cryptographic Evidence'}
-                </div>
-                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
-                  Event ID: <code style={{ fontFamily: 'var(--font-mono)' }}>{selectedEvent.event_id}</code>
-                </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                {selectedEvent.is_tampered ? (
+                  <XCircle size={16} style={{ color: 'var(--crimson)' }} />
+                ) : (
+                  <CheckCircle2 size={16} style={{ color: 'var(--jade)' }} />
+                )}
+                <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-ivory)' }}>
+                  {selectedEvent.is_tampered ? 'Cryptographic mismatch' : 'Cryptographically verified'}
+                </span>
               </div>
               <StatusBadge
-                label={selectedEvent.is_tampered ? 'TAMPERED' : 'VALID'}
+                label={selectedEvent.is_tampered ? 'Tampered' : 'Sealed'}
                 variant={selectedEvent.is_tampered ? 'danger' : 'success'}
-                size="sm"
-                dot
+                size="xs"
               />
             </div>
 
-            {/* Scope */}
-            <div
-              style={{
-                backgroundColor: 'var(--surface)',
-                border: '1px solid var(--border)',
-                borderRadius: 'var(--radius-md)',
-                padding: 'var(--space-4)',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 'var(--space-2)'
-              }}
-            >
-              <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase' }}>
-                Event Scope & Actor
+            {/* Block Metadata */}
+            <div>
+              <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-graphite)', fontWeight: 600, marginBottom: '10px' }}>
+                Block Attributes
               </div>
-              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text)' }}>
-                Actor Identity: <strong style={{ color: 'var(--primary-text)' }}>{selectedEvent.recipient_id}</strong>
-              </div>
-              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
-                Document ID: <code>{selectedEvent.document_id}</code> • Release ID: <code>{selectedEvent.release_id}</code>
-              </div>
-            </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: '10px 16px', fontSize: '12px' }}>
+                <span style={{ color: 'var(--text-graphite)' }}>Event type</span>
+                <span style={{ color: 'var(--text-ivory)', fontWeight: 500 }}>{selectedEvent.event_type}</span>
 
-            {/* Previous Hash */}
-            <div
-              style={{
-                backgroundColor: 'var(--surface)',
-                border: '1px solid var(--border)',
-                borderRadius: 'var(--radius-md)',
-                padding: 'var(--space-4)'
-              }}
-            >
-              <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase', marginBottom: '4px' }}>
-                Previous Block Hash (Parent Linkage)
-              </div>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-secondary)', wordBreak: 'break-all' }}>
-                {selectedEvent.previous_event_hash}
-              </div>
-            </div>
-
-            {/* Artifact Hash */}
-            <div
-              style={{
-                backgroundColor: 'var(--surface)',
-                border: '1px solid var(--border)',
-                borderRadius: 'var(--radius-md)',
-                padding: 'var(--space-4)'
-              }}
-            >
-              <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase', marginBottom: '4px' }}>
-                Artifact Payload Hash
-              </div>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: selectedEvent.is_tampered ? 'var(--danger-text)' : 'var(--success-text)', wordBreak: 'break-all', fontWeight: 600 }}>
-                {selectedEvent.artifact_hash}
-              </div>
-            </div>
-
-            {/* ML-DSA-65 Signature */}
-            <div
-              style={{
-                backgroundColor: 'var(--surface)',
-                border: '1px solid var(--border)',
-                borderRadius: 'var(--radius-md)',
-                padding: 'var(--space-4)'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
-                <span style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase' }}>
-                  Non-Repudiation ML-DSA-65 Signature
+                <span style={{ color: 'var(--text-graphite)' }}>Principal actor</span>
+                <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-slate)' }}>
+                  {selectedEvent.recipient_id || 'System process'}
                 </span>
-                <span style={{ fontSize: '10.5px', color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}>
-                  {selectedEvent.algorithm || 'ML-DSA-65'}
+
+                <span style={{ color: 'var(--text-graphite)' }}>Committed at</span>
+                <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-slate)' }}>
+                  {new Date(selectedEvent.timestamp).toISOString()}
                 </span>
+              </div>
+            </div>
+
+            {/* Previous Block Link */}
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+                <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-graphite)', fontWeight: 600 }}>
+                  Parent Block Hash
+                </span>
+                {selectedEvent.previous_event_hash && (
+                  <button
+                    onClick={() => handleCopy(selectedEvent.previous_event_hash || '', 'prev')}
+                    style={{ background: 'none', border: 'none', color: 'var(--text-graphite)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px' }}
+                  >
+                    {copiedKey === 'prev' ? <Check size={12} style={{ color: 'var(--jade)' }} /> : <Copy size={12} />}
+                    <span>{copiedKey === 'prev' ? 'Copied' : 'Copy'}</span>
+                  </button>
+                )}
               </div>
               <div
                 style={{
-                  backgroundColor: 'var(--surface-subtle)',
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-xs)',
-                  padding: 'var(--space-3)',
+                  padding: '10px 12px',
+                  borderRadius: '4px',
+                  backgroundColor: 'var(--bg-elevated)',
+                  border: '1px solid var(--border-subtle)',
                   fontFamily: 'var(--font-mono)',
                   fontSize: '11px',
-                  color: 'var(--text-secondary)',
+                  color: selectedEvent.is_tampered ? 'var(--crimson-text)' : 'var(--text-slate)',
                   wordBreak: 'break-all',
-                  maxHeight: '120px',
-                  overflowY: 'auto'
+                  lineHeight: 1.5
                 }}
               >
-                {selectedEvent.signature}
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 'var(--space-2)' }}>
-                <button
-                  onClick={() => handleCopy(selectedEvent.signature, 'drawer-sig')}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px',
-                    padding: '4px 10px',
-                    backgroundColor: 'var(--surface)',
-                    border: '1px solid var(--border)',
-                    borderRadius: 'var(--radius-sm)',
-                    fontSize: '11.5px',
-                    color: 'var(--text-secondary)',
-                    cursor: 'pointer'
-                  }}
-                >
-                  {copiedKey === 'drawer-sig' ? <Check size={12} color="var(--success)" /> : <Copy size={12} />}
-                  <span>{copiedKey === 'drawer-sig' ? 'Copied' : 'Copy Signature'}</span>
-                </button>
+                {selectedEvent.previous_event_hash || 'Genesis block (root of trust)'}
               </div>
             </div>
+
+            {/* Artifact Content Hash */}
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+                <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-graphite)', fontWeight: 600 }}>
+                  Artifact SHA-256 Digest
+                </span>
+                {selectedEvent.artifact_hash && (
+                  <button
+                    onClick={() => handleCopy(selectedEvent.artifact_hash || '', 'art')}
+                    style={{ background: 'none', border: 'none', color: 'var(--text-graphite)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px' }}
+                  >
+                    {copiedKey === 'art' ? <Check size={12} style={{ color: 'var(--jade)' }} /> : <Copy size={12} />}
+                    <span>{copiedKey === 'art' ? 'Copied' : 'Copy'}</span>
+                  </button>
+                )}
+              </div>
+              <div
+                style={{
+                  padding: '10px 12px',
+                  borderRadius: '4px',
+                  backgroundColor: 'var(--bg-elevated)',
+                  border: '1px solid var(--border-subtle)',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '11px',
+                  color: 'var(--text-slate)',
+                  wordBreak: 'break-all',
+                  lineHeight: 1.5
+                }}
+              >
+                {selectedEvent.artifact_hash || 'No direct artifact payload associated'}
+              </div>
+            </div>
+
+            {/* Digital Signature */}
+            {selectedEvent.signature && (
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+                  <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-graphite)', fontWeight: 600 }}>
+                    Post-Quantum Signature (ML-DSA-65)
+                  </span>
+                  <button
+                    onClick={() => handleCopy(selectedEvent.signature || '', 'sig')}
+                    style={{ background: 'none', border: 'none', color: 'var(--text-graphite)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px' }}
+                  >
+                    {copiedKey === 'sig' ? <Check size={12} style={{ color: 'var(--jade)' }} /> : <Copy size={12} />}
+                    <span>{copiedKey === 'sig' ? 'Copied' : 'Copy'}</span>
+                  </button>
+                </div>
+                <div
+                  style={{
+                    padding: '10px 12px',
+                    borderRadius: '4px',
+                    backgroundColor: 'var(--bg-elevated)',
+                    border: '1px solid var(--border-subtle)',
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '10.5px',
+                    color: 'var(--text-graphite)',
+                    wordBreak: 'break-all',
+                    maxHeight: '120px',
+                    overflowY: 'auto',
+                    lineHeight: 1.5
+                  }}
+                >
+                  {selectedEvent.signature}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </Drawer>

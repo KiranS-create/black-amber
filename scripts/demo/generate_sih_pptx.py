@@ -19,8 +19,10 @@ from pptx.util import Inches, Pt
 from pptx.dml.color import RGBColor
 from pptx.enum.text import PP_ALIGN
 
+import os
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-TEMPLATE_PATH = Path(r"C:\Users\kiran akash\Downloads\SIH2026-IDEA-Presentation-Format.pptx")
+TEMPLATE_PATH = Path(os.environ.get("SIH_TEMPLATE_PATH", Path.home() / "Downloads" / "SIH2026-IDEA-Presentation-Format.pptx"))
 OUTPUT_PATH = PROJECT_ROOT / "presentation" / "SIH26237_Final.pptx"
 
 # Colors

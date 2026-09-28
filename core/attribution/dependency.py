@@ -63,11 +63,43 @@ class EvidenceDependencyGraph:
                     f"Observation '{obs.source_id}' release_id '{obs_bind.release_id}' "
                     f"does not match target release_id '{target.release_id}'"
                 )
-            # Check artifact_hash mismatch if strict
-            if strict_hash and target.artifact_hash and obs_bind.artifact_hash and target.artifact_hash != obs_bind.artifact_hash:
+            # Check recipient_id mismatch
+            if target.recipient_id and obs_bind.recipient_id and target.recipient_id != obs_bind.recipient_id:
                 violations.append(
-                    f"Observation '{obs.source_id}' artifact_hash '{obs_bind.artifact_hash}' "
-                    f"does not match target artifact_hash '{target.artifact_hash}'"
+                    f"Observation '{obs.source_id}' recipient_id '{obs_bind.recipient_id}' "
+                    f"does not match target recipient_id '{target.recipient_id}'"
+                )
+            # Check original_document_hash mismatch
+            if target.original_document_hash and obs_bind.original_document_hash and target.original_document_hash != obs_bind.original_document_hash:
+                violations.append(
+                    f"Observation '{obs.source_id}' original_document_hash '{obs_bind.original_document_hash}' "
+                    f"does not match target original_document_hash '{target.original_document_hash}'"
+                )
+            # Check traceability_key_id mismatch
+            if target.traceability_key_id and obs_bind.traceability_key_id and target.traceability_key_id != obs_bind.traceability_key_id:
+                violations.append(
+                    f"Observation '{obs.source_id}' traceability_key_id '{obs_bind.traceability_key_id}' "
+                    f"does not match target traceability_key_id '{target.traceability_key_id}'"
+                )
+            # Check protocol_version mismatch
+            if target.protocol_version and obs_bind.protocol_version and target.protocol_version != obs_bind.protocol_version:
+                violations.append(
+                    f"Observation '{obs.source_id}' protocol_version '{obs_bind.protocol_version}' "
+                    f"does not match target protocol_version '{target.protocol_version}'"
+                )
+            # Check leak_artifact_hash mismatch
+            if target.leak_artifact_hash and obs_bind.leak_artifact_hash and target.leak_artifact_hash != obs_bind.leak_artifact_hash:
+                violations.append(
+                    f"Observation '{obs.source_id}' leak_artifact_hash '{obs_bind.leak_artifact_hash}' "
+                    f"does not match target leak_artifact_hash '{target.leak_artifact_hash}'"
+                )
+            # Check artifact_hash mismatch if strict
+            h_target = target.get_effective_artifact_hash() if hasattr(target, 'get_effective_artifact_hash') else target.artifact_hash
+            h_obs = obs_bind.get_effective_artifact_hash() if hasattr(obs_bind, 'get_effective_artifact_hash') else obs_bind.artifact_hash
+            if strict_hash and h_target and h_obs and h_target != h_obs:
+                violations.append(
+                    f"Observation '{obs.source_id}' artifact_hash '{h_obs}' "
+                    f"does not match target artifact_hash '{h_target}'"
                 )
 
         return (len(violations) == 0, violations)

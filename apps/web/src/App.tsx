@@ -7,30 +7,47 @@ import {
   LedgerVerificationResult,
   DocumentMetadata,
   LeakMetadata,
-  AttackTelemetryInput
+  AttackTelemetryInput,
+  DirectoryIdentity,
+  DirectoryGroup,
+  UserSession,
+  EvidenceRecord,
+  InvestigationRecord
 } from './types';
 import { apiService } from './services/api';
 import { ThemeProvider } from './context/ThemeContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AppShell } from './components/common/AppShell';
 import { TabId } from './components/common/Sidebar';
-import { DashboardTab } from './components/DashboardTab';
-import { RecipientsTab } from './components/RecipientsTab';
+import { LoginScreen } from './components/LoginScreen';
+import { SignUpScreen } from './components/SignUpScreen';
+import { VerifyTab } from './components/VerifyTab';
+import { OverviewTab } from './components/OverviewTab';
+import { DocumentsTab } from './components/DocumentsTab';
 import { ReleaseTab } from './components/ReleaseTab';
-import { DecryptionTab } from './components/DecryptionTab';
+import { InvestigationsTab } from './components/InvestigationsTab';
+import { DirectoryTab } from './components/DirectoryTab';
+import { RecipientsTab } from './components/RecipientsTab';
+import { GroupsTab } from './components/GroupsTab';
+import { EvidenceTab } from './components/EvidenceTab';
+import { ProvenanceTab } from './components/ProvenanceTab';
 import { LedgerTab } from './components/LedgerTab';
-import { LeakAnalysisTab } from './components/LeakAnalysisTab';
 import { AttackLabTab } from './components/AttackLabTab';
-import { TardosVisualizer } from './components/TardosVisualizer';
 import { SystemHealthTab } from './components/SystemHealthTab';
+import { IntegrationsTab } from './components/IntegrationsTab';
 import { SettingsTab } from './components/SettingsTab';
-import { JudgeWalkthroughModal } from './components/JudgeWalkthroughModal';
+import { ProductGuideModal } from './components/ProductGuideModal';
 import { ForensicReportModal } from './components/ForensicReportModal';
 import { SignatureIntro } from './components/common/SignatureIntro';
-import { computeMockAttribution } from './services/mockData';
+import { useLenis } from './hooks/useLenis';
 
 export function AppContent() {
-  const [activeTab, setActiveTab] = useState<TabId>('dashboard');
+  const [activeTab, setActiveTab] = useState<TabId>('overview');
+
+  const [userSession, setUserSession] = useState<UserSession | null>(() => apiService.getCurrentUser());
+  const [isDemoMode, setIsDemoMode] = useState<boolean>(() => apiService.isDemoMode());
+  const [isSignUpMode, setIsSignUpMode] = useState<boolean>(false);
+  const [isVerifyStandalone, setIsVerifyStandalone] = useState<boolean>(false);
 
   const [documents, setDocuments] = useState<DocumentMetadata[]>([]);
   const [recipients, setRecipients] = useState<PublicRecipient[]>([]);
@@ -38,10 +55,14 @@ export function AppContent() {
   const [ledgerEvents, setLedgerEvents] = useState<EvidenceEvent[]>([]);
   const [ledgerStatus, setLedgerStatus] = useState<LedgerVerificationResult | null>(null);
   const [leakResult, setLeakResult] = useState<AttributionResult | null>(null);
+  const [directoryIdentities, setDirectoryIdentities] = useState<DirectoryIdentity[]>([]);
+  const [directoryGroups, setDirectoryGroups] = useState<DirectoryGroup[]>([]);
+  const [evidenceRecords, setEvidenceRecords] = useState<EvidenceRecord[]>([]);
+  const [investigations, setInvestigations] = useState<InvestigationRecord[]>([]);
 
   const [isOnline, setIsOnline] = useState<boolean>(false);
   const [forceOffline, setForceOffline] = useState<boolean>(false);
-  const [walkthroughOpen, setWalkthroughOpen] = useState<boolean>(false);
+  const [guideOpen, setGuideOpen] = useState<boolean>(false);
   const [reportModalOpen, setReportModalOpen] = useState<boolean>(false);
   const [introCompleted, setIntroCompleted] = useState<boolean>(() => {
     try {
@@ -60,7 +81,6 @@ export function AppContent() {
         apiService.setForceOffline(true);
       }
       await refreshAllData();
-      setLeakResult(computeMockAttribution('clean_bob'));
     };
     init();
 
@@ -79,12 +99,16 @@ export function AppContent() {
       const health = await apiService.checkHealth();
       setIsOnline(health.online);
 
-      const [docList, recList, relList, evList, legStatus] = await Promise.all([
+      const [docList, recList, relList, evList, legStatus, dirList, grpList, evRecList, invList] = await Promise.all([
         apiService.getDocuments(),
         apiService.getRecipients(),
         apiService.getReleases(),
         apiService.getLedgerEvents(),
-        apiService.verifyLedger()
+        apiService.verifyLedger(),
+        apiService.searchDirectory(''),
+        apiService.getDirectoryGroups(),
+        apiService.getEvidenceRecords(),
+        apiService.getHistoricalInvestigations()
       ]);
 
       setDocuments(docList);
@@ -92,23 +116,37 @@ export function AppContent() {
       setReleases(relList);
       setLedgerEvents(evList);
       setLedgerStatus(legStatus);
+      setDirectoryIdentities(dirList);
+      setDirectoryGroups(grpList);
+      setEvidenceRecords(evRecList);
+      setInvestigations(invList);
+      setIsDemoMode(apiService.isDemoMode());
     } catch (err: any) {
-      console.warn('Live refresh encountered error, setting offline demo mode:', err);
+      console.warn('Live refresh encountered error, setting offline simulation mode:', err);
       setForceOffline(true);
       apiService.setForceOffline(true);
       setIsOnline(false);
-      const [docList, recList, relList, evList, legStatus] = await Promise.all([
+      const [docList, recList, relList, evList, legStatus, dirList, grpList, evRecList, invList] = await Promise.all([
         apiService.getDocuments(),
         apiService.getRecipients(),
         apiService.getReleases(),
         apiService.getLedgerEvents(),
-        apiService.verifyLedger()
+        apiService.verifyLedger(),
+        apiService.searchDirectory(''),
+        apiService.getDirectoryGroups(),
+        apiService.getEvidenceRecords(),
+        apiService.getHistoricalInvestigations()
       ]);
       setDocuments(docList);
       setRecipients(recList);
       setReleases(relList);
       setLedgerEvents(evList);
       setLedgerStatus(legStatus);
+      setDirectoryIdentities(dirList);
+      setDirectoryGroups(grpList);
+      setEvidenceRecords(evRecList);
+      setInvestigations(invList);
+      setIsDemoMode(apiService.isDemoMode());
     }
   };
 
@@ -129,14 +167,25 @@ export function AppContent() {
     await refreshAllData();
   };
 
+  const handleEnrollFromDirectory = async (identityId: string, role?: string) => {
+    await apiService.enrollFromDirectory(identityId, role);
+    await refreshAllData();
+  };
+
+  const handleRevokeRecipient = async (recipientId: string) => {
+    await apiService.revokeRecipient(recipientId);
+    await refreshAllData();
+  };
+
   const handleCreateRelease = async (
     docName: string, 
     docBase64: string, 
     recipientIds: string[],
     docId?: string,
-    tardosEnabled?: boolean
+    tardosEnabled?: boolean,
+    targets?: Array<{ target_type: 'INDIVIDUAL' | 'GROUP', target_id: string }>
   ) => {
-    await apiService.createRelease(docName, docBase64, recipientIds, docId, tardosEnabled);
+    await apiService.createRelease(docName, docBase64, recipientIds, docId, tardosEnabled, targets);
     await refreshAllData();
   };
 
@@ -175,16 +224,58 @@ export function AppContent() {
     refreshAllData();
   };
 
-  const handleResetAll = () => {
-    apiService.resetAllToDefault();
-    setLeakResult(computeMockAttribution('clean_bob'));
+  const handleSignOut = async () => {
+    await apiService.logout();
+    setUserSession(null);
+  };
+
+  const handleLoadDemoData = () => {
+    apiService.loadDemoData();
+    setIsDemoMode(true);
+    refreshAllData();
+  };
+
+  const handlePurgeDemoData = () => {
+    apiService.purgeDemoData();
+    setIsDemoMode(false);
+    setLeakResult(null);
     refreshAllData();
   };
 
   const handleQuickScenario = async (scenarioId: string) => {
     await handleAnalyzeLeak(scenarioId);
-    setActiveTab('leak');
+    setActiveTab('investigations');
   };
+
+  if (isVerifyStandalone) {
+    return (
+      <VerifyTab
+        isStandalone={true}
+        onBackToApp={() => setIsVerifyStandalone(false)}
+      />
+    );
+  }
+
+  if (!userSession) {
+    if (isSignUpMode) {
+      return (
+        <SignUpScreen
+          onSwitchToSignIn={() => setIsSignUpMode(false)}
+          onOpenVerifyStandalone={() => setIsVerifyStandalone(true)}
+        />
+      );
+    }
+    return (
+      <LoginScreen
+        onLoginSuccess={(session) => {
+          setUserSession(session);
+          refreshAllData();
+        }}
+        onSwitchToSignUp={() => setIsSignUpMode(true)}
+        onOpenVerifyStandalone={() => setIsVerifyStandalone(true)}
+      />
+    );
+  }
 
   return (
     <>
@@ -199,132 +290,194 @@ export function AppContent() {
         />
       )}
       <AppShell
-      activeTab={activeTab}
-      setActiveTab={setActiveTab}
-      isOnline={isOnline}
-      forceOffline={forceOffline}
-      onToggleForceOffline={handleToggleForceOffline}
-      onOpenWalkthrough={() => setWalkthroughOpen(true)}
-      onResetDemo={handleResetAll}
-      onQuickScenario={handleQuickScenario}
-      onSimulateTamper={() => handleSimulateTamper(1)}
-      onExportReport={() => setReportModalOpen(true)}
-      recipientCount={recipients.length}
-      releaseCount={releases.length}
-      ledgerCount={ledgerStatus?.total_events ?? ledgerEvents.length}
-    >
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={activeTab}
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -6 }}
-          transition={{ duration: 0.15, ease: 'easeOut' }}
-          style={{ width: '100%' }}
-        >
-          {activeTab === 'dashboard' && (
-            <DashboardTab
-              documents={documents}
-              recipients={recipients}
-              releases={releases}
-              ledgerStatus={ledgerStatus}
-              isOnline={isOnline}
-              setActiveTab={setActiveTab}
-              onQuickScenario={handleQuickScenario}
-            />
-          )}
-
-          {activeTab === 'recipients' && (
-            <RecipientsTab
-              recipients={recipients}
-              onEnroll={handleEnrollRecipient}
-            />
-          )}
-
-          {activeTab === 'release' && (
-            <ReleaseTab
-              documents={documents}
-              recipients={recipients}
-              releases={releases}
-              onCreateRelease={handleCreateRelease}
-              onUploadDocument={handleUploadDocument}
-              setActiveTab={setActiveTab}
-            />
-          )}
-
-          {activeTab === 'decrypt' && (
-            <DecryptionTab
-              recipients={recipients}
-              releases={releases}
-              onDecrypt={handleDecrypt}
-              setActiveTab={setActiveTab}
-            />
-          )}
-
-          {activeTab === 'ledger' && (
-            <LedgerTab
-              events={ledgerEvents}
-              ledgerStatus={ledgerStatus}
-              isOnline={isOnline}
-              onVerifyLedger={handleVerifyLedger}
-              onSimulateTamper={handleSimulateTamper}
-              onResetTamper={handleResetTamper}
-            />
-          )}
-
-          {activeTab === 'leak' && (
-            <LeakAnalysisTab
-              leakResult={leakResult}
-              onAnalyzeLeak={handleAnalyzeLeak}
-              onUploadLeakFile={handleUploadLeakFile}
-              onOpenReportModal={() => setReportModalOpen(true)}
-            />
-          )}
-
-          {activeTab === 'attack_lab' && (
-            <AttackLabTab />
-          )}
-
-          {activeTab === 'tardos' && (
-            <TardosVisualizer />
-          )}
-
-          {activeTab === 'health' && (
-            <SystemHealthTab isOnline={isOnline} onRefresh={refreshAllData} />
-          )}
-
-          {activeTab === 'settings' && (
-            <SettingsTab />
-          )}
-        </motion.div>
-      </AnimatePresence>
-
-      {/* Guided Judge Walkthrough Modal */}
-      <JudgeWalkthroughModal
-        isOpen={walkthroughOpen}
-        onClose={() => setWalkthroughOpen(false)}
+        activeTab={activeTab}
         setActiveTab={setActiveTab}
-        onTriggerDecryption={async () => {
-          if (releases[0]) {
-            await handleDecrypt(releases[0].release_id, 'bob');
-          }
-        }}
-        onTriggerLeakAnalysis={async (scenarioId) => {
-          await handleAnalyzeLeak(scenarioId);
-        }}
-        onTriggerLedgerTamper={() => {
-          handleSimulateTamper(1);
-        }}
-      />
+        isOnline={isOnline}
+        forceOffline={forceOffline}
+        onToggleForceOffline={handleToggleForceOffline}
+        onOpenWalkthrough={() => setGuideOpen(true)}
+        onResetDemo={handleLoadDemoData}
+        onQuickScenario={handleQuickScenario}
+        onSimulateTamper={() => handleSimulateTamper(1)}
+        onExportReport={() => setReportModalOpen(true)}
+        documentCount={documents.length}
+        recipientCount={recipients.length}
+        releaseCount={releases.length}
+        ledgerCount={ledgerStatus?.total_events ?? ledgerEvents.length}
+        hasActiveInvestigation={leakResult !== null}
+        userSession={userSession}
+        isDemoMode={isDemoMode}
+        onPurgeDemo={handlePurgeDemoData}
+        onSignOut={handleSignOut}
+      >
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.15, ease: 'easeOut' }}
+            style={{ width: '100%' }}
+          >
+            {/* OPERATIONS */}
+            {activeTab === 'overview' && (
+              <OverviewTab
+                documents={documents}
+                recipients={recipients}
+                releases={releases}
+                ledgerStatus={ledgerStatus}
+                investigations={investigations}
+                evidenceRecords={evidenceRecords}
+                isOnline={isOnline}
+                isDemoMode={isDemoMode}
+                setActiveTab={setActiveTab}
+                onQuickScenario={handleQuickScenario}
+                onLoadDemo={handleLoadDemoData}
+                onPurgeDemo={handlePurgeDemoData}
+              />
+            )}
 
-      {/* Forensic Report Export Modal */}
-      <ForensicReportModal
-        isOpen={reportModalOpen}
-        onClose={() => setReportModalOpen(false)}
-        leakResult={leakResult}
-        ledgerEvents={ledgerEvents}
-      />
-    </AppShell>
+            {activeTab === 'documents' && (
+              <DocumentsTab
+                documents={documents}
+                releases={releases}
+                onUploadDocument={handleUploadDocument}
+                setActiveTab={setActiveTab}
+              />
+            )}
+
+            {activeTab === 'releases' && (
+              <ReleaseTab
+                documents={documents}
+                recipients={recipients}
+                releases={releases}
+                onCreateRelease={handleCreateRelease}
+                onUploadDocument={handleUploadDocument}
+                setActiveTab={setActiveTab}
+              />
+            )}
+
+            {activeTab === 'investigations' && (
+              <InvestigationsTab
+                leakResult={leakResult}
+                onAnalyzeLeak={handleAnalyzeLeak}
+                onUploadLeakFile={handleUploadLeakFile}
+                onOpenReportModal={() => setReportModalOpen(true)}
+              />
+            )}
+
+            {/* IDENTITY */}
+            {activeTab === 'directory' && (
+              <DirectoryTab
+                identities={directoryIdentities}
+                recipients={recipients}
+                onEnrollFromDirectory={handleEnrollFromDirectory}
+                onRevokeRecipient={handleRevokeRecipient}
+                setActiveTab={setActiveTab}
+              />
+            )}
+
+            {activeTab === 'recipients' && (
+              <RecipientsTab
+                recipients={recipients}
+                onEnroll={handleEnrollRecipient}
+                onEnrollFromDirectory={handleEnrollFromDirectory}
+                onRevokeRecipient={handleRevokeRecipient}
+              />
+            )}
+
+            {activeTab === 'groups' && (
+              <GroupsTab
+                groups={directoryGroups}
+                identities={directoryIdentities}
+                recipients={recipients}
+                setActiveTab={setActiveTab}
+              />
+            )}
+
+            {/* EVIDENCE */}
+            {activeTab === 'evidence' && (
+              <EvidenceTab
+                records={evidenceRecords}
+                setActiveTab={setActiveTab}
+              />
+            )}
+
+            {/* VERIFICATION */}
+            {activeTab === 'verify' && (
+              <VerifyTab
+                isStandalone={false}
+                onBackToApp={() => setActiveTab('overview')}
+              />
+            )}
+
+            {activeTab === 'provenance' && (
+              <ProvenanceTab
+                releases={releases}
+                leakResult={leakResult}
+                setActiveTab={setActiveTab}
+              />
+            )}
+
+            {activeTab === 'ledger' && (
+              <LedgerTab
+                events={ledgerEvents}
+                ledgerStatus={ledgerStatus}
+                isOnline={isOnline}
+                onVerifyLedger={handleVerifyLedger}
+                onSimulateTamper={handleSimulateTamper}
+                onResetTamper={handleResetTamper}
+              />
+            )}
+
+            {/* SECURITY */}
+            {activeTab === 'security_testing' && (
+              <AttackLabTab />
+            )}
+
+            {activeTab === 'health' && (
+              <SystemHealthTab isOnline={isOnline} onRefresh={refreshAllData} />
+            )}
+
+            {activeTab === 'integrations' && (
+              <IntegrationsTab
+                setActiveTab={setActiveTab}
+              />
+            )}
+
+            {/* ADMIN */}
+            {activeTab === 'settings' && (
+              <SettingsTab />
+            )}
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Enterprise System Architecture Guide Modal */}
+        <ProductGuideModal
+          isOpen={guideOpen}
+          onClose={() => setGuideOpen(false)}
+          setActiveTab={setActiveTab}
+          onTriggerDecryption={async () => {
+            if (releases[0]) {
+              await handleDecrypt(releases[0].release_id, 'bob');
+            }
+          }}
+          onTriggerLeakAnalysis={async (scenarioId) => {
+            await handleAnalyzeLeak(scenarioId);
+          }}
+          onTriggerLedgerTamper={() => {
+            handleSimulateTamper(1);
+          }}
+        />
+
+        {/* Forensic Report Export Modal */}
+        <ForensicReportModal
+          isOpen={reportModalOpen}
+          onClose={() => setReportModalOpen(false)}
+          leakResult={leakResult}
+          ledgerEvents={ledgerEvents}
+        />
+      </AppShell>
     </>
   );
 }

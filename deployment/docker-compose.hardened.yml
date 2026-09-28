@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  aegistrace-backend:
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile.hardened
+    container_name: aegistrace-core-hardened
+    restart: unless-stopped
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    user: "10001:10001"
+    environment:
+      - AEGISTRACE_AIRGAP_MODE=1
+      - SIH26237_ENV=production
+      - PYTHONUNBUFFERED=1
+    ports:
+      - "127.0.0.1:8000:8000"
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    volumes:
+      - aegis-data:/app/data:rw
+    deploy:
+      resources:
+        limits:
+          cpus: "4.0"
+          memory: 2048M
+        reservations:
+          cpus: "1.0"
+          memory: 512M
+    networks:
+      - airgap-isolated-net
+
+volumes:
+  aegis-data:
+    driver: local
+
+networks:
+  airgap-isolated-net:
+    driver: bridge
+    internal: true # Strictly prevents external internet routing/gateway access

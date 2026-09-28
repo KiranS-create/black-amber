@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { 
   ShieldCheck, 
   Search, 
-  PlayCircle, 
   RotateCcw, 
   Wifi, 
   WifiOff, 
   Sun, 
   Moon, 
-  CheckCircle,
-  HelpCircle
+  BookOpen,
+  UserCheck,
+  LogOut
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
+import { UserSession } from '../../types';
 
 interface TopBarProps {
   isOnline: boolean;
@@ -20,6 +21,10 @@ interface TopBarProps {
   onOpenWalkthrough: () => void;
   onResetDemo: () => void;
   onOpenCommandPalette: () => void;
+  userSession?: UserSession | null;
+  isDemoMode?: boolean;
+  onPurgeDemo?: () => void;
+  onSignOut?: () => void;
 }
 
 export const TopBar: React.FC<TopBarProps> = ({
@@ -28,15 +33,18 @@ export const TopBar: React.FC<TopBarProps> = ({
   onToggleForceOffline,
   onOpenWalkthrough,
   onResetDemo,
-  onOpenCommandPalette
+  onOpenCommandPalette,
+  userSession,
+  isDemoMode = false,
+  onPurgeDemo,
+  onSignOut
 }) => {
   const { theme, toggleTheme } = useTheme();
-  const [profileOpen, setProfileOpen] = useState(false);
 
   return (
     <header
       style={{
-        height: '60px',
+        height: '52px',
         backgroundColor: 'var(--surface)',
         borderBottom: '1px solid var(--border)',
         display: 'flex',
@@ -45,119 +53,87 @@ export const TopBar: React.FC<TopBarProps> = ({
         padding: '0 var(--space-6)',
         position: 'sticky',
         top: 0,
-        zIndex: 40,
-        boxShadow: 'var(--shadow-sm)'
+        zIndex: 40
       }}
     >
-      {/* Brand & Left Context */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+      {/* Brand Identity */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
         <div
           style={{
+            width: '28px',
+            height: '28px',
+            borderRadius: 'var(--radius-xs)',
+            backgroundColor: 'var(--primary-subtle)',
+            border: '1px solid var(--primary-border)',
+            color: 'var(--primary)',
             display: 'flex',
             alignItems: 'center',
-            gap: 'var(--space-3)',
-            textDecoration: 'none',
-            color: 'inherit'
+            justifyContent: 'center',
+            flexShrink: 0
           }}
         >
-          <div
+          <ShieldCheck size={16} />
+        </div>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+          <span
             style={{
-              width: '34px',
-              height: '34px',
-              borderRadius: 'var(--radius-md)',
-              backgroundColor: 'var(--primary)',
-              color: '#ffffff',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: '0 2px 8px rgba(37, 99, 235, 0.25)'
+              fontFamily: 'var(--font-family)',
+              fontSize: '15px',
+              fontWeight: 700,
+              color: 'var(--text)',
+              letterSpacing: '-0.01em'
             }}
           >
-            <ShieldCheck size={20} />
-          </div>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span
-                style={{
-                  fontSize: 'var(--text-lg)',
-                  fontWeight: 800,
-                  letterSpacing: '-0.02em',
-                  color: 'var(--text)',
-                  lineHeight: 1.1
-                }}
-              >
-                AegisTrace
-              </span>
-              <span
-                style={{
-                  fontSize: '10px',
-                  fontWeight: 700,
-                  padding: '2px 6px',
-                  borderRadius: 'var(--radius-xs)',
-                  backgroundColor: 'var(--surface-hover)',
-                  color: 'var(--text-secondary)',
-                  border: '1px solid var(--border)',
-                  lineHeight: 1
-                }}
-              >
-                v2.4 PQC
-              </span>
-            </div>
-            <div
-              style={{
-                fontSize: '11px',
-                color: 'var(--text-tertiary)',
-                lineHeight: 1.1,
-                marginTop: '1px'
-              }}
-            >
-              Forensic Security Platform
-            </div>
-          </div>
+            AegisTrace
+          </span>
+          <span
+            style={{
+              fontSize: '11px',
+              color: 'var(--text-tertiary)',
+              fontWeight: 500
+            }}
+          >
+            Forensic Workstation
+          </span>
         </div>
       </div>
 
-      {/* Global Search Bar (Center Trigger) */}
-      <div style={{ flex: '1', maxWidth: '440px', margin: '0 var(--space-6)' }}>
+      {/* Global Search / Command Palette Trigger (Layer 2 Surface) */}
+      <div style={{ flex: 1, maxWidth: '440px', margin: '0 var(--space-6)' }}>
         <button
           onClick={onOpenCommandPalette}
+          className="topbar-search-container"
           style={{
             width: '100%',
-            height: '36px',
-            backgroundColor: 'var(--surface-subtle)',
-            border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-md)',
-            padding: '0 var(--space-3)',
+            height: '32px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            cursor: 'pointer',
+            padding: '0 10px',
+            backgroundColor: 'var(--surface-subtle)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-sm)',
             color: 'var(--text-tertiary)',
             fontSize: 'var(--text-xs)',
-            transition: 'border-color var(--transition-fast), background var(--transition-fast)'
+            cursor: 'pointer',
+            transition: 'border-color var(--transition-fast)'
           }}
-          onMouseEnter={e => {
-            (e.currentTarget as HTMLElement).style.borderColor = 'var(--border-strong)';
-            (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--surface-hover)';
-          }}
-          onMouseLeave={e => {
-            (e.currentTarget as HTMLElement).style.borderColor = 'var(--border)';
-            (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--surface-subtle)';
-          }}
+          onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--border-strong)')}
+          onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border)')}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Search size={14} style={{ color: 'var(--text-tertiary)' }} />
-            <span>Search documents, recipients, or events...</span>
+            <Search size={13} style={{ color: 'var(--text-tertiary)' }} />
+            <span>Search documents, cases, evidence, or ledger...</span>
           </div>
           <kbd
             style={{
-              padding: '2px 6px',
-              fontSize: '10.5px',
+              fontSize: '10px',
               fontFamily: 'var(--font-mono)',
-              backgroundColor: 'var(--surface)',
-              border: '1px solid var(--border)',
+              padding: '1px 5px',
               borderRadius: 'var(--radius-xs)',
-              color: 'var(--text-secondary)'
+              backgroundColor: 'rgba(255, 255, 255, 0.05)',
+              border: '1px solid var(--border-subtle)',
+              color: 'var(--text-tertiary)'
             }}
           >
             Ctrl K
@@ -165,210 +141,183 @@ export const TopBar: React.FC<TopBarProps> = ({
         </button>
       </div>
 
-      {/* Right Controls & Profile */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-        {/* Connection Status Pill with Toggle */}
+      {/* System State, Quick Controls & Operator Identity */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        {/* Offline Simulation Toggle */}
         <button
           onClick={() => onToggleForceOffline(!forceOffline)}
-          title="Click to toggle between live FastAPI (:8000) and offline demo simulator mode"
+          title={forceOffline ? 'Switch to live API connection' : 'Switch to standalone offline simulator'}
           style={{
-            height: '32px',
             display: 'inline-flex',
             alignItems: 'center',
             gap: '6px',
+            height: '28px',
             padding: '0 10px',
-            borderRadius: 'var(--radius-full)',
-            backgroundColor: isOnline ? 'var(--success-subtle)' : (forceOffline ? 'var(--warning-subtle)' : 'var(--danger-subtle)'),
-            color: isOnline ? 'var(--success-text)' : (forceOffline ? 'var(--warning-text)' : 'var(--danger-text)'),
-            border: `1px solid ${isOnline ? 'var(--success-border)' : (forceOffline ? 'var(--warning-border)' : 'var(--danger-border)')}`,
-            fontSize: 'var(--text-xs)',
-            fontWeight: 600,
-            cursor: 'pointer',
-            transition: 'opacity var(--transition-fast)'
+            borderRadius: 'var(--radius-xs)',
+            backgroundColor: forceOffline ? 'var(--warning-subtle)' : 'var(--success-subtle)',
+            border: `1px solid ${forceOffline ? 'var(--warning-border)' : 'var(--success-border)'}`,
+            color: forceOffline ? 'var(--warning-text)' : 'var(--success-text)',
+            fontSize: '11.5px',
+            fontWeight: 500,
+            cursor: 'pointer'
           }}
         >
-          {isOnline ? (
-            <>
-              <span
-                style={{
-                  width: '6px',
-                  height: '6px',
-                  borderRadius: '50%',
-                  backgroundColor: 'var(--success)',
-                  display: 'inline-block'
-                }}
-              />
-              <Wifi size={13} />
-              <span>LIVE API (:8000)</span>
-            </>
-          ) : forceOffline ? (
-            <>
-              <span
-                style={{
-                  width: '6px',
-                  height: '6px',
-                  borderRadius: '50%',
-                  backgroundColor: 'var(--warning)',
-                  display: 'inline-block'
-                }}
-              />
-              <WifiOff size={13} />
-              <span>OFFLINE SIMULATOR</span>
-            </>
-          ) : (
-            <>
-              <span
-                style={{
-                  width: '6px',
-                  height: '6px',
-                  borderRadius: '50%',
-                  backgroundColor: 'var(--danger)',
-                  display: 'inline-block'
-                }}
-              />
-              <WifiOff size={13} />
-              <span>DISCONNECTED</span>
-            </>
-          )}
+          {forceOffline ? <WifiOff size={12} /> : <Wifi size={12} />}
+          <span>{forceOffline ? 'Offline mode' : 'Connected'}</span>
         </button>
 
-        {/* Judge Walkthrough Button */}
+        {/* System Architecture Guide */}
         <button
           onClick={onOpenWalkthrough}
-          title="Launch the 15-step interactive judge walkthrough"
+          title="Open architecture guide"
           style={{
-            height: '32px',
             display: 'inline-flex',
             alignItems: 'center',
             gap: '6px',
-            padding: '0 12px',
-            borderRadius: 'var(--radius-md)',
-            backgroundColor: 'var(--primary)',
-            color: '#ffffff',
-            border: 'none',
-            fontSize: 'var(--text-xs)',
-            fontWeight: 600,
-            cursor: 'pointer',
-            transition: 'background var(--transition-fast)'
-          }}
-          onMouseEnter={e => (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--primary-hover)'}
-          onMouseLeave={e => (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--primary)'}
-        >
-          <PlayCircle size={14} />
-          <span>Judge Walkthrough</span>
-        </button>
-
-        {/* Reset State Button */}
-        <button
-          onClick={onResetDemo}
-          title="Reset demo baseline state"
-          aria-label="Reset demo baseline state"
-          style={{
-            width: '32px',
-            height: '32px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: 'var(--radius-md)',
+            height: '28px',
+            padding: '0 10px',
+            borderRadius: 'var(--radius-xs)',
             backgroundColor: 'transparent',
             border: '1px solid var(--border)',
             color: 'var(--text-secondary)',
-            cursor: 'pointer',
-            transition: 'all var(--transition-fast)'
+            fontSize: '11.5px',
+            fontWeight: 500,
+            cursor: 'pointer'
           }}
           onMouseEnter={e => {
-            (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--surface-hover)';
-            (e.currentTarget as HTMLElement).style.color = 'var(--text)';
+            e.currentTarget.style.backgroundColor = 'var(--surface-hover)';
+            e.currentTarget.style.color = 'var(--text)';
           }}
           onMouseLeave={e => {
-            (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
-            (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)';
+            e.currentTarget.style.backgroundColor = 'transparent';
+            e.currentTarget.style.color = 'var(--text-secondary)';
           }}
         >
-          <RotateCcw size={14} />
+          <BookOpen size={12} />
+          <span>System guide</span>
         </button>
 
-        {/* Theme Toggle Button (Light/Dark) */}
+        {/* Demo Mode Indicator */}
+        {isDemoMode && (
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '3px 8px',
+              backgroundColor: 'rgba(197, 150, 69, 0.15)',
+              border: '1px solid rgba(197, 150, 69, 0.4)',
+              borderRadius: 'var(--radius-xs)',
+              fontSize: '11px',
+              fontWeight: 700,
+              color: 'var(--warning)',
+              letterSpacing: '0.04em'
+            }}
+          >
+            <span>DEMO DATA</span>
+            {onPurgeDemo && (
+              <button
+                onClick={onPurgeDemo}
+                title="Purge demonstration data and return to clean state"
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--warning)',
+                  cursor: 'pointer',
+                  padding: '0 2px',
+                  fontSize: '13px',
+                  lineHeight: 1,
+                  display: 'flex',
+                  alignItems: 'center'
+                }}
+              >
+                ×
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Theme Toggle */}
         <button
           onClick={toggleTheme}
-          title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-          aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+          title="Toggle interface theme"
           style={{
-            width: '32px',
-            height: '32px',
+            width: '28px',
+            height: '28px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            borderRadius: 'var(--radius-md)',
+            borderRadius: 'var(--radius-xs)',
             backgroundColor: 'transparent',
             border: '1px solid var(--border)',
-            color: 'var(--text-secondary)',
-            cursor: 'pointer',
-            transition: 'all var(--transition-fast)'
+            color: 'var(--text-tertiary)',
+            cursor: 'pointer'
           }}
-          onMouseEnter={e => {
-            (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--surface-hover)';
-            (e.currentTarget as HTMLElement).style.color = 'var(--text)';
-          }}
-          onMouseLeave={e => {
-            (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
-            (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)';
-          }}
+          onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
+          onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-tertiary)')}
         >
-          {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
+          {theme === 'dark' ? <Sun size={13} /> : <Moon size={13} />}
         </button>
 
-        {/* User Profile Avatar */}
-        <div style={{ position: 'relative' }}>
-          <button
-            onClick={() => setProfileOpen(!profileOpen)}
+        {/* Operator Profile */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            paddingLeft: '6px',
+            borderLeft: '1px solid var(--border-subtle)'
+          }}
+        >
+          <div
             style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: 'var(--radius-full)',
-              backgroundColor: 'var(--surface-hover)',
-              border: '1px solid var(--border-strong)',
-              color: 'var(--text)',
-              fontSize: '12px',
-              fontWeight: 700,
+              width: '26px',
+              height: '26px',
+              borderRadius: 'var(--radius-xs)',
+              backgroundColor: 'var(--surface-subtle)',
+              border: '1px solid var(--border)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              cursor: 'pointer'
+              fontSize: '11px',
+              fontWeight: 600,
+              color: 'var(--text)',
+              textTransform: 'uppercase'
             }}
           >
-            KA
-          </button>
+            {userSession?.display_name 
+              ? userSession.display_name.substring(0, 2) 
+              : userSession?.actor_id ? userSession.actor_id.substring(0, 2) : 'EX'}
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <span style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text)', lineHeight: 1.1 }}>
+              {userSession?.display_name || userSession?.email || 'Examiner'}
+            </span>
+            <span style={{ fontSize: '10px', color: 'var(--text-tertiary)', lineHeight: 1.1, textTransform: 'capitalize' }}>
+              {userSession?.role || 'Operator'}
+            </span>
+          </div>
 
-          {profileOpen && (
-            <div
+          {onSignOut && (
+            <button
+              onClick={onSignOut}
+              title="Sign out of workstation"
               style={{
-                position: 'absolute',
-                right: 0,
-                top: '40px',
-                width: '240px',
-                backgroundColor: 'var(--surface-elevated)',
-                border: '1px solid var(--border)',
-                borderRadius: 'var(--radius-md)',
-                boxShadow: 'var(--shadow-lg)',
-                padding: 'var(--space-3)',
-                zIndex: 60
+                background: 'none',
+                border: 'none',
+                color: 'var(--text-tertiary)',
+                cursor: 'pointer',
+                padding: '4px',
+                marginLeft: '4px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
               }}
+              onMouseEnter={e => (e.currentTarget.style.color = 'var(--danger)')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-tertiary)')}
             >
-              <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: 'var(--space-2)', marginBottom: 'var(--space-2)' }}>
-                <div style={{ fontWeight: 700, fontSize: 'var(--text-sm)', color: 'var(--text)' }}>
-                  Kiran Akash
-                </div>
-                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
-                  System Administrator • Lead Analyst
-                </div>
-              </div>
-              <div style={{ fontSize: '11.5px', color: 'var(--text-tertiary)', lineHeight: 1.4 }}>
-                Session: <code style={{ color: 'var(--primary-text)' }}>SESSION-PQC-768</code>
-                <br />
-                Node: <code style={{ color: 'var(--text)' }}>sih-node-01 (x86_64)</code>
-              </div>
-            </div>
+              <LogOut size={13} />
+            </button>
           )}
         </div>
       </div>

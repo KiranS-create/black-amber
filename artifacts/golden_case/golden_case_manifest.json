@@ -1,0 +1,55 @@
+{
+  "manifest_id": "gc_manifest_20260927152445",
+  "timestamp": "2026-09-27T15:24:45.116271+00:00",
+  "document_metadata": {
+    "document_name": "golden_shield.png",
+    "document_hash": "1af772fb8846e4964a121d530c08e74a7db2c9ce526dc36ba52e530e02c878d9",
+    "release_id": "rel_20260927152442_ff5b19",
+    "authorized_recipients": [
+      "rec_a91bce4018b1db2f",
+      "rec_2dd55278143bfce6",
+      "rec_b288325b687c91e8"
+    ]
+  },
+  "case_1_direct_leak": {
+    "scenario": "Direct Leak by Decrypting Recipient",
+    "decrypting_recipient_id": "rec_a91bce4018b1db2f",
+    "session_id": "ses_209f1133c70ca2c6",
+    "export_event_id": "exp_e379781ca20d9697",
+    "receipt": {
+      "receipt_id": "rcpt_evt_exp_cpy_789e8708_8b277747",
+      "watermark_commitment": "abdb829d04bb36ba13084ff27cfcc140a9decfe985bd42b642659454396026e9",
+      "watermark_token": "fb8329556fd0d344506d5b981ce1dafbef5158aef1def0d9ecdfb0020646ed5e",
+      "recipient_public_key_b64": "vmnzfSm6kNFa9y2jw0RTIXWFTH6tEhW7...",
+      "recipient_signature_b64": "2UXdaI8mKt6Mhw/EaRXkXBT35m0Ziy81...",
+      "is_signature_valid": true
+    },
+    "dlt_record": {
+      "block_height": 2,
+      "block_hash": "f23602ab59a9c7d9ae0769c79b83653069a01a2bf0f7cd98ec34422caffd1a90",
+      "merkle_root": "aa0c2f281f13dab678e509ce32ae325cfdbd3e30340b2048422e79a6752cb154",
+      "quorum_votes_count": 3
+    },
+    "forensic_investigation_result": {
+      "attribution_state": "ATTRIBUTED",
+      "candidate_recipient_id": "rec_a91bce4018b1db2f",
+      "candidate_name": "Alice Strategic",
+      "forensic_attribution_level": "LEVEL_2_ORIGINAL_RECIPIENT_IDENTIFIED",
+      "last_known_holder": "rec_a91bce4018b1db2f",
+      "quorum_verified": true,
+      "merkle_verified": true,
+      "summary": "Successfully attributed dynamic leak to recipient 'rec_a91bce4018b1db2f' -> Identity 'Alice Strategic'. PROVED: This exact recipient performed this signed decryption event. NOT AUTOMATICALLY PROVED: This human personally leaked the file downstream."
+    }
+  },
+  "case_2_unmonitored_downstream_transition": {
+    "scenario": "Unmonitored Downstream Transition (Alice -> Bob off-ledger)",
+    "initial_holder": "rec_a91bce4018b1db2f",
+    "downstream_suspect": "rec_2dd55278143bfce6",
+    "honesty_invariant": {
+      "proven_fact": "Alice executed the signed decryption session and committed receipt to DLT.",
+      "unproven_hypothesis": "Alice personally executed the public leak.",
+      "system_determination": "LAST_KNOWN_HOLDER",
+      "honesty_declaration": "PROVED: This exact recipient performed this signed decryption event. NOT AUTOMATICALLY PROVED: This human personally leaked the file downstream."
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "temporal_cases_tested": 3,
+  "all_temporal_boundaries_respected": true,
+  "results": [
+    {
+      "scenario": "valid_event_prior_to_key_revocation",
+      "event_timestamp": "2026-09-01T10:00:00Z",
+      "revocation_timestamp": "2026-09-02T12:00:00Z",
+      "is_valid": true,
+      "attribution_status": "ATTRIBUTED"
+    },
+    {
+      "scenario": "invalid_event_post_key_revocation",
+      "event_timestamp": "2026-09-03T10:00:00Z",
+      "revocation_timestamp": "2026-09-02T12:00:00Z",
+      "is_valid": false,
+      "attribution_status": "INSUFFICIENT_EVIDENCE"
+    },
+    {
+      "scenario": "expired_session_token",
+      "session_expired": true,
+      "is_valid": false,
+      "attribution_status": "INSUFFICIENT_EVIDENCE"
+    }
+  ]
+}

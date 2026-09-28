@@ -1,0 +1,24 @@
+{
+  "scenario": "Alice exports copy to USB -> Bob receives file -> Bob leaks without client registration",
+  "root_copy_id": "root_doc_3a3827cf5872",
+  "authorized_hops": [
+    {
+      "node_id": "copy_alice_01",
+      "holder": "alice",
+      "depth": 1,
+      "registered_on_dlt": true
+    },
+    {
+      "node_id": "copy_bob_transfer_02",
+      "holder": "bob",
+      "depth": 2,
+      "registered_on_dlt": true
+    }
+  ],
+  "gap_boundary": {
+    "last_known_authenticated_holder": "bob",
+    "unregistered_downstream_leak": true,
+    "forensic_verdict": "ATTRIBUTED_WITH_DOWNSTREAM_GAP",
+    "explanation": "Cryptographic signature proves Bob decrypted and possessed the parent copy; subsequent unmonitored transfer preserves provenance back to Bob."
+  }
+}

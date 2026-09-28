@@ -4,8 +4,113 @@ import {
   EvidenceEvent, 
   AttributionResult, 
   AttackTestScenario, 
-  DocumentMetadata 
+  DocumentMetadata,
+  DirectoryIdentity,
+  DirectoryGroup,
+  InvestigationRecord,
+  IntegrationProviderStatus,
+  EvidenceRecord
 } from '../types';
+
+export const DIRECTORY_IDENTITIES: DirectoryIdentity[] = [
+  {
+    identity_id: 'usr_8f7a9c2b01',
+    display_name: 'Sarah Jenkins',
+    email: 'sarah.jenkins@defense.enterprise.org',
+    organization_id: 'org_defense_gov',
+    provider: 'local_enterprise_directory',
+    status: 'ACTIVE',
+    department: 'Cyber Defense Operations',
+    title: 'Security Operations Lead',
+    tags: ['clearance_top_secret', 'incident_responder']
+  },
+  {
+    identity_id: 'usr_3d4e5f6a02',
+    display_name: 'Marcus Vance',
+    email: 'marcus.vance@defense.enterprise.org',
+    organization_id: 'org_defense_gov',
+    provider: 'local_enterprise_directory',
+    status: 'ACTIVE',
+    department: 'Strategic Intelligence Division',
+    title: 'Principal Cryptanalyst',
+    tags: ['clearance_top_secret', 'crypto_specialist']
+  },
+  {
+    identity_id: 'usr_1a2b3c4d03',
+    display_name: 'Dr. Aris Thorne',
+    email: 'aris.thorne@partner.defense.org',
+    organization_id: 'org_defense_gov',
+    provider: 'local_enterprise_directory',
+    status: 'ACTIVE',
+    department: 'Advanced Research Projects (External Partner)',
+    title: 'Visiting PQC Scientist',
+    tags: ['clearance_secret', 'external_partner']
+  },
+  {
+    identity_id: 'usr_9e8d7c6b04',
+    display_name: 'Elena Rostova',
+    email: 'elena.rostova@contractor.defense.org',
+    organization_id: 'org_defense_gov',
+    provider: 'local_enterprise_directory',
+    status: 'ACTIVE',
+    department: 'Tactical Cryptography Contractor (Contractor)',
+    title: 'Senior Hardware Security Auditor',
+    tags: ['contractor', 'hardware_specialist']
+  },
+  {
+    identity_id: 'usr_5f6e7d8c05',
+    display_name: 'Jordan Lee',
+    email: 'jordan.lee@defense.enterprise.org',
+    organization_id: 'org_defense_gov',
+    provider: 'local_enterprise_directory',
+    status: 'ACTIVE',
+    department: 'Legal & Compliance Office',
+    title: 'Chief Compliance Counsel',
+    tags: ['compliance', 'legal']
+  },
+  {
+    identity_id: 'usr_0a1b2c3d06',
+    display_name: 'David Kim',
+    email: 'david.kim@defense.enterprise.org',
+    organization_id: 'org_defense_gov',
+    provider: 'local_enterprise_directory',
+    status: 'ACTIVE',
+    department: 'Executive Leadership',
+    title: 'Deputy Chief of Staff',
+    tags: ['executive', 'clearance_top_secret']
+  }
+];
+
+export const DIRECTORY_GROUPS: DirectoryGroup[] = [
+  {
+    group_id: 'grp_cyber_secops',
+    name: 'Cyber Incident Response Team',
+    organization_id: 'org_defense_gov',
+    member_count: 2,
+    description: 'Active CIRT engineers authorized for high-consequence incident investigation.'
+  },
+  {
+    group_id: 'grp_strategic_intel',
+    name: 'Strategic Intelligence & Cryptanalysis',
+    organization_id: 'org_defense_gov',
+    member_count: 2,
+    description: 'Cryptographic policy and intelligence analysis branch.'
+  },
+  {
+    group_id: 'grp_contractors',
+    name: 'External Cleared Contractors',
+    organization_id: 'org_defense_gov',
+    member_count: 2,
+    description: 'External research and hardware auditor personnel under non-disclosure.'
+  },
+  {
+    group_id: 'grp_exec_leadership',
+    name: 'Executive Leadership & Oversight',
+    organization_id: 'org_defense_gov',
+    member_count: 2,
+    description: 'Executive committee and general counsel for distribution authorization.'
+  }
+];
 
 export const INITIAL_DOCUMENTS: DocumentMetadata[] = [
   {
@@ -16,15 +121,245 @@ export const INITIAL_DOCUMENTS: DocumentMetadata[] = [
     mime_type: 'application/pdf',
     created_at: '2026-09-26T10:30:00Z',
     artifact_id: 'art_doc_9f86d081884c',
-    origin: 'SIMULATED_DEMO_SCENARIO'
+    classification: 'TOP_SECRET',
+    owner_department: 'Cyber Defense Operations',
+    owner_name: 'Sarah Jenkins',
+    active_releases_count: 2,
+    origin: 'REAL_BACKEND_RESULT'
+  },
+  {
+    document_id: 'doc_qkd_spec_04',
+    document_name: 'PQC_Migration_Architecture_Briefing.pdf',
+    original_document_hash: '4a6b2c89f012e3456789abcdef0123456789abcdef0123456789abcdef012345',
+    size_bytes: 1048576,
+    mime_type: 'application/pdf',
+    created_at: '2026-09-25T14:15:00Z',
+    artifact_id: 'art_doc_4a6b2c89f012',
+    classification: 'SECRET',
+    owner_department: 'Strategic Intelligence Division',
+    owner_name: 'Marcus Vance',
+    active_releases_count: 1,
+    origin: 'REAL_BACKEND_RESULT'
+  },
+  {
+    document_id: 'doc_tactical_key_07',
+    document_name: 'Hardware_Root_of_Trust_Audit_Report.pdf',
+    original_document_hash: '7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d',
+    size_bytes: 786432,
+    mime_type: 'application/pdf',
+    created_at: '2026-09-24T09:00:00Z',
+    artifact_id: 'art_doc_7c8d9e0f1a2b',
+    classification: 'CONFIDENTIAL',
+    owner_department: 'Tactical Cryptography Contractor',
+    owner_name: 'Elena Rostova',
+    active_releases_count: 1,
+    origin: 'REAL_BACKEND_RESULT'
   }
 ];
+
+export const HISTORICAL_INVESTIGATIONS: InvestigationRecord[] = [
+  {
+    investigation_id: 'inv_20260927_001',
+    artifact_id: 'art_leak_9921',
+    artifact_name: 'leaked_defense_protocol_page4.png',
+    suspected_document_id: 'doc_sec_shield_99',
+    suspected_release_id: 'rel_20260926_001',
+    state: 'ATTRIBUTED',
+    candidate_id: 'bob',
+    candidate_name: 'Marcus Vance',
+    identity_summary: {
+      identity_id: 'usr_3d4e5f6a02',
+      display_name: 'Marcus Vance',
+      email: 'marcus.vance@defense.enterprise.org',
+      organization_id: 'org_defense_gov',
+      provider: 'Microsoft Entra ID',
+      status: 'ACTIVE',
+      department: 'Strategic Intelligence Division',
+      title: 'Principal Cryptanalyst',
+      source: 'DIRECTORY'
+    },
+    confidence_level: 'HIGH',
+    fused_score: 18.08,
+    created_at: '2026-09-27T11:42:00Z',
+    status: 'COMPLETED'
+  },
+  {
+    investigation_id: 'inv_20260927_002',
+    artifact_id: 'art_leak_8842',
+    artifact_name: 'mobile_photograph_recapture_leak.jpg',
+    suspected_document_id: 'doc_sec_shield_99',
+    suspected_release_id: 'rel_20260926_001',
+    state: 'ATTRIBUTED',
+    candidate_id: 'bob',
+    candidate_name: 'Marcus Vance',
+    identity_summary: {
+      identity_id: 'usr_3d4e5f6a02',
+      display_name: 'Marcus Vance',
+      email: 'marcus.vance@defense.enterprise.org',
+      organization_id: 'org_defense_gov',
+      provider: 'Microsoft Entra ID',
+      status: 'ACTIVE',
+      department: 'Strategic Intelligence Division',
+      title: 'Principal Cryptanalyst',
+      source: 'DIRECTORY'
+    },
+    confidence_level: 'HIGH',
+    fused_score: 15.62,
+    created_at: '2026-09-27T08:15:00Z',
+    status: 'COMPLETED'
+  },
+  {
+    investigation_id: 'inv_20260926_003',
+    artifact_id: 'art_leak_7719',
+    artifact_name: 'counterfeit_signature_payload.pdf',
+    suspected_document_id: 'doc_sec_shield_99',
+    state: 'ABSTAINED',
+    confidence_level: 'NONE',
+    fused_score: 0.0,
+    created_at: '2026-09-26T16:20:00Z',
+    status: 'COMPLETED'
+  },
+  {
+    investigation_id: 'inv_20260925_004',
+    artifact_id: 'art_leak_6604',
+    artifact_name: 'collusion_mixed_signal_document.pdf',
+    suspected_document_id: 'doc_sec_shield_99',
+    state: 'CONFLICT',
+    confidence_level: 'NONE',
+    fused_score: 0.0,
+    created_at: '2026-09-25T13:45:00Z',
+    status: 'COMPLETED'
+  }
+];
+
+export const EVIDENCE_RECORDS: EvidenceRecord[] = [
+  {
+    evidence_id: 'ev_wm_9011',
+    source_channel: 'SPATIAL_DSSS',
+    channel_name: 'Spatial Watermark Carrier (DSSS + ArUco 4x4)',
+    suspected_candidate_id: 'bob',
+    suspected_candidate_name: 'Marcus Vance',
+    binding_type: 'HOMOMORPHIC_WATERMARK',
+    measurement: 0.98,
+    llr: 6.84,
+    reliability: 0.95,
+    status: 'VERIFIED',
+    timestamp: '2026-09-27T11:42:01Z',
+    document_id: 'doc_sec_shield_99',
+    release_id: 'rel_20260926_001',
+    raw_proof: 'DSSS spatial carrier matched orthogonal pseudo-random sequence seed_bob_02 (BER: 0.00%, Peak Corr: 0.98, ArUco skew corrected 2.4 deg).'
+  },
+  {
+    evidence_id: 'ev_tar_9012',
+    source_channel: 'TARDOS_MATRIX',
+    channel_name: 'Tardos Traitor Tracing Matrix (m=128, c<=5)',
+    suspected_candidate_id: 'bob',
+    suspected_candidate_name: 'Marcus Vance',
+    binding_type: 'CODEBOOK_CORRELATION',
+    measurement: 16.42,
+    llr: 6.44,
+    reliability: 0.90,
+    status: 'VERIFIED',
+    timestamp: '2026-09-27T11:42:02Z',
+    document_id: 'doc_sec_shield_99',
+    release_id: 'rel_20260926_001',
+    raw_proof: 'Score U_j = 16.42 exceeds cutoff Z = 11.40. Chebyshev false alarm probability eps <= 10^-5 under c-collusion.'
+  },
+  {
+    evidence_id: 'ev_pqc_9013',
+    source_channel: 'ML_DSA_SIGNATURE',
+    channel_name: 'Decryption Event Provenance Signature (ML-DSA-65)',
+    suspected_candidate_id: 'bob',
+    suspected_candidate_name: 'Marcus Vance',
+    binding_type: 'CRYPTOGRAPHIC_SIGNATURE',
+    measurement: 1.0,
+    llr: 4.80,
+    reliability: 1.0,
+    status: 'VERIFIED',
+    timestamp: '2026-09-27T11:42:03Z',
+    document_id: 'doc_sec_shield_99',
+    release_id: 'rel_20260926_001',
+    raw_proof: 'NIST FIPS 204 ML-DSA-65 digital signature verified against public key dSA65_pub_9a871234... on ledger event evt_dec_bob_002.'
+  },
+  {
+    evidence_id: 'ev_led_9014',
+    source_channel: 'AUDIT_LEDGER',
+    channel_name: 'Cryptographic Ledger Block Linkage (SHA-256)',
+    suspected_candidate_id: 'bob',
+    suspected_candidate_name: 'Marcus Vance',
+    binding_type: 'HASH_CHAIN',
+    measurement: 1.0,
+    llr: 0.0,
+    reliability: 1.0,
+    status: 'VERIFIED',
+    timestamp: '2026-09-27T11:42:04Z',
+    document_id: 'doc_sec_shield_99',
+    release_id: 'rel_20260926_001',
+    raw_proof: 'Block #2 verified: Parent Hash == Block #1 Tip (03a58e65...), Event Hash verified (e3b0c442...). Chain unbroken.'
+  }
+];
+
+export const INTEGRATION_PROVIDERS: IntegrationProviderStatus[] = [
+  {
+    id: 'int_entra_id',
+    name: 'Microsoft Entra ID (Azure AD)',
+    type: 'IDENTITY_DIRECTORY',
+    provider: 'entra_id_oauth2_scim',
+    status: 'CONNECTED',
+    last_sync: '2026-09-27T14:00:00Z',
+    details: 'Tenant ID: 8f9b2c3d-org-gov. SCIM v2.0 bidirectional directory sync active. 6 user objects, 4 group objects synced.',
+    synced_entities_count: 10
+  },
+  {
+    id: 'int_okta',
+    name: 'Okta Identity Cloud',
+    type: 'IDENTITY_DIRECTORY',
+    provider: 'okta_rest_api_v1',
+    status: 'CONNECTED',
+    last_sync: '2026-09-27T13:45:00Z',
+    details: 'Okta Domain: defense-gov.okta.com. SAML 2.0 / OIDC Post-Quantum Authentication Broker connected.',
+    synced_entities_count: 6
+  },
+  {
+    id: 'int_ldap_local',
+    name: 'Enterprise Active Directory / LDAP',
+    type: 'IDENTITY_DIRECTORY',
+    provider: 'ldaps_kerberos',
+    status: 'CONNECTED',
+    last_sync: '2026-09-27T14:10:00Z',
+    details: 'LDAPS :636 secured with TLS 1.3. Local high-availability directory failover active with cached TTL.',
+    synced_entities_count: 12
+  },
+  {
+    id: 'int_vault_kms',
+    name: 'HashiCorp Vault Transit Engine',
+    type: 'KMS',
+    provider: 'vault_transit_pqc',
+    status: 'CONNECTED',
+    last_sync: '2026-09-27T14:15:00Z',
+    details: 'Vault Cluster: vault.internal.defense.gov:8200. Transit engine handles master wrapping keys & PQC root certificates.',
+    synced_entities_count: 4
+  },
+  {
+    id: 'int_siem_sentinel',
+    name: 'Microsoft Sentinel / Splunk HEC',
+    type: 'SIEM_AUDIT',
+    provider: 'webhook_syslog_tls',
+    status: 'CONNECTED',
+    last_sync: '2026-09-27T14:14:00Z',
+    details: 'Continuous immutable audit ledger streaming active. SHA-256 block receipts forward every 500ms.',
+    synced_entities_count: 48
+  }
+];
+
 
 export const INITIAL_RECIPIENTS: PublicRecipient[] = [
   {
     recipient_id: 'alice',
-    name: 'Alice Vance',
-    role: 'Director of Strategic Intelligence',
+    name: 'Sarah Jenkins',
+    identity_id: 'usr_8f7a9c2b01',
+    identity_status: 'ACTIVE',
+    role: 'Cyber Defense Operations Lead',
     kem_public_key_b64: 'kEM768_pub_8f29e01a89c43b879a92fbc7891234ea567890bcde1234567890abcdef123456',
     dsa_public_key_b64: 'dSA65_pub_4179bc892a0e41235678bcda09871234eefa1234567890abcdef1234567890ab',
     algorithm_kem: 'ML-KEM-768 (Kyber-768 standard)',
@@ -35,8 +370,10 @@ export const INITIAL_RECIPIENTS: PublicRecipient[] = [
   },
   {
     recipient_id: 'bob',
-    name: 'Bob Martinez',
-    role: 'Senior Field Cryptanalyst',
+    name: 'Marcus Vance',
+    identity_id: 'usr_3d4e5f6a02',
+    identity_status: 'ACTIVE',
+    role: 'Principal Cryptanalyst',
     kem_public_key_b64: 'kEM768_pub_3b7890acdef1234567890abcdef1234567890abcdef1234567890abcdef123456',
     dsa_public_key_b64: 'dSA65_pub_9a871234bcda09871234eefa1234567890abcdef1234567890abcdef12345678',
     algorithm_kem: 'ML-KEM-768 (Kyber-768 standard)',
@@ -47,8 +384,10 @@ export const INITIAL_RECIPIENTS: PublicRecipient[] = [
   },
   {
     recipient_id: 'charlie',
-    name: 'Charlie Zhang',
-    role: 'Foreign Defense Liaison',
+    name: 'Dr. Aris Thorne',
+    identity_id: 'usr_1a2b3c4d03',
+    identity_status: 'ACTIVE',
+    role: 'Visiting PQC Scientist',
     kem_public_key_b64: 'kEM768_pub_cda09871234eefa1234567890abcdef1234567890abcdef1234567890abcdef12',
     dsa_public_key_b64: 'dSA65_pub_ef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
     algorithm_kem: 'ML-KEM-768 (Kyber-768 standard)',
@@ -327,14 +666,28 @@ export function computeMockAttribution(scenarioIdOrPayload: string): Attribution
       state: 'ATTRIBUTED',
       candidate: {
         recipient_id: 'bob',
-        name: 'Bob Martinez',
+        name: 'Marcus Vance',
         confidence: 0.985,
-        verified_events: ['evt_dec_bob_002', 'evt_rel_001']
+        verified_events: ['evt_dec_bob_002', 'evt_rel_001'],
+        identity_id: 'usr_3d4e5f6a02',
+        resolution_status: 'RESOLVED',
+        identity_status: 'ACTIVE',
+        identity_summary: {
+          identity_id: 'usr_3d4e5f6a02',
+          display_name: 'Marcus Vance',
+          email: 'marcus.vance@defense.enterprise.org',
+          organization_id: 'org_defense_gov',
+          provider: 'local_enterprise_directory',
+          status: 'ACTIVE',
+          department: 'Strategic Intelligence Division',
+          title: 'Principal Cryptanalyst',
+          source: 'DIRECTORY'
+        }
       },
       confidence: 0.985,
       confidence_level: 'HIGH',
       watermark_status: 'RECOVERED',
-      summary: "Attribution verified for recipient 'Bob Martinez' (bob) with HIGH confidence (Fused LLR: 18.08 >= threshold 8.0, separation margin Delta: 18.08 >= threshold 3.0).",
+      summary: "Attribution verified for recipient 'Marcus Vance' (bob) with HIGH confidence (Fused LLR: 18.08 >= threshold 8.0, separation margin Delta: 18.08 >= threshold 3.0).",
       should_abstain: false,
       fused_score: 18.08,
       margin: 18.08,
@@ -347,7 +700,7 @@ export function computeMockAttribution(scenarioIdOrPayload: string): Attribution
       ],
       explanation: [
         'Valid recipient cryptographic marker extracted from carrier artifact',
-        'ML-DSA-65 provenance signature verified against Bob Martinez public key',
+        'ML-DSA-65 provenance signature verified against Marcus Vance public key',
         'Decryption provenance event evt_dec_bob_002 confirmed in audit ledger hash chain',
         'Document-release binding digest matches release context rel_20260926_001',
         'Bayesian fused score 18.08 exceeds threshold 8.0 with separation margin 18.08'
@@ -366,14 +719,28 @@ export function computeMockAttribution(scenarioIdOrPayload: string): Attribution
       state: 'ATTRIBUTED',
       candidate: {
         recipient_id: 'alice',
-        name: 'Alice Vance',
+        name: 'Sarah Jenkins',
         confidence: 0.982,
-        verified_events: ['evt_dec_alice_003', 'evt_rel_001']
+        verified_events: ['evt_dec_alice_003', 'evt_rel_001'],
+        identity_id: 'usr_8f7a9c2b01',
+        resolution_status: 'RESOLVED',
+        identity_status: 'ACTIVE',
+        identity_summary: {
+          identity_id: 'usr_8f7a9c2b01',
+          display_name: 'Sarah Jenkins',
+          email: 'sarah.jenkins@defense.enterprise.org',
+          organization_id: 'org_defense_gov',
+          provider: 'local_enterprise_directory',
+          status: 'ACTIVE',
+          department: 'Cyber Defense Operations',
+          title: 'Security Operations Lead',
+          source: 'DIRECTORY'
+        }
       },
       confidence: 0.982,
       confidence_level: 'HIGH',
       watermark_status: 'RECOVERED',
-      summary: "Attribution verified for recipient 'Alice Vance' (alice) with HIGH confidence (Fused LLR: 17.92).",
+      summary: "Attribution verified for recipient 'Sarah Jenkins' (alice) with HIGH confidence (Fused LLR: 17.92).",
       should_abstain: false,
       fused_score: 17.92,
       margin: 17.92,
@@ -384,7 +751,7 @@ export function computeMockAttribution(scenarioIdOrPayload: string): Attribution
         { channel_id: 'pqc_sig', channel_name: 'ML-DSA-65 Provenance Signature', raw_measurement: 1.0, llr: 4.80, reliability: 1.0, effective_llr: 4.80, status: 'VALID', type: 'INDEPENDENT' },
         { channel_id: 'ledger_chain', channel_name: 'Tamper-Evident Ledger', raw_measurement: 1.0, llr: 1.60, reliability: 1.0, effective_llr: 1.60, status: 'VALID', type: 'DERIVED' }
       ],
-      explanation: ['All cryptographic, watermark, and ledger channels corroborate Alice Vance.'],
+      explanation: ['All cryptographic, watermark, and ledger channels corroborate Sarah Jenkins.'],
       origin: 'SIMULATED_DEMO_SCENARIO'
     };
   }
@@ -394,14 +761,28 @@ export function computeMockAttribution(scenarioIdOrPayload: string): Attribution
       state: 'ATTRIBUTED',
       candidate: {
         recipient_id: 'charlie',
-        name: 'Charlie Zhang',
+        name: 'Dr. Aris Thorne',
         confidence: 0.988,
-        verified_events: ['evt_dec_charlie_004', 'evt_rel_001']
+        verified_events: ['evt_dec_charlie_004', 'evt_rel_001'],
+        identity_id: 'usr_1a2b3c4d03',
+        resolution_status: 'RESOLVED',
+        identity_status: 'ACTIVE',
+        identity_summary: {
+          identity_id: 'usr_1a2b3c4d03',
+          display_name: 'Dr. Aris Thorne',
+          email: 'aris.thorne@partner.defense.org',
+          organization_id: 'org_defense_gov',
+          provider: 'local_enterprise_directory',
+          status: 'ACTIVE',
+          department: 'Advanced Research Projects (External Partner)',
+          title: 'Visiting PQC Scientist',
+          source: 'DIRECTORY'
+        }
       },
       confidence: 0.988,
       confidence_level: 'HIGH',
       watermark_status: 'RECOVERED',
-      summary: "Attribution verified for recipient 'Charlie Zhang' (charlie) with HIGH confidence (Fused LLR: 18.15).",
+      summary: "Attribution verified for recipient 'Dr. Aris Thorne' (charlie) with HIGH confidence (Fused LLR: 18.15).",
       should_abstain: false,
       fused_score: 18.15,
       margin: 18.15,
@@ -412,7 +793,7 @@ export function computeMockAttribution(scenarioIdOrPayload: string): Attribution
         { channel_id: 'pqc_sig', channel_name: 'ML-DSA-65 Provenance Signature', raw_measurement: 1.0, llr: 4.80, reliability: 1.0, effective_llr: 4.80, status: 'VALID', type: 'INDEPENDENT' },
         { channel_id: 'ledger_chain', channel_name: 'Tamper-Evident Ledger', raw_measurement: 1.0, llr: 1.60, reliability: 1.0, effective_llr: 1.60, status: 'VALID', type: 'DERIVED' }
       ],
-      explanation: ['All cryptographic, watermark, and ledger channels corroborate Charlie Zhang.'],
+      explanation: ['All cryptographic, watermark, and ledger channels corroborate Dr. Aris Thorne.'],
       origin: 'SIMULATED_DEMO_SCENARIO'
     };
   }
@@ -422,14 +803,28 @@ export function computeMockAttribution(scenarioIdOrPayload: string): Attribution
       state: 'ATTRIBUTED',
       candidate: {
         recipient_id: 'bob',
-        name: 'Bob Martinez',
+        name: 'Marcus Vance',
         confidence: 0.92,
-        verified_events: ['evt_dec_bob_002']
+        verified_events: ['evt_dec_bob_002'],
+        identity_id: 'usr_3d4e5f6a02',
+        resolution_status: 'RESOLVED',
+        identity_status: 'ACTIVE',
+        identity_summary: {
+          identity_id: 'usr_3d4e5f6a02',
+          display_name: 'Marcus Vance',
+          email: 'marcus.vance@defense.enterprise.org',
+          organization_id: 'org_defense_gov',
+          provider: 'local_enterprise_directory',
+          status: 'ACTIVE',
+          department: 'Strategic Intelligence Division',
+          title: 'Principal Cryptanalyst',
+          source: 'DIRECTORY'
+        }
       },
       confidence: 0.92,
       confidence_level: 'HIGH',
       watermark_status: 'RECOVERED',
-      summary: 'Attribution verified for Bob Martinez despite 3D camera warp. OpenCV projective homography rectified Barker-13 fiducials with RS(42,26) error correction.',
+      summary: 'Attribution verified for Marcus Vance despite 3D camera warp. OpenCV projective homography rectified Barker-13 fiducials with RS(42,26) error correction.',
       should_abstain: false,
       fused_score: 14.30,
       margin: 14.30,
@@ -640,3 +1035,16 @@ export function computeMockAttribution(scenarioIdOrPayload: string): Attribution
     origin: 'SIMULATED_DEMO_SCENARIO'
   };
 }
+
+export const DEMO_FIXTURES = {
+  DOCUMENTS: INITIAL_DOCUMENTS,
+  RECIPIENTS: INITIAL_RECIPIENTS,
+  RELEASES: INITIAL_RELEASES,
+  LEDGER_EVENTS: INITIAL_LEDGER_EVENTS,
+  IDENTITIES: DIRECTORY_IDENTITIES,
+  GROUPS: DIRECTORY_GROUPS,
+  HISTORICAL_INVESTIGATIONS: HISTORICAL_INVESTIGATIONS,
+  EVIDENCE_RECORDS: EVIDENCE_RECORDS,
+  INTEGRATION_PROVIDERS: INTEGRATION_PROVIDERS
+};
+

@@ -1,0 +1,73 @@
+{
+  "manifest_version": "1.0.0",
+  "project_id": "SIH26237",
+  "code_name": "Black Amber",
+  "product_name": "AegisTrace",
+  "release_version": "1.0.0-rc1",
+  "release_gate": "READY_WITH_DOCUMENTED_LIMITATIONS",
+  "release_timestamp_iso": "2026-09-28T04:00:00Z",
+  "repository": {
+    "url": "https://github.com/Kirans-create/black-amber.git",
+    "branch": "main",
+    "license": "Apache-2.0 / Proprietary Dual License"
+  },
+  "cryptographic_primitives": {
+    "key_encapsulation": "NIST FIPS 203 ML-KEM-768",
+    "digital_signature": "NIST FIPS 204 ML-DSA-65",
+    "symmetric_encryption": "NIST SP 800-38D AES-256-GCM (256-bit)",
+    "merkle_ledger": "RFC-6962 Double-Domain SHA-256",
+    "traitor_tracing": "Tardos Probabilistic Arcsine Code (c <= 4, eps <= 1e-3)",
+    "error_correcting_code": "Reed-Solomon (255, 223) ECC"
+  },
+  "test_metrics": {
+    "total_tests": 1098,
+    "passed": 1098,
+    "failed": 0,
+    "skipped": 0,
+    "pass_rate_percentage": 100.0,
+    "deprecation_warnings": 28
+  },
+  "epistemic_classification": {
+    "software_and_crypto": "VERIFIED_SOFTWARE",
+    "dlt_and_ledger": "VERIFIED_SOFTWARE",
+    "tier1_tier2_formats": "VERIFIED_SOFTWARE",
+    "tier3_formats": "METADATA_ONLY / UNSUPPORTED",
+    "host_framebuffer": "DEVICE_IN_LOOP",
+    "smartphone_endpoints": "DEVICE_IN_LOOP",
+    "print_scan_simulation": "SIMULATION_CALIBRATION",
+    "optical_document_cameras": "NOT_VERIFIED",
+    "physical_printers_scanners": "UNAVAILABLE",
+    "downstream_out_of_band_leak": "LAST_KNOWN_HOLDER (DOWNSTREAM_GAP)"
+  },
+  "reproduction_scorecard": {
+    "stage_1_source_tree_integrity": "PASS",
+    "stage_2_startup_self_tests": "PASS",
+    "stage_3_golden_pipeline": "PASS",
+    "stage_4_offline_verification": "PASS",
+    "stage_5_blind_evaluation": "PASS",
+    "stage_6_composed_attack_chains": "PASS",
+    "reproduction_duration_seconds": 4.98
+  },
+  "static_secret_audit": {
+    "files_scanned": 965,
+    "findings_detected": 0,
+    "verdict": "CLEAN"
+  },
+  "offline_verifier": {
+    "cli_tool": "aegistrace_verify.py",
+    "supported_archive_formats": [".zip", "directory"],
+    "pillars_verified": 11,
+    "network_egress_bytes": 0,
+    "fail_closed_tamper_detection": true
+  },
+  "key_artifacts": {
+    "final_audit_report": "FINAL_FORENSIC_RELEASE_AUDIT.md",
+    "release_checklist": "FINAL_RELEASE_CHECKLIST.md",
+    "known_limitations": "KNOWN_LIMITATIONS.md",
+    "security_summary": "SECURITY_SUMMARY.md",
+    "validation_status": "VALIDATION_STATUS.md",
+    "executive_summary": "EXECUTIVE_SUMMARY.md",
+    "golden_evidence_package": "artifacts/demo/golden_case/golden_evidence_package.zip",
+    "presentation_file": "presentation/SIH26237_Final.pptx"
+  }
+}

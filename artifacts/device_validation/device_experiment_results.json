@@ -1,0 +1,470 @@
+{
+  "run_id": "RUN-DITL-20260927_230136",
+  "timestamp": "2026-09-27T23:01:50.482855+00:00",
+  "host_name": "MSI",
+  "epistemic_record": {
+    "experiment_id": "RUN-DITL-20260927_230136",
+    "overall_status": "HYBRID_VALIDATION",
+    "summary_declaration": "Real Device / Network / Display / Transfer Validation with Simulation Calibration.",
+    "subcomponents": {
+      "DISPLAY": {
+        "subsystem": "DISPLAY",
+        "status": "DEVICE_IN_LOOP",
+        "required_hardware": "Laptop Display",
+        "detected_hardware": "AMD Radeon(TM) Graphics (1920x1080 @ 144Hz)",
+        "actual_procedure": "Physical pixel rendering and presentation of forensic carrier",
+        "evidence_artifact": "c85176416496288a742837ce0e89f0b57116439dede629dec68e79f365c8e53a",
+        "provenance_basis": "GENUINE_HARDWARE",
+        "limitations": [
+          "No physical camera optical sensor used to capture display output"
+        ]
+      },
+      "PHONE_A_WORKFLOW": {
+        "subsystem": "PHONE_A_WORKFLOW",
+        "status": "DEVICE_IN_LOOP",
+        "required_hardware": "Physical Smartphone",
+        "detected_hardware": "Galaxy Note10 Lite (SM-N770F) (Serial: RF8N927PM9N)",
+        "actual_procedure": "Physical device session access, recipient authentication, and artifact staging",
+        "evidence_artifact": "XFER-e059d346a627",
+        "provenance_basis": "GENUINE_HARDWARE",
+        "limitations": [
+          "Device acts as recipient node; does not act as optical camera sensor"
+        ]
+      },
+      "PHONE_B_WORKFLOW": {
+        "subsystem": "PHONE_B_WORKFLOW",
+        "status": "DEVICE_IN_LOOP",
+        "required_hardware": "Physical Smartphone",
+        "detected_hardware": "Galaxy A55 5G (Serial: RZCY9396AGX)",
+        "actual_procedure": "Independent second device session and recipient isolation audit",
+        "evidence_artifact": "SESS-PHONB-20260927_230136",
+        "provenance_basis": "GENUINE_HARDWARE",
+        "limitations": [
+          "No cross-device correlation"
+        ]
+      },
+      "FILE_TRANSFER": {
+        "subsystem": "FILE_TRANSFER",
+        "status": "DEVICE_IN_LOOP",
+        "required_hardware": "USB / Local Network Interface",
+        "detected_hardware": "DEVICE_STAGING",
+        "actual_procedure": "Direct artifact transfer with bitwise SHA-256 verification",
+        "evidence_artifact": "XFER-e059d346a627",
+        "provenance_basis": "GENUINE_HARDWARE",
+        "limitations": [
+          "Digital file transfer verified; optical capture is NOT claimed"
+        ]
+      },
+      "CAMERA_CAPTURE": {
+        "subsystem": "CAMERA_CAPTURE",
+        "status": "NOT_VERIFIED",
+        "required_hardware": "Physical Camera / Webcam",
+        "detected_hardware": "0 detected",
+        "actual_procedure": "OpenCV VideoCapture index probe 0..3",
+        "evidence_artifact": null,
+        "provenance_basis": "GENUINE_HARDWARE",
+        "limitations": [
+          "0 physical cameras detected; capability honestly declared NOT_VERIFIED"
+        ]
+      },
+      "PRINT_VALIDATION": {
+        "subsystem": "PRINT_VALIDATION",
+        "status": "UNAVAILABLE",
+        "required_hardware": "Physical Laser/Inkjet Printer",
+        "detected_hardware": "0 detected (Virtual queues excluded)",
+        "actual_procedure": "PowerShell Get-Printer filter",
+        "evidence_artifact": null,
+        "provenance_basis": "GENUINE_HARDWARE",
+        "limitations": [
+          "No physical printer hardware attached"
+        ]
+      },
+      "SCAN_VALIDATION": {
+        "subsystem": "SCAN_VALIDATION",
+        "status": "UNAVAILABLE",
+        "required_hardware": "Physical WIA/TWAIN Scanner",
+        "detected_hardware": "0 detected",
+        "actual_procedure": "WIA/PnP Image Class probe",
+        "evidence_artifact": null,
+        "provenance_basis": "GENUINE_HARDWARE",
+        "limitations": [
+          "No physical scanner attached"
+        ]
+      },
+      "OPTICAL_SIMULATION": {
+        "subsystem": "OPTICAL_SIMULATION",
+        "status": "SIMULATION_CALIBRATION",
+        "required_hardware": "None (Computational Model)",
+        "detected_hardware": "N/A",
+        "actual_procedure": "DSSS channel distortion calibration",
+        "evidence_artifact": "artifacts/calibration/",
+        "provenance_basis": "COMPUTATIONAL_MODEL",
+        "limitations": [
+          "Simulated physics only; not physical optical measurement"
+        ]
+      }
+    },
+    "has_unsupported_claim": false,
+    "timestamp": "2026-09-27T23:01:50.482855+00:00"
+  },
+  "discovered_hardware": {
+    "inventory_id": "HWINV-e13414210bb3",
+    "host_name": "MSI",
+    "timestamp": "2026-09-27T23:01:48.788551+00:00",
+    "cameras": [],
+    "printers": [],
+    "scanners": [],
+    "displays": [
+      {
+        "device_id": "display_0edb24",
+        "name": "AMD Radeon(TM) Graphics",
+        "horizontal_resolution": 1920,
+        "vertical_resolution": 1080,
+        "resolution_str": "1920x1080",
+        "refresh_rate_hz": 144,
+        "driver_name": "AMD Radeon(TM) Graphics",
+        "is_physical": true,
+        "metadata": {
+          "refresh_rate_hz": 144
+        }
+      }
+    ],
+    "phones": [
+      {
+        "device_id": "phone_rf8n927pm9n",
+        "serial": "RF8N927PM9N",
+        "role": "PHONE_A_RECIPIENT",
+        "platform": "Android",
+        "model": "Galaxy Note10 Lite (SM-N770F)",
+        "os_version": "UNKNOWN",
+        "manufacturer": "Samsung",
+        "pnp_name": "Galaxy Note10 Lite Endpoint A",
+        "usb_connection_state": "CONNECTED",
+        "adb_state": "UNAVAILABLE",
+        "mtp_state": "AVAILABLE",
+        "network_state": "LAN_ACCESSIBLE",
+        "browser_availability": true,
+        "camera_capability": "NOT_VERIFIED",
+        "storage_capability": true,
+        "transfer_capability": true,
+        "metadata": {
+          "adb_details": {},
+          "pnp_instance": "RF8N927PM9N"
+        },
+        "timestamp": "2026-09-27T23:01:48.787549+00:00"
+      },
+      {
+        "device_id": "phone_rzcy9396agx",
+        "serial": "RZCY9396AGX",
+        "role": "PHONE_B_INDEPENDENT",
+        "platform": "Android",
+        "model": "Galaxy A55 5G",
+        "os_version": "UNKNOWN",
+        "manufacturer": "Samsung",
+        "pnp_name": "Galaxy A55 Endpoint B",
+        "usb_connection_state": "CONNECTED",
+        "adb_state": "UNAVAILABLE",
+        "mtp_state": "AVAILABLE",
+        "network_state": "LAN_ACCESSIBLE",
+        "browser_availability": true,
+        "camera_capability": "NOT_VERIFIED",
+        "storage_capability": true,
+        "transfer_capability": true,
+        "metadata": {
+          "adb_details": {},
+          "pnp_instance": "RZCY9396AGX"
+        },
+        "timestamp": "2026-09-27T23:01:48.788551+00:00"
+      }
+    ],
+    "network_interfaces": [
+      {
+        "interface_alias": "vEthernet (WSL (Hyper-V firewall))",
+        "ip_address": "172.20.128.1",
+        "interface_index": 59,
+        "is_loopback": false,
+        "is_active": true,
+        "subnet": null
+      },
+      {
+        "interface_alias": "Local Area Connection* 12",
+        "ip_address": "169.254.43.37",
+        "interface_index": 3,
+        "is_loopback": false,
+        "is_active": true,
+        "subnet": null
+      },
+      {
+        "interface_alias": "Local Area Connection* 3",
+        "ip_address": "169.254.77.170",
+        "interface_index": 22,
+        "is_loopback": false,
+        "is_active": true,
+        "subnet": null
+      },
+      {
+        "interface_alias": "Ethernet",
+        "ip_address": "169.254.74.15",
+        "interface_index": 16,
+        "is_loopback": false,
+        "is_active": true,
+        "subnet": null
+      },
+      {
+        "interface_alias": "Wi-Fi",
+        "ip_address": "10.114.31.4",
+        "interface_index": 10,
+        "is_loopback": false,
+        "is_active": true,
+        "subnet": null
+      },
+      {
+        "interface_alias": "Local Area Connection",
+        "ip_address": "169.254.243.182",
+        "interface_index": 6,
+        "is_loopback": false,
+        "is_active": true,
+        "subnet": null
+      }
+    ],
+    "phone_a": {
+      "device_id": "phone_rf8n927pm9n",
+      "serial": "RF8N927PM9N",
+      "role": "PHONE_A_RECIPIENT",
+      "platform": "Android",
+      "model": "Galaxy Note10 Lite (SM-N770F)",
+      "os_version": "UNKNOWN",
+      "manufacturer": "Samsung",
+      "pnp_name": "Galaxy Note10 Lite Endpoint A",
+      "usb_connection_state": "CONNECTED",
+      "adb_state": "UNAVAILABLE",
+      "mtp_state": "AVAILABLE",
+      "network_state": "LAN_ACCESSIBLE",
+      "browser_availability": true,
+      "camera_capability": "NOT_VERIFIED",
+      "storage_capability": true,
+      "transfer_capability": true,
+      "metadata": {
+        "adb_details": {},
+        "pnp_instance": "RF8N927PM9N"
+      },
+      "timestamp": "2026-09-27T23:01:48.787549+00:00"
+    },
+    "phone_b": {
+      "device_id": "phone_rzcy9396agx",
+      "serial": "RZCY9396AGX",
+      "role": "PHONE_B_INDEPENDENT",
+      "platform": "Android",
+      "model": "Galaxy A55 5G",
+      "os_version": "UNKNOWN",
+      "manufacturer": "Samsung",
+      "pnp_name": "Galaxy A55 Endpoint B",
+      "usb_connection_state": "CONNECTED",
+      "adb_state": "UNAVAILABLE",
+      "mtp_state": "AVAILABLE",
+      "network_state": "LAN_ACCESSIBLE",
+      "browser_availability": true,
+      "camera_capability": "NOT_VERIFIED",
+      "storage_capability": true,
+      "transfer_capability": true,
+      "metadata": {
+        "adb_details": {},
+        "pnp_instance": "RZCY9396AGX"
+      },
+      "timestamp": "2026-09-27T23:01:48.788551+00:00"
+    },
+    "camera_status": "UNAVAILABLE",
+    "printer_status": "UNAVAILABLE",
+    "scanner_status": "UNAVAILABLE",
+    "display_status": "DEVICE_IN_LOOP",
+    "phone_status": "DEVICE_IN_LOOP",
+    "network_status": "DEVICE_IN_LOOP",
+    "overall_status": "DEVICE_IN_LOOP"
+  },
+  "step_results": {
+    "step_1_create_artifact": {
+      "status": "PASS",
+      "artifact_id": "ART-DISPATCH-001",
+      "filename": "field_dispatch.pdf",
+      "original_sha256": "edb6ec34c63bea228f9162ec1df7c2a45fd9a4a06bb59135c2e2935a743ac42a",
+      "byte_length": 1406,
+      "security_passed": true
+    },
+    "step_2_crypto_state": {
+      "status": "PASS",
+      "recipient_a": "alice_field_commander",
+      "recipient_b": "bob_tactical_liaison",
+      "kem_algorithm": "NIST FIPS 203 ML-KEM-768",
+      "signature_algorithm": "NIST FIPS 204 ML-DSA-65"
+    },
+    "step_3_phone_a_access": {
+      "status": "PASS",
+      "session_id": "SESS-PHONA-20260927_230136",
+      "device_id": "phone_rf8n927pm9n",
+      "device_model": "Galaxy Note10 Lite (SM-N770F)",
+      "interface": "LOCAL_NETWORK_WIFI",
+      "host_ip": "172.20.128.1"
+    },
+    "step_4_authenticate_phone_a": {
+      "status": "PASS",
+      "recipient_id": "alice_field_commander",
+      "device_bound": true,
+      "attestation_tier": "DEVICE_BOUND_IDENTIFIED"
+    },
+    "step_5_render_artifact": {
+      "status": "PASS",
+      "carrier_id": "doc_edb6ec34c63b_page_1",
+      "carrier_sha256": "c85176416496288a742837ce0e89f0b57116439dede629dec68e79f365c8e53a",
+      "dimensions": "800x1000",
+      "embedding_psnr_db": 42.0,
+      "embedding_ssim": 0.99
+    },
+    "step_6_record_metadata": {
+      "status": "PASS",
+      "phone_a_serial": "RF8N927PM9N",
+      "phone_a_platform": "Android",
+      "phone_a_os": "UNKNOWN",
+      "usb_state": "CONNECTED",
+      "adb_state": "UNAVAILABLE"
+    },
+    "step_7_phone_b_endpoint": {
+      "status": "PASS",
+      "session_id": "SESS-PHONB-20260927_230136",
+      "device_id": "phone_rzcy9396agx",
+      "device_model": "Galaxy A55 5G",
+      "role": "PHONE_B_INDEPENDENT"
+    },
+    "step_8_phone_b_workflow": {
+      "status": "PASS",
+      "recipient_id": "bob_tactical_liaison",
+      "isolation_verified": true,
+      "no_cross_token_leak": true
+    },
+    "step_9_transfer": {
+      "status": "PASS",
+      "transfer_id": "XFER-e059d346a627",
+      "mechanism": "DEVICE_STAGING",
+      "latency_ms": 20.267,
+      "source_hash": "c85176416496288a742837ce0e89f0b57116439dede629dec68e79f365c8e53a",
+      "destination_hash": "c85176416496288a742837ce0e89f0b57116439dede629dec68e79f365c8e53a",
+      "is_identical": true
+    },
+    "step_10_verify_byte_integrity": {
+      "status": "PASS",
+      "source_len": 193681,
+      "destination_len": 193681,
+      "verified": true
+    },
+    "step_11_lineage_and_custody": {
+      "status": "PASS",
+      "lineage_merkle_root": "856839f7669dc4d0ed0b7d9924c9e652b45eb35b0c488bee3b099a26ece66c92",
+      "custody_root_hash": "e9f8c313b18cade781e6fb9d3d89090db6b84a96144337d5b8b33a27117fc810",
+      "custody_events": 3
+    },
+    "step_12_package_evidence": {
+      "status": "PASS",
+      "package_id": "pkg_CASE-DITL-20260927_230136_20260927230149",
+      "object_count": 6,
+      "merkle_root": "5a8899db56b800c2999adf04d50a12785ba31524a6c42efe1a616df2ce528604"
+    },
+    "step_13_verify_offline": {
+      "status": "PASS",
+      "overall_verification": "VERIFIED",
+      "manifest_signature_valid": true,
+      "merkle_root_valid": true,
+      "custody_chain_valid": true,
+      "decision_consistent": true
+    }
+  },
+  "format_results": [
+    {
+      "format_name": "PDF",
+      "original_sha256": "902d007e0257683a661176520917fe0850d04ab2e3ce7a913d5ec7144857cc7d",
+      "canonical_model": "CanonicalDocument",
+      "carrier_sha256": "ebcecf26263ee3039915a4c6cd793ed0c254dc722b3efc3fffcf26757ab5ac69",
+      "device_workflow_status": "RENDERED_AND_BOUND",
+      "transfer_status": "SUCCESS",
+      "transfer_latency_ms": 8.586,
+      "is_hash_identical": true,
+      "watermark_recovered": true,
+      "epistemic_declaration": "PDF device-in-loop rendering verified.",
+      "verification_status": "VERIFIED_DEVICE_IN_LOOP"
+    },
+    {
+      "format_name": "DOCX",
+      "original_sha256": "8c4eeb02fa2f23f135503eee794ff10bd7bcb2009ca79b3ece94d429c970fc6a",
+      "canonical_model": "CanonicalDocument",
+      "carrier_sha256": "d97e9b53739535d68dbacb083ba2961d4527db4c59d8804f1cfb70d2911b4147",
+      "device_workflow_status": "RENDERED_AND_BOUND",
+      "transfer_status": "SUCCESS",
+      "transfer_latency_ms": 10.401,
+      "is_hash_identical": true,
+      "watermark_recovered": true,
+      "epistemic_declaration": "DOCX device-in-loop rendering verified.",
+      "verification_status": "VERIFIED_DEVICE_IN_LOOP"
+    },
+    {
+      "format_name": "PPTX",
+      "original_sha256": "fbdd7e8dc58754b7fc3eca55b951164dd5a4d3eb24927a199c409ba08e8a5c43",
+      "canonical_model": "CanonicalDocument",
+      "carrier_sha256": "a82b5606b43de74f9515682b940b79d1ebc4aedbc4f88b8ba614b72d0afa9a73",
+      "device_workflow_status": "RENDERED_AND_BOUND",
+      "transfer_status": "SUCCESS",
+      "transfer_latency_ms": 10.711,
+      "is_hash_identical": true,
+      "watermark_recovered": true,
+      "epistemic_declaration": "PPTX device-in-loop rendering verified.",
+      "verification_status": "VERIFIED_DEVICE_IN_LOOP"
+    },
+    {
+      "format_name": "XLSX",
+      "original_sha256": "866bd5ae9e51792ffaae07ac9796849058d8381a08122a33267f2507156bb3d6",
+      "canonical_model": "CanonicalDocument",
+      "carrier_sha256": "c66481d55b8300aa4abc46e28b9c6ea751b2a26b2b0a416974a1720789e57a39",
+      "device_workflow_status": "RENDERED_AND_BOUND",
+      "transfer_status": "SUCCESS",
+      "transfer_latency_ms": 23.234,
+      "is_hash_identical": true,
+      "watermark_recovered": true,
+      "epistemic_declaration": "XLSX device-in-loop rendering verified.",
+      "verification_status": "VERIFIED_DEVICE_IN_LOOP"
+    },
+    {
+      "format_name": "PNG",
+      "original_sha256": "4385d310ca16f1b1aeb6d5c9731c486def9018a5d5a7974c38c0916be80a2ff4",
+      "canonical_model": "CanonicalDocument",
+      "carrier_sha256": "13d1b1a8be335cc80918879ec6880c09c2674daa78cd6b5b6d967046ab1375b9",
+      "device_workflow_status": "RENDERED_AND_BOUND",
+      "transfer_status": "SUCCESS",
+      "transfer_latency_ms": 8.484,
+      "is_hash_identical": true,
+      "watermark_recovered": true,
+      "epistemic_declaration": "PNG device-in-loop rendering verified.",
+      "verification_status": "VERIFIED_DEVICE_IN_LOOP"
+    },
+    {
+      "format_name": "JPEG",
+      "original_sha256": "fee3729b34d13a64093db6ad22be25146d1341bf2fdeee391e8301557f6b6ca1",
+      "canonical_model": "CanonicalDocument",
+      "carrier_sha256": "d234fc077101c20c158946465decfb4512d7d758f9317032bc05d0953134ff2e",
+      "device_workflow_status": "RENDERED_AND_BOUND",
+      "transfer_status": "SUCCESS",
+      "transfer_latency_ms": 21.352,
+      "is_hash_identical": true,
+      "watermark_recovered": true,
+      "epistemic_declaration": "JPEG device-in-loop rendering verified.",
+      "verification_status": "VERIFIED_DEVICE_IN_LOOP"
+    }
+  ],
+  "lineage_merkle_root": "856839f7669dc4d0ed0b7d9924c9e652b45eb35b0c488bee3b099a26ece66c92",
+  "custody_root_hash": "e9f8c313b18cade781e6fb9d3d89090db6b84a96144337d5b8b33a27117fc810",
+  "evidence_package_id": "pkg_CASE-DITL-20260927_230136_20260927230149",
+  "evidence_verified_offline": true,
+  "limitations": [
+    "0 physical cameras detected: Camera capture is NOT_VERIFIED.",
+    "0 physical printers detected: Print validation is UNAVAILABLE.",
+    "0 physical scanners detected: Scan validation is UNAVAILABLE.",
+    "Real smartphones participate as authenticated recipients and transfer nodes, NOT optical cameras.",
+    "Optical transformations remain calibrated via simulation, clearly labeled SIMULATION_CALIBRATION."
+  ]
+}

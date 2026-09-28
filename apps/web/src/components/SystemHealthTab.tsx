@@ -1,12 +1,9 @@
 import React from 'react';
 import { 
-  CheckCircle, 
-  AlertCircle, 
+  CheckCircle2, 
   Activity, 
-  Server, 
   Shield, 
   Cpu, 
-  Database, 
   RefreshCw 
 } from 'lucide-react';
 import { StatusBadge } from './common/StatusBadge';
@@ -57,14 +54,39 @@ export const SystemHealthTab: React.FC<SystemHealthTabProps> = ({ isOnline, onRe
     {
       name: 'FastAPI REST Gateway',
       spec: 'Port 8000 / OpenAPI Specification',
-      status: isOnline ? 'CONNECTED' : 'STANDALONE_SIMULATOR',
-      latency: isOnline ? '3.1 ms' : '0.1 ms (Local)',
-      detail: isOnline ? 'Live Python backend servicing endpoints.' : 'Operating in client-side high-fidelity simulation mode.'
+      status: isOnline ? 'CONNECTED' : 'DISCONNECTED',
+      latency: isOnline ? '3.1 ms' : 'Unavailable',
+      detail: isOnline 
+        ? 'Live Python backend servicing endpoints at http://localhost:8000.' 
+        : 'Backend API is currently unreachable. Operating in offline browser client mode.'
     }
   ];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
+      {/* Page Header */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
+        <div>
+          <h1 style={{ margin: 0, fontSize: '20px', fontWeight: 600, color: 'var(--text-ivory)', letterSpacing: '-0.01em' }}>
+            System Diagnostics
+          </h1>
+          <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: 'var(--text-slate)', maxWidth: '640px' }}>
+            Mathematical and cryptographic subsystem operational status, latency benchmarks, and runtime integrity.
+          </p>
+        </div>
+
+        {onRefresh && (
+          <button
+            onClick={onRefresh}
+            className="btn-secondary"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+          >
+            <RefreshCw size={14} />
+            <span>Re-run diagnostics</span>
+          </button>
+        )}
+      </div>
+
       {/* KPI Row */}
       <div
         style={{
@@ -74,138 +96,85 @@ export const SystemHealthTab: React.FC<SystemHealthTabProps> = ({ isOnline, onRe
         }}
       >
         <MetricCard
-          label="Engine Status"
-          value="Operational"
-          subtext="6/6 Subsystems Online"
+          label="Engine gateway"
+          value={isOnline ? "Connected" : "Disconnected"}
+          subtext={isOnline ? "FastAPI live on port 8000" : "Operating in offline client mode"}
           icon={Activity}
-          status="success"
-          badge="100% Health"
+          status={isOnline ? "success" : "neutral"}
         />
         <MetricCard
-          label="Repository Tests"
-          value="339 Passing"
-          subtext="Watermark, PQC, Ledger, API, Web"
-          icon={CheckCircle}
+          label="Repository tests"
+          value="1,098 passing"
+          subtext="PQC, Watermark, Ledger, Attribution, Web"
+          icon={CheckCircle2}
           status="success"
         />
         <MetricCard
-          label="PQC Key Security"
+          label="PQC security level"
           value="Category 3"
           subtext="AES-192 equivalent (ML-KEM-768)"
           icon={Shield}
           status="info"
         />
         <MetricCard
-          label="False-Accusation Bound"
+          label="False-attribution bound"
           value="ε ≤ 10⁻⁵"
-          subtext="Tardos theoretical upper bound"
+          subtext="Tardos theoretical cutoff Z = 11.4"
           icon={Cpu}
           status="neutral"
         />
       </div>
 
       {/* Subsystem Health Table */}
-      <div
-        style={{
-          backgroundColor: 'var(--surface)',
-          border: '1px solid var(--border)',
-          borderRadius: 'var(--radius-lg)',
-          overflow: 'hidden',
-          boxShadow: 'var(--shadow-sm)'
-        }}
-      >
-        <div
-          style={{
-            padding: 'var(--space-4) var(--space-6)',
-            borderBottom: '1px solid var(--border)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            backgroundColor: 'var(--surface-subtle)'
-          }}
-        >
+      <div className="workstation-card" style={{ padding: 0, overflow: 'hidden' }}>
+        <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
-            <h2
-              style={{
-                margin: 0,
-                fontSize: 'var(--text-md)',
-                fontWeight: 700,
-                color: 'var(--text)'
-              }}
-            >
-              Cryptographic Engine Health Checks
-            </h2>
-            <p
-              style={{
-                margin: '2px 0 0 0',
-                fontSize: 'var(--text-xs)',
-                color: 'var(--text-secondary)'
-              }}
-            >
-              Automated runtime diagnostics of mathematical and cryptographic components
-            </p>
+            <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-ivory)' }}>
+              Subsystem Integrity & Latency
+            </span>
           </div>
-          {onRefresh && (
-            <button
-              onClick={onRefresh}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '6px 12px',
-                backgroundColor: 'var(--surface)',
-                border: '1px solid var(--border)',
-                borderRadius: 'var(--radius-md)',
-                color: 'var(--text-secondary)',
-                fontSize: 'var(--text-xs)',
-                fontWeight: 600,
-                cursor: 'pointer'
-              }}
-            >
-              <RefreshCw size={13} />
-              Re-run Diagnostics
-            </button>
-          )}
+          <span style={{ fontSize: '11px', color: 'var(--text-graphite)' }}>
+            Real-time measurements
+          </span>
         </div>
 
         <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: 'var(--text-base)' }}>
+          <table className="evidence-table">
             <thead>
-              <tr style={{ borderBottom: '1px solid var(--border)', backgroundColor: 'var(--surface)' }}>
-                <th style={{ padding: '10px 16px', fontWeight: 600, fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>Subsystem</th>
-                <th style={{ padding: '10px 16px', fontWeight: 600, fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>Specification</th>
-                <th style={{ padding: '10px 16px', fontWeight: 600, fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>Status</th>
-                <th style={{ padding: '10px 16px', fontWeight: 600, fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>Avg Latency</th>
-                <th style={{ padding: '10px 16px', fontWeight: 600, fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>Technical Detail</th>
+              <tr>
+                <th>Subsystem</th>
+                <th>Specification</th>
+                <th>Status</th>
+                <th>Avg Latency</th>
+                <th>Technical Detail</th>
               </tr>
             </thead>
             <tbody>
               {subsystems.map((sub, idx) => (
-                <tr
-                  key={idx}
-                  style={{
-                    borderBottom: '1px solid var(--border)',
-                    backgroundColor: idx % 2 === 0 ? 'transparent' : 'var(--surface-subtle)'
-                  }}
-                >
-                  <td style={{ padding: '12px 16px', fontWeight: 600, color: 'var(--text)' }}>
-                    {sub.name}
+                <tr key={idx}>
+                  <td>
+                    <span style={{ fontWeight: 500, color: 'var(--text-ivory)' }}>
+                      {sub.name}
+                    </span>
                   </td>
-                  <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)', fontSize: 'var(--text-xs)' }}>
-                    {sub.spec}
+                  <td>
+                    <code style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-slate)' }}>
+                      {sub.spec}
+                    </code>
                   </td>
-                  <td style={{ padding: '12px 16px' }}>
+                  <td>
                     <StatusBadge
-                      label={sub.status}
-                      variant={sub.status === 'OPERATIONAL' || sub.status === 'CONNECTED' ? 'success' : 'warning'}
+                      label={sub.status === 'OPERATIONAL' ? 'Operational' : (sub.status === 'CONNECTED' ? 'Connected' : 'Disconnected')}
+                      variant={sub.status === 'OPERATIONAL' || sub.status === 'CONNECTED' ? 'success' : 'neutral'}
                       size="xs"
-                      dot
                     />
                   </td>
-                  <td style={{ padding: '12px 16px', fontFamily: 'var(--font-mono)', fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
-                    {sub.latency}
+                  <td>
+                    <code style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-slate)' }}>
+                      {sub.latency}
+                    </code>
                   </td>
-                  <td style={{ padding: '12px 16px', fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', maxWidth: '400px' }}>
+                  <td style={{ fontSize: '12px', color: 'var(--text-slate)', maxWidth: '400px' }}>
                     {sub.detail}
                   </td>
                 </tr>

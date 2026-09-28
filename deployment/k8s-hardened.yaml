@@ -1,0 +1,110 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aegistrace-api
+  namespace: aegistrace-forensics
+  labels:
+    app.kubernetes.io/name: aegistrace
+    app.kubernetes.io/component: forensic-backend
+    app.kubernetes.io/part-of: aegistrace-platform
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: aegistrace-api
+  template:
+    metadata:
+      labels:
+        app: aegistrace-api
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: aegistrace-engine
+          image: aegistrace:1.0.0
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: AEGISTRACE_AIRGAP_MODE
+              value: "1"
+            - name: SIH26237_ENV
+              value: "production"
+            - name: PYTHONUNBUFFERED
+              value: "1"
+          ports:
+            - containerPort: 8000
+              name: http-api
+          resources:
+            limits:
+              cpu: "2000m"
+              memory: "2Gi"
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp-volume
+            - mountPath: /app/data
+              name: persistent-data
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 3
+            periodSeconds: 10
+      volumes:
+        - name: tmp-volume
+          emptyDir:
+            medium: Memory
+            sizeLimit: 128Mi
+        - name: persistent-data
+          emptyDir: {}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: aegistrace-airgap-egress-deny
+  namespace: aegistrace-forensics
+spec:
+  podSelector:
+    matchLabels:
+      app: aegistrace-api
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Allow incoming traffic only from designated ingress controller or frontend pods
+    - from:
+        - podSelector:
+            matchLabels:
+              app: aegistrace-web
+      ports:
+        - protocol: TCP
+          port: 8000
+  egress:
+    # Zero external internet egress allowed!
+    # Only permit intra-cluster DNS resolution to kube-dns if needed
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53

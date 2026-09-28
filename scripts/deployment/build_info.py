@@ -53,8 +53,9 @@ def collect_build_info() -> dict:
 
     # 3. Python Package Snapshot
     key_packages = [
-        "fastapi", "uvicorn", "pydantic", "pycryptodome",
-        "reportlab", "pypdf", "pytest", "numpy", "opencv-python", "scipy"
+        "fastapi", "uvicorn", "pydantic", "cryptography", "pycryptodome",
+        "kyber-py", "dilithium-py",
+        "reportlab", "pypdf", "pytest", "numpy", "opencv-python", "scipy", "Pillow"
     ]
     pkg_snapshot = {}
     for pkg in key_packages:

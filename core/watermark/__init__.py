@@ -38,6 +38,14 @@ from core.watermark.schema import (
     PhysicalExperimentRecord,
     PhysicalValidationReport,
 )
+from core.watermark.dynamic import (
+    DynamicWatermarkIdentity,
+    derive_dynamic_codeword,
+    generate_dynamic_watermark,
+    verify_dynamic_watermark_commitment,
+    DynamicWatermarkEngine,
+    compute_visual_equivalence_metrics,
+)
 
 __all__ = [
     # Base
@@ -67,4 +75,12 @@ __all__ = [
     # Schema
     "PhysicalExperimentRecord",
     "PhysicalValidationReport",
+    # Dynamic
+    "DynamicWatermarkIdentity",
+    "derive_dynamic_codeword",
+    "generate_dynamic_watermark",
+    "verify_dynamic_watermark_commitment",
+    "DynamicWatermarkEngine",
+    "compute_visual_equivalence_metrics",
 ]
+

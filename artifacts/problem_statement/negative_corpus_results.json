@@ -1,0 +1,74 @@
+{
+  "negative_corpus_evaluation_id": "neg_eval_20260927152445",
+  "timestamp": "2026-09-27T15:24:45.146944+00:00",
+  "total_negative_cases": 8,
+  "false_positive_accusations": 0,
+  "empirical_fpr": 0.0,
+  "cases": [
+    {
+      "test_id": "NEG-01",
+      "name": "Completely Unwatermarked Document",
+      "expected_state": "NO_SIGNAL",
+      "observed_state": "NO_SIGNAL",
+      "false_attribution": false,
+      "passed": true
+    },
+    {
+      "test_id": "NEG-02",
+      "name": "Random Gaussian Noise Canvas",
+      "expected_state": "NO_SIGNAL",
+      "observed_state": "NO_SIGNAL",
+      "false_attribution": false,
+      "passed": true
+    },
+    {
+      "test_id": "NEG-03",
+      "name": "Watermark from Another Document",
+      "expected_state": "CONFLICT",
+      "observed_state": "CONFLICT",
+      "false_attribution": false,
+      "passed": true
+    },
+    {
+      "test_id": "NEG-04",
+      "name": "Watermark with Forged Recipient Signature",
+      "expected_state": "INVALID_SIGNATURE",
+      "observed_state": "INVALID_SIGNATURE",
+      "false_attribution": false,
+      "passed": true
+    },
+    {
+      "test_id": "NEG-05",
+      "name": "Watermark Fragment / Severe Crop (>50%)",
+      "expected_state": "INSUFFICIENT_EVIDENCE",
+      "observed_state": "INSUFFICIENT_EVIDENCE",
+      "false_attribution": false,
+      "passed": true
+    },
+    {
+      "test_id": "NEG-06",
+      "name": "Replayed Stale Receipt",
+      "expected_state": "REPLAY_REJECTED",
+      "observed_state": "REPLAY_REJECTED",
+      "false_attribution": false,
+      "passed": true
+    },
+    {
+      "test_id": "NEG-07",
+      "name": "Unauthorized Recipient Package Decrypt Attempt",
+      "expected_state": "RECIPIENT_MISMATCH",
+      "observed_state": "RECIPIENT_MISMATCH",
+      "false_attribution": false,
+      "passed": true
+    },
+    {
+      "test_id": "NEG-08",
+      "name": "Cross-Tenant Scope Injection",
+      "expected_state": "CONFLICT",
+      "observed_state": "CONFLICT",
+      "false_attribution": false,
+      "passed": true
+    }
+  ],
+  "summary": "100% fail-closed rate; zero false positive accusations across all adversarial and negative cases."
+}

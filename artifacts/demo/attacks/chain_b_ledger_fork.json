@@ -1,0 +1,11 @@
+{
+  "chain_id": "CHAIN_B",
+  "chain_name": "Ledger Tail Mutation & Fork Injection",
+  "description": "Attacker attempts to append block with broken parent hash",
+  "verdict": "DETECTED",
+  "security_maintained": true,
+  "evidence_errors": [
+    "Broken hash chain link at height 4: expected prev '8961c95c0abc1e1b0527f617a5e24e03d03abc0ba1d3b39e5266059678d4c124', got 'forged_prev_0000000000000000000000000000000000000000000000000000'"
+  ],
+  "mitigating_pillar": "DLT Continuity & Parent Hash Enforcement"
+}

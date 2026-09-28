@@ -9,6 +9,10 @@ interface MetricCardProps {
   badge?: string;
 }
 
+/**
+ * MetricCard Component — Forensic Luxury Edition
+ * Compact, restrained operational indicator with subtle elevation and typography.
+ */
 export const MetricCard: React.FC<MetricCardProps> = ({
   label,
   value,
@@ -17,71 +21,72 @@ export const MetricCard: React.FC<MetricCardProps> = ({
   status = 'neutral',
   badge
 }) => {
-  const getStatusColor = () => {
+  const getAccentColor = () => {
     switch (status) {
       case 'success':
-        return 'var(--success)';
+        return 'var(--success-text)';
       case 'warning':
-        return 'var(--warning)';
+        return 'var(--warning-text)';
       case 'danger':
-        return 'var(--danger)';
+        return 'var(--danger-text)';
       case 'info':
-        return 'var(--info)';
+        return 'var(--info-text)';
+      case 'primary':
+        return 'var(--primary-text)';
       case 'neutral':
       default:
-        return 'var(--primary)';
+        return 'var(--text-secondary)';
     }
   };
 
+  const accentColor = getAccentColor();
+
   return (
     <div
+      className="workstation-card"
       style={{
-        backgroundColor: 'var(--surface)',
-        border: '1px solid var(--border)',
-        borderRadius: 'var(--radius-lg)',
-        padding: 'var(--space-4) var(--space-5)',
+        padding: 'var(--space-4)',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        boxShadow: 'var(--shadow-sm)',
-        transition: 'border-color var(--transition-fast)'
+        borderRadius: 'var(--radius-sm)',
+        minHeight: '92px'
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--space-2)' }}>
         <span
           style={{
             fontSize: 'var(--text-xs)',
-            fontWeight: 600,
-            textTransform: 'uppercase',
-            letterSpacing: '0.04em',
+            fontWeight: 500,
             color: 'var(--text-tertiary)'
           }}
         >
           {label}
         </span>
-        {Icon && (
-          <div
+        {badge && (
+          <span
             style={{
-              width: '28px',
-              height: '28px',
-              borderRadius: 'var(--radius-sm)',
-              backgroundColor: 'var(--surface-subtle)',
-              border: '1px solid var(--border)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: getStatusColor()
+              fontSize: '11px',
+              color: accentColor,
+              fontWeight: 500,
+              backgroundColor: 'rgba(255, 255, 255, 0.04)',
+              padding: '1px 6px',
+              borderRadius: 'var(--radius-xs)',
+              border: '1px solid var(--border-subtle)'
             }}
           >
-            <Icon size={15} />
-          </div>
+            {badge}
+          </span>
+        )}
+        {Icon && !badge && (
+          <Icon size={15} style={{ color: 'var(--text-tertiary)', flexShrink: 0 }} />
         )}
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: 'var(--space-1)' }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
         <span
           style={{
-            fontSize: 'var(--text-2xl)',
+            fontSize: 'var(--text-xl)',
             fontWeight: 700,
             color: 'var(--text)',
             letterSpacing: '-0.02em',
@@ -90,31 +95,17 @@ export const MetricCard: React.FC<MetricCardProps> = ({
         >
           {value}
         </span>
-        {badge && (
-          <span
-            style={{
-              fontSize: '11px',
-              fontWeight: 600,
-              padding: '1px 6px',
-              borderRadius: 'var(--radius-full)',
-              backgroundColor: 'var(--surface-hover)',
-              color: 'var(--text-secondary)',
-              border: '1px solid var(--border)'
-            }}
-          >
-            {badge}
-          </span>
-        )}
       </div>
 
       {subtext && (
         <div
           style={{
-            fontSize: 'var(--text-xs)',
+            fontSize: '11.5px',
             color: 'var(--text-secondary)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '4px'
+            marginTop: '4px',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap'
           }}
         >
           {subtext}

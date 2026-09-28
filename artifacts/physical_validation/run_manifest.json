@@ -1,0 +1,84 @@
+{
+  "physical_run_id": "PLAB-20260927-f124555d",
+  "operator": "operator_secops",
+  "host": "MSI",
+  "os": "Windows 10",
+  "python_version": "3.9.0",
+  "aegistrace_version": "2.4.0-hardened",
+  "watermark_version": "2.1.0-pqc-dsss",
+  "crypto_version": "FIPS203-MLKEM768/FIPS204-MLDSA65",
+  "policy_version": "SIH-SEC-2026.1",
+  "hardware_inventory": {
+    "inventory_id": "HINV-ff49e1585e91",
+    "timestamp": "2026-09-27T22:33:57.800192+00:00",
+    "host_environment": "WORKSTATION_WIN32",
+    "os_name": "Windows",
+    "os_release": "10",
+    "cameras": [],
+    "printers": [],
+    "scanners": [],
+    "displays": [
+      {
+        "device_id": "DesktopMonitor1",
+        "device_type": "DISPLAY",
+        "manufacturer": "UNKNOWN",
+        "model": "Default Monitor",
+        "interface": "VIDEO_DISPLAY",
+        "driver": "DirectX/WDDM",
+        "resolution": "UNKNOWN",
+        "supported_capture_modes": [
+          "SCREEN_CAPTURE",
+          "RENDER_CANVAS"
+        ],
+        "is_physical": true,
+        "status": "ACTIVE",
+        "metadata": {
+          "monitor_type": "Default Monitor"
+        },
+        "timestamp": "2026-09-27T22:33:57.787202+00:00"
+      },
+      {
+        "device_id": "DesktopMonitor2",
+        "device_type": "DISPLAY",
+        "manufacturer": "UNKNOWN",
+        "model": "Generic PnP Monitor",
+        "interface": "VIDEO_DISPLAY",
+        "driver": "DirectX/WDDM",
+        "resolution": "UNKNOWN",
+        "supported_capture_modes": [
+          "SCREEN_CAPTURE",
+          "RENDER_CANVAS"
+        ],
+        "is_physical": true,
+        "status": "ACTIVE",
+        "metadata": {
+          "monitor_type": "Generic PnP Monitor"
+        },
+        "timestamp": "2026-09-27T22:33:57.787202+00:00"
+      }
+    ],
+    "camera_modality_status": "UNAVAILABLE",
+    "printer_modality_status": "UNAVAILABLE",
+    "scanner_modality_status": "UNAVAILABLE",
+    "display_modality_status": "AVAILABLE",
+    "is_laboratory_ready": false,
+    "raw_probe_log": [
+      "Camera index 0 probed: NOT_OPENED",
+      "Camera index 1 probed: NOT_OPENED",
+      "Camera index 2 probed: NOT_OPENED",
+      "Camera index 3 probed: NOT_OPENED"
+    ]
+  },
+  "source_document": {
+    "document_id": "DOC_PHYSICAL_STANDARD_V1",
+    "document_name": "CONFIDENTIAL_ORCHESTRATION_DIRECTIVE.pdf",
+    "sha256": "5df0e585f244109839139ef7d2dfbafcf0f02940a44853ebf8b857633fc0eb5a",
+    "page_count": 1,
+    "width": 1240,
+    "height": 1754,
+    "dpi": 150,
+    "created_at": "2026-09-27T22:33:57.841723+00:00"
+  },
+  "date_time": "2026-09-27T22:33:57.845724+00:00",
+  "manifest_hash": "9a7e4fe1bad9acb48c6d010a9893cdcd7ba2429dca5cddba46521f19aa11704d"
+}

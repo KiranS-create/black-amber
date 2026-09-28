@@ -1,0 +1,61 @@
+{
+  "inventory_id": "HINV-ff49e1585e91",
+  "timestamp": "2026-09-27T22:33:57.800192+00:00",
+  "host_environment": "WORKSTATION_WIN32",
+  "os_name": "Windows",
+  "os_release": "10",
+  "cameras": [],
+  "printers": [],
+  "scanners": [],
+  "displays": [
+    {
+      "device_id": "DesktopMonitor1",
+      "device_type": "DISPLAY",
+      "manufacturer": "UNKNOWN",
+      "model": "Default Monitor",
+      "interface": "VIDEO_DISPLAY",
+      "driver": "DirectX/WDDM",
+      "resolution": "UNKNOWN",
+      "supported_capture_modes": [
+        "SCREEN_CAPTURE",
+        "RENDER_CANVAS"
+      ],
+      "is_physical": true,
+      "status": "ACTIVE",
+      "metadata": {
+        "monitor_type": "Default Monitor"
+      },
+      "timestamp": "2026-09-27T22:33:57.787202+00:00"
+    },
+    {
+      "device_id": "DesktopMonitor2",
+      "device_type": "DISPLAY",
+      "manufacturer": "UNKNOWN",
+      "model": "Generic PnP Monitor",
+      "interface": "VIDEO_DISPLAY",
+      "driver": "DirectX/WDDM",
+      "resolution": "UNKNOWN",
+      "supported_capture_modes": [
+        "SCREEN_CAPTURE",
+        "RENDER_CANVAS"
+      ],
+      "is_physical": true,
+      "status": "ACTIVE",
+      "metadata": {
+        "monitor_type": "Generic PnP Monitor"
+      },
+      "timestamp": "2026-09-27T22:33:57.787202+00:00"
+    }
+  ],
+  "camera_modality_status": "UNAVAILABLE",
+  "printer_modality_status": "UNAVAILABLE",
+  "scanner_modality_status": "UNAVAILABLE",
+  "display_modality_status": "AVAILABLE",
+  "is_laboratory_ready": false,
+  "raw_probe_log": [
+    "Camera index 0 probed: NOT_OPENED",
+    "Camera index 1 probed: NOT_OPENED",
+    "Camera index 2 probed: NOT_OPENED",
+    "Camera index 3 probed: NOT_OPENED"
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "timestamp": "2026-09-27T16:24:05Z",
+  "environment": {
+    "python_version": "3.9.0",
+    "os": "win32",
+    "cpu_cores": 12
+  },
+  "scales": {
+    "1": {
+      "recipient_count": 1,
+      "iterations": 3,
+      "latencies_ms": [
+        1910.28,
+        1592.4,
+        2305.69
+      ],
+      "mean_latency_ms": 1936.12,
+      "p50_latency_ms": 1910.28,
+      "p95_latency_ms": 2305.69,
+      "throughput_recipients_per_sec": 0.52
+    },
+    "5": {
+      "recipient_count": 5,
+      "iterations": 3,
+      "latencies_ms": [
+        6102.23,
+        6049.62,
+        5615.89
+      ],
+      "mean_latency_ms": 5922.58,
+      "p50_latency_ms": 6049.62,
+      "p95_latency_ms": 6102.23,
+      "throughput_recipients_per_sec": 0.84
+    },
+    "10": {
+      "recipient_count": 10,
+      "iterations": 3,
+      "latencies_ms": [
+        9471.84,
+        10513.68,
+        10873.14
+      ],
+      "mean_latency_ms": 10286.22,
+      "p50_latency_ms": 10513.68,
+      "p95_latency_ms": 10873.14,
+      "throughput_recipients_per_sec": 0.97
+    },
+    "25": {
+      "recipient_count": 25,
+      "iterations": 1,
+      "latencies_ms": [
+        22983.1
+      ],
+      "mean_latency_ms": 22983.1,
+      "p50_latency_ms": 22983.1,
+      "p95_latency_ms": 22983.1,
+      "throughput_recipients_per_sec": 1.09
+    },
+    "50": {
+      "recipient_count": 50,
+      "iterations": 1,
+      "latencies_ms": [
+        43671.88
+      ],
+      "mean_latency_ms": 43671.88,
+      "p50_latency_ms": 43671.88,
+      "p95_latency_ms": 43671.88,
+      "throughput_recipients_per_sec": 1.14
+    }
+  },
+  "golden_case": {
+    "case_id": "CASE_SIH_rel_2026",
+    "tenant_id": "tenant_golden_case",
+    "document_id": "doc_47e7b2497fd8",
+    "release_id": "rel_20260927162405_058ba4",
+    "total_latency_ms": 4566.45,
+    "step_timings_ms": {
+      "step_01_ingest_hash": 0.01,
+      "step_02_03_enroll_recipients": 62.13,
+      "step_04_07_broadcast_encryption": 52.87,
+      "step_08_17_decryptions_and_dlt": 3220.35,
+      "step_18_leak_simulation": 0.1,
+      "step_19_23_extraction_and_attribution": 161.19,
+      "step_24_package_and_offline_verification": 1069.75
+    },
+    "verification_status": "VERIFIED",
+    "attributed_principal": "alice",
+    "decision_state": "ATTRIBUTED",
+    "equivalence_verdict": "EQUIVALENT_AND_FORENSICALLY_DISTINCT",
+    "object_count": 12,
+    "manifest_signature_valid": true,
+    "merkle_root_valid": true,
+    "recipient_signature_valid": true,
+    "ledger_proof_valid": true
+  },
+  "memory_rss_delta_mb": 30.04
+}

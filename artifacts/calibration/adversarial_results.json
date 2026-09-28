@@ -1,0 +1,51 @@
+{
+  "total_adversarial_scenarios": 5,
+  "all_invariants_preserved": true,
+  "scenarios": [
+    {
+      "scenario": "1_signature_forgery_framing",
+      "fused_state": "NO_SIGNAL",
+      "fused_score": 0.0,
+      "confidence": 0.0,
+      "top_candidate": null,
+      "should_abstain": true,
+      "security_invariant_preserved": true
+    },
+    {
+      "scenario": "2_cross_document_transplant",
+      "fused_state": "CONFLICT",
+      "fused_score": 0.0,
+      "confidence": 0.0,
+      "top_candidate": null,
+      "should_abstain": true,
+      "security_invariant_preserved": true
+    },
+    {
+      "scenario": "3_multi_sensor_duplication_inflation",
+      "fused_state": "INSUFFICIENT_EVIDENCE",
+      "fused_score": 2.7,
+      "confidence": 0.937,
+      "top_candidate": "rec_framed_bob",
+      "should_abstain": true,
+      "security_invariant_preserved": true
+    },
+    {
+      "scenario": "4_contradictory_candidate_conflict",
+      "fused_state": "CONFLICT",
+      "fused_score": 7.0,
+      "confidence": 0.9991,
+      "top_candidate": "rec_innocent_alice",
+      "should_abstain": true,
+      "security_invariant_preserved": true
+    },
+    {
+      "scenario": "5_stale_replay_token_attack",
+      "fused_state": "NO_SIGNAL",
+      "fused_score": 0.0,
+      "confidence": 0.0,
+      "top_candidate": null,
+      "should_abstain": true,
+      "security_invariant_preserved": true
+    }
+  ]
+}

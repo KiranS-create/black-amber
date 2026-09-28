@@ -1,0 +1,70 @@
+{
+  "evaluation_split": "HELD_OUT_TEST",
+  "confusion_matrix": {
+    "tp": 100,
+    "tn": 200,
+    "fp": 0,
+    "fn": 0,
+    "abstentions_valid": 0,
+    "abstentions_negative": 200,
+    "total_evaluated": 300
+  },
+  "error_rates": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "specificity": 1.0,
+    "fpr_empirical_str": "0 / 200",
+    "fpr_point_estimate": 0.0,
+    "fnr_empirical_str": "0 / 100",
+    "fnr_point_estimate": 0.0,
+    "fpr_ci_wilson": {
+      "point_estimate": 0.0,
+      "lower_bound_95": 0.0,
+      "upper_bound_95": 0.018845,
+      "method": "wilson_score",
+      "sample_size": 200,
+      "success_count": 0
+    },
+    "fpr_ci_clopper_pearson": {
+      "point_estimate": 0.0,
+      "lower_bound_95": 0.0,
+      "upper_bound_95": 0.018275,
+      "method": "clopper_pearson_exact",
+      "sample_size": 200,
+      "success_count": 0
+    },
+    "fnr_ci_wilson": {
+      "point_estimate": 0.0,
+      "lower_bound_95": 0.0,
+      "upper_bound_95": 0.036993,
+      "method": "wilson_score",
+      "sample_size": 100,
+      "success_count": 0
+    },
+    "fnr_ci_clopper_pearson": {
+      "point_estimate": 0.0,
+      "lower_bound_95": 0.0,
+      "upper_bound_95": 0.036217,
+      "method": "clopper_pearson_exact",
+      "sample_size": 100,
+      "success_count": 0
+    },
+    "precision_ci_wilson": {
+      "point_estimate": 1.0,
+      "lower_bound_95": 0.963007,
+      "upper_bound_95": 1.0,
+      "method": "wilson_score",
+      "sample_size": 100,
+      "success_count": 100
+    },
+    "recall_ci_wilson": {
+      "point_estimate": 1.0,
+      "lower_bound_95": 0.963007,
+      "upper_bound_95": 1.0,
+      "method": "wilson_score",
+      "sample_size": 100,
+      "success_count": 100
+    }
+  }
+}

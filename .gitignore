@@ -64,3 +64,8 @@ keystore/
 *.swo
 .DS_Store
 Thumbs.db
+
+# Executables
+cloudflared.exe
+*.exe
+

@@ -44,6 +44,14 @@ class GeometricSynchronizer:
         # Precompute canonical marker corner coordinates
         self.canonical_marker_corners = self._compute_canonical_corners()
 
+        # Precompute static fiducial marker bitmaps to avoid redundant OpenCV synthesis
+        self._precomputed_markers: Dict[int, np.ndarray] = {}
+        sz = self.spec.marker_size
+        for marker_id in self.spec.marker_ids:
+            marker_img = cv2.aruco.generateImageMarker(self.dictionary, marker_id, sz)
+            marker_bgr = cv2.cvtColor(marker_img, cv2.COLOR_GRAY2BGR)
+            self._precomputed_markers[marker_id] = marker_bgr
+
     def _compute_canonical_corners(self) -> Dict[int, np.ndarray]:
         """Calculates canonical 4-corner coordinates for each marker ID."""
         w, h = self.spec.width, self.spec.height
@@ -95,10 +103,9 @@ class GeometricSynchronizer:
         sz = self.spec.marker_size
         w, h = self.spec.width, self.spec.height
 
-        # Generate each marker image
+        # Fast blit of precomputed marker images
         for marker_id in self.spec.marker_ids:
-            marker_img = cv2.aruco.generateImageMarker(self.dictionary, marker_id, sz)
-            marker_bgr = cv2.cvtColor(marker_img, cv2.COLOR_GRAY2BGR)
+            marker_bgr = self._precomputed_markers[marker_id]
 
             if marker_id == 0:    # Top-Left
                 output[m:m + sz, m:m + sz] = marker_bgr

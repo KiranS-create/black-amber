@@ -1,123 +1,144 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Layers, 
-  Users, 
   FileText, 
-  Unlock, 
+  Package, 
+  Search, 
+  Building, 
+  Users, 
+  Network, 
+  FileCheck, 
+  GitFork, 
   Database, 
-  ShieldAlert, 
-  Zap, 
-  Cpu, 
   Activity, 
-  Settings,
-  Shield,
-  ExternalLink
+  ChevronLeft,
+  ChevronRight,
+  ShieldAlert,
+  Server
 } from 'lucide-react';
 
 export type TabId = 
-  | 'dashboard' 
+  | 'overview' 
+  | 'documents' 
+  | 'releases' 
+  | 'investigations' 
+  | 'evidence'
+  | 'verify'
   | 'recipients' 
-  | 'release' 
-  | 'decrypt' 
+  | 'directory' 
+  | 'groups' 
+  | 'provenance' 
   | 'ledger' 
-  | 'leak' 
-  | 'attack_lab' 
-  | 'tardos'
-  | 'health'
+  | 'security_testing' 
+  | 'health' 
+  | 'integrations' 
   | 'settings';
 
 interface SidebarProps {
   activeTab: TabId;
   setActiveTab: (tab: TabId) => void;
+  documentCount?: number;
   recipientCount?: number;
   releaseCount?: number;
   ledgerCount?: number;
+  hasActiveInvestigation?: boolean;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
   activeTab,
   setActiveTab,
-  recipientCount = 3,
-  releaseCount = 1,
-  ledgerCount = 4
+  documentCount = 0,
+  recipientCount = 0,
+  releaseCount = 0,
+  ledgerCount = 0,
+  hasActiveInvestigation = false
 }) => {
+  const [collapsed, setCollapsed] = useState(false);
+
   const navSections = [
     {
-      title: 'Work',
+      title: 'Primary',
       items: [
         {
-          id: 'dashboard' as TabId,
+          id: 'overview' as TabId,
           label: 'Overview',
           icon: Layers,
           badge: null
         },
         {
-          id: 'release' as TabId,
-          label: 'Releases',
+          id: 'documents' as TabId,
+          label: 'Documents',
           icon: FileText,
+          badge: documentCount > 0 ? `${documentCount}` : null
+        },
+        {
+          id: 'releases' as TabId,
+          label: 'Releases',
+          icon: Package,
           badge: releaseCount > 0 ? `${releaseCount}` : null
         },
         {
-          id: 'leak' as TabId,
-          label: 'Attribution',
-          icon: ShieldAlert,
-          badge: 'Fail-Closed'
+          id: 'investigations' as TabId,
+          label: 'Investigations',
+          icon: Search,
+          badge: hasActiveInvestigation ? 'Active' : null
         },
         {
-          id: 'decrypt' as TabId,
-          label: 'Decrypt & Sign',
-          icon: Unlock,
+          id: 'evidence' as TabId,
+          label: 'Evidence',
+          icon: FileCheck,
           badge: null
         }
       ]
     },
     {
-      title: 'Identities',
+      title: 'Verification',
+      items: [
+        {
+          id: 'verify' as TabId,
+          label: 'AegisTrace Verify',
+          icon: ShieldAlert,
+          badge: null
+        }
+      ]
+    },
+    {
+      title: 'Advanced',
       items: [
         {
           id: 'recipients' as TabId,
           label: 'Recipients',
           icon: Users,
           badge: recipientCount > 0 ? `${recipientCount}` : null
-        }
-      ]
-    },
-    {
-      title: 'Audit & Lab',
-      items: [
+        },
+        {
+          id: 'directory' as TabId,
+          label: 'Directory',
+          icon: Building,
+          badge: null
+        },
+        {
+          id: 'provenance' as TabId,
+          label: 'Provenance',
+          icon: GitFork,
+          badge: null
+        },
         {
           id: 'ledger' as TabId,
           label: 'Audit Ledger',
           icon: Database,
-          badge: `${ledgerCount}`
+          badge: ledgerCount > 0 ? `${ledgerCount}` : null
         },
         {
-          id: 'attack_lab' as TabId,
-          label: 'Attack Lab',
-          icon: Zap,
+          id: 'security_testing' as TabId,
+          label: 'Security',
+          icon: ShieldAlert,
           badge: null
         },
         {
-          id: 'tardos' as TabId,
-          label: 'Tardos Matrix',
-          icon: Cpu,
-          badge: 'm=128'
-        }
-      ]
-    },
-    {
-      title: 'System',
-      items: [
-        {
           id: 'health' as TabId,
-          label: 'System Health',
-          icon: Activity,
-          badge: 'Online'
-        },
-        {
-          id: 'settings' as TabId,
-          label: 'Settings',
-          icon: Settings,
+          label: 'System',
+          icon: Server,
           badge: null
         }
       ]
@@ -126,129 +147,163 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <aside
+      className="sidebar-container"
       style={{
-        width: '240px',
-        backgroundColor: 'var(--surface)',
+        width: collapsed ? '60px' : '230px',
+        backgroundColor: 'var(--surface-subtle)',
         borderRight: '1px solid var(--border)',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
         flexShrink: 0,
-        height: 'calc(100vh - 60px)',
-        position: 'sticky',
-        top: '60px',
-        zIndex: 30
+        transition: 'width var(--transition-normal)',
+        position: 'relative',
+        zIndex: 20
       }}
     >
-      {/* Navigation List */}
-      <div style={{ padding: 'var(--space-3)', overflowY: 'auto' }}>
+      {/* Navigation Sections */}
+      <div style={{ padding: collapsed ? '12px 6px' : '16px 12px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
         {navSections.map(section => (
-          <div key={section.title} style={{ marginBottom: 'var(--space-3)' }}>
-            <div
-              style={{
-                fontSize: '10.5px',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-                color: 'var(--text-tertiary)',
-                padding: 'var(--space-2) var(--space-3) var(--space-1) var(--space-3)',
-                marginBottom: '2px'
-              }}
-            >
-              {section.title}
-            </div>
+          <div key={section.title} style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+            {!collapsed && (
+              <div
+                className="sidebar-section-title"
+                style={{
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  color: 'var(--text-tertiary)',
+                  padding: '4px 10px 6px 10px',
+                  letterSpacing: '0.04em'
+                }}
+              >
+                {section.title}
+              </div>
+            )}
 
-            <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-              {section.items.map(item => {
-                const Icon = item.icon;
-                const isActive = activeTab === item.id;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => setActiveTab(item.id)}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      width: '100%',
-                      padding: '8px 10px',
-                      borderRadius: 'var(--radius-md)',
-                      border: 'none',
-                      backgroundColor: isActive ? 'var(--primary-subtle)' : 'transparent',
-                      color: isActive ? 'var(--primary-text)' : 'var(--text-secondary)',
-                      fontWeight: isActive ? 600 : 500,
-                      fontSize: 'var(--text-base)',
-                      cursor: 'pointer',
-                      textAlign: 'left',
-                      transition: 'all var(--transition-fast)'
-                    }}
-                    onMouseEnter={e => {
-                      if (!isActive) {
-                        (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--surface-hover)';
-                        (e.currentTarget as HTMLElement).style.color = 'var(--text)';
-                      }
-                    }}
-                    onMouseLeave={e => {
-                      if (!isActive) {
-                        (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
-                        (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)';
-                      }
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <Icon
-                        size={16}
-                        style={{
-                          color: isActive ? 'var(--primary-text)' : 'var(--text-tertiary)',
-                          flexShrink: 0
-                        }}
-                      />
-                      <span>{item.label}</span>
-                    </div>
-                    {item.badge && (
+            {section.items.map(item => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  title={collapsed ? item.label : undefined}
+                  className="sidebar-item"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: collapsed ? 'center' : 'space-between',
+                    padding: collapsed ? '9px' : '7px 10px',
+                    borderRadius: 'var(--radius-sm)',
+                    backgroundColor: isActive ? 'var(--primary-subtle)' : 'transparent',
+                    color: isActive ? 'var(--text)' : 'var(--text-secondary)',
+                    border: 'none',
+                    borderLeft: isActive ? '2px solid var(--primary)' : '2px solid transparent',
+                    cursor: 'pointer',
+                    fontSize: 'var(--text-sm)',
+                    fontWeight: isActive ? 600 : 400,
+                    transition: 'all var(--transition-fast)',
+                    textAlign: 'left',
+                    position: 'relative'
+                  }}
+                  onMouseEnter={e => {
+                    if (!isActive) {
+                      e.currentTarget.style.backgroundColor = 'var(--surface-hover)';
+                      e.currentTarget.style.color = 'var(--text)';
+                    }
+                  }}
+                  onMouseLeave={e => {
+                    if (!isActive) {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                      e.currentTarget.style.color = 'var(--text-secondary)';
+                    }
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
+                    <Icon
+                      size={16}
+                      style={{
+                        color: isActive ? 'var(--primary-text)' : 'var(--text-tertiary)',
+                        flexShrink: 0
+                      }}
+                    />
+                    {!collapsed && (
                       <span
+                        className="sidebar-label"
                         style={{
-                          fontSize: '10px',
-                          padding: '1px 6px',
-                          borderRadius: 'var(--radius-full)',
-                          backgroundColor: isActive ? 'var(--surface)' : 'var(--surface-subtle)',
-                          border: '1px solid var(--border)',
-                          color: isActive ? 'var(--primary-text)' : 'var(--text-tertiary)',
-                          fontWeight: 600
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap'
                         }}
                       >
-                        {item.badge}
+                        {item.label}
                       </span>
                     )}
-                  </button>
-                );
-              })}
-            </nav>
+                  </div>
+
+                  {!collapsed && item.badge && (
+                    <span
+                      className="sidebar-badge"
+                      style={{
+                        fontSize: '11px',
+                        padding: '1px 6px',
+                        borderRadius: 'var(--radius-xs)',
+                        backgroundColor: isActive ? 'rgba(76, 154, 154, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                        color: isActive ? 'var(--primary-text)' : 'var(--text-tertiary)',
+                        fontWeight: 500,
+                        marginLeft: '8px'
+                      }}
+                    >
+                      {item.badge}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
         ))}
       </div>
 
-      {/* Sidebar Footer Security Badge */}
+      {/* Sidebar Collapse Toggle & Footer Status */}
       <div
         style={{
-          padding: 'var(--space-3) var(--space-4)',
-          borderTop: '1px solid var(--border)',
-          backgroundColor: 'var(--surface-subtle)',
-          fontSize: '11px',
-          color: 'var(--text-tertiary)'
+          padding: '10px 12px',
+          borderTop: '1px solid var(--border-subtle)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: collapsed ? 'center' : 'space-between'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
-          <Shield size={13} style={{ color: 'var(--success)' }} />
-          <strong style={{ color: 'var(--text-secondary)', fontSize: '11.5px' }}>PQC Active</strong>
-        </div>
-        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', lineHeight: 1.4 }}>
-          KEM: ML-KEM-768
-          <br />
-          SIG: ML-DSA-65
-          <br />
-          CODE: Tardos m=128
-        </div>
+        {!collapsed && (
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)' }}>
+              AegisTrace 1.0
+            </span>
+            <span style={{ fontSize: '10px', color: 'var(--text-tertiary)' }}>
+              PQC Workstation
+            </span>
+          </div>
+        )}
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          style={{
+            padding: '6px',
+            borderRadius: 'var(--radius-xs)',
+            backgroundColor: 'transparent',
+            border: '1px solid var(--border-subtle)',
+            color: 'var(--text-tertiary)',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+          onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
+          onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-tertiary)')}
+        >
+          {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+        </button>
       </div>
     </aside>
   );

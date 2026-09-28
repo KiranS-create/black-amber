@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0.0",
+  "run_id": "RUN-DITL-20260927_230136",
+  "timestamp": "2026-09-27T23:01:50.482855+00:00",
+  "overall_status": "HYBRID_VALIDATION",
+  "summary_declaration": "Real Device / Network / Display / Transfer Validation with Simulation Calibration.",
+  "evidence_verified_offline": true,
+  "multi_format_results_count": 6,
+  "limitations": [
+    "0 physical cameras detected: Camera capture is NOT_VERIFIED.",
+    "0 physical printers detected: Print validation is UNAVAILABLE.",
+    "0 physical scanners detected: Scan validation is UNAVAILABLE.",
+    "Real smartphones participate as authenticated recipients and transfer nodes, NOT optical cameras.",
+    "Optical transformations remain calibrated via simulation, clearly labeled SIMULATION_CALIBRATION."
+  ]
+}

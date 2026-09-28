@@ -3,24 +3,28 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Search, 
   Layers, 
-  Users, 
   FileText, 
-  Unlock, 
-  Database, 
+  Package, 
   ShieldAlert, 
-  Zap, 
-  Cpu, 
-  PlayCircle, 
+  Building, 
+  Users, 
+  Network, 
+  FileCheck, 
+  GitFork, 
+  Database, 
+  Activity, 
+  Server, 
+  Play, 
   RotateCcw, 
   Wifi, 
   WifiOff, 
-  AlertTriangle,
-  FileCheck
+  ShieldCheck,
+  FileSignature
 } from 'lucide-react';
 
 export interface CommandItem {
   id: string;
-  category: 'Navigation' | 'Scenarios' | 'Actions';
+  category: 'Navigation' | 'Forensic Scenarios' | 'System Actions';
   title: string;
   subtitle?: string;
   icon: React.ComponentType<any>;
@@ -61,221 +65,194 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   const commands: CommandItem[] = [
     // Navigation
     {
-      id: 'nav-dashboard',
+      id: 'nav-overview',
       category: 'Navigation',
       title: 'Operations Overview',
-      subtitle: 'System KPI metrics, active pipeline status, and security architecture checklist',
+      subtitle: 'System posture, active releases, and operational summary',
       icon: Layers,
-      perform: () => { setActiveTab('dashboard'); onClose(); }
+      perform: () => { setActiveTab('overview'); onClose(); }
+    },
+    {
+      id: 'nav-documents',
+      category: 'Navigation',
+      title: 'Protected Documents',
+      subtitle: 'Classified documents, hashes, owners, and releases',
+      icon: FileText,
+      perform: () => { setActiveTab('documents'); onClose(); }
+    },
+    {
+      id: 'nav-releases',
+      category: 'Navigation',
+      title: 'Encrypted Releases',
+      subtitle: 'Multi-recipient hybrid encapsulation (ML-KEM-768 + AES-256-GCM)',
+      icon: Package,
+      perform: () => { setActiveTab('releases'); onClose(); }
+    },
+    {
+      id: 'nav-investigations',
+      category: 'Navigation',
+      title: 'Forensic Investigations',
+      subtitle: 'Multi-channel Bayesian evidence fusion and attribution',
+      icon: ShieldAlert,
+      perform: () => { setActiveTab('investigations'); onClose(); }
+    },
+    {
+      id: 'nav-directory',
+      category: 'Navigation',
+      title: 'Enterprise Directory',
+      subtitle: 'Microsoft Entra ID, Okta, and LDAP identity synchronization',
+      icon: Building,
+      perform: () => { setActiveTab('directory'); onClose(); }
     },
     {
       id: 'nav-recipients',
       category: 'Navigation',
-      title: 'Recipient Registry',
-      subtitle: 'Post-quantum public keys (ML-KEM-768, ML-DSA-65) and role management',
+      title: 'Cryptographic Principals',
+      subtitle: 'Enrolled PQC public keys (ML-KEM-768, ML-DSA-65)',
       icon: Users,
       perform: () => { setActiveTab('recipients'); onClose(); }
     },
     {
-      id: 'nav-release',
+      id: 'nav-groups',
       category: 'Navigation',
-      title: 'Encrypted Releases',
-      subtitle: 'Multi-recipient hybrid envelope encapsulation and release package generation',
-      icon: FileText,
-      perform: () => { setActiveTab('release'); onClose(); }
+      title: 'Security Groups',
+      subtitle: 'Targeting groups with zero shared keys',
+      icon: Network,
+      perform: () => { setActiveTab('groups'); onClose(); }
     },
     {
-      id: 'nav-leak',
+      id: 'nav-evidence',
       category: 'Navigation',
-      title: 'Forensic Attribution Workstation',
-      subtitle: 'Multi-channel evidence fusion, Tardos matrix scoring, and fail-closed verdict',
-      icon: ShieldAlert,
-      perform: () => { setActiveTab('leak'); onClose(); }
+      title: 'Cryptographic Evidence',
+      subtitle: 'Multi-channel evidence repository and LLR proofs',
+      icon: FileCheck,
+      perform: () => { setActiveTab('evidence'); onClose(); }
     },
     {
-      id: 'nav-attack',
+      id: 'nav-provenance',
       category: 'Navigation',
-      title: 'Attack Laboratory',
-      subtitle: 'Adversarial degradation benchmarks, print-camera recapture, and robustness proofs',
-      icon: Zap,
-      perform: () => { setActiveTab('attack_lab'); onClose(); }
+      title: 'Custody & Provenance',
+      subtitle: 'Lineage DAG from document genesis to leak attribution',
+      icon: GitFork,
+      perform: () => { setActiveTab('provenance'); onClose(); }
     },
     {
       id: 'nav-ledger',
       category: 'Navigation',
-      title: 'Audit Ledger & Hash-Chain',
-      subtitle: 'Immutable cryptographic provenance events, block linkage, and tamper detection',
+      title: 'Audit Ledger',
+      subtitle: 'Immutable cryptographic hash-chain and block explorer',
       icon: Database,
       perform: () => { setActiveTab('ledger'); onClose(); }
     },
     {
-      id: 'nav-tardos',
+      id: 'nav-security-testing',
       category: 'Navigation',
-      title: 'Tardos Codeword Matrix',
-      subtitle: 'Mathematical fingerprint distribution, collusion resistance, and symmetric bounds',
-      icon: Cpu,
-      perform: () => { setActiveTab('tardos'); onClose(); }
+      title: 'Security Testing',
+      subtitle: 'Adversarial degradation benchmarks and robustness suite',
+      icon: ShieldCheck,
+      perform: () => { setActiveTab('security_testing'); onClose(); }
     },
     {
-      id: 'nav-decrypt',
+      id: 'nav-health',
       category: 'Navigation',
-      title: 'Client Decrypt & Sign',
-      subtitle: 'Simulate recipient-side ML-KEM decapsulation and non-repudiation signing',
-      icon: Unlock,
-      perform: () => { setActiveTab('decrypt'); onClose(); }
+      title: 'System Health',
+      subtitle: 'Cryptographic runtime health and component diagnostics',
+      icon: Server,
+      perform: () => { setActiveTab('health'); onClose(); }
     },
 
-    // Scenarios
+    // Forensic Scenarios
     {
       id: 'scen-clean-bob',
-      category: 'Scenarios',
-      title: 'Run: Clean Bob Leak (Direct Unaltered Leak)',
-      subtitle: 'Evaluates direct leak with zero channel distortion; expects ATTRIBUTED to Bob',
-      icon: ShieldAlert,
+      category: 'Forensic Scenarios',
+      title: 'Evaluate Clean Digital Leak (Bob Martinez)',
+      subtitle: 'Benchmark scenario with verified spatial marker and ML-DSA signature',
+      icon: Play,
       perform: () => { onQuickScenario('clean_bob'); onClose(); }
     },
     {
-      id: 'scen-camera-bob',
-      category: 'Scenarios',
-      title: 'Run: Print-Camera Recapture Leak (Bob)',
-      subtitle: 'Physical recapture with perspective tilt and illumination noise; evaluates ArUco sync',
-      icon: ShieldAlert,
-      perform: () => { onQuickScenario('print_scan_camera'); onClose(); }
+      id: 'scen-recapture',
+      category: 'Forensic Scenarios',
+      title: 'Evaluate Optical Print-Camera Recapture',
+      subtitle: 'Simulates geometric warp, lens distortion, and RANSAC rectification',
+      icon: Play,
+      perform: () => { onQuickScenario('recapture_camera'); onClose(); }
     },
     {
-      id: 'scen-forged-hmac',
-      category: 'Scenarios',
-      title: 'Run: Forged Metadata Attack (Tampered Header)',
-      subtitle: 'Evaluates adversarial signature forgery; expects fail-closed signature rejection',
-      icon: AlertTriangle,
-      perform: () => { onQuickScenario('forged_hmac'); onClose(); }
-    },
-    {
-      id: 'scen-framed-identity',
-      category: 'Scenarios',
-      title: 'Run: Framed Identity Attack (Alice Claimed, Bob Embedded)',
-      subtitle: 'Transplanted envelope header claiming Alice; forensic fusion resolves to true source',
-      icon: AlertTriangle,
-      perform: () => { onQuickScenario('framed_identity'); onClose(); }
-    },
-    {
-      id: 'scen-conflict',
-      category: 'Scenarios',
-      title: 'Run: Collusion / Channel Conflict (Bob + Charlie)',
-      subtitle: 'Two recipients collude; Tardos and carrier signals conflict, triggering CONFLICT state',
-      icon: AlertTriangle,
-      perform: () => { onQuickScenario('evidence_conflict_bob_charlie'); onClose(); }
-    },
-    {
-      id: 'scen-review',
-      category: 'Scenarios',
-      title: 'Run: Severe Distortion Anomaly (Review Required)',
-      subtitle: 'Heavy blur and cropping; confidence drops below threshold, triggering REVIEW_REQUIRED',
-      icon: AlertTriangle,
-      perform: () => { onQuickScenario('review_required_anomaly'); onClose(); }
+      id: 'scen-tardos-collusion',
+      category: 'Forensic Scenarios',
+      title: 'Evaluate Tardos 2-Party Collusion Attack',
+      subtitle: '2-colluder coalition attack bounded by Tardos arcsine bias cutoff',
+      icon: Play,
+      perform: () => { onQuickScenario('tardos_collusion_2party'); onClose(); }
     },
 
-    // Actions
+    // System Actions
     {
-      id: 'act-walkthrough',
-      category: 'Actions',
-      title: 'Start Interactive Judge Walkthrough',
-      subtitle: 'Step-by-step guided evaluation tour through all cryptographic and forensic phases',
-      icon: PlayCircle,
-      perform: () => { onOpenWalkthrough(); onClose(); }
+      id: 'act-export-dossier',
+      category: 'System Actions',
+      title: 'Export Forensic Evidence Dossier',
+      subtitle: 'Generate verifiable technical report with ML-DSA proofs and JSON export',
+      icon: FileSignature,
+      perform: () => { if (onExportReport) onExportReport(); onClose(); }
     },
     {
-      id: 'act-tamper',
-      category: 'Actions',
-      title: 'Simulate Ledger Tamper (Block #1 Invalidation)',
-      subtitle: 'Corrupts payload in block #1 to demonstrate real cryptographic hash-chain failure',
-      icon: AlertTriangle,
-      perform: () => { onSimulateTamper(); setActiveTab('ledger'); onClose(); }
+      id: 'act-tamper-test',
+      category: 'System Actions',
+      title: 'Simulate Ledger Block Tampering',
+      subtitle: 'Inject intentional hash mismatch into block #1 to test fail-closed defense',
+      icon: ShieldAlert,
+      perform: () => { onSimulateTamper(); onClose(); }
     },
     {
       id: 'act-toggle-offline',
-      category: 'Actions',
-      title: isOnline ? 'Switch to Offline Simulation Mode' : 'Connect to Live Backend (:8000)',
-      subtitle: 'Toggle between live FastAPI backend and standalone browser demo simulator',
-      icon: isOnline ? WifiOff : Wifi,
+      category: 'System Actions',
+      title: forceOffline ? 'Connect to Live API Gateway' : 'Switch to Standalone Offline Simulator',
+      subtitle: 'Toggle between live Python backend and client-side simulator',
+      icon: forceOffline ? Wifi : WifiOff,
       perform: () => { setForceOffline(!forceOffline); onClose(); }
     },
     {
-      id: 'act-reset',
-      category: 'Actions',
-      title: 'Reset Demo State to Clean Baseline',
-      subtitle: 'Restores initial documents, enrolled recipients, release packages, and verified ledger',
+      id: 'act-reset-demo',
+      category: 'System Actions',
+      title: 'Reset Demo State & Ledger',
+      subtitle: 'Restore clean baseline state across all cryptographic subsystems',
       icon: RotateCcw,
       perform: () => { onResetDemo(); onClose(); }
     }
   ];
 
-  if (onExportReport) {
-    commands.push({
-      id: 'act-export',
-      category: 'Actions',
-      title: 'Export Forensic Evidence Package',
-      subtitle: 'Generate formatted cryptographic audit report with proof hashes and verdicts',
-      icon: FileCheck,
-      perform: () => { onExportReport(); onClose(); }
-    });
-  }
-
-  const filtered = commands.filter(cmd => {
-    if (!query.trim()) return true;
-    const q = query.toLowerCase();
-    return (
-      cmd.title.toLowerCase().includes(q) ||
-      (cmd.subtitle && cmd.subtitle.toLowerCase().includes(q)) ||
-      cmd.category.toLowerCase().includes(q)
-    );
-  });
-
-  useEffect(() => {
-    setSelectedIndex(0);
-  }, [query]);
+  const filtered = commands.filter(cmd => 
+    cmd.title.toLowerCase().includes(query.toLowerCase()) ||
+    cmd.category.toLowerCase().includes(query.toLowerCase()) ||
+    (cmd.subtitle && cmd.subtitle.toLowerCase().includes(query.toLowerCase()))
+  );
 
   useEffect(() => {
     if (isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 50);
-    } else {
       setQuery('');
+      setSelectedIndex(0);
+      setTimeout(() => inputRef.current?.focus(), 50);
     }
   }, [isOpen]);
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-        e.preventDefault();
-        if (isOpen) onClose();
-        else {
-          // Open palette
-          (window as any).__openCommandPalette?.();
-        }
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setSelectedIndex(prev => (prev + 1) % (filtered.length || 1));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setSelectedIndex(prev => (prev - 1 + (filtered.length || 1)) % (filtered.length || 1));
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (filtered[selectedIndex]) {
+        filtered[selectedIndex].perform();
       }
-
-      if (!isOpen) return;
-
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        onClose();
-      } else if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        setSelectedIndex(prev => (prev + 1 < filtered.length ? prev + 1 : 0));
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        setSelectedIndex(prev => (prev - 1 >= 0 ? prev - 1 : filtered.length - 1));
-      } else if (e.key === 'Enter') {
-        e.preventDefault();
-        if (filtered[selectedIndex]) {
-          filtered[selectedIndex].perform();
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, filtered, selectedIndex, onClose, forceOffline, isOnline]);
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      onClose();
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -284,7 +261,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.12 }}
+          transition={{ duration: 0.15 }}
           style={{
             position: 'fixed',
             inset: 0,
@@ -292,21 +269,24 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             display: 'flex',
             alignItems: 'flex-start',
             justifyContent: 'center',
-            paddingTop: '10vh',
-            backgroundColor: 'rgba(0, 0, 0, 0.55)',
-            backdropFilter: 'blur(4px)'
+            paddingTop: '12vh',
+            backgroundColor: 'rgba(11, 16, 21, 0.7)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)'
           }}
           onClick={onClose}
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.97, y: -8 }}
+            initial={{ opacity: 0, scale: 0.98, y: -6 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.97, y: -8 }}
-            transition={{ duration: 0.14, ease: 'easeOut' }}
+            exit={{ opacity: 0, scale: 0.98, y: -6 }}
+            transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
             style={{
-              width: '640px',
-              maxWidth: '92vw',
-              backgroundColor: 'var(--surface-elevated)',
+              width: '100%',
+              maxWidth: '600px',
+              backgroundColor: 'var(--glass-surface-elevated)',
+              backdropFilter: 'var(--glass-blur-md)',
+              WebkitBackdropFilter: 'var(--glass-blur-md)',
               border: '1px solid var(--border-strong)',
               borderRadius: 'var(--radius-lg)',
               boxShadow: 'var(--shadow-lg)',
@@ -315,177 +295,165 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
               flexDirection: 'column'
             }}
             onClick={e => e.stopPropagation()}
+            onKeyDown={handleKeyDown}
           >
             {/* Search Input Bar */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 'var(--space-3)',
-            padding: 'var(--space-4) var(--space-5)',
-            borderBottom: '1px solid var(--border)',
-            backgroundColor: 'var(--surface)'
-          }}
-        >
-          <Search size={18} style={{ color: 'var(--text-tertiary)', flexShrink: 0 }} />
-          <input
-            ref={inputRef}
-            type="text"
-            placeholder="Search commands, views, forensic scenarios, actions... (↑↓ to select, Enter to run)"
-            value={query}
-            onChange={e => setQuery(e.target.value)}
-            style={{
-              flex: 1,
-              background: 'transparent',
-              border: 'none',
-              outline: 'none',
-              color: 'var(--text)',
-              fontSize: 'var(--text-md)',
-              fontFamily: 'inherit'
-            }}
-          />
-          <kbd
-            style={{
-              padding: '2px 6px',
-              fontSize: '11px',
-              backgroundColor: 'var(--surface-hover)',
-              border: '1px solid var(--border)',
-              borderRadius: 'var(--radius-xs)',
-              color: 'var(--text-tertiary)'
-            }}
-          >
-            ESC
-          </kbd>
-        </div>
-
-        {/* Results List */}
-        <div
-          style={{
-            maxHeight: '400px',
-            overflowY: 'auto',
-            padding: 'var(--space-2)'
-          }}
-        >
-          {filtered.length === 0 ? (
             <div
               style={{
-                padding: 'var(--space-8)',
-                textAlign: 'center',
-                color: 'var(--text-tertiary)',
-                fontSize: 'var(--text-base)'
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                padding: '14px 18px',
+                borderBottom: '1px solid var(--border)'
               }}
             >
-              No matching commands or actions found.
+              <Search size={16} style={{ color: 'var(--primary-text)' }} />
+              <input
+                ref={inputRef}
+                value={query}
+                onChange={e => {
+                  setQuery(e.target.value);
+                  setSelectedIndex(0);
+                }}
+                placeholder="Type a command or search documents, evidence, ledger..."
+                style={{
+                  flex: 1,
+                  background: 'transparent',
+                  border: 'none',
+                  outline: 'none',
+                  color: 'var(--text)',
+                  fontSize: 'var(--text-base)',
+                  fontFamily: 'inherit'
+                }}
+              />
+              <kbd
+                style={{
+                  fontSize: '10.5px',
+                  fontFamily: 'var(--font-mono)',
+                  padding: '2px 6px',
+                  borderRadius: 'var(--radius-xs)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid var(--border-subtle)',
+                  color: 'var(--text-tertiary)'
+                }}
+              >
+                ESC
+              </kbd>
             </div>
-          ) : (
-            filtered.map((cmd, idx) => {
-              const Icon = cmd.icon;
-              const isSelected = idx === selectedIndex;
-              return (
-                <div
-                  key={cmd.id}
-                  onClick={() => cmd.perform()}
-                  onMouseEnter={() => setSelectedIndex(idx)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 'var(--space-3)',
-                    padding: 'var(--space-3) var(--space-4)',
-                    borderRadius: 'var(--radius-md)',
-                    backgroundColor: isSelected ? 'var(--primary-subtle)' : 'transparent',
-                    border: isSelected ? '1px solid var(--primary-border)' : '1px solid transparent',
-                    cursor: 'pointer',
-                    transition: 'background var(--transition-fast)'
-                  }}
-                >
-                  <div
-                    style={{
-                      width: '32px',
-                      height: '32px',
-                      borderRadius: 'var(--radius-sm)',
-                      backgroundColor: isSelected ? 'var(--primary)' : 'var(--surface-hover)',
-                      color: isSelected ? '#ffffff' : 'var(--text-secondary)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexShrink: 0
-                    }}
-                  >
-                    <Icon size={16} />
-                  </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span
-                        style={{
-                          fontSize: 'var(--text-base)',
-                          fontWeight: 600,
-                          color: isSelected ? 'var(--primary-text)' : 'var(--text)',
-                          whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis'
-                        }}
-                      >
-                        {cmd.title}
-                      </span>
+
+            {/* Results List */}
+            <div
+              style={{
+                maxHeight: '380px',
+                overflowY: 'auto',
+                padding: '8px'
+              }}
+            >
+              {filtered.length === 0 ? (
+                <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text-tertiary)', fontSize: 'var(--text-sm)' }}>
+                  No matching commands or navigation routes.
+                </div>
+              ) : (
+                filtered.map((item, idx) => {
+                  const Icon = item.icon;
+                  const isSelected = idx === selectedIndex;
+
+                  return (
+                    <div
+                      key={item.id}
+                      onClick={() => item.perform()}
+                      onMouseEnter={() => setSelectedIndex(idx)}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '9px 12px',
+                        borderRadius: 'var(--radius-sm)',
+                        backgroundColor: isSelected ? 'var(--primary-subtle)' : 'transparent',
+                        border: isSelected ? '1px solid var(--primary-border)' : '1px solid transparent',
+                        cursor: 'pointer',
+                        transition: 'background-color var(--transition-fast)'
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <div
+                          style={{
+                            width: '28px',
+                            height: '28px',
+                            borderRadius: 'var(--radius-xs)',
+                            backgroundColor: isSelected ? 'rgba(76, 154, 154, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: isSelected ? 'var(--primary-text)' : 'var(--text-secondary)'
+                          }}
+                        >
+                          <Icon size={15} />
+                        </div>
+                        <div>
+                          <div
+                            style={{
+                              fontSize: 'var(--text-sm)',
+                              fontWeight: isSelected ? 600 : 500,
+                              color: isSelected ? 'var(--text)' : 'var(--text-secondary)'
+                            }}
+                          >
+                            {item.title}
+                          </div>
+                          {item.subtitle && (
+                            <div
+                              style={{
+                                fontSize: '11px',
+                                color: 'var(--text-tertiary)',
+                                marginTop: '1px'
+                              }}
+                            >
+                              {item.subtitle}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
                       <span
                         style={{
                           fontSize: '10.5px',
-                          padding: '1px 6px',
-                          borderRadius: 'var(--radius-full)',
-                          backgroundColor: 'var(--surface-hover)',
                           color: 'var(--text-tertiary)',
-                          border: '1px solid var(--border)'
+                          padding: '2px 6px',
+                          borderRadius: 'var(--radius-xs)',
+                          backgroundColor: 'rgba(255, 255, 255, 0.03)'
                         }}
                       >
-                        {cmd.category}
+                        {item.category}
                       </span>
                     </div>
-                    {cmd.subtitle && (
-                      <div
-                        style={{
-                          fontSize: 'var(--text-xs)',
-                          color: 'var(--text-secondary)',
-                          whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          marginTop: '2px'
-                        }}
-                      >
-                        {cmd.subtitle}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })
-          )}
-        </div>
+                  );
+                })
+              )}
+            </div>
 
-        {/* Footer shortcuts */}
-        <div
-          style={{
-            padding: 'var(--space-2) var(--space-4)',
-            borderTop: '1px solid var(--border)',
-            backgroundColor: 'var(--surface)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            fontSize: 'var(--text-xs)',
-            color: 'var(--text-tertiary)'
-          }}
-        >
-          <div style={{ display: 'flex', gap: '12px' }}>
-            <span><kbd>↑</kbd> <kbd>↓</kbd> Navigate</span>
-            <span><kbd>↵</kbd> Execute</span>
-            <span><kbd>ESC</kbd> Close</span>
-          </div>
-          <div>
-            <span>AegisTrace Workstation</span>
-          </div>
-        </div>
-      </motion.div>
-    </motion.div>
-  )}
-</AnimatePresence>
+            {/* Footer Navigation Hints */}
+            <div
+              style={{
+                padding: '8px 16px',
+                borderTop: '1px solid var(--border-subtle)',
+                backgroundColor: 'rgba(255, 255, 255, 0.01)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                fontSize: '11px',
+                color: 'var(--text-tertiary)'
+              }}
+            >
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <span>↑↓ Navigate</span>
+                <span>↵ Select</span>
+                <span>ESC Close</span>
+              </div>
+              <span>NIST FIPS 203/204</span>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };

@@ -1,0 +1,50 @@
+{
+  "1000_events": {
+    "ingest_throughput_ops_sec": 8254.52,
+    "ingest_duration_ms": 121.15,
+    "query_latency_us": {
+      "min": 1.8,
+      "max": 28.1,
+      "mean": 2.617,
+      "p50": 2.3,
+      "p95": 3.5,
+      "p99": 5.8,
+      "stddev": 1.441
+    },
+    "incremental_verification_ms": 0.041,
+    "checkpoints_count": 10,
+    "classification": "MEASURED"
+  },
+  "10000_events": {
+    "ingest_throughput_ops_sec": 7689.44,
+    "ingest_duration_ms": 1300.48,
+    "query_latency_us": {
+      "min": 2.1,
+      "max": 46.9,
+      "mean": 3.928,
+      "p50": 3.7,
+      "p95": 4.6,
+      "p99": 6.505,
+      "stddev": 2.962
+    },
+    "incremental_verification_ms": 0.025,
+    "checkpoints_count": 10,
+    "classification": "MEASURED"
+  },
+  "100000_events": {
+    "ingest_throughput_ops_sec": 7598.81,
+    "ingest_duration_ms": 13159.95,
+    "query_latency_us": {
+      "min": 1.9,
+      "max": 27.3,
+      "mean": 3.049,
+      "p50": 3.2,
+      "p95": 4.0,
+      "p99": 4.801,
+      "stddev": 1.326
+    },
+    "incremental_verification_ms": 0.014,
+    "checkpoints_count": 10,
+    "classification": "MEASURED"
+  }
+}

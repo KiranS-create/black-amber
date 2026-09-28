@@ -3,6 +3,8 @@ from enum import Enum
 from typing import List, Optional, Dict, Any, Set
 from pydantic import BaseModel, Field
 
+from core.lineage.models import ForensicAttributionLevel, ForensicBoundaryState
+
 class AttributionState(str, Enum):
     """
     Fail-closed attribution decision states.
@@ -13,6 +15,8 @@ class AttributionState(str, Enum):
     INSUFFICIENT_EVIDENCE = "INSUFFICIENT_EVIDENCE"
     CONFLICT = "CONFLICT"
     REVIEW_REQUIRED = "REVIEW_REQUIRED"
+    ABSTAINED = "ABSTAINED"
+    FAILED = "FAILED"
 
 class EvidenceFamily(str, Enum):
     """Distinct families of forensic evidence."""
@@ -23,6 +27,9 @@ class EvidenceFamily(str, Enum):
     CRYPTOGRAPHIC_INTEGRITY = "CRYPTOGRAPHIC_INTEGRITY"
     DOCUMENT_STRUCTURE = "DOCUMENT_STRUCTURE"
     ATTACK_CONTEXT = "ATTACK_CONTEXT"
+    COPY_LINEAGE = "COPY_LINEAGE"
+    EXTERNAL_TELEMETRY = "EXTERNAL_TELEMETRY"
+    DEVICE_ATTESTATION = "DEVICE_ATTESTATION"
 
 class DependencyType(str, Enum):
     """
@@ -50,24 +57,76 @@ class EvidenceSource(str, Enum):
     TARDOS_CODEWORD = "TARDOS_CODEWORD"
     WATERMARK_SPATIAL = "WATERMARK_SPATIAL"
     WATERMARK_FREQUENCY = "WATERMARK_FREQUENCY"
+    WATERMARK_PAYLOAD = "WATERMARK_PAYLOAD"
+    PROVENANCE_SIGNATURE = "PROVENANCE_SIGNATURE"
     METADATA_PROVENANCE = "METADATA_PROVENANCE"
     ATTACK_DETECTION = "ATTACK_DETECTION"
+    COPY_LINEAGE = "COPY_LINEAGE"
 
 class TargetBinding(BaseModel):
-    """Cryptographic binding tuple isolating document, release, and artifact."""
+    """
+    Canonical Artifact Identity and Cryptographic Target Binding.
+    Unifies document, release, recipient, key epoch, and artifact content hashes
+    across all forensic and distribution pipeline stages.
+    """
     document_id: Optional[str] = None
     release_id: Optional[str] = None
+    recipient_id: Optional[str] = None
+    original_document_hash: Optional[str] = None
+    release_artifact_hash: Optional[str] = None
+    traceable_artifact_hash: Optional[str] = None
+    leak_artifact_hash: Optional[str] = None
     artifact_hash: Optional[str] = None
+    protocol_version: str = "1.0"
+    traceability_key_id: Optional[str] = None
 
-    def matches(self, other: "TargetBinding") -> bool:
+    def get_effective_artifact_hash(self) -> Optional[str]:
+        return self.artifact_hash or self.leak_artifact_hash or self.traceable_artifact_hash or self.release_artifact_hash
+
+    def matches(self, other: "TargetBinding", strict: bool = False) -> bool:
         """Check if bindings match where both are defined."""
         if self.document_id and other.document_id and self.document_id != other.document_id:
             return False
         if self.release_id and other.release_id and self.release_id != other.release_id:
             return False
-        if self.artifact_hash and other.artifact_hash and self.artifact_hash != other.artifact_hash:
+        if self.recipient_id and other.recipient_id and self.recipient_id != other.recipient_id:
             return False
+
+        h1 = self.get_effective_artifact_hash()
+        h2 = other.get_effective_artifact_hash()
+        if h1 and h2 and h1 != h2:
+            return False
+
+        if self.original_document_hash and other.original_document_hash and self.original_document_hash != other.original_document_hash:
+            return False
+
+        if self.protocol_version and other.protocol_version and self.protocol_version != other.protocol_version:
+            return False
+
+        if self.traceability_key_id and other.traceability_key_id and self.traceability_key_id != other.traceability_key_id:
+            return False
+
+        if strict:
+            if bool(self.document_id) != bool(other.document_id):
+                return False
+            if bool(self.release_id) != bool(other.release_id):
+                return False
         return True
+
+    def canonical_binding_string(self) -> str:
+        """Deterministic canonical representation for cryptographic/hash binding."""
+        return (
+            f"BINDING:v{self.protocol_version}:"
+            f"doc={self.document_id or 'NONE'}:"
+            f"rel={self.release_id or 'NONE'}:"
+            f"rec={self.recipient_id or 'NONE'}:"
+            f"orig_hash={self.original_document_hash or 'NONE'}:"
+            f"art_hash={self.get_effective_artifact_hash() or 'NONE'}:"
+            f"key_id={self.traceability_key_id or 'NONE'}"
+        )
+
+# Canonical Alias
+CanonicalArtifactIdentity = TargetBinding
 
 class EvidenceObservation(BaseModel):
     """
@@ -172,12 +231,54 @@ class AttackContextObservation(EvidenceObservation):
     crop_ratio: Optional[float] = None
     noise_level: Optional[float] = None
     detected_collusion_size: Optional[int] = None
+ 
+class LineageObservation(EvidenceObservation):
+    family: EvidenceFamily = Field(default=EvidenceFamily.COPY_LINEAGE)
+    copy_id: Optional[str] = None
+    parent_copy_id: Optional[str] = None
+    lineage_depth: int = 0
+    attribution_level: ForensicAttributionLevel = ForensicAttributionLevel.LEVEL_1_DOCUMENT_DETECTED
+    boundary_state: ForensicBoundaryState = ForensicBoundaryState.LINEAGE_CONTINUES
+    last_known_holder: Optional[str] = None
+    is_lineage_valid: bool = False
+    break_reason: Optional[str] = None
+    session_id: Optional[str] = None
+    telemetry_corroborated: bool = False
+    proof_details: Dict[str, Any] = Field(default_factory=dict)
+
+class ExternalTelemetryObservation(EvidenceObservation):
+    family: EvidenceFamily = Field(default=EvidenceFamily.EXTERNAL_TELEMETRY)
+    primary_state: str = "INSUFFICIENT_EVIDENCE"
+    last_known_controlled_holder: Optional[str] = None
+    downstream_holder_account: Optional[str] = None
+    downstream_device_id: Optional[str] = None
+    publication_source: Optional[str] = None
+    account_compromised_or_shared: bool = False
+    is_human_corroborated: bool = False
+    observed_events_count: int = 0
+    custody_gaps_count: int = 0
+    boundary_statement: str = ""
+
+class DeviceAttestationObservation(EvidenceObservation):
+    family: EvidenceFamily = Field(default=EvidenceFamily.DEVICE_ATTESTATION)
+    device_id: str
+    device_key_id: Optional[str] = None
+    attestation_state: str = "DEVICE_UNATTESTED"
+    hardware_class: str = "SOFTWARE_FALLBACK"
+    platform_type: str = "SOFTWARE_LOCAL"
+    organization_id: Optional[str] = None
+    is_hardware_attested: bool = False
+    is_device_revoked: bool = False
+    boundary_statement: str = ""
+
+# Standard alias
+TelemetryObservation = ExternalTelemetryObservation
 
 class EvidenceBundle(BaseModel):
     """
     Container of all gathered forensic evidence across all channels for a single inquiry.
     """
-    bundle_id: str
+    bundle_id: str = Field(default_factory=lambda: f"bnd_{__import__('os').urandom(6).hex()}")
     target_binding: TargetBinding = Field(default_factory=TargetBinding)
     observations: List[EvidenceObservation] = Field(default_factory=list)
     attack_context: Optional[AttackContextObservation] = None

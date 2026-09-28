@@ -1,0 +1,66 @@
+# ==============================================================================
+# AegisTrace Hardened Multi-Stage Production Container
+# Defense-Grade, Zero-Trust, Air-Gap Ready Container Image
+# ==============================================================================
+
+# Stage 1: Build & Wheel Verification Stage
+FROM python:3.9-slim-bookworm AS builder
+
+WORKDIR /build
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    libc6-dev \
+    libffi-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY deployment/requirements-hashes.txt /build/
+RUN pip install --no-cache-dir --require-hashes -r requirements-hashes.txt --prefix=/install
+
+# ==============================================================================
+# Stage 2: Final Minimal Distroless-Style Runtime Image
+# ==============================================================================
+FROM python:3.9-slim-bookworm AS runtime
+
+WORKDIR /app
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    AEGISTRACE_AIRGAP_MODE=1 \
+    SIH26237_ENV=production \
+    PYTHONPATH=/app
+
+# Create dedicated non-privileged user and group
+RUN groupadd -g 10001 aegis && \
+    useradd -u 10001 -g aegis -s /sbin/nologin -M aegisuser
+
+# Copy installed dependencies from builder
+COPY --from=builder /install /usr/local
+
+# Copy application source code
+COPY --chown=10001:10001 core/ /app/core/
+COPY --chown=10001:10001 apps/api/ /app/apps/api/
+COPY --chown=10001:10001 security/ /app/security/
+COPY --chown=10001:10001 deployment/ /app/deployment/
+COPY --chown=10001:10001 scripts/ /app/scripts/
+COPY --chown=10001:10001 artifacts/ /app/artifacts/
+COPY --chown=10001:10001 requirements.txt /app/
+
+# Create runtime scratch directories for local artifact cache
+RUN mkdir -p /app/data /tmp && \
+    chown -R 10001:10001 /app/data /tmp && \
+    chmod 700 /app/data /tmp
+
+USER 10001:10001
+
+EXPOSE 8000
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)" || exit 1
+
+ENTRYPOINT ["python", "-m", "uvicorn", "apps.api.main:app", "--host", "0.0.0.0", "--port", "8000"]

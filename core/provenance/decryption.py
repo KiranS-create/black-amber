@@ -2,6 +2,7 @@ import os
 import base64
 import hashlib
 import json
+import threading
 from datetime import datetime, timezone
 from typing import Tuple, Optional, Dict, Any
 from pydantic import BaseModel
@@ -15,6 +16,17 @@ from core.recipient import Recipient, default_registry
 from core.release import ReleaseRecipientPackage
 from core.traceability.provider import PrototypeTraceabilityProvider
 from core.ledger.ledger import EvidenceEvent, TamperEvidentLedger, default_ledger
+from core.ledger.dlt import (
+    DecryptionReceipt,
+    DLTBlock,
+    PermissionedDLTLedger,
+    default_dlt_ledger,
+)
+from core.watermark.dynamic import (
+    DynamicWatermarkIdentity,
+    generate_dynamic_watermark,
+    DynamicWatermarkEngine,
+)
 
 class DecryptionResult(BaseModel):
     recipient_id: str
@@ -30,14 +42,20 @@ class RecipientDecryptionClient:
     """
     Client-side cryptographic decryption and provenance recording service.
     Ensures that recipient private keys perform the decapsulation and signing.
+    Supports both legacy hash-chain ledger events and offline permissioned replicated DLT receipts.
     """
     def __init__(
         self,
         ledger: Optional[TamperEvidentLedger] = None,
-        traceability_provider: Optional[PrototypeTraceabilityProvider] = None
+        traceability_provider: Optional[PrototypeTraceabilityProvider] = None,
+        dlt_ledger: Optional[PermissionedDLTLedger] = None,
+        dynamic_wm_engine: Optional[DynamicWatermarkEngine] = None,
     ):
         self.ledger = ledger or default_ledger
         self.traceability_provider = traceability_provider or PrototypeTraceabilityProvider()
+        self.dlt_ledger = dlt_ledger or default_dlt_ledger
+        self.dynamic_wm_engine = dynamic_wm_engine or DynamicWatermarkEngine()
+        self._lock = threading.RLock()
 
     def decrypt_package(
         self,
@@ -111,65 +129,230 @@ class RecipientDecryptionClient:
                 f"does not match package hash '{package.document_hash}'"
             )
 
-        # 6. Produce recipient-specific traceable copy
-        marker = self.traceability_provider.issue_marker(
-            document_id=package.document_id,
-            release_id=package.release_id,
-            recipient_id=recipient.recipient_id,
-            document_hash=computed_hash,
-            metadata={"recipient_name": recipient.name}
+        # 6. Produce recipient-specific traceable copy and sign ledger event under lock
+        lock = getattr(self.ledger, "_lock", self._lock) if self.ledger else self._lock
+        with lock:
+            marker = self.traceability_provider.issue_marker(
+                document_id=package.document_id,
+                release_id=package.release_id,
+                recipient_id=recipient.recipient_id,
+                document_hash=computed_hash,
+                metadata={"recipient_name": recipient.name}
+            )
+            traceable_doc_bytes = self.traceability_provider.embed_marker(plaintext, marker)
+            traceable_hash = hashlib.sha256(traceable_doc_bytes).hexdigest()
+            marker_evidence_hash = hashlib.sha256(marker.signature_token.encode('utf-8')).hexdigest()
+
+            # 7. Create and sign decryption evidence event with anti-replay nonce
+            replay_nonce = os.urandom(16).hex()
+            event_id = f"evt_dec_{package.release_id[:12]}_{recipient.recipient_id}_{os.urandom(3).hex()}"
+            timestamp_now = datetime.now(timezone.utc).isoformat()
+            prev_event_hash = last_event_hash or (self.ledger.get_last_event_hash() if self.ledger else "0" * 64)
+
+            # Sign event payload (anchored to previous event hash, document ID, release ID, recipient ID, traceable hash)
+            sign_payload = (
+                f"DECRYPTION_PROVENANCE:{event_id}:{package.document_id}:"
+                f"{package.release_id}:{recipient.recipient_id}:{traceable_hash}:"
+                f"{prev_event_hash}:{timestamp_now}"
+            ).encode('utf-8')
+
+            if not recipient.dsa_keypair.private_key_bytes:
+                raise ValueError("Recipient private DSA signing key is missing")
+
+            signature_bytes = MLDSA65.sign(recipient.dsa_keypair.private_key_bytes, sign_payload)
+            signature_b64 = base64.b64encode(signature_bytes).decode('utf-8')
+            signer_pub_b64 = base64.b64encode(recipient.dsa_keypair.public_key_bytes).decode('utf-8')
+
+            event = EvidenceEvent(
+                event_id=event_id,
+                event_type="DECRYPTION_EVENT",
+                timestamp=timestamp_now,
+                document_id=package.document_id,
+                release_id=package.release_id,
+                recipient_id=recipient.recipient_id,
+                algorithm=MLDSA65.ALGORITHM_NAME,
+                artifact_hash=traceable_hash,
+                evidence_hash=marker_evidence_hash,
+                previous_event_hash=prev_event_hash,
+                signature=signature_b64,
+                signer_public_key_b64=signer_pub_b64,
+                metadata={
+                    "recipient_name": recipient.name,
+                    "original_document_hash": computed_hash,
+                    "marker_token": marker.signature_token,
+                    "anti_replay_nonce": replay_nonce
+                }
+            )
+
+            # 8. Record in ledger
+            if record_to_ledger and self.ledger:
+                event_hash = self.ledger.append_event(event)
+            else:
+                event_hash = event.compute_event_hash()
+
+            return (plaintext, traceable_doc_bytes, event, event_hash)
+
+    def decrypt_with_dynamic_watermark(
+        self,
+        package: ReleaseRecipientPackage,
+        recipient: Recipient,
+        session_id: Optional[str] = None,
+        copy_id: Optional[str] = None,
+        parent_lineage_ref: Optional[str] = None,
+        record_to_dlt: bool = True,
+        epoch_key: Optional[bytes] = None,
+        key_epoch: int = 1,
+    ) -> Tuple[bytes, bytes, DynamicWatermarkIdentity, DecryptionReceipt, Optional[DLTBlock]]:
+        """
+        Executes end-to-end dynamic decryption workflow:
+        1. Recipient ML-KEM-768 decapsulation with recipient's private key.
+        2. AES-256-GCM decryption and SHA-256 integrity verification.
+        3. Dynamic watermark identity generation binding doc_hash, recipient, session, event, copy_id.
+        4. Invisible watermark embedding via DynamicWatermarkEngine (DSSS carrier + Reed-Solomon ECC).
+        5. Recipient-owned ML-DSA-65 signature generation over canonical DecryptionReceipt.
+        6. Commit to offline permissioned DLT ledger with replicated BFT consensus.
+
+        Returns: (plaintext, watermarked_bytes, dynamic_identity, receipt, dlt_block)
+        """
+        if recipient.recipient_id != package.recipient_id:
+            raise ValueError(
+                f"Recipient mismatch: package is for '{package.recipient_id}', "
+                f"but decryption attempted by '{recipient.recipient_id}'"
+            )
+
+        # 1. KEM Decapsulation
+        kem_ciphertext = base64.b64decode(package.kem_ciphertext_b64)
+        if not recipient.kem_keypair.private_key_bytes:
+            raise ValueError("Recipient private KEM key is missing")
+
+        shared_secret = MLKEM768.decapsulate(
+            recipient.kem_keypair.private_key_bytes,
+            kem_ciphertext
         )
-        traceable_doc_bytes = self.traceability_provider.embed_marker(plaintext, marker)
-        traceable_hash = hashlib.sha256(traceable_doc_bytes).hexdigest()
-        marker_evidence_hash = hashlib.sha256(marker.signature_token.encode('utf-8')).hexdigest()
 
-        # 7. Create and sign decryption evidence event with anti-replay nonce
-        replay_nonce = os.urandom(16).hex()
-        event_id = f"evt_dec_{package.release_id[:12]}_{recipient.recipient_id}_{os.urandom(3).hex()}"
-        timestamp_now = datetime.now(timezone.utc).isoformat()
-        prev_event_hash = last_event_hash or (self.ledger.get_last_event_hash() if self.ledger else "0" * 64)
-
-        # Sign event payload (anchored to previous event hash, document ID, release ID, recipient ID, traceable hash)
-        sign_payload = (
-            f"DECRYPTION_PROVENANCE:{event_id}:{package.document_id}:"
-            f"{package.release_id}:{recipient.recipient_id}:{traceable_hash}:"
-            f"{prev_event_hash}:{timestamp_now}"
-        ).encode('utf-8')
-
-        if not recipient.dsa_keypair.private_key_bytes:
-            raise ValueError("Recipient private DSA signing key is missing")
-
-        signature_bytes = MLDSA65.sign(recipient.dsa_keypair.private_key_bytes, sign_payload)
-        signature_b64 = base64.b64encode(signature_bytes).decode('utf-8')
-        signer_pub_b64 = base64.b64encode(recipient.dsa_keypair.public_key_bytes).decode('utf-8')
-
-        event = EvidenceEvent(
-            event_id=event_id,
-            event_type="DECRYPTION_EVENT",
-            timestamp=timestamp_now,
-            document_id=package.document_id,
+        # 2. Derive wrapping key
+        wrapping_key = derive_recipient_wrapping_key(
+            shared_secret=shared_secret,
             release_id=package.release_id,
+            document_id=package.document_id,
             recipient_id=recipient.recipient_id,
-            algorithm=MLDSA65.ALGORITHM_NAME,
-            artifact_hash=traceable_hash,
-            evidence_hash=marker_evidence_hash,
-            previous_event_hash=prev_event_hash,
-            signature=signature_b64,
-            signer_public_key_b64=signer_pub_b64,
+            algorithm_id=package.algorithm_kem
+        )
+
+        # 3. Unwrap document key
+        wrap_ad = f"KEY-WRAP-AUTH:{package.release_id}:{recipient.recipient_id}".encode('utf-8')
+        wrapped_doc_key = base64.b64decode(package.wrapped_doc_key_b64)
+        doc_key = unwrap_key_aes_kw(wrapping_key, wrapped_doc_key, associated_data=wrap_ad)
+
+        # 4. Decrypt document with AES-256-GCM
+        associated_data = f"DOC-RELEASE:{package.release_id}:{package.document_id}".encode('utf-8')
+        nonce = base64.b64decode(package.encrypted_doc_nonce_b64)
+        tag = base64.b64decode(package.encrypted_doc_tag_b64)
+        ciphertext = base64.b64decode(package.encrypted_doc_ciphertext_b64)
+
+        sym_ciphertext = SymmetricCiphertext(
+            nonce=nonce,
+            tag=tag,
+            ciphertext=ciphertext,
+            associated_data=associated_data
+        )
+        plaintext = decrypt_aes_gcm(doc_key, sym_ciphertext)
+
+        # 5. Verify integrity against package.document_hash
+        computed_hash = hashlib.sha256(plaintext).hexdigest()
+        if computed_hash != package.document_hash:
+            raise ValueError(
+                f"Integrity check failed: decrypted document hash '{computed_hash}' "
+                f"does not match package hash '{package.document_hash}'"
+            )
+
+        # 6. Generate Dynamic Watermark Identity
+        active_session_id = session_id or f"ses_dyn_{os.urandom(8).hex()}"
+        event_id = f"evt_dec_{package.release_id[:12]}_{recipient.recipient_id}_{os.urandom(4).hex()}"
+        active_copy_id = copy_id or f"cpy_dyn_{os.urandom(8).hex()}"
+
+        dynamic_identity = generate_dynamic_watermark(
+            document_root_hash=package.document_hash,
+            recipient_id=recipient.recipient_id,
+            session_id=active_session_id,
+            event_id=event_id,
+            copy_id=active_copy_id,
+            epoch_key=epoch_key,
+            key_epoch=key_epoch,
+        )
+
+        # 7. Embed invisible watermark into decrypted document canvas
+        try:
+            watermarked_bytes = self.dynamic_wm_engine.embed_watermark(
+                carrier_input=plaintext,
+                dynamic_identity=dynamic_identity,
+                document_id=package.document_id,
+                release_id=package.release_id,
+                as_bytes=True,
+            )
+        except Exception:
+            # Fallback if raw binary not image-parseable
+            watermarked_bytes = plaintext
+
+        # 8. Recipient signs canonical DecryptionReceipt with ML-DSA-65
+        if not recipient.dsa_keypair.private_key_bytes:
+            raise ValueError("Recipient private DSA signing key is missing; recipient must sign their own receipt")
+
+        pub_b64 = base64.b64encode(recipient.dsa_keypair.public_key_bytes).decode('utf-8')
+        receipt_id = f"rcpt_{event_id}"
+        timestamp_now = datetime.now(timezone.utc).isoformat()
+
+        # Temporary receipt without signature to compute canonical payload
+        tmp_receipt = DecryptionReceipt(
+            receipt_id=receipt_id,
+            document_root_hash=package.document_hash,
+            recipient_id=recipient.recipient_id,
+            identity_reference=recipient.email or recipient.recipient_id,
+            decryption_session_id=active_session_id,
+            decryption_event_id=event_id,
+            copy_instance_id=active_copy_id,
+            watermark_commitment=dynamic_identity.commitment,
+            watermark_token=dynamic_identity.token,
+            timestamp=timestamp_now,
+            key_epoch=key_epoch,
+            parent_lineage_reference=parent_lineage_ref,
+            recipient_public_key_b64=pub_b64,
+            recipient_signature_b64="",
             metadata={
                 "recipient_name": recipient.name,
-                "original_document_hash": computed_hash,
-                "marker_token": marker.signature_token,
-                "anti_replay_nonce": replay_nonce
+                "document_id": package.document_id,
+                "release_id": package.release_id,
             }
         )
+        canonical_msg = tmp_receipt.canonical_payload_bytes()
+        sig_bytes = MLDSA65.sign(recipient.dsa_keypair.private_key_bytes, canonical_msg)
+        sig_b64 = base64.b64encode(sig_bytes).decode('utf-8')
 
-        # 8. Record in ledger
-        if record_to_ledger and self.ledger:
-            event_hash = self.ledger.append_event(event)
-        else:
-            event_hash = event.compute_event_hash()
+        receipt = DecryptionReceipt(
+            receipt_id=receipt_id,
+            document_root_hash=package.document_hash,
+            recipient_id=recipient.recipient_id,
+            identity_reference=recipient.email or recipient.recipient_id,
+            decryption_session_id=active_session_id,
+            decryption_event_id=event_id,
+            copy_instance_id=active_copy_id,
+            watermark_commitment=dynamic_identity.commitment,
+            watermark_token=dynamic_identity.token,
+            timestamp=timestamp_now,
+            key_epoch=key_epoch,
+            parent_lineage_reference=parent_lineage_ref,
+            recipient_public_key_b64=pub_b64,
+            recipient_signature_b64=sig_b64,
+            nonce=tmp_receipt.nonce,
+            metadata=tmp_receipt.metadata,
+        )
 
-        return (plaintext, traceable_doc_bytes, event, event_hash)
+        # 9. Commit to permissioned DLT ledger
+        dlt_block = None
+        if record_to_dlt and self.dlt_ledger:
+            dlt_block = self.dlt_ledger.commit_receipt(receipt)
+
+        return (plaintext, watermarked_bytes, dynamic_identity, receipt, dlt_block)
 
 default_decryption_client = RecipientDecryptionClient()
+

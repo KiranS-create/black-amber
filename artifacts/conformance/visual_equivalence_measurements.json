@@ -1,0 +1,61 @@
+{
+  "timestamp": "2026-09-27T15:24:45.534901+00:00",
+  "canvas_dimensions": "800x1000",
+  "carrier_configuration": {
+    "embedding_strength_alpha": 1.0,
+    "block_size": 20,
+    "chip_scale": 2
+  },
+  "against_clean_reference": {
+    "Alice": {
+      "ssim": 0.9951,
+      "psnr_db": 51.32,
+      "max_diff": 1.0,
+      "is_visually_equivalent": true
+    },
+    "Bob": {
+      "ssim": 0.9951,
+      "psnr_db": 51.32,
+      "max_diff": 1.0,
+      "is_visually_equivalent": true
+    },
+    "Charlie": {
+      "ssim": 0.9951,
+      "psnr_db": 51.32,
+      "max_diff": 1.0,
+      "is_visually_equivalent": true
+    }
+  },
+  "cross_recipient_equivalence": {
+    "Alice_vs_Bob": {
+      "ssim": 0.9925,
+      "psnr_db": 49.37,
+      "max_diff": 2.0,
+      "is_visually_equivalent": true
+    },
+    "Bob_vs_Charlie": {
+      "ssim": 0.9916,
+      "psnr_db": 48.89,
+      "max_diff": 2.0,
+      "is_visually_equivalent": true
+    },
+    "Charlie_vs_Alice": {
+      "ssim": 0.9921,
+      "psnr_db": 49.06,
+      "max_diff": 2.0,
+      "is_visually_equivalent": true
+    }
+  },
+  "text_and_layout_equality": {
+    "fiducial_anchor_alignment": "100% matched (4 ArUco markers)",
+    "text_pixel_preservation": "High-contrast text line contours unperturbed",
+    "perceptual_equivalence": "VISUALLY_EQUIVALENT"
+  },
+  "conformance_verdict": {
+    "min_ssim_measured": 0.9917,
+    "min_psnr_db_measured": 49.01,
+    "required_ssim_threshold": 0.98,
+    "required_psnr_threshold_db": 35.0,
+    "status": "PASS - VISUALLY IDENTICAL / FORENSICALLY DISTINCT"
+  }
+}

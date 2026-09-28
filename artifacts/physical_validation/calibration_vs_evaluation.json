@@ -1,0 +1,25 @@
+{
+  "generated_at": "2026-09-26T12:50:33.187002+00:00",
+  "calibration_set": {
+    "sample_size": "N = 15",
+    "purpose": "Threshold determination and algorithm parameter calibration",
+    "recovery_rate": "11/15",
+    "sync_rate": "15/15",
+    "mean_pre_ber": "8.67%",
+    "mean_latency_ms": "97.79 ms"
+  },
+  "evaluation_set": {
+    "sample_size": "N = 30",
+    "purpose": "Independent held-out verification across 3 carrier strategies and 5 users",
+    "recovery_rate": "24/30",
+    "sync_rate": "30/30",
+    "mean_pre_ber": "8.00%",
+    "mean_latency_ms": "79.49 ms"
+  },
+  "negative_corpus": {
+    "sample_size": "N = 50",
+    "purpose": "False positive rate verification (fail-closed test)",
+    "false_positive_rate": "0/50",
+    "clean_abstention_rate": "50/50 (100.0%)"
+  }
+}

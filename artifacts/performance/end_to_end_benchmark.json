@@ -1,0 +1,12 @@
+{
+  "1_key_generation_ms": 212.78,
+  "2_release_encryption_ms": 55.27,
+  "3_client_decryption_ms": 73.06,
+  "4_watermark_embedding_ms": 151.56,
+  "5_provenance_signing_ms": 714.39,
+  "6_ledger_append_ms": 0.31,
+  "7_watermark_extraction_ms": 108.25,
+  "8_investigation_join_ms": 0.45,
+  "9_provenance_verification_ms": 132.76,
+  "total_end_to_end_duration_ms": 1448.89
+}

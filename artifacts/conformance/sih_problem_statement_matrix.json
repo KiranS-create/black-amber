@@ -1,0 +1,96 @@
+{
+  "problem_statement": "SIH26237 - Post-Quantum Zero-Trust Document Watermarking, Lineage & Leak Attribution",
+  "conformance_status": "100% FULLY CONFORMANT",
+  "pillars": [
+    {
+      "id": "REQ-01",
+      "name": "Post-Quantum Cryptography",
+      "standard": "FIPS 203 ML-KEM-768 & FIPS 204 ML-DSA-65",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "REQ-02",
+      "name": "Broadcast Encryption",
+      "standard": "Single AES-256-GCM doc encryption + wrapped KEM capsules",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "REQ-03",
+      "name": "Client-Side Decryption",
+      "standard": "Recipient private key decapsulation & signature",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "REQ-04",
+      "name": "Dynamic Invisible Watermarking",
+      "standard": "Decryption-time session identity + DSSS carrier",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "REQ-05",
+      "name": "Recipient-Owned Signatures",
+      "standard": "ML-DSA-65 canonical DecryptionReceipt signature",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "REQ-06",
+      "name": "Permissioned DLT Consensus",
+      "standard": "Byzantine fault-tolerant replicated quorum & RFC 6962 tree",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "REQ-07",
+      "name": "Sparse Lineage Tracking",
+      "standard": "Memory-bounded O(1) indexed lineage graph",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "REQ-08",
+      "name": "Hardware Device Attestation",
+      "standard": "TPM / Secure Enclave binding & telemetry DAG linking",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "REQ-09",
+      "name": "Visual Equivalence & Isolation",
+      "standard": "SSIM >= 0.70 / PSNR >= 28 dB + orthogonal codewords",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "REQ-10",
+      "name": "Watermark Recovery & Lookup",
+      "standard": "Codeword decoding & DLT commitment resolution",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "REQ-11",
+      "name": "Fail-Closed Attribution",
+      "standard": "LAST_KNOWN_HOLDER preservation & abstain on noise",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "REQ-12",
+      "name": "Portable Evidence Packages",
+      "standard": "17 strongly-typed schemas + Merkle manifest",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "REQ-13",
+      "name": "Offline Air-Gap Verifier",
+      "standard": "12-pillar independent verification without network",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "REQ-14",
+      "name": "Multi-Tenant Isolation",
+      "standard": "Cryptographic tenant scoping across all layers",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "REQ-15",
+      "name": "Disaster Recovery",
+      "standard": "Endorsed state snapshots & node recovery",
+      "status": "VERIFIED"
+    }
+  ]
+}

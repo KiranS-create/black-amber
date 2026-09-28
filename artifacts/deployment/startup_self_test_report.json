@@ -1,0 +1,85 @@
+{
+  "checks": {
+    "airgap_guard": {
+      "airgap_mode_configured": false,
+      "egress_guard_installed": false,
+      "policy": "STANDARD",
+      "status": "PASS"
+    },
+    "crypto_providers": {
+      "details": {
+        "aes_256_gcm": {
+          "authenticated_encryption": true,
+          "key_size_bits": 256,
+          "nonce_size_bytes": 12,
+          "primitive": "AES-256-GCM",
+          "standard": "NIST SP 800-38D",
+          "status": "CRYPTO_PROVIDER_VALID",
+          "tag_size_bytes": 16
+        },
+        "hkdf_sha256": {
+          "domain_separation_verified": true,
+          "hash_function": "SHA-256",
+          "primitive": "HKDF-SHA256",
+          "standard": "RFC 5869 / NIST SP 800-56C",
+          "status": "CRYPTO_PROVIDER_VALID"
+        },
+        "ml_dsa_65": {
+          "is_post_quantum": true,
+          "is_production_safe": true,
+          "primitive": "ML-DSA-65",
+          "private_key_bytes": 4000,
+          "provider_class": "StandardMLDSA65Provider",
+          "provider_name": "dilithium_py (Standard Lattice Implementation)",
+          "public_key_bytes": 1952,
+          "roundtrip_time_ms": 188.67,
+          "signature_bytes": 3293,
+          "standard": "FIPS 204",
+          "status": "CRYPTO_PROVIDER_VALID"
+        },
+        "ml_kem_768": {
+          "ciphertext_bytes": 1088,
+          "is_post_quantum": true,
+          "is_production_safe": true,
+          "primitive": "ML-KEM-768",
+          "private_key_bytes": 2400,
+          "provider_class": "StandardMLKEM768Provider",
+          "provider_name": "kyber_py (Standard Lattice Implementation)",
+          "public_key_bytes": 1184,
+          "roundtrip_time_ms": 20.56,
+          "shared_secret_bytes": 32,
+          "standard": "FIPS 203",
+          "status": "CRYPTO_PROVIDER_VALID"
+        }
+      },
+      "overall_status": "CRYPTO_PROVIDER_VALID",
+      "status": "PASS"
+    },
+    "manifest_integrity": {
+      "matched_count": 252,
+      "missing_count": 0,
+      "modified_count": 0,
+      "status": "PASS"
+    },
+    "manifest_signature": {
+      "algorithm": "ML-DSA-65",
+      "error": null,
+      "signer_id": "aegistrace-release-authority-2026",
+      "status": "PASS"
+    },
+    "runtime": {
+      "executable": "C:\\Users\\kiran akash\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+      "platform": "win32",
+      "python_version": "3.9.0",
+      "status": "PASS"
+    },
+    "storage_and_keystore": {
+      "status": "PASS",
+      "storage_path": "C:\\Projects\\SIH26237\\data",
+      "writable": true
+    }
+  },
+  "overall_status": "PASS",
+  "strict_mode": false,
+  "timestamp_iso": "2026-09-28T04:09:52Z"
+}

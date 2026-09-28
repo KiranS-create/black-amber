@@ -1,0 +1,334 @@
+{
+  "metadata": {
+    "phase": "baseline",
+    "timestamp": "2026-09-27T15:32:35.568334+00:00",
+    "total_benchmark_duration_sec": 26.05,
+    "hardware": {
+      "timestamp": "2026-09-27T15:32:09.518062+00:00",
+      "platform": "Windows-10-10.0.26100-SP0",
+      "system": "Windows",
+      "release": "10",
+      "version": "10.0.26100",
+      "machine": "AMD64",
+      "processor": "AMD64 Family 23 Model 96 Stepping 1, AuthenticAMD",
+      "physical_cores": 6,
+      "logical_cores": 12,
+      "total_ram_gb": 15.4,
+      "available_ram_gb": 3.8,
+      "disk_total_gb": 459.21,
+      "disk_free_gb": 73.15,
+      "python_version": "3.9.0 (tags/v3.9.0:9cf6752, Oct  5 2020, 15:34:40) [MSC v.1927 64 bit (AMD64)]",
+      "python_implementation": "CPython",
+      "process_architecture": "64bit",
+      "filesystem": "NTFS",
+      "storage_medium": "SSD (Local)"
+    }
+  },
+  "crypto": {
+    "ml_kem_768_keygen": {
+      "min": 26.54,
+      "max": 34.879,
+      "mean": 29.126,
+      "p50": 28.3,
+      "p95": 33.653,
+      "p99": 34.634,
+      "stddev": 2.982
+    },
+    "ml_kem_768_encaps": {
+      "min": 36.457,
+      "max": 40.427,
+      "mean": 37.989,
+      "p50": 37.681,
+      "p95": 40.019,
+      "p99": 40.345,
+      "stddev": 1.38
+    },
+    "ml_kem_768_decaps": {
+      "min": 48.471,
+      "max": 57.949,
+      "mean": 51.832,
+      "p50": 50.268,
+      "p95": 56.918,
+      "p99": 57.743,
+      "stddev": 3.368
+    },
+    "ml_dsa_65_keygen": {
+      "min": 77.198,
+      "max": 140.004,
+      "mean": 95.865,
+      "p50": 91.395,
+      "p95": 130.623,
+      "p99": 138.128,
+      "stddev": 23.052
+    },
+    "ml_dsa_65_sign": {
+      "min": 186.636,
+      "max": 926.21,
+      "mean": 430.771,
+      "p50": 301.792,
+      "p95": 847.678,
+      "p99": 910.503,
+      "stddev": 276.743
+    },
+    "ml_dsa_65_verify": {
+      "min": 93.691,
+      "max": 156.667,
+      "mean": 120.882,
+      "p50": 113.394,
+      "p95": 152.301,
+      "p99": 155.794,
+      "stddev": 22.35
+    },
+    "aes_256_gcm_64kb_encrypt": {
+      "min": 0.195,
+      "max": 48.819,
+      "mean": 2.154,
+      "p50": 0.206,
+      "p95": 0.247,
+      "p99": 37.162,
+      "stddev": 9.525
+    },
+    "aes_256_gcm_64kb_decrypt": {
+      "min": 0.223,
+      "max": 0.776,
+      "mean": 0.261,
+      "p50": 0.233,
+      "p95": 0.307,
+      "p99": 0.666,
+      "stddev": 0.107
+    },
+    "hkdf_sha256": {
+      "min": 0.017,
+      "max": 0.059,
+      "mean": 0.019,
+      "p50": 0.017,
+      "p95": 0.019,
+      "p99": 0.046,
+      "stddev": 0.006
+    }
+  },
+  "watermark": {
+    "1_pages_encode": {
+      "min": 140.597,
+      "max": 140.597,
+      "mean": 140.597,
+      "p50": 140.597,
+      "p95": 140.597,
+      "p99": 140.597,
+      "stddev": 0.0
+    },
+    "1_pages_decode": {
+      "min": 129.052,
+      "max": 129.052,
+      "mean": 129.052,
+      "p50": 129.052,
+      "p95": 129.052,
+      "p99": 129.052,
+      "stddev": 0.0
+    },
+    "5_pages_encode": {
+      "min": 121.353,
+      "max": 147.089,
+      "mean": 132.155,
+      "p50": 129.419,
+      "p95": 144.951,
+      "p99": 146.662,
+      "stddev": 8.91
+    },
+    "5_pages_decode": {
+      "min": 132.621,
+      "max": 146.038,
+      "mean": 138.973,
+      "p50": 138.413,
+      "p95": 144.882,
+      "p99": 145.807,
+      "stddev": 4.343
+    }
+  },
+  "ledger": {
+    "1000_events": {
+      "ingest_throughput_ops_sec": 9937.06,
+      "ingest_duration_ms": 100.63,
+      "query_latency_us": {
+        "min": 1.8,
+        "max": 8.4,
+        "mean": 1.958,
+        "p50": 1.9,
+        "p95": 2.1,
+        "p99": 3.105,
+        "stddev": 0.417
+      },
+      "incremental_verification_ms": 0.014,
+      "checkpoints_count": 10,
+      "classification": "MEASURED"
+    },
+    "10000_events": {
+      "ingest_throughput_ops_sec": 12290.39,
+      "ingest_duration_ms": 813.64,
+      "query_latency_us": {
+        "min": 1.8,
+        "max": 15.2,
+        "mean": 1.963,
+        "p50": 1.9,
+        "p95": 2.2,
+        "p99": 2.4,
+        "stddev": 0.606
+      },
+      "incremental_verification_ms": 0.007,
+      "checkpoints_count": 10,
+      "classification": "MEASURED"
+    },
+    "100000_events": {
+      "ingest_throughput_ops_sec": 11656.8,
+      "ingest_duration_ms": 8578.68,
+      "query_latency_us": {
+        "min": 1.8,
+        "max": 31.4,
+        "mean": 2.148,
+        "p50": 2.0,
+        "p95": 2.4,
+        "p99": 2.7,
+        "stddev": 1.329
+      },
+      "incremental_verification_ms": 0.01,
+      "checkpoints_count": 10,
+      "classification": "MEASURED"
+    }
+  },
+  "lineage": {
+    "1000_nodes": {
+      "insert_throughput_ops_sec": 53656.7,
+      "insert_duration_ms": 18.64,
+      "ancestor_traversal_1000_hops_us": 2030.0,
+      "traversal_hops": 999,
+      "classification": "MEASURED"
+    },
+    "10000_nodes": {
+      "insert_throughput_ops_sec": 65485.53,
+      "insert_duration_ms": 152.71,
+      "ancestor_traversal_1000_hops_us": 1562.2,
+      "traversal_hops": 1000,
+      "classification": "MEASURED"
+    },
+    "100000_nodes": {
+      "insert_throughput_ops_sec": 61344.83,
+      "insert_duration_ms": 1630.13,
+      "ancestor_traversal_1000_hops_us": 1932.8,
+      "traversal_hops": 1000,
+      "classification": "MEASURED"
+    }
+  },
+  "telemetry": {
+    "1000_events": {
+      "ingest_throughput_ops_sec": 31381.8,
+      "ingest_duration_ms": 31.87,
+      "temporal_range_query_ms": 0.481,
+      "temporal_matched_count": 251,
+      "classification": "MEASURED"
+    },
+    "10000_events": {
+      "ingest_throughput_ops_sec": 41203.81,
+      "ingest_duration_ms": 242.7,
+      "temporal_range_query_ms": 5.504,
+      "temporal_matched_count": 2501,
+      "classification": "MEASURED"
+    },
+    "100000_events": {
+      "ingest_throughput_ops_sec": 39339.64,
+      "ingest_duration_ms": 2541.97,
+      "temporal_range_query_ms": 52.907,
+      "temporal_matched_count": 25001,
+      "classification": "MEASURED"
+    }
+  },
+  "identity": {
+    "1000_identities": {
+      "resolve_latency_us": {
+        "min": 14.0,
+        "max": 50.4,
+        "mean": 17.12,
+        "p50": 15.7,
+        "p95": 27.405,
+        "p99": 36.009,
+        "stddev": 4.451
+      },
+      "classification": "MEASURED"
+    },
+    "10000_identities": {
+      "resolve_latency_us": {
+        "min": 13.8,
+        "max": 85.4,
+        "mean": 14.908,
+        "p50": 14.3,
+        "p95": 16.605,
+        "p99": 22.901,
+        "stddev": 3.544
+      },
+      "classification": "MEASURED"
+    }
+  },
+  "investigation": {
+    "scale": 10000,
+    "queries_evaluated": 100,
+    "join_latency_ms": {
+      "min": 0.108,
+      "max": 0.326,
+      "mean": 0.127,
+      "p50": 0.12,
+      "p95": 0.163,
+      "p99": 0.24,
+      "stddev": 0.027
+    },
+    "classification": "MEASURED"
+  },
+  "evidence_and_recovery": {
+    "manifest_seal_ms": 305.16,
+    "manifest_verify_ms": 140.84,
+    "restore_100_objects_ms": 125.44,
+    "classification": "MEASURED"
+  },
+  "end_to_end": {
+    "1_key_generation_ms": 137.35,
+    "2_release_encryption_ms": 46.25,
+    "3_client_decryption_ms": 62.31,
+    "4_watermark_embedding_ms": 156.39,
+    "5_provenance_signing_ms": 354.29,
+    "6_ledger_append_ms": 0.35,
+    "7_watermark_extraction_ms": 156.2,
+    "8_investigation_join_ms": 0.45,
+    "9_provenance_verification_ms": 122.38,
+    "total_end_to_end_duration_ms": 1036.02
+  },
+  "memory": {
+    "current_traced_mb": 0.97,
+    "peak_traced_mb": 254.64,
+    "gc_stats": [
+      {
+        "collections": 2376,
+        "collected": 8441,
+        "uncollectable": 0
+      },
+      {
+        "collections": 211,
+        "collected": 1418,
+        "uncollectable": 0
+      },
+      {
+        "collections": 24,
+        "collected": 181,
+        "uncollectable": 0
+      }
+    ],
+    "gc_counts": [
+      0,
+      3,
+      7
+    ],
+    "concurrency_scaling": {
+      "1_workers_hash_2000_items_ms": 213.16,
+      "2_workers_hash_2000_items_ms": 149.82,
+      "4_workers_hash_2000_items_ms": 197.92,
+      "8_workers_hash_2000_items_ms": 106.98
+    }
+  }
+}

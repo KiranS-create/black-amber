@@ -1,0 +1,15 @@
+{
+  "total_positive_samples": 100,
+  "true_positives_recovered": 100,
+  "false_negatives_abstained": 0,
+  "empirical_recall_fraction": "100 / 100",
+  "point_estimate_recall": 1.0,
+  "recall_95_wilson_ci": {
+    "point_estimate": 1.0,
+    "lower_bound_95": 0.963007,
+    "upper_bound_95": 1.0,
+    "method": "wilson_score",
+    "sample_size": 100,
+    "success_count": 100
+  }
+}

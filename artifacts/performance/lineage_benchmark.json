@@ -1,0 +1,23 @@
+{
+  "1000_nodes": {
+    "insert_throughput_ops_sec": 49267.15,
+    "insert_duration_ms": 20.3,
+    "ancestor_traversal_1000_hops_us": 1274.9,
+    "traversal_hops": 999,
+    "classification": "MEASURED"
+  },
+  "10000_nodes": {
+    "insert_throughput_ops_sec": 52439.84,
+    "insert_duration_ms": 190.69,
+    "ancestor_traversal_1000_hops_us": 2463.0,
+    "traversal_hops": 1000,
+    "classification": "MEASURED"
+  },
+  "100000_nodes": {
+    "insert_throughput_ops_sec": 47236.53,
+    "insert_duration_ms": 2117.01,
+    "ancestor_traversal_1000_hops_us": 2367.9,
+    "traversal_hops": 1000,
+    "classification": "MEASURED"
+  }
+}

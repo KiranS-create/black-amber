@@ -1,0 +1,64 @@
+{
+  "fpr_summary": {
+    "fraction": "0 / 200",
+    "point_estimate": 0.0,
+    "wilson_ci_95": {
+      "point_estimate": 0.0,
+      "lower_bound_95": 0.0,
+      "upper_bound_95": 0.018845,
+      "method": "wilson_score",
+      "sample_size": 200,
+      "success_count": 0
+    },
+    "clopper_pearson_exact_ci_95": {
+      "point_estimate": 0.0,
+      "lower_bound_95": 0.0,
+      "upper_bound_95": 0.018275,
+      "method": "clopper_pearson_exact",
+      "sample_size": 200,
+      "success_count": 0
+    }
+  },
+  "fnr_summary": {
+    "fraction": "0 / 100",
+    "point_estimate": 0.0,
+    "wilson_ci_95": {
+      "point_estimate": 0.0,
+      "lower_bound_95": 0.0,
+      "upper_bound_95": 0.036993,
+      "method": "wilson_score",
+      "sample_size": 100,
+      "success_count": 0
+    },
+    "clopper_pearson_exact_ci_95": {
+      "point_estimate": 0.0,
+      "lower_bound_95": 0.0,
+      "upper_bound_95": 0.036217,
+      "method": "clopper_pearson_exact",
+      "sample_size": 100,
+      "success_count": 0
+    }
+  },
+  "precision_summary": {
+    "point_estimate": 1.0,
+    "wilson_ci_95": {
+      "point_estimate": 1.0,
+      "lower_bound_95": 0.963007,
+      "upper_bound_95": 1.0,
+      "method": "wilson_score",
+      "sample_size": 100,
+      "success_count": 100
+    }
+  },
+  "recall_summary": {
+    "point_estimate": 1.0,
+    "wilson_ci_95": {
+      "point_estimate": 1.0,
+      "lower_bound_95": 0.963007,
+      "upper_bound_95": 1.0,
+      "method": "wilson_score",
+      "sample_size": 100,
+      "success_count": 100
+    }
+  }
+}

@@ -31,6 +31,10 @@ def validate_base64_payload(
 
     # Validate character set (alphanumerics, +, /, =, and whitespace)
     clean_b64 = re.sub(r"\s+", "", b64_str)
+    if len(clean_b64) % 4 == 1:
+        raise SecurityValidationError("Invalid base64 payload length: cannot be 1 more than multiple of 4")
+    if ('=' in clean_b64 and len(clean_b64) % 4 != 0) or clean_b64.count('=') > 2 or ('=' in clean_b64 and not clean_b64.endswith('=')):
+        raise SecurityValidationError("Invalid base64 padding detected")
     if not re.fullmatch(r"[A-Za-z0-9+/]*={0,2}", clean_b64):
         raise SecurityValidationError("Invalid base64 encoding characters detected")
 

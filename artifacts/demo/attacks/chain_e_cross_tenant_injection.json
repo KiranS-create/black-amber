@@ -1,0 +1,11 @@
+{
+  "chain_id": "CHAIN_E",
+  "chain_name": "Cross-Tenant Foreign Package Injection",
+  "description": "Tenant Alpha package audited under Tenant Bravo context",
+  "verdict": "DETECTED",
+  "security_maintained": true,
+  "evidence_errors": [
+    "TENANT_ISOLATION_VIOLATION: Expected tenant 'tenant_bravo_foreign', package belongs to 'TENANT-SIH-2026'"
+  ],
+  "mitigating_pillar": "Pillar 1 (Tenant Isolation Partition)"
+}

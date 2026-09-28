@@ -1,7 +1,9 @@
+import os
+from pathlib import Path
 import pptx
 from pptx import Presentation
 
-template_path = r'C:\Users\kiran akash\Downloads\SIH2026-IDEA-Presentation-Format.pptx'
+template_path = os.environ.get("SIH_TEMPLATE_PATH", str(Path.home() / "Downloads" / "SIH2026-IDEA-Presentation-Format.pptx"))
 prs = Presentation(template_path)
 
 print(f"Total slides: {len(prs.slides)}")

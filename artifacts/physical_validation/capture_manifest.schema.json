@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AegisTrace Physical Capture Ingestion Manifest",
+  "description": "Schema for physical and simulated watermark capture records and benchmark evaluation runs.",
+  "type": "object",
+  "required": [
+    "manifest_version",
+    "generated_at",
+    "dataset_category",
+    "hardware_environment_connected",
+    "total_captures",
+    "records"
+  ],
+  "properties": {
+    "manifest_version": {
+      "type": "string"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "dataset_category": {
+      "type": "string",
+      "enum": ["PHYSICAL", "SIMULATED", "SIMULATION", "COMBINED"]
+    },
+    "hardware_environment_connected": {
+      "type": "boolean"
+    },
+    "total_captures": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "capture_id",
+          "physical_or_simulated",
+          "document_id",
+          "release_id",
+          "capture_hash",
+          "synchronization_metrics",
+          "ecc_and_payload_metrics",
+          "forensic_status",
+          "forensic_outcome"
+        ],
+        "properties": {
+          "capture_id": {
+            "type": "string"
+          },
+          "physical_or_simulated": {
+            "type": "string",
+            "enum": ["PHYSICAL", "SIMULATED"]
+          },
+          "document_id": {
+            "type": "string"
+          },
+          "release_id": {
+            "type": "string"
+          },
+          "artifact_hash": {
+            "type": "string"
+          },
+          "capture_hash": {
+            "type": "string"
+          },
+          "image_metadata": {
+            "type": "object"
+          },
+          "hardware_metadata": {
+            "type": "object"
+          },
+          "environmental_metadata": {
+            "type": "object"
+          },
+          "synchronization_metrics": {
+            "type": "object",
+            "required": ["sync_status", "marker_count", "reprojection_error_px"],
+            "properties": {
+              "sync_status": {
+                "type": "string",
+                "enum": ["OK", "FAILED", "NO_MARK"]
+              },
+              "marker_count": {
+                "type": "integer"
+              },
+              "reprojection_error_px": {
+                "type": "number"
+              }
+            }
+          },
+          "ecc_and_payload_metrics": {
+            "type": "object",
+            "required": ["pre_ecc_ber", "post_ecc_ber", "recovered_bits", "expected_bits"],
+            "properties": {
+              "pre_ecc_ber": {
+                "type": "number"
+              },
+              "post_ecc_ber": {
+                "type": "number"
+              },
+              "recovered_bits": {
+                "type": "integer"
+              },
+              "expected_bits": {
+                "type": "integer"
+              }
+            }
+          },
+          "forensic_status": {
+            "type": "string",
+            "enum": [
+              "SUCCESS",
+              "SYNC_FAILED",
+              "ECC_FAILED",
+              "CRC_MISMATCH",
+              "ABSTAIN_LOW_CONFIDENCE",
+              "CONFLICT_MULTI_SIGNAL",
+              "INVALID_BINDING"
+            ]
+          },
+          "forensic_outcome": {
+            "type": "object",
+            "required": ["confidence_score", "tardos_state", "abstention_enforced"],
+            "properties": {
+              "confidence_score": {
+                "type": "number"
+              },
+              "tardos_state": {
+                "type": "string"
+              },
+              "accused_candidate": {
+                "type": ["string", "null"]
+              },
+              "fused_confidence": {
+                "type": "number"
+              },
+              "abstention_enforced": {
+                "type": "boolean"
+              }
+            }
+          },
+          "timing_telemetry_ms": {
+            "type": "object"
+          },
+          "operator_notes": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

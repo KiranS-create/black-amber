@@ -1,0 +1,21 @@
+{
+  "transfer_id": "XFER-e059d346a627",
+  "artifact_id": "ART-DISPATCH-001",
+  "filename": "protected_dispatch.png",
+  "direction": "LAPTOP_TO_PHONE",
+  "mechanism": "DEVICE_STAGING",
+  "source_device_id": "display_0edb24",
+  "destination_device_id": "phone_rf8n927pm9n",
+  "source_hash": "c85176416496288a742837ce0e89f0b57116439dede629dec68e79f365c8e53a",
+  "destination_hash": "c85176416496288a742837ce0e89f0b57116439dede629dec68e79f365c8e53a",
+  "source_byte_length": 193681,
+  "destination_byte_length": 193681,
+  "is_hash_identical": true,
+  "status": "SUCCESS",
+  "timestamp": "2026-09-27T23:01:49.055554+00:00",
+  "epistemic_status": "DEVICE_IN_LOOP",
+  "transfer_latency_ms": 20.267,
+  "metadata": {
+    "adb_verified": false
+  }
+}

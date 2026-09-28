@@ -1,0 +1,19 @@
+{
+  "recipients": [
+    "alice",
+    "bob",
+    "charlie"
+  ],
+  "pairwise_hamming_distances": {
+    "alice_vs_bob": 17,
+    "alice_vs_charlie": 15,
+    "bob_vs_charlie": 14
+  },
+  "pairwise_correlations": {
+    "alice_vs_bob": 0.4688,
+    "alice_vs_charlie": 0.5312,
+    "bob_vs_charlie": 0.5625
+  },
+  "collision_count": 0,
+  "wrong_recipient_attributions": 0
+}

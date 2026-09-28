@@ -1,0 +1,12 @@
+{
+  "chain_id": "CHAIN_C",
+  "chain_name": "Watermark Transplantation & Document Binding Breach",
+  "description": "Attacker transplants watermark token onto unrelated document",
+  "verdict": "DETECTED",
+  "security_maintained": true,
+  "evidence_errors": [
+    "MERKLE_ROOT_MISMATCH: Recomputed 77f7c7d34b469b4ebb71af7e92af8a984263973f408c8fb4aeccd80168ec980d != Manifest 2aa055b6da117f259d63e59e3f3ee04d7b74f7902c040efaf3dbee0196b69db3",
+    "Receipt 'rcpt_evt_dec_rel_20260927_alice_c30d46ef' invalid ML-DSA-65 signature"
+  ],
+  "mitigating_pillar": "Pillar 6 (Canonical Payload Replay) & Pillar 9 (Watermark Binding)"
+}

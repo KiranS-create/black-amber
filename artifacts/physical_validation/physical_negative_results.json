@@ -1,0 +1,35 @@
+[
+  {
+    "sample_id": "NEG_PHYS_01_UNWATERMARKED",
+    "sample_type": "UNWATERMARKED",
+    "classification": "SIMULATION",
+    "artifact_hash": "aab3f8fcf86b27d0859758c81f2e3a07b56c497faa7c56de0d1699f6414e1d61",
+    "expected_outcome": "NO_SIGNAL",
+    "observed_outcome": "NO_SIGNAL",
+    "abstention_enforced": true,
+    "is_false_positive": false,
+    "correlation_score": 0.0
+  },
+  {
+    "sample_id": "NEG_PHYS_02_RANDOM_NOISE",
+    "sample_type": "NOISE",
+    "classification": "SIMULATION",
+    "artifact_hash": "bcc6bfb56bd8f10d509f02476e52790917a11bcd188da6b45b344dc3ff27fafc",
+    "expected_outcome": "NO_SIGNAL",
+    "observed_outcome": "NO_SIGNAL",
+    "abstention_enforced": true,
+    "is_false_positive": false,
+    "correlation_score": 0.0
+  },
+  {
+    "sample_id": "NEG_PHYS_03_TRANSPLANT_MISMATCH",
+    "sample_type": "TRANSPLANT",
+    "classification": "SIMULATION",
+    "artifact_hash": "58472edaadf3b4d7e6a490a600d40f22335fc383cff476aea564c3858d423cbc",
+    "expected_outcome": "CONFLICT",
+    "observed_outcome": "INVALID",
+    "abstention_enforced": true,
+    "is_false_positive": false,
+    "correlation_score": 0.0
+  }
+]

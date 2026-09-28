@@ -1,0 +1,14 @@
+{
+  "audit_timestamp": "2026-09-27T15:24:47.008536+00:00",
+  "capture_environment": "AIRGAP_CONTAINER_HOST",
+  "hardware_status": {
+    "camera_modality": "UNAVAILABLE (HOST_ENV_NO_LIVE_DEVICE)",
+    "printer_modality": "UNAVAILABLE (HOST_ENV_NO_LIVE_DEVICE)",
+    "scanner_modality": "UNAVAILABLE (HOST_ENV_NO_LIVE_DEVICE)",
+    "detected_cameras_count": 0,
+    "detected_printers_count": 0,
+    "detected_scanners_count": 0
+  },
+  "sih_conformance_status": "NOT_VERIFIED",
+  "scientific_integrity_declaration": "No live physical optical capture hardware is attached to the current execution environment. In strict compliance with prompt instructions, physical hardware validation is marked NOT_VERIFIED. Simulation and mathematical calibration results are labeled explicitly as SIMULATION. A formal hardware acquisition runbook and test protocol is provided for authentic lab deployment."
+}

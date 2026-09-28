@@ -11,6 +11,9 @@ class KeyPair(BaseModel):
     public_key_bytes: bytes
     private_key_bytes: Optional[bytes] = None
 
+    def __iter__(self):
+        return iter((self.public_key_bytes, self.private_key_bytes))
+
 class EncapsulationResult(BaseModel):
     ciphertext: bytes
     shared_secret: bytes

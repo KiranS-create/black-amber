@@ -59,6 +59,19 @@ def bytes_to_bits(data: bytes, total_bits: Optional[int] = None) -> List[int]:
     return bits
 
 
+_PERMUTATION_CACHE: Dict[Tuple[int, int], np.ndarray] = {}
+
+
+def _get_permutation(n: int, seed: int) -> np.ndarray:
+    key = (n, seed)
+    perm = _PERMUTATION_CACHE.get(key)
+    if perm is None:
+        rng = np.random.RandomState(seed)
+        perm = rng.permutation(n)
+        _PERMUTATION_CACHE[key] = perm
+    return perm
+
+
 def interleave_bytes(data: bytes, seed: int = INTERLEAVER_SEED) -> bytes:
     """
     Permutes bytes using a deterministic pseudo-random permutation.
@@ -66,8 +79,7 @@ def interleave_bytes(data: bytes, seed: int = INTERLEAVER_SEED) -> bytes:
     Reed-Solomon symbols with exact mathematical invertibility for any length n.
     """
     n = len(data)
-    rng = np.random.RandomState(seed)
-    perm = rng.permutation(n)
+    perm = _get_permutation(n, seed)
     arr = bytearray(n)
     for orig_idx, perm_idx in enumerate(perm):
         arr[perm_idx] = data[orig_idx]
@@ -77,8 +89,7 @@ def interleave_bytes(data: bytes, seed: int = INTERLEAVER_SEED) -> bytes:
 def deinterleave_bytes(data: bytes, seed: int = INTERLEAVER_SEED) -> bytes:
     """Inverts the deterministic pseudo-random byte permutation."""
     n = len(data)
-    rng = np.random.RandomState(seed)
-    perm = rng.permutation(n)
+    perm = _get_permutation(n, seed)
     arr = bytearray(n)
     for orig_idx, perm_idx in enumerate(perm):
         arr[orig_idx] = data[perm_idx]

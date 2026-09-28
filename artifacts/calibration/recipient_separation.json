@@ -1,0 +1,41 @@
+{
+  "pools_evaluated": [
+    {
+      "candidate_pool_size": 10,
+      "codeword_length_bits": 128,
+      "pairwise_comparisons": 45,
+      "min_hamming_distance": 54,
+      "mean_hamming_distance": 65.29,
+      "max_cross_correlation": 0.1562,
+      "observed_collisions": 0,
+      "empirical_collision_rate_str": "0 / 45",
+      "theoretical_collision_bound": 1.3224311446750734e-37,
+      "label": "OBSERVED_ON_SYNTHETIC_CODEWORDS"
+    },
+    {
+      "candidate_pool_size": 100,
+      "codeword_length_bits": 128,
+      "pairwise_comparisons": 4950,
+      "min_hamming_distance": 46,
+      "mean_hamming_distance": 64.05,
+      "max_cross_correlation": 0.2812,
+      "observed_collisions": 0,
+      "empirical_collision_rate_str": "0 / 4950",
+      "theoretical_collision_bound": 1.4546742591425808e-35,
+      "label": "OBSERVED_ON_SYNTHETIC_CODEWORDS"
+    },
+    {
+      "candidate_pool_size": 1000,
+      "codeword_length_bits": 128,
+      "pairwise_comparisons": 499500,
+      "min_hamming_distance": 38,
+      "mean_hamming_distance": 64.0,
+      "max_cross_correlation": 0.4062,
+      "observed_collisions": 0,
+      "empirical_collision_rate_str": "0 / 499500",
+      "theoretical_collision_bound": 1.4678985705893315e-33,
+      "label": "OBSERVED_ON_SYNTHETIC_CODEWORDS"
+    }
+  ],
+  "conclusion": "No pairwise collisions observed across tested recipient populations; mean Hamming distance approximates Bernoulli(0.5) expectation (m/2 = 64 bits)."
+}

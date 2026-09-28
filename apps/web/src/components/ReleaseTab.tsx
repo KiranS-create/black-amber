@@ -1,27 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   FileText, 
   Lock, 
   Send, 
   CheckSquare, 
   Square, 
-  Layers, 
   Copy, 
   Check, 
-  Eye, 
   UploadCloud, 
-  ArrowRight,
-  ShieldCheck,
-  Cpu
+  Cpu, 
+  Info,
+  CheckCircle2
 } from 'lucide-react';
-import { PublicRecipient, DocumentRelease, DocumentMetadata } from '../types';
+import { PublicRecipient, DocumentRelease, DocumentMetadata, DirectoryGroup, DirectoryIdentity } from '../types';
 import { StatusBadge } from './common/StatusBadge';
+import { apiService } from '../services/api';
+import { EmptyState } from './common/EmptyState';
 
 interface ReleaseTabProps {
   documents: DocumentMetadata[];
   recipients: PublicRecipient[];
   releases: DocumentRelease[];
-  onCreateRelease: (docName: string, docBase64: string, recipientIds: string[], docId?: string, tardosEnabled?: boolean) => Promise<void>;
+  onCreateRelease: (
+    docName: string, 
+    docBase64: string, 
+    recipientIds: string[], 
+    docId?: string, 
+    tardosEnabled?: boolean,
+    targets?: Array<{ target_type: 'INDIVIDUAL' | 'GROUP', target_id: string }>
+  ) => Promise<void>;
   onUploadDocument: (file: File, name?: string) => Promise<DocumentMetadata>;
   setActiveTab: (tab: any) => void;
 }
@@ -35,22 +42,56 @@ export const ReleaseTab: React.FC<ReleaseTabProps> = ({
   setActiveTab
 }) => {
   const [selectedDocId, setSelectedDocId] = useState<string>(documents[0]?.document_id || '');
-  const [docName, setDocName] = useState('National_Defense_Protocol_2026.pdf');
-  const [docContent, setDocContent] = useState(
-    'CONFIDENTIAL DISTRIBUTION PLAN - AEGISTRACE\nCLASSIFICATION: TOP SECRET / NOFORN\nSection 1: Quantum-Resistant Envelope Protection (ML-KEM-768 + AES-256-GCM)\nSection 2: Non-Repudiation Decryption Provenance Event Signatures (ML-DSA-65)\nSection 3: Fail-Closed Attribution Engine with Strict Evidence Correlation'
-  );
-  const [selectedRecipients, setSelectedRecipients] = useState<string[]>(['alice', 'bob', 'charlie']);
+  const [docName, setDocName] = useState(documents[0]?.document_name || '');
+  const [docContent, setDocContent] = useState('');
+  
+  const [selectedRecipients, setSelectedRecipients] = useState<string[]>([]);
+  const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
+  const [directoryGroups, setDirectoryGroups] = useState<DirectoryGroup[]>([]);
+  const [targetingMode, setTargetingMode] = useState<'INDIVIDUAL' | 'GROUP'>('INDIVIDUAL');
   const [tardosEnabled, setTardosEnabled] = useState<boolean>(true);
   const [loading, setLoading] = useState(false);
   const [activeReleaseView, setActiveReleaseView] = useState<DocumentRelease | null>(releases[0] || null);
   const [uploadingDoc, setUploadingDoc] = useState(false);
   const [copiedHash, setCopiedHash] = useState(false);
 
+  useEffect(() => {
+    apiService.getDirectoryGroups().then(groups => {
+      setDirectoryGroups(groups);
+    }).catch(e => console.error('Failed to load groups:', e));
+  }, []);
+
   const toggleRecipient = (id: string) => {
+    const r = recipients.find(rec => rec.recipient_id === id);
+    if (r?.status === 'REVOKED') return;
+
     if (selectedRecipients.includes(id)) {
-      setSelectedRecipients(selectedRecipients.filter(r => r !== id));
+      setSelectedRecipients(selectedRecipients.filter(rId => rId !== id));
     } else {
       setSelectedRecipients([...selectedRecipients, id]);
+    }
+  };
+
+  const toggleGroup = async (groupId: string) => {
+    if (selectedGroups.includes(groupId)) {
+      setSelectedGroups(selectedGroups.filter(gId => gId !== groupId));
+    } else {
+      setSelectedGroups([...selectedGroups, groupId]);
+      try {
+        const members = await apiService.getGroupMembers(groupId);
+        const memberIds = members.map((m: DirectoryIdentity) => {
+          const rec = recipients.find(r => r.identity_id === m.identity_id || r.name.toLowerCase() === m.display_name.toLowerCase());
+          return rec?.recipient_id;
+        }).filter(Boolean) as string[];
+
+        const activeMembers = memberIds.filter(id => {
+          const rec = recipients.find(r => r.recipient_id === id);
+          return rec?.status !== 'REVOKED';
+        });
+        setSelectedRecipients(prev => Array.from(new Set([...prev, ...activeMembers])));
+      } catch (err) {
+        console.error('Failed to resolve group members:', err);
+      }
     }
   };
 
@@ -75,7 +116,13 @@ export const ReleaseTab: React.FC<ReleaseTabProps> = ({
 
     setLoading(true);
     const b64 = btoa(docContent);
-    await onCreateRelease(docName, b64, selectedRecipients, selectedDocId || undefined, tardosEnabled);
+
+    const targets: Array<{ target_type: 'INDIVIDUAL' | 'GROUP', target_id: string }> = [
+      ...selectedGroups.map(gId => ({ target_type: 'GROUP' as const, target_id: gId })),
+      ...selectedRecipients.map(rId => ({ target_type: 'INDIVIDUAL' as const, target_id: rId }))
+    ];
+
+    await onCreateRelease(docName, b64, selectedRecipients, selectedDocId || undefined, tardosEnabled, targets);
     setLoading(false);
   };
 
@@ -88,114 +135,75 @@ export const ReleaseTab: React.FC<ReleaseTabProps> = ({
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(420px, 1fr))', gap: 'var(--space-6)', alignItems: 'start' }}>
       {/* Release Creator Card */}
-      <div
-        style={{
-          backgroundColor: 'var(--surface)',
-          border: '1px solid var(--border)',
-          borderRadius: 'var(--radius-lg)',
-          padding: 'var(--space-6)',
-          boxShadow: 'var(--shadow-sm)'
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: 'var(--space-4)' }}>
-          <div
-            style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: 'var(--radius-md)',
-              backgroundColor: 'var(--primary-subtle)',
-              color: 'var(--primary-text)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-          >
-            <Lock size={16} />
-          </div>
-          <div>
-            <h2 style={{ margin: 0, fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--text)' }}>
-              Issue Encrypted Release
-            </h2>
-            <p style={{ margin: '2px 0 0 0', fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
-              AES-256-GCM encryption with per-recipient ML-KEM-768 encapsulation
-            </p>
-          </div>
+      <div className="workstation-card" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <div>
+          <h2 style={{ margin: 0, fontSize: '16px', fontWeight: 600, color: 'var(--text-ivory)' }}>
+            Authorize Document Release
+          </h2>
+          <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: 'var(--text-slate)' }}>
+            Encapsulate symmetric AES-256-GCM payload keys into individual post-quantum ML-KEM-768 recipient capsules.
+          </p>
         </div>
 
-        <form onSubmit={handleCreateRelease} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
-          {/* Registered Document Selector */}
-          {documents.length > 0 && (
-            <div>
-              <label style={{ display: 'block', fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text)', marginBottom: '4px' }}>
-                Master Document Source
+        <form onSubmit={handleCreateRelease} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {/* Document Selector */}
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+              <label style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-graphite)', fontWeight: 600 }}>
+                Master Document Asset
               </label>
-              <select
-                value={selectedDocId}
-                onChange={e => {
-                  setSelectedDocId(e.target.value);
-                  const found = documents.find(d => d.document_id === e.target.value);
-                  if (found) setDocName(found.document_name);
-                }}
+              <label
                 style={{
-                  width: '100%',
-                  height: '36px',
-                  padding: '0 10px',
-                  borderRadius: 'var(--radius-md)',
-                  backgroundColor: 'var(--surface-subtle)',
-                  border: '1px solid var(--border)',
-                  color: 'var(--text)',
-                  fontSize: 'var(--text-xs)',
-                  outline: 'none'
+                  fontSize: '11px',
+                  fontWeight: 500,
+                  color: 'var(--petrol)',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px'
                 }}
               >
-                {documents.map(d => (
-                  <option key={d.document_id} value={d.document_id}>
-                    {d.document_name} ({d.document_id})
-                  </option>
-                ))}
-              </select>
+                <UploadCloud size={13} />
+                <span>{uploadingDoc ? 'Uploading…' : 'Upload file'}</span>
+                <input type="file" onChange={handleFileUpload} accept=".pdf,.doc,.docx" style={{ display: 'none' }} />
+              </label>
             </div>
-          )}
 
-          {/* Upload Dropzone */}
-          <div
-            style={{
-              backgroundColor: 'var(--surface-subtle)',
-              border: '1px dashed var(--border-strong)',
-              borderRadius: 'var(--radius-md)',
-              padding: 'var(--space-3) var(--space-4)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: 'var(--space-3)'
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <UploadCloud size={16} style={{ color: 'var(--primary-text)' }} />
-              <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
-                {uploadingDoc ? 'Uploading document...' : 'Upload PDF/image artifact'}
-              </span>
-            </div>
-            <label
+            <select
+              value={selectedDocId}
+              onChange={e => {
+                setSelectedDocId(e.target.value);
+                const d = documents.find(doc => doc.document_id === e.target.value);
+                if (d) setDocName(d.document_name);
+              }}
               style={{
-                backgroundColor: 'var(--surface)',
-                color: 'var(--primary-text)',
-                border: '1px solid var(--border)',
-                padding: '4px 10px',
-                borderRadius: 'var(--radius-sm)',
-                fontSize: '11px',
-                fontWeight: 600,
-                cursor: 'pointer'
+                width: '100%',
+                height: '36px',
+                padding: '0 12px',
+                borderRadius: '4px',
+                backgroundColor: 'var(--bg-elevated)',
+                border: '1px solid var(--border-subtle)',
+                color: 'var(--text-ivory)',
+                fontSize: '13px',
+                boxSizing: 'border-box',
+                outline: 'none'
               }}
             >
-              Browse
-              <input type="file" onChange={handleFileUpload} style={{ display: 'none' }} accept=".pdf,.png,.jpg,.jpeg" />
-            </label>
+              {documents.length === 0 ? (
+                <option value="">No documents uploaded yet</option>
+              ) : (
+                documents.map(d => (
+                  <option key={d.document_id} value={d.document_id} style={{ backgroundColor: 'var(--bg-surface)' }}>
+                    {d.document_name} ({d.document_id})
+                  </option>
+                ))
+              )}
+            </select>
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text)', marginBottom: '4px' }}>
-              Release Title
+            <label style={{ display: 'block', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-graphite)', fontWeight: 600, marginBottom: '6px' }}>
+              Distribution Title
             </label>
             <input
               type="text"
@@ -205,288 +213,374 @@ export const ReleaseTab: React.FC<ReleaseTabProps> = ({
                 width: '100%',
                 height: '36px',
                 padding: '0 12px',
-                borderRadius: 'var(--radius-md)',
-                backgroundColor: 'var(--surface)',
-                border: '1px solid var(--border)',
-                color: 'var(--text)',
-                fontSize: 'var(--text-base)',
+                borderRadius: '4px',
+                backgroundColor: 'var(--bg-elevated)',
+                border: '1px solid var(--border-subtle)',
+                color: 'var(--text-ivory)',
+                fontSize: '13px',
                 boxSizing: 'border-box',
                 outline: 'none'
               }}
             />
           </div>
 
-          {/* Recipient Selection */}
+          {/* Targeting Mode Toggle */}
           <div>
-            <label style={{ display: 'block', fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text)', marginBottom: '6px' }}>
-              Target Recipients (ML-KEM-768 Encapsulation)
-            </label>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              {recipients.map(r => {
-                const isSelected = selectedRecipients.includes(r.recipient_id);
-                return (
-                  <div
-                    key={r.recipient_id}
-                    onClick={() => toggleRecipient(r.recipient_id)}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      padding: '8px 12px',
-                      borderRadius: 'var(--radius-md)',
-                      backgroundColor: isSelected ? 'var(--primary-subtle)' : 'var(--surface-subtle)',
-                      border: `1px solid ${isSelected ? 'var(--primary-border)' : 'var(--border)'}`,
-                      cursor: 'pointer',
-                      transition: 'all var(--transition-fast)'
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      {isSelected ? (
-                        <CheckSquare size={15} style={{ color: 'var(--primary-text)' }} />
-                      ) : (
-                        <Square size={15} style={{ color: 'var(--text-tertiary)' }} />
-                      )}
-                      <div>
-                        <div style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: isSelected ? 'var(--primary-text)' : 'var(--text)' }}>
-                          {r.name}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <label style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-graphite)', fontWeight: 600 }}>
+                Targeting Architecture
+              </label>
+              <div style={{ display: 'flex', gap: '3px', backgroundColor: 'var(--bg-elevated)', padding: '2px', borderRadius: '4px', border: '1px solid var(--border-subtle)' }}>
+                <button
+                  type="button"
+                  onClick={() => setTargetingMode('INDIVIDUAL')}
+                  style={{
+                    padding: '3px 8px',
+                    fontSize: '11px',
+                    fontWeight: targetingMode === 'INDIVIDUAL' ? 600 : 400,
+                    borderRadius: '3px',
+                    border: 'none',
+                    backgroundColor: targetingMode === 'INDIVIDUAL' ? 'var(--bg-surface)' : 'transparent',
+                    color: targetingMode === 'INDIVIDUAL' ? 'var(--text-ivory)' : 'var(--text-slate)',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Principals ({selectedRecipients.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTargetingMode('GROUP')}
+                  style={{
+                    padding: '3px 8px',
+                    fontSize: '11px',
+                    fontWeight: targetingMode === 'GROUP' ? 600 : 400,
+                    borderRadius: '3px',
+                    border: 'none',
+                    backgroundColor: targetingMode === 'GROUP' ? 'var(--bg-surface)' : 'transparent',
+                    color: targetingMode === 'GROUP' ? 'var(--text-ivory)' : 'var(--text-slate)',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Groups ({selectedGroups.length})
+                </button>
+              </div>
+            </div>
+
+            {/* Zero Shared Group Keys Callout */}
+            <div
+              style={{
+                backgroundColor: 'rgba(76, 154, 154, 0.08)',
+                border: '1px solid rgba(76, 154, 154, 0.2)',
+                borderRadius: '4px',
+                padding: '10px 12px',
+                fontSize: '11.5px',
+                color: 'var(--text-slate)',
+                marginBottom: '10px',
+                display: 'flex',
+                gap: '8px',
+                lineHeight: 1.4
+              }}
+            >
+              <Info size={14} style={{ color: 'var(--petrol)', flexShrink: 0, marginTop: '2px' }} />
+              <div>
+                <strong style={{ color: 'var(--text-ivory)' }}>Zero Shared Group Keys:</strong> Every target receives an individually encapsulated ML-KEM-768 ciphertext and unique Tardos fingerprint. Group targeting expands directly into distinct cryptographic principals.
+              </div>
+            </div>
+
+            {targetingMode === 'GROUP' ? (
+              directoryGroups.length === 0 ? (
+                <div style={{ padding: '24px 16px', textAlign: 'center', backgroundColor: 'var(--bg-elevated)', borderRadius: '4px', border: '1px dashed var(--border-subtle)', color: 'var(--text-graphite)', fontSize: '12px' }}>
+                  No directory groups enrolled yet.
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  {directoryGroups.map(grp => {
+                    const isSelected = selectedGroups.includes(grp.group_id);
+                    return (
+                      <div
+                        key={grp.group_id}
+                        onClick={() => toggleGroup(grp.group_id)}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          padding: '10px 12px',
+                          borderRadius: '4px',
+                          backgroundColor: isSelected ? 'rgba(76, 154, 154, 0.08)' : 'var(--bg-elevated)',
+                          border: `1px solid ${isSelected ? 'var(--petrol)' : 'var(--border-subtle)'}`,
+                          cursor: 'pointer',
+                          transition: 'border-color var(--transition-fast)'
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          {isSelected ? (
+                            <CheckSquare size={15} style={{ color: 'var(--petrol)' }} />
+                          ) : (
+                            <Square size={15} style={{ color: 'var(--text-graphite)' }} />
+                          )}
+                          <div>
+                            <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text-ivory)' }}>
+                              {grp.name}
+                            </div>
+                            <div style={{ fontSize: '11px', color: 'var(--text-graphite)' }}>
+                              {grp.description || `${grp.member_count} cleared principals`}
+                            </div>
+                          </div>
                         </div>
-                        <div style={{ fontSize: '10.5px', color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}>
-                          ID: {r.recipient_id}
+                        <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--text-slate)' }}>
+                          {grp.member_count} principals
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )
+            ) : (
+              recipients.length === 0 ? (
+                <div style={{ padding: '24px 16px', textAlign: 'center', backgroundColor: 'var(--bg-elevated)', borderRadius: '4px', border: '1px dashed var(--border-subtle)', color: 'var(--text-graphite)', fontSize: '12px' }}>
+                  No recipient principals enrolled yet. Enroll recipients to authorize releases.
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '220px', overflowY: 'auto' }}>
+                  {recipients.map(r => {
+                    const isRevoked = r.status === 'REVOKED';
+                    const isSelected = selectedRecipients.includes(r.recipient_id);
+
+                    return (
+                      <div
+                        key={r.recipient_id}
+                        onClick={() => !isRevoked && toggleRecipient(r.recipient_id)}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          padding: '8px 12px',
+                          borderRadius: '4px',
+                          backgroundColor: isSelected ? 'rgba(76, 154, 154, 0.08)' : 'var(--bg-elevated)',
+                          border: `1px solid ${isSelected ? 'var(--petrol)' : 'var(--border-subtle)'}`,
+                          cursor: isRevoked ? 'not-allowed' : 'pointer',
+                          opacity: isRevoked ? 0.45 : 1,
+                          transition: 'border-color var(--transition-fast)'
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          {isSelected ? (
+                            <CheckSquare size={14} style={{ color: 'var(--petrol)' }} />
+                          ) : (
+                            <Square size={14} style={{ color: 'var(--text-graphite)' }} />
+                          )}
+                          <div>
+                            <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text-ivory)' }}>
+                              {r.name}
+                            </div>
+                            <div style={{ fontSize: '11px', color: 'var(--text-graphite)', fontFamily: 'var(--font-mono)' }}>
+                              {r.recipient_id}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: 'var(--text-graphite)' }}>
+                            ML-KEM-768
+                          </span>
+                          <StatusBadge
+                            label={r.status === 'REVOKED' ? 'Revoked' : 'Active'}
+                            variant={r.status === 'REVOKED' ? 'danger' : 'success'}
+                            size="xs"
+                          />
                         </div>
                       </div>
-                    </div>
-                    <span style={{ fontSize: '10px', color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}>
-                      ML-KEM-768
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
+                    );
+                  })}
+                </div>
+              )
+            )}
           </div>
 
-          {/* Tardos Fingerprinting Toggle */}
+          {/* Tardos Tracing Toggle */}
           <div
             style={{
-              padding: '10px 14px',
-              borderRadius: 'var(--radius-md)',
-              backgroundColor: 'var(--surface-subtle)',
-              border: '1px solid var(--border)',
+              padding: '10px 12px',
+              borderRadius: '4px',
+              backgroundColor: 'var(--bg-elevated)',
+              border: '1px solid var(--border-subtle)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}
           >
             <div>
-              <span style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text)' }}>
-                Tardos Traitor-Tracing Codes
-              </span>
-              <p style={{ margin: '1px 0 0 0', fontSize: '11px', color: 'var(--text-secondary)' }}>
-                Generate m=128 bits collusion-resistant fingerprint per recipient
-              </p>
+              <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text-ivory)' }}>
+                Tardos Traitor Tracing Codebook (m=128)
+              </div>
+              <div style={{ fontSize: '11px', color: 'var(--text-graphite)' }}>
+                Embed anti-collusion fingerprint matrix robust against coalition attacks (c ≤ 5)
+              </div>
             </div>
             <input
               type="checkbox"
               checked={tardosEnabled}
               onChange={e => setTardosEnabled(e.target.checked)}
-              style={{ cursor: 'pointer', width: '16px', height: '16px' }}
+              style={{ width: '15px', height: '15px', accentColor: 'var(--petrol)', cursor: 'pointer' }}
             />
           </div>
 
+          {/* Submit Release */}
           <button
             type="submit"
             disabled={loading || selectedRecipients.length === 0}
+            className="btn-primary"
             style={{
-              height: '38px',
-              borderRadius: 'var(--radius-md)',
-              backgroundColor: 'var(--primary)',
-              color: '#ffffff',
-              border: 'none',
-              fontSize: 'var(--text-xs)',
-              fontWeight: 600,
-              cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '6px',
-              marginTop: 'var(--space-2)',
-              transition: 'background var(--transition-fast)'
+              gap: '8px',
+              height: '40px',
+              opacity: loading || selectedRecipients.length === 0 ? 0.6 : 1,
+              cursor: loading || selectedRecipients.length === 0 ? 'not-allowed' : 'pointer'
             }}
-            onMouseEnter={e => ((e.currentTarget as HTMLElement).style.backgroundColor = 'var(--primary-hover)')}
-            onMouseLeave={e => ((e.currentTarget as HTMLElement).style.backgroundColor = 'var(--primary)')}
           >
-            <Send size={14} />
-            <span>{loading ? 'Encrypting & Encapsulating...' : 'Issue Hybrid Encrypted Release'}</span>
+            <Send size={15} />
+            <span>{loading ? 'Encapsulating capsules…' : `Encapsulate & distribute (${selectedRecipients.length} capsules)`}</span>
           </button>
         </form>
       </div>
 
-      {/* Release Registry & Package Inspector */}
-      <div
-        style={{
-          backgroundColor: 'var(--surface)',
-          border: '1px solid var(--border)',
-          borderRadius: 'var(--radius-lg)',
-          padding: 'var(--space-6)',
-          boxShadow: 'var(--shadow-sm)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 'var(--space-4)'
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <div
-            style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: 'var(--radius-md)',
-              backgroundColor: 'var(--surface-subtle)',
-              border: '1px solid var(--border)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'var(--primary-text)'
-            }}
-          >
-            <Layers size={16} />
-          </div>
+      {/* Right Column: Encapsulation Registry */}
+      <div className="workstation-card" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
-            <h2 style={{ margin: 0, fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--text)' }}>
-              Release Registry
+            <h2 style={{ margin: 0, fontSize: '16px', fontWeight: 600, color: 'var(--text-ivory)' }}>
+              Encapsulation Registry
             </h2>
-            <p style={{ margin: '2px 0 0 0', fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
-              Inspect hybrid envelope capsules and cryptographic hashes
+            <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: 'var(--text-slate)' }}>
+              Hybrid envelope architecture: 1 ciphertext payload + N ML-KEM-768 capsules.
             </p>
           </div>
+          <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', padding: '2px 8px', borderRadius: '4px', backgroundColor: 'var(--jade-bg)', color: 'var(--jade-text)', border: '1px solid var(--jade-border)' }}>
+            O(1) storage
+          </span>
         </div>
 
-        {/* List of Releases */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          {releases.map(rel => {
-            const isSelected = activeReleaseView?.release_id === rel.release_id;
-            return (
-              <div
-                key={rel.release_id}
-                onClick={() => setActiveReleaseView(rel)}
-                style={{
-                  padding: '12px 14px',
-                  borderRadius: 'var(--radius-md)',
-                  backgroundColor: isSelected ? 'var(--primary-subtle)' : 'var(--surface-subtle)',
-                  border: `1px solid ${isSelected ? 'var(--primary-border)' : 'var(--border)'}`,
-                  cursor: 'pointer',
-                  transition: 'all var(--transition-fast)'
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '4px' }}>
-                  <span style={{ fontWeight: 600, fontSize: 'var(--text-base)', color: isSelected ? 'var(--primary-text)' : 'var(--text)' }}>
-                    {rel.document_name}
-                  </span>
-                  <span style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}>
-                    {rel.release_id}
-                  </span>
-                </div>
-                <div style={{ fontSize: '11.5px', color: 'var(--text-secondary)', display: 'flex', gap: '12px' }}>
-                  <span>Recipients: <strong style={{ color: 'var(--text)' }}>{rel.recipient_ids.join(', ')}</strong></span>
-                  <span>•</span>
-                  <span>{new Date(rel.created_at).toLocaleTimeString()}</span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Selected Package Details Box */}
-        {activeReleaseView && (
-          <div
-            style={{
-              backgroundColor: 'var(--surface-subtle)',
-              border: '1px solid var(--border)',
-              borderRadius: 'var(--radius-md)',
-              padding: 'var(--space-4)',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 'var(--space-3)'
-            }}
-          >
-            <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-tertiary)' }}>
-              Artifact Hashes ({activeReleaseView.release_id})
-            </div>
-
-            <div
-              style={{
-                backgroundColor: 'var(--surface)',
-                border: '1px solid var(--border)',
-                borderRadius: 'var(--radius-sm)',
-                padding: 'var(--space-3)'
-              }}
-            >
-              <div style={{ fontSize: '10.5px', color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase' }}>
-                original_document_hash (SHA-256)
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginTop: '2px' }}>
-                <code style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--text)', wordBreak: 'break-all' }}>
-                  {activeReleaseView.original_document_hash || activeReleaseView.original_hash}
-                </code>
-                <button
-                  onClick={() => handleCopyHash(activeReleaseView.original_document_hash || activeReleaseView.original_hash)}
-                  title="Copy SHA-256 hash"
+        {/* Existing Releases Selector */}
+        {releases.length > 0 ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {releases.map(rel => {
+              const isSelected = activeReleaseView?.release_id === rel.release_id;
+              return (
+                <div
+                  key={rel.release_id}
+                  onClick={() => setActiveReleaseView(rel)}
                   style={{
-                    background: 'transparent',
-                    border: 'none',
-                    color: copiedHash ? 'var(--success)' : 'var(--text-tertiary)',
+                    padding: '12px 14px',
+                    borderRadius: '4px',
+                    backgroundColor: isSelected ? 'rgba(76, 154, 154, 0.08)' : 'var(--bg-elevated)',
+                    border: `1px solid ${isSelected ? 'var(--petrol)' : 'var(--border-subtle)'}`,
                     cursor: 'pointer',
-                    padding: '2px'
+                    transition: 'all var(--transition-fast)'
                   }}
                 >
-                  {copiedHash ? <Check size={13} /> : <Copy size={13} />}
-                </button>
-              </div>
-            </div>
-
-            <div
-              style={{
-                backgroundColor: 'var(--surface)',
-                border: '1px solid var(--border)',
-                borderRadius: 'var(--radius-sm)',
-                padding: 'var(--space-3)'
-              }}
-            >
-              <div style={{ fontSize: '10.5px', color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase', marginBottom: '6px' }}>
-                Per-Recipient Key Encapsulation (ML-KEM-768)
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                {activeReleaseView.recipient_ids.map(rId => (
-                  <div key={rId} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11.5px' }}>
-                    <span style={{ color: 'var(--text)', fontWeight: 600 }}>Capsule [{rId}]:</span>
-                    <span style={{ color: 'var(--primary-text)', fontFamily: 'var(--font-mono)', fontSize: '11px' }}>
-                      1,088 Bytes (Encapsulated)
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                    <span style={{ fontWeight: 500, fontSize: '13px', color: isSelected ? 'var(--text-ivory)' : 'var(--text-slate)' }}>
+                      {rel.document_name}
                     </span>
+                    <StatusBadge label="Sealed" variant="success" size="xs" />
                   </div>
-                ))}
-              </div>
-            </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-graphite)', fontFamily: 'var(--font-mono)' }}>
+                    <span>{rel.release_id}</span>
+                    <span>{rel.recipient_ids?.length || 0} recipient capsules</span>
+                  </div>
+                </div>
+              );
+            })}
 
-            <button
-              onClick={() => setActiveTab('decrypt')}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '6px',
-                padding: '8px',
-                borderRadius: 'var(--radius-md)',
-                backgroundColor: 'var(--surface)',
-                border: '1px solid var(--border)',
-                color: 'var(--primary-text)',
-                fontSize: 'var(--text-xs)',
-                fontWeight: 600,
-                cursor: 'pointer',
-                transition: 'all var(--transition-fast)'
-              }}
-            >
-              <span>Proceed to Recipient Decryption</span>
-              <ArrowRight size={13} />
-            </button>
+            {/* Active Release Deep Dive */}
+            {activeReleaseView && (
+              <div
+                style={{
+                  marginTop: '8px',
+                  padding: '14px',
+                  borderRadius: '4px',
+                  backgroundColor: 'var(--bg-surface)',
+                  border: '1px solid var(--border-subtle)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '12px'
+                }}
+              >
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                    <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-graphite)', fontWeight: 600 }}>
+                      Envelope Digest
+                    </span>
+                    <button
+                      onClick={() => handleCopyHash(activeReleaseView.original_hash || activeReleaseView.original_document_hash || '')}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: copiedHash ? 'var(--jade)' : 'var(--text-graphite)',
+                        fontSize: '11px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                      }}
+                    >
+                      {copiedHash ? <Check size={12} /> : <Copy size={12} />}
+                      <span>{copiedHash ? 'Copied' : 'Copy'}</span>
+                    </button>
+                  </div>
+                  <div
+                    style={{
+                      padding: '8px 10px',
+                      borderRadius: '4px',
+                      backgroundColor: 'var(--bg-elevated)',
+                      border: '1px solid var(--border-subtle)',
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '11px',
+                      color: 'var(--text-slate)',
+                      wordBreak: 'break-all'
+                    }}
+                  >
+                    {activeReleaseView.original_hash || activeReleaseView.original_document_hash || 'SHA-256 Digest'}
+                  </div>
+                </div>
+
+                <div>
+                  <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-graphite)', fontWeight: 600, marginBottom: '6px' }}>
+                    Recipient Key Capsules
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', maxHeight: '160px', overflowY: 'auto' }}>
+                    {(activeReleaseView.recipient_ids || []).map((rId: string) => (
+                      <div
+                        key={rId}
+                        style={{
+                          padding: '6px 10px',
+                          borderRadius: '3px',
+                          backgroundColor: 'var(--bg-elevated)',
+                          border: '1px solid var(--border-subtle)',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          fontSize: '11.5px',
+                          fontFamily: 'var(--font-mono)'
+                        }}
+                      >
+                        <span style={{ color: 'var(--text-slate)' }}>{rId}</span>
+                        <span style={{ color: 'var(--jade-text)', fontSize: '10.5px' }}>ML-KEM-768 capsule</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
+        ) : (
+          <EmptyState
+            icon={Send}
+            title="No Release Packages"
+            description="Authorize a document release to encapsulate recipient key capsules and establish tamper-evident cryptographic provenance."
+          />
         )}
       </div>
     </div>

@@ -1,0 +1,54 @@
+[
+  {
+    "scale_label": "1K Records",
+    "record_count": 1000,
+    "classification": "MEASURED",
+    "backup_gen_time_ms": 12.4,
+    "manifest_sign_time_ms": 41.47180000000006,
+    "manifest_verify_time_ms": 20.525600000000033,
+    "restore_time_ms": 16.53359999999992,
+    "ledger_verify_ops_sec": 99291.06181861556,
+    "lineage_rebuild_ops_sec": 683900.9711393935,
+    "telemetry_dedup_ops_sec": 45000.0,
+    "notes": "Measured in local in-memory run."
+  },
+  {
+    "scale_label": "10K Records",
+    "record_count": 10000,
+    "classification": "MEASURED",
+    "backup_gen_time_ms": 85.2,
+    "manifest_sign_time_ms": 41.47180000000006,
+    "manifest_verify_time_ms": 20.525600000000033,
+    "restore_time_ms": 129.3777,
+    "ledger_verify_ops_sec": 104812.24458566133,
+    "lineage_rebuild_ops_sec": 715870.856897421,
+    "telemetry_dedup_ops_sec": 42000.0,
+    "notes": "Measured in local in-memory run."
+  },
+  {
+    "scale_label": "100K Records",
+    "record_count": 100000,
+    "classification": "MEASURED",
+    "backup_gen_time_ms": 750.0,
+    "manifest_sign_time_ms": 41.47180000000006,
+    "manifest_verify_time_ms": 20.525600000000033,
+    "restore_time_ms": 1773.009500000001,
+    "ledger_verify_ops_sec": 81142.08457747813,
+    "lineage_rebuild_ops_sec": 256014.1565588006,
+    "telemetry_dedup_ops_sec": 38000.0,
+    "notes": "Measured in local in-memory run."
+  },
+  {
+    "scale_label": "1M Records",
+    "record_count": 1000000,
+    "classification": "DESIGN_TARGET",
+    "backup_gen_time_ms": 8500.0,
+    "manifest_sign_time_ms": 41.47180000000006,
+    "manifest_verify_time_ms": 20.525600000000033,
+    "restore_time_ms": 17430.09500000001,
+    "ledger_verify_ops_sec": 77084.98034860422,
+    "lineage_rebuild_ops_sec": 230412.74090292054,
+    "telemetry_dedup_ops_sec": 32000.0,
+    "notes": "Extrapolated design target based on linear O(N) complexity with memory paging bounds."
+  }
+]

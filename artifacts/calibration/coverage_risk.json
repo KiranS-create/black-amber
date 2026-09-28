@@ -1,0 +1,121 @@
+{
+  "total_samples": 300,
+  "attributed_count": 100,
+  "abstained_count": 200,
+  "coverage": 0.3333,
+  "abstention_rate": 0.6667,
+  "selective_accuracy": 1.0,
+  "selective_risk": 0.0,
+  "risk_coverage_curve": [
+    {
+      "threshold": 1.0,
+      "coverage": 0.5,
+      "abstention_rate": 0.5,
+      "selective_accuracy": 0.6667,
+      "selective_risk": 0.3333,
+      "conditional_fp_count": 50,
+      "conditional_tp_count": 100,
+      "total_decided": 150
+    },
+    {
+      "threshold": 2.0,
+      "coverage": 0.4167,
+      "abstention_rate": 0.5833,
+      "selective_accuracy": 0.8,
+      "selective_risk": 0.2,
+      "conditional_fp_count": 25,
+      "conditional_tp_count": 100,
+      "total_decided": 125
+    },
+    {
+      "threshold": 3.0,
+      "coverage": 0.4167,
+      "abstention_rate": 0.5833,
+      "selective_accuracy": 0.8,
+      "selective_risk": 0.2,
+      "conditional_fp_count": 25,
+      "conditional_tp_count": 100,
+      "total_decided": 125
+    },
+    {
+      "threshold": 4.0,
+      "coverage": 0.4167,
+      "abstention_rate": 0.5833,
+      "selective_accuracy": 0.8,
+      "selective_risk": 0.2,
+      "conditional_fp_count": 25,
+      "conditional_tp_count": 100,
+      "total_decided": 125
+    },
+    {
+      "threshold": 5.0,
+      "coverage": 0.4167,
+      "abstention_rate": 0.5833,
+      "selective_accuracy": 0.8,
+      "selective_risk": 0.2,
+      "conditional_fp_count": 25,
+      "conditional_tp_count": 100,
+      "total_decided": 125
+    },
+    {
+      "threshold": 6.0,
+      "coverage": 0.4167,
+      "abstention_rate": 0.5833,
+      "selective_accuracy": 0.8,
+      "selective_risk": 0.2,
+      "conditional_fp_count": 25,
+      "conditional_tp_count": 100,
+      "total_decided": 125
+    },
+    {
+      "threshold": 7.0,
+      "coverage": 0.3333,
+      "abstention_rate": 0.6667,
+      "selective_accuracy": 0.75,
+      "selective_risk": 0.25,
+      "conditional_fp_count": 25,
+      "conditional_tp_count": 75,
+      "total_decided": 100
+    },
+    {
+      "threshold": 8.0,
+      "coverage": 0.25,
+      "abstention_rate": 0.75,
+      "selective_accuracy": 1.0,
+      "selective_risk": 0.0,
+      "conditional_fp_count": 0,
+      "conditional_tp_count": 75,
+      "total_decided": 75
+    },
+    {
+      "threshold": 10.0,
+      "coverage": 0.25,
+      "abstention_rate": 0.75,
+      "selective_accuracy": 1.0,
+      "selective_risk": 0.0,
+      "conditional_fp_count": 0,
+      "conditional_tp_count": 75,
+      "total_decided": 75
+    },
+    {
+      "threshold": 12.0,
+      "coverage": 0.0833,
+      "abstention_rate": 0.9167,
+      "selective_accuracy": 1.0,
+      "selective_risk": 0.0,
+      "conditional_fp_count": 0,
+      "conditional_tp_count": 25,
+      "total_decided": 25
+    },
+    {
+      "threshold": 15.0,
+      "coverage": 0.0833,
+      "abstention_rate": 0.9167,
+      "selective_accuracy": 1.0,
+      "selective_risk": 0.0,
+      "conditional_fp_count": 0,
+      "conditional_tp_count": 25,
+      "total_decided": 25
+    }
+  ]
+}

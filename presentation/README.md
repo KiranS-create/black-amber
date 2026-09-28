@@ -19,8 +19,8 @@ This directory contains the official presentation deliverables for **SIH26237** 
 
 ## 2. PPTX Template Source & Regeneration
 
-- **Source Template File:** `C:\Users\kiran akash\Downloads\SIH2026-IDEA-Presentation-Format.pptx`
-- **Output File:** `C:\Projects\SIH26237\presentation\SIH26237_Final.pptx`
+- **Source Template File:** Official SIH Template (`SIH2026-IDEA-Presentation-Format.pptx`)
+- **Output File:** `presentation/SIH26237_Final.pptx`
 - **Slide Count:** Exactly **6 Slides** (Conforms to SIH maximum 6-slide rule; instruction slide 7 safely removed)
 - **Aspect Ratio:** **16:9 Widescreen** (Width: 12,192,000 / Height: 6,858,000 EMUs)
 

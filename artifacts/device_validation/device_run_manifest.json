@@ -1,0 +1,105 @@
+{
+  "run_id": "RUN-DITL-20260927_230136",
+  "schema_version": "1.0.0",
+  "timestamp": "2026-09-27T23:01:50.482855+00:00",
+  "overall_status": "HYBRID_VALIDATION",
+  "summary": "Real Device / Network / Display / Transfer Validation with Simulation Calibration.",
+  "evidence_package_id": "pkg_CASE-DITL-20260927_230136_20260927230149",
+  "lineage_merkle_root": "856839f7669dc4d0ed0b7d9924c9e652b45eb35b0c488bee3b099a26ece66c92",
+  "custody_root_hash": "e9f8c313b18cade781e6fb9d3d89090db6b84a96144337d5b8b33a27117fc810",
+  "steps": {
+    "step_1_create_artifact": {
+      "status": "PASS",
+      "artifact_id": "ART-DISPATCH-001",
+      "filename": "field_dispatch.pdf",
+      "original_sha256": "edb6ec34c63bea228f9162ec1df7c2a45fd9a4a06bb59135c2e2935a743ac42a",
+      "byte_length": 1406,
+      "security_passed": true
+    },
+    "step_2_crypto_state": {
+      "status": "PASS",
+      "recipient_a": "alice_field_commander",
+      "recipient_b": "bob_tactical_liaison",
+      "kem_algorithm": "NIST FIPS 203 ML-KEM-768",
+      "signature_algorithm": "NIST FIPS 204 ML-DSA-65"
+    },
+    "step_3_phone_a_access": {
+      "status": "PASS",
+      "session_id": "SESS-PHONA-20260927_230136",
+      "device_id": "phone_rf8n927pm9n",
+      "device_model": "Galaxy Note10 Lite (SM-N770F)",
+      "interface": "LOCAL_NETWORK_WIFI",
+      "host_ip": "172.20.128.1"
+    },
+    "step_4_authenticate_phone_a": {
+      "status": "PASS",
+      "recipient_id": "alice_field_commander",
+      "device_bound": true,
+      "attestation_tier": "DEVICE_BOUND_IDENTIFIED"
+    },
+    "step_5_render_artifact": {
+      "status": "PASS",
+      "carrier_id": "doc_edb6ec34c63b_page_1",
+      "carrier_sha256": "c85176416496288a742837ce0e89f0b57116439dede629dec68e79f365c8e53a",
+      "dimensions": "800x1000",
+      "embedding_psnr_db": 42.0,
+      "embedding_ssim": 0.99
+    },
+    "step_6_record_metadata": {
+      "status": "PASS",
+      "phone_a_serial": "RF8N927PM9N",
+      "phone_a_platform": "Android",
+      "phone_a_os": "UNKNOWN",
+      "usb_state": "CONNECTED",
+      "adb_state": "UNAVAILABLE"
+    },
+    "step_7_phone_b_endpoint": {
+      "status": "PASS",
+      "session_id": "SESS-PHONB-20260927_230136",
+      "device_id": "phone_rzcy9396agx",
+      "device_model": "Galaxy A55 5G",
+      "role": "PHONE_B_INDEPENDENT"
+    },
+    "step_8_phone_b_workflow": {
+      "status": "PASS",
+      "recipient_id": "bob_tactical_liaison",
+      "isolation_verified": true,
+      "no_cross_token_leak": true
+    },
+    "step_9_transfer": {
+      "status": "PASS",
+      "transfer_id": "XFER-e059d346a627",
+      "mechanism": "DEVICE_STAGING",
+      "latency_ms": 20.267,
+      "source_hash": "c85176416496288a742837ce0e89f0b57116439dede629dec68e79f365c8e53a",
+      "destination_hash": "c85176416496288a742837ce0e89f0b57116439dede629dec68e79f365c8e53a",
+      "is_identical": true
+    },
+    "step_10_verify_byte_integrity": {
+      "status": "PASS",
+      "source_len": 193681,
+      "destination_len": 193681,
+      "verified": true
+    },
+    "step_11_lineage_and_custody": {
+      "status": "PASS",
+      "lineage_merkle_root": "856839f7669dc4d0ed0b7d9924c9e652b45eb35b0c488bee3b099a26ece66c92",
+      "custody_root_hash": "e9f8c313b18cade781e6fb9d3d89090db6b84a96144337d5b8b33a27117fc810",
+      "custody_events": 3
+    },
+    "step_12_package_evidence": {
+      "status": "PASS",
+      "package_id": "pkg_CASE-DITL-20260927_230136_20260927230149",
+      "object_count": 6,
+      "merkle_root": "5a8899db56b800c2999adf04d50a12785ba31524a6c42efe1a616df2ce528604"
+    },
+    "step_13_verify_offline": {
+      "status": "PASS",
+      "overall_verification": "VERIFIED",
+      "manifest_signature_valid": true,
+      "merkle_root_valid": true,
+      "custody_chain_valid": true,
+      "decision_consistent": true
+    }
+  }
+}

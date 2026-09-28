@@ -1,0 +1,17 @@
+{
+  "artifact_hash": "bbbfd2c6272bab8dd1944870dd9f27a8c3624e3156882bf01fe7e49ad01458d6",
+  "watermark_detected": false,
+  "extracted_token": null,
+  "extracted_codeword": null,
+  "confidence_score": 0.0,
+  "matched_receipt_id": null,
+  "attributed_recipient_id": null,
+  "decision_state": "NO_SIGNAL",
+  "is_signature_valid": false,
+  "is_ledger_inclusion_valid": false,
+  "last_known_holder": null,
+  "reason_codes": [
+    "WATERMARK_NO_SIGNAL_FOUND"
+  ],
+  "telemetry_summary": {}
+}

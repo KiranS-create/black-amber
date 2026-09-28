@@ -2,6 +2,12 @@ import io
 import os
 import random
 from typing import Optional, Dict, Any, List
+
+try:
+    import cryptography
+except ImportError:
+    pass
+
 from pypdf import PdfReader, PdfWriter
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
@@ -314,7 +320,8 @@ class PdfRasterizationAttack(BaseAttack):
         y = 40
         draw.text((40, 20), "[RASTERIZED PDF SCAN - SIMULATED BITMAP]", fill=(120, 120, 120))
         for line in lines:
-            draw.text((40, y), line[:80], fill=(0, 0, 0))
+            safe_line = line.encode("ascii", "replace").decode("ascii")
+            draw.text((40, y), safe_line[:80], fill=(0, 0, 0))
             y += 20
 
         img_buf = io.BytesIO()
@@ -447,7 +454,8 @@ class PdfTextExtractionRegenerationAttack(BaseAttack):
 
         y = 710
         for line in text_lines:
-            c.drawString(54, y, line[:90])
+            safe_line = line.encode("latin-1", "replace").decode("latin-1")
+            c.drawString(54, y, safe_line[:90])
             y -= 15
             if y < 60:
                 c.showPage()

@@ -9,7 +9,12 @@ from core.attribution.evidence import (
     EvidenceConfidenceLevel,
     EvidenceObservation,
     EvidenceBundle,
-    ProvenanceObservation
+    ProvenanceObservation,
+    LineageObservation,
+)
+from core.lineage.models import (
+    ForensicAttributionLevel,
+    ForensicBoundaryState,
 )
 from core.attribution.dependency import EvidenceDependencyGraph
 from core.attribution.reliability import AttackAwareReliabilityCalibrator
@@ -50,6 +55,13 @@ class FusedAttributionResult(BaseModel):
     recommended_next_steps: List[str] = Field(default_factory=list)
     details: Dict[str, Any] = Field(default_factory=dict)
 
+    # Active Cryptographic Copy Lineage forensic outputs
+    forensic_attribution_level: Optional[ForensicAttributionLevel] = None
+    forensic_boundary_state: Optional[ForensicBoundaryState] = None
+    last_known_holder: Optional[str] = None
+    lineage_proof: Optional[Dict[str, Any]] = None
+    candidate: Optional[Any] = None
+
 class EvidenceFusionEngine:
     """
     Multi-Channel Bayesian Evidence Fusion Engine for SIH26237.
@@ -74,6 +86,62 @@ class EvidenceFusionEngine:
         self.calibrator = calibrator or AttackAwareReliabilityCalibrator()
         self.policy = policy or DecisionPolicy()
 
+    def _extract_lineage_metadata(
+        self,
+        bundle: EvidenceBundle,
+        state: AttributionState,
+        top_cand_id: Optional[str]
+    ) -> Tuple[Optional[ForensicAttributionLevel], Optional[ForensicBoundaryState], Optional[str], Optional[Dict[str, Any]]]:
+        lineage_obs: Optional[LineageObservation] = None
+        for o in bundle.observations:
+            if isinstance(o, LineageObservation) or getattr(o, "family", None) == EvidenceFamily.COPY_LINEAGE:
+                lineage_obs = o
+                break
+
+        # Check for corroborating external telemetry
+        has_telemetry_corroboration = False
+        if lineage_obs and getattr(lineage_obs, "telemetry_corroborated", False):
+            has_telemetry_corroboration = True
+        else:
+            for o in bundle.observations:
+                if getattr(o, "family", None) == EvidenceFamily.EXTERNAL_TELEMETRY:
+                    if getattr(o, "is_human_corroborated", False):
+                        has_telemetry_corroboration = True
+                        break
+
+        if lineage_obs:
+            level = getattr(lineage_obs, "attribution_level", ForensicAttributionLevel.LEVEL_1_DOCUMENT_DETECTED)
+            b_state = getattr(lineage_obs, "boundary_state", ForensicBoundaryState.LINEAGE_CONTINUES)
+            holder = getattr(lineage_obs, "last_known_holder", top_cand_id)
+            proof = getattr(lineage_obs, "proof_details", {})
+
+            # Elevate to Level 5 if state is ATTRIBUTED and external corroborating telemetry exists
+            if state == AttributionState.ATTRIBUTED and has_telemetry_corroboration:
+                level = ForensicAttributionLevel.LEVEL_5_HUMAN_IDENTITY_RESOLVED
+
+            return level, b_state, holder, proof
+
+        if state == AttributionState.ATTRIBUTED:
+            level = (
+                ForensicAttributionLevel.LEVEL_5_HUMAN_IDENTITY_RESOLVED
+                if has_telemetry_corroboration
+                else ForensicAttributionLevel.LEVEL_2_ORIGINAL_RECIPIENT_IDENTIFIED
+            )
+            return (
+                level,
+                ForensicBoundaryState.ATTRIBUTED_TO_CONTROLLED_ACTOR,
+                top_cand_id,
+                None,
+            )
+        else:
+            b_st = ForensicBoundaryState.INSUFFICIENT_EVIDENCE if state == AttributionState.INSUFFICIENT_EVIDENCE else ForensicBoundaryState.ABSTAINED
+            return (
+                ForensicAttributionLevel.LEVEL_1_DOCUMENT_DETECTED,
+                b_st,
+                None,
+                None,
+            )
+
     def fuse(self, bundle: EvidenceBundle) -> FusedAttributionResult:
         reasoning_steps: List[str] = []
         recommended_next_steps: List[str] = []
@@ -84,6 +152,7 @@ class EvidenceFusionEngine:
         is_binding_valid, binding_violations = self.dependency_graph.validate_bundle_binding(bundle)
         if not is_binding_valid:
             reasoning_steps.append(f"Binding check failed: {'; '.join(binding_violations)}")
+            f_level, f_state, f_holder, f_proof = self._extract_lineage_metadata(bundle, AttributionState.CONFLICT, None)
             return FusedAttributionResult(
                 state=AttributionState.CONFLICT,
                 top_candidate_id=None,
@@ -97,7 +166,11 @@ class EvidenceFusionEngine:
                     "Isolate carrier artifacts by document_id and release_id.",
                     "Verify provenance logs for release scope contamination."
                 ],
-                details={"binding_violations": binding_violations}
+                details={"binding_violations": binding_violations},
+                forensic_attribution_level=f_level,
+                forensic_boundary_state=f_state,
+                last_known_holder=f_holder,
+                lineage_proof=f_proof,
             )
 
         reasoning_steps.append("Document and release target bindings validated successfully.")
@@ -109,6 +182,7 @@ class EvidenceFusionEngine:
 
         if not valid_observations:
             reasoning_steps.append("No valid forensic signals detected across any channel.")
+            f_level, f_state, f_holder, f_proof = self._extract_lineage_metadata(bundle, AttributionState.NO_SIGNAL, None)
             return FusedAttributionResult(
                 state=AttributionState.NO_SIGNAL,
                 top_candidate_id=None,
@@ -121,7 +195,11 @@ class EvidenceFusionEngine:
                 recommended_next_steps=[
                     "Attempt higher-sensitivity frequency-domain watermark extraction.",
                     "Inspect carrier artifact for structural truncation or heavy cropping."
-                ]
+                ],
+                forensic_attribution_level=f_level,
+                forensic_boundary_state=f_state,
+                last_known_holder=f_holder,
+                lineage_proof=f_proof,
             )
 
         reasoning_steps.append(
@@ -134,6 +212,7 @@ class EvidenceFusionEngine:
 
         if not candidate_scores:
             reasoning_steps.append("No candidates identified by any evidence channel.")
+            f_level, f_state, f_holder, f_proof = self._extract_lineage_metadata(bundle, AttributionState.NO_SIGNAL, None)
             return FusedAttributionResult(
                 state=AttributionState.NO_SIGNAL,
                 top_candidate_id=None,
@@ -143,7 +222,11 @@ class EvidenceFusionEngine:
                 summary="Abstain: No candidates identified in evidence signals.",
                 should_abstain=True,
                 reasoning_steps=reasoning_steps,
-                recommended_next_steps=["Verify if leak matches known enrollment registry."]
+                recommended_next_steps=["Verify if leak matches known enrollment registry."],
+                forensic_attribution_level=f_level,
+                forensic_boundary_state=f_state,
+                last_known_holder=f_holder,
+                lineage_proof=f_proof,
             )
 
         # Sort candidates descending by score
@@ -276,6 +359,7 @@ class EvidenceFusionEngine:
                 f"Conflict detected: Candidate '{top_cand_id}' ({top_score:.2f}) and '{runner_up_cand_id}' "
                 f"({runner_up_score:.2f}) represent an irreconcilable multi-source cryptographic disagreement."
             )
+            f_level, f_state, f_holder, f_proof = self._extract_lineage_metadata(bundle, AttributionState.CONFLICT, top_cand_id)
             return FusedAttributionResult(
                 state=AttributionState.CONFLICT,
                 top_candidate_id=top_cand_id,
@@ -294,7 +378,11 @@ class EvidenceFusionEngine:
                 recommended_next_steps=[
                     "Check for multi-recipient collusion attack.",
                     "Verify if leaked artifact represents a spliced or blended composite."
-                ]
+                ],
+                forensic_attribution_level=f_level,
+                forensic_boundary_state=f_state,
+                last_known_holder=f_holder,
+                lineage_proof=f_proof,
             )
 
         # Step 6: Check Attribution Thresholds
@@ -302,6 +390,7 @@ class EvidenceFusionEngine:
             reasoning_steps.append(
                 f"Top score {top_score:.2f} is below minimum attribution threshold {self.policy.min_attribution_score}."
             )
+            f_level, f_state, f_holder, f_proof = self._extract_lineage_metadata(bundle, AttributionState.INSUFFICIENT_EVIDENCE, top_cand_id)
             return FusedAttributionResult(
                 state=AttributionState.INSUFFICIENT_EVIDENCE,
                 top_candidate_id=top_cand_id,
@@ -320,7 +409,11 @@ class EvidenceFusionEngine:
                 recommended_next_steps=[
                     "Collect additional document pages or higher resolution scans.",
                     "Correlate ledger logs for suspicious release access timing."
-                ]
+                ],
+                forensic_attribution_level=f_level,
+                forensic_boundary_state=f_state,
+                last_known_holder=f_holder,
+                lineage_proof=f_proof,
             )
 
         # Step 7: Check Separation Margin
@@ -328,6 +421,7 @@ class EvidenceFusionEngine:
             reasoning_steps.append(
                 f"Separation margin {separation_margin:.2f} is below minimum requirement {self.policy.min_separation_margin}."
             )
+            f_level, f_state, f_holder, f_proof = self._extract_lineage_metadata(bundle, AttributionState.INSUFFICIENT_EVIDENCE, top_cand_id)
             return FusedAttributionResult(
                 state=AttributionState.INSUFFICIENT_EVIDENCE,
                 top_candidate_id=top_cand_id,
@@ -346,7 +440,11 @@ class EvidenceFusionEngine:
                 recommended_next_steps=[
                     "Analyze collusion probability across top candidates.",
                     "Extract secondary forensic markers from supplementary carrier channels."
-                ]
+                ],
+                forensic_attribution_level=f_level,
+                forensic_boundary_state=f_state,
+                last_known_holder=f_holder,
+                lineage_proof=f_proof,
             )
 
         # Step 8: Attribution Decision
@@ -366,6 +464,13 @@ class EvidenceFusionEngine:
         }
         telemetry = bundle.attack_context.model_dump() if bundle.attack_context else None
 
+        f_level, f_state, f_holder, f_proof = self._extract_lineage_metadata(bundle, AttributionState.ATTRIBUTED, top_cand_id)
+
+        if f_state == ForensicBoundaryState.LAST_KNOWN_HOLDER:
+            summary_text = f"Attributed to last known controlled custodian '{top_cand_id}' (Downstream uncontrolled leakage detected; intermediary not personally accused)."
+        else:
+            summary_text = f"Successfully attributed leak to recipient '{top_cand_id}' ({confidence_level.value} confidence)."
+
         return FusedAttributionResult(
             state=AttributionState.ATTRIBUTED,
             top_candidate_id=top_cand_id,
@@ -378,7 +483,7 @@ class EvidenceFusionEngine:
             candidate_evaluations=evaluations,
             supporting_sources=supporting_sources,
             contradicting_sources=contradicting_sources,
-            summary=f"Successfully attributed leak to recipient '{top_cand_id}' ({confidence_level.value} confidence).",
+            summary=summary_text,
             should_abstain=False,
             assumptions=default_assumptions,
             attack_telemetry=telemetry,
@@ -391,5 +496,9 @@ class EvidenceFusionEngine:
                 "calibrated_observations_count": len(valid_observations),
                 "top_candidate_score": top_score,
                 "separation_margin": separation_margin
-            }
+            },
+            forensic_attribution_level=f_level,
+            forensic_boundary_state=f_state,
+            last_known_holder=f_holder,
+            lineage_proof=f_proof,
         )

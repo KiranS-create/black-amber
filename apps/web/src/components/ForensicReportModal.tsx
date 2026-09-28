@@ -1,11 +1,9 @@
 import React from 'react';
 import { 
   X, 
-  Download, 
   Copy, 
   Check, 
   FileText, 
-  ShieldCheck, 
   Printer 
 } from 'lucide-react';
 import { AttributionResult, EvidenceEvent } from '../types';
@@ -73,49 +71,48 @@ export const ForensicReportModal: React.FC<ForensicReportModalProps> = ({
       style={{
         position: 'fixed',
         inset: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.55)',
-        backdropFilter: 'blur(4px)',
+        backgroundColor: 'rgba(11, 16, 21, 0.8)',
+        backdropFilter: 'blur(16px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        zIndex: 110,
+        zIndex: 100,
         padding: '20px'
       }}
       onClick={onClose}
     >
       <div
+        className="workstation-card"
         style={{
-          backgroundColor: 'var(--surface-elevated)',
-          border: '1px solid var(--border-strong)',
-          borderRadius: 'var(--radius-lg)',
-          maxWidth: '850px',
           width: '100%',
-          boxShadow: 'var(--shadow-lg)',
+          maxWidth: '820px',
+          padding: 0,
+          boxShadow: '0 24px 48px rgba(0, 0, 0, 0.5)',
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
-          maxHeight: '90vh'
+          maxHeight: '85vh'
         }}
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
         <div
           style={{
-            padding: 'var(--space-4) var(--space-6)',
-            backgroundColor: 'var(--surface-subtle)',
-            borderBottom: '1px solid var(--border)',
+            padding: '16px 20px',
+            backgroundColor: 'var(--bg-elevated)',
+            borderBottom: '1px solid var(--border-subtle)',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center'
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <FileText size={18} style={{ color: 'var(--primary-text)' }} />
+            <FileText size={18} style={{ color: 'var(--petrol)' }} />
             <div>
-              <h3 style={{ margin: 0, fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--text)' }}>
+              <h2 style={{ margin: 0, fontSize: '15px', fontWeight: 600, color: 'var(--text-ivory)', letterSpacing: '-0.01em' }}>
                 Forensic Evidence Dossier
-              </h3>
-              <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: 'var(--text-tertiary)' }}>
+              </h2>
+              <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: 'var(--text-slate)' }}>
                 Immutable cryptographically verifiable technical report
               </p>
             </div>
@@ -124,19 +121,8 @@ export const ForensicReportModal: React.FC<ForensicReportModalProps> = ({
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <button
               onClick={handlePrint}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '6px 12px',
-                borderRadius: 'var(--radius-md)',
-                backgroundColor: 'var(--surface)',
-                border: '1px solid var(--border)',
-                color: 'var(--text-secondary)',
-                fontSize: 'var(--text-xs)',
-                fontWeight: 600,
-                cursor: 'pointer'
-              }}
+              className="btn-secondary"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '4px 10px', fontSize: '11px' }}
             >
               <Printer size={13} />
               <span>Print</span>
@@ -144,33 +130,21 @@ export const ForensicReportModal: React.FC<ForensicReportModalProps> = ({
 
             <button
               onClick={handleCopyJson}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '6px 12px',
-                borderRadius: 'var(--radius-md)',
-                backgroundColor: 'var(--surface)',
-                border: '1px solid var(--border)',
-                color: 'var(--text-secondary)',
-                fontSize: 'var(--text-xs)',
-                fontWeight: 600,
-                cursor: 'pointer'
-              }}
+              className="btn-secondary"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '4px 10px', fontSize: '11px' }}
             >
-              {copied ? <Check size={13} color="var(--success)" /> : <Copy size={13} />}
+              {copied ? <Check size={13} style={{ color: 'var(--jade)' }} /> : <Copy size={13} />}
               <span>{copied ? 'Copied' : 'Copy JSON'}</span>
             </button>
 
             <button
               onClick={onClose}
               style={{
-                background: 'transparent',
+                background: 'none',
                 border: 'none',
-                color: 'var(--text-tertiary)',
+                color: 'var(--text-graphite)',
                 cursor: 'pointer',
-                padding: '6px',
-                borderRadius: 'var(--radius-sm)'
+                padding: '4px'
               }}
             >
               <X size={18} />
@@ -179,83 +153,83 @@ export const ForensicReportModal: React.FC<ForensicReportModalProps> = ({
         </div>
 
         {/* Dossier Content Body */}
-        <div style={{ padding: 'var(--space-6)', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+        <div style={{ padding: '20px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {/* Executive Verdict Box */}
           <div
             style={{
-              backgroundColor: leakResult.should_abstain ? 'var(--warning-subtle)' : 'var(--success-subtle)',
-              border: `1px solid ${leakResult.should_abstain ? 'var(--warning-border)' : 'var(--success-border)'}`,
-              borderRadius: 'var(--radius-md)',
-              padding: 'var(--space-4)',
+              backgroundColor: leakResult.should_abstain ? 'var(--amber-bg)' : 'var(--jade-bg)',
+              border: `1px solid ${leakResult.should_abstain ? 'var(--amber-border)' : 'var(--jade-border)'}`,
+              borderRadius: '4px',
+              padding: '14px 16px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}
           >
             <div>
-              <div style={{ fontSize: '10.5px', fontWeight: 700, textTransform: 'uppercase', color: leakResult.should_abstain ? 'var(--warning-text)' : 'var(--success-text)' }}>
+              <div style={{ fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', color: leakResult.should_abstain ? 'var(--amber-text)' : 'var(--jade-text)' }}>
                 System Decision Verdict
               </div>
-              <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--text)', marginTop: '2px' }}>
+              <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-ivory)', marginTop: '2px' }}>
                 {leakResult.state}
               </div>
-              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', marginTop: '2px' }}>
-                Attributed Entity: <strong style={{ color: 'var(--text)' }}>{leakResult.candidate?.name || 'NONE (ABSTAINED)'}</strong>
+              <div style={{ fontSize: '12px', color: 'var(--text-slate)', marginTop: '2px' }}>
+                Attributed Entity: <strong style={{ color: 'var(--text-ivory)' }}>{leakResult.candidate?.name || 'NONE (ABSTAINED)'}</strong>
                 {leakResult.candidate && ` (${leakResult.candidate.recipient_id})`}
               </div>
             </div>
 
             <div style={{ textAlign: 'right' }}>
-              <div style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>Confidence Tier</div>
-              <div style={{ fontWeight: 700, fontSize: 'var(--text-md)', color: 'var(--text)' }}>
+              <div style={{ fontSize: '11px', color: 'var(--text-graphite)' }}>Confidence Tier</div>
+              <div style={{ fontWeight: 600, fontSize: '14px', color: 'var(--text-ivory)' }}>
                 {leakResult.confidence_level}
               </div>
-              <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}>
+              <div style={{ fontSize: '11px', color: 'var(--text-slate)', fontFamily: 'var(--font-mono)' }}>
                 LLR: {leakResult.fused_score?.toFixed(2) || '0.00'}
               </div>
             </div>
           </div>
 
           {/* Telemetry & Channels Summary */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--space-3)' }}>
-            <div style={{ backgroundColor: 'var(--surface-subtle)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: 'var(--space-3)' }}>
-              <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase' }}>Watermark Carrier Status</div>
-              <div style={{ fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--text)', marginTop: '2px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px' }}>
+            <div style={{ backgroundColor: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)', borderRadius: '4px', padding: '12px' }}>
+              <div style={{ fontSize: '11px', color: 'var(--text-graphite)', fontWeight: 600, textTransform: 'uppercase' }}>Watermark Carrier</div>
+              <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-ivory)', marginTop: '2px' }}>
                 {leakResult.watermark_status || 'UNKNOWN'}
               </div>
-              <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Execution: {leakResult.metrics?.execution_mode || 'SIMULATED'}</div>
+              <div style={{ fontSize: '11px', color: 'var(--text-slate)', marginTop: '2px' }}>Execution: {leakResult.metrics?.execution_mode || 'SIMULATED'}</div>
             </div>
 
-            <div style={{ backgroundColor: 'var(--surface-subtle)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: 'var(--space-3)' }}>
-              <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase' }}>Distortion Metrics</div>
-              <div style={{ fontSize: '11.5px', color: 'var(--text)', marginTop: '2px', fontFamily: 'var(--font-mono)' }}>
+            <div style={{ backgroundColor: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)', borderRadius: '4px', padding: '12px' }}>
+              <div style={{ fontSize: '11px', color: 'var(--text-graphite)', fontWeight: 600, textTransform: 'uppercase' }}>Distortion Metrics</div>
+              <div style={{ fontSize: '12px', color: 'var(--text-ivory)', marginTop: '2px', fontFamily: 'var(--font-mono)' }}>
                 PSNR: {leakResult.metrics?.psnr ?? 'N/A'} dB | SSIM: {leakResult.metrics?.ssim ?? 'N/A'}
               </div>
-              <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Bit Error: {leakResult.metrics?.ber !== undefined ? `${Math.round(leakResult.metrics.ber * 100)}%` : '0%'}</div>
+              <div style={{ fontSize: '11px', color: 'var(--text-slate)', marginTop: '2px' }}>Bit Error: {leakResult.metrics?.ber !== undefined ? `${Math.round(leakResult.metrics.ber * 100)}%` : '0%'}</div>
             </div>
 
-            <div style={{ backgroundColor: 'var(--surface-subtle)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: 'var(--space-3)' }}>
-              <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase' }}>Separation Margin</div>
-              <div style={{ fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--primary-text)', marginTop: '2px', fontFamily: 'var(--font-mono)' }}>
+            <div style={{ backgroundColor: 'var(--bg-elevated)', border: '1px solid var(--border-subtle)', borderRadius: '4px', padding: '12px' }}>
+              <div style={{ fontSize: '11px', color: 'var(--text-graphite)', fontWeight: 600, textTransform: 'uppercase' }}>Separation Margin</div>
+              <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--petrol)', marginTop: '2px', fontFamily: 'var(--font-mono)' }}>
                 Δ {leakResult.margin?.toFixed(2) || '0.00'}
               </div>
-              <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Threshold: Z = 11.40</div>
+              <div style={{ fontSize: '11px', color: 'var(--text-slate)', marginTop: '2px' }}>Threshold: Z = 11.40</div>
             </div>
           </div>
 
           {/* Rationale Bullet Points */}
           <div
             style={{
-              backgroundColor: 'var(--surface-subtle)',
-              border: '1px solid var(--border)',
-              borderRadius: 'var(--radius-md)',
-              padding: 'var(--space-4)'
+              backgroundColor: 'var(--bg-elevated)',
+              border: '1px solid var(--border-subtle)',
+              borderRadius: '4px',
+              padding: '14px 16px'
             }}
           >
-            <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase', marginBottom: '6px' }}>
+            <div style={{ fontSize: '11px', color: 'var(--text-graphite)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '6px' }}>
               Forensic Rationale & Evidentiary Findings
             </div>
-            <ul style={{ margin: 0, paddingLeft: '18px', fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <ul style={{ margin: 0, paddingLeft: '18px', fontSize: '12px', color: 'var(--text-slate)', display: 'flex', flexDirection: 'column', gap: '4px', lineHeight: 1.45 }}>
               {leakResult.explanation?.map((exp, i) => (
                 <li key={i}>{exp}</li>
               ))}
@@ -265,26 +239,26 @@ export const ForensicReportModal: React.FC<ForensicReportModalProps> = ({
           {/* Raw JSON Artifact Preview */}
           <div
             style={{
-              backgroundColor: 'var(--surface)',
-              border: '1px solid var(--border)',
-              borderRadius: 'var(--radius-md)',
-              padding: 'var(--space-3)'
+              backgroundColor: 'var(--bg-elevated)',
+              border: '1px solid var(--border-subtle)',
+              borderRadius: '4px',
+              padding: '12px'
             }}
           >
-            <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase', marginBottom: '4px' }}>
+            <div style={{ fontSize: '11px', color: 'var(--text-graphite)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '6px' }}>
               Machine-Readable Dossier (JSON Export)
             </div>
             <pre
               style={{
                 margin: 0,
-                padding: 'var(--space-3)',
-                backgroundColor: 'var(--surface-subtle)',
-                border: '1px solid var(--border)',
-                borderRadius: 'var(--radius-xs)',
+                padding: '10px 12px',
+                backgroundColor: 'var(--bg-surface)',
+                border: '1px solid var(--border-subtle)',
+                borderRadius: '4px',
                 fontFamily: 'var(--font-mono)',
                 fontSize: '11px',
-                color: 'var(--text-secondary)',
-                maxHeight: '160px',
+                color: 'var(--text-slate)',
+                maxHeight: '140px',
                 overflowY: 'auto'
               }}
             >

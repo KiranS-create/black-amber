@@ -1,0 +1,97 @@
+{
+  "generated_at_iso": "2026-09-27T22:30:28.116247+00:00",
+  "platform": "AegisTrace (SIH26237)",
+  "demo_suite_version": "1.0.0",
+  "demonstrations": {
+    "golden_case": {
+      "status": "PASS",
+      "case_id": "CASE_SIH_rel_2026",
+      "attributed_suspect": "alice",
+      "confidence": 1.0,
+      "package_id": "pkg_CASE_SIH_rel_2026_20260927223032",
+      "files": {
+        "original_document": "golden_case/original_document.pdf",
+        "decrypted_watermarked_alice": "golden_case/decrypted_watermarked_alice.pdf",
+        "leak_artifact": "golden_case/leak_artifact.pdf",
+        "decryption_receipt": "golden_case/decryption_receipt_alice.json",
+        "dlt_merkle_proof": "golden_case/dlt_merkle_proof.json",
+        "evidence_package_zip": "golden_case/golden_evidence_package.zip",
+        "evidence_package_json": "golden_case/golden_evidence_package.json"
+      }
+    },
+    "unknown_downstream": {
+      "status": "PASS",
+      "scenario_file": "unknown_downstream/downstream_lineage_scenario.json",
+      "last_known_holder": "bob",
+      "gap_retained": true
+    },
+    "negative_case": {
+      "status": "PASS",
+      "clean_document": "negative_case/clean_unwatermarked_document.pdf",
+      "evaluation_report": "negative_case/blind_negative_evaluation_report.json",
+      "verdict": "NO_SIGNAL",
+      "attributed_recipient": null
+    },
+    "attacks": {
+      "chain_a_stolen_account": {
+        "name": "Chain A: Stolen Account + Device Mismatch",
+        "security_maintained": true,
+        "verdict": "DETECTED",
+        "mitigating_pillar": "Pillar 4 (Content Integrity) & Pillar 3 (Merkle Commitment)",
+        "report_file": "attacks/chain_a_stolen_account.json"
+      },
+      "chain_b_ledger_fork": {
+        "name": "Chain B: Valid Receipt + Modified Ledger Tail",
+        "security_maintained": true,
+        "verdict": "DETECTED",
+        "mitigating_pillar": "DLT Continuity & Parent Hash Enforcement",
+        "report_file": "attacks/chain_b_ledger_fork.json"
+      },
+      "chain_c_transplantation": {
+        "name": "Chain C: Watermark Transplantation + Forged Metadata",
+        "security_maintained": true,
+        "verdict": "DETECTED",
+        "mitigating_pillar": "Pillar 6 (Canonical Payload Replay) & Pillar 9 (Watermark Binding)",
+        "report_file": "attacks/chain_c_transplantation.json"
+      },
+      "chain_d_post_revocation_replay": {
+        "name": "Chain D: Replayed Receipt + Rotated Key",
+        "security_maintained": true,
+        "verdict": "DETECTED",
+        "mitigating_pillar": "Pillar 7 (Key Lifecycle & Revocation Boundary)",
+        "report_file": "attacks/chain_d_post_revocation_replay.json"
+      },
+      "chain_e_cross_tenant_injection": {
+        "name": "Chain E: Cross-Tenant Artifact Injection",
+        "security_maintained": true,
+        "verdict": "DETECTED",
+        "mitigating_pillar": "Pillar 1 (Tenant Isolation Partition)",
+        "report_file": "attacks/chain_e_cross_tenant_injection.json"
+      },
+      "chain_f_lineage_gap_violation": {
+        "name": "Chain F: Valid Artifact + Modified Lineage",
+        "security_maintained": true,
+        "verdict": "DETECTED",
+        "mitigating_pillar": "Pillar 10 (Lineage Integrity & Boundary Preservation)",
+        "report_file": "attacks/chain_f_lineage_gap_violation.json"
+      },
+      "chain_g_manifest_forgery": {
+        "name": "Chain G: Corrupted Package + Manifest Forgery",
+        "security_maintained": true,
+        "verdict": "DETECTED",
+        "mitigating_pillar": "Pillar 2 (ML-DSA-65 Manifest Signature)",
+        "report_file": "attacks/chain_g_manifest_forgery.json"
+      }
+    },
+    "verification": {
+      "golden_report": "verification/golden_package_verification_report.json",
+      "golden_status": "VERIFIED",
+      "tampered_report": "verification/tampered_package_verification_report.json",
+      "tampered_status": "INVALID"
+    }
+  },
+  "physical_attestation": {
+    "PHYSICAL_COMPONENT": "NOT_VERIFIED (Simulated test fixture only)",
+    "disclaimer": "Hardware optical camera and print-scan media requires real-world physical calibration. Digital pipeline and cryptographic guarantees are fully certified."
+  }
+}

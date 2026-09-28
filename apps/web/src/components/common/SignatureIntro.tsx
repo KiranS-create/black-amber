@@ -16,13 +16,9 @@ export const SignatureIntro: React.FC<SignatureIntroProps> = ({ onComplete }) =>
       return;
     }
 
-    // Sequence timing: ~950ms total
-    // Stage 1: Trace line draws across (0 - 350ms)
-    // Stage 2: Shield and wordmark resolve + status activates (350 - 850ms)
-    // Stage 3: Smooth dissolve to app (850 - 1000ms)
-    const t1 = setTimeout(() => setStage('resolve'), 350);
-    const t2 = setTimeout(() => setStage('finish'), 850);
-    const t3 = setTimeout(() => onComplete(), 1050);
+    const t1 = setTimeout(() => setStage('resolve'), 300);
+    const t2 = setTimeout(() => setStage('finish'), 750);
+    const t3 = setTimeout(() => onComplete(), 900);
 
     const handleSkip = () => {
       clearTimeout(t1);
@@ -50,12 +46,12 @@ export const SignatureIntro: React.FC<SignatureIntroProps> = ({ onComplete }) =>
           key="signature-intro"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.2, ease: 'easeOut' }}
+          transition={{ duration: 0.15, ease: 'easeOut' }}
           style={{
             position: 'fixed',
             inset: 0,
             zIndex: 9999,
-            backgroundColor: 'var(--bg)',
+            backgroundColor: 'var(--bg-canvas)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -68,7 +64,7 @@ export const SignatureIntro: React.FC<SignatureIntroProps> = ({ onComplete }) =>
           <div
             style={{
               position: 'relative',
-              width: '380px',
+              width: '360px',
               maxWidth: '90vw',
               display: 'flex',
               flexDirection: 'column',
@@ -80,31 +76,30 @@ export const SignatureIntro: React.FC<SignatureIntroProps> = ({ onComplete }) =>
             <motion.div
               initial={{ scaleX: 0, opacity: 0 }}
               animate={{ scaleX: 1, opacity: 1 }}
-              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               style={{
                 position: 'absolute',
                 top: '50%',
                 left: 0,
                 right: 0,
                 height: '1px',
-                backgroundColor: 'var(--primary)',
-                boxShadow: '0 0 8px var(--primary)',
+                backgroundColor: 'var(--petrol)',
                 transformOrigin: 'left center',
                 zIndex: 1
               }}
             />
 
-            {/* Shield and Wordmark (resolves in stage 2) */}
+            {/* Shield and Wordmark */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.96 }}
+              initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: stage === 'resolve' ? 1 : 0.2, scale: 1 }}
-              transition={{ duration: 0.25, ease: 'easeOut' }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '12px',
                 zIndex: 2,
-                backgroundColor: 'var(--bg)',
+                backgroundColor: 'var(--bg-canvas)',
                 padding: '0 16px'
               }}
             >
@@ -112,13 +107,12 @@ export const SignatureIntro: React.FC<SignatureIntroProps> = ({ onComplete }) =>
                 style={{
                   width: '32px',
                   height: '32px',
-                  borderRadius: 'var(--radius-sm)',
-                  backgroundColor: 'var(--primary)',
-                  color: '#ffffff',
+                  borderRadius: '4px',
+                  backgroundColor: 'var(--petrol)',
+                  color: '#0B1015',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 2px 8px rgba(37, 99, 235, 0.3)'
+                  justifyContent: 'center'
                 }}
               >
                 <ShieldCheck size={18} />
@@ -128,10 +122,10 @@ export const SignatureIntro: React.FC<SignatureIntroProps> = ({ onComplete }) =>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <span
                     style={{
-                      fontSize: '18px',
-                      fontWeight: 800,
+                      fontSize: '17px',
+                      fontWeight: 600,
                       letterSpacing: '-0.02em',
-                      color: 'var(--text)',
+                      color: 'var(--text-ivory)',
                       lineHeight: 1
                     }}
                   >
@@ -139,13 +133,13 @@ export const SignatureIntro: React.FC<SignatureIntroProps> = ({ onComplete }) =>
                   </span>
                   <span
                     style={{
-                      fontSize: '9.5px',
-                      fontWeight: 700,
-                      padding: '2px 5px',
-                      borderRadius: 'var(--radius-xs)',
-                      backgroundColor: 'var(--surface-hover)',
-                      color: 'var(--text-secondary)',
-                      border: '1px solid var(--border)',
+                      fontSize: '10px',
+                      fontWeight: 500,
+                      padding: '2px 6px',
+                      borderRadius: '3px',
+                      backgroundColor: 'var(--bg-elevated)',
+                      color: 'var(--text-slate)',
+                      border: '1px solid var(--border-subtle)',
                       lineHeight: 1
                     }}
                   >
@@ -155,11 +149,11 @@ export const SignatureIntro: React.FC<SignatureIntroProps> = ({ onComplete }) =>
                 <div
                   style={{
                     fontSize: '11px',
-                    color: 'var(--text-tertiary)',
+                    color: 'var(--text-graphite)',
                     marginTop: '3px'
                   }}
                 >
-                  Forensic Security Workstation
+                  Digital Forensic Investigation Workstation
                 </div>
               </div>
             </motion.div>
@@ -168,25 +162,25 @@ export const SignatureIntro: React.FC<SignatureIntroProps> = ({ onComplete }) =>
             <motion.div
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: stage === 'resolve' ? 1 : 0, y: stage === 'resolve' ? 0 : 4 }}
-              transition={{ duration: 0.2, delay: 0.1 }}
+              transition={{ duration: 0.2, delay: 0.05 }}
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
                 fontSize: '10.5px',
-                color: 'var(--text-secondary)',
+                color: 'var(--text-slate)',
                 fontFamily: 'var(--font-mono)',
                 zIndex: 2,
-                backgroundColor: 'var(--bg)',
+                backgroundColor: 'var(--bg-canvas)',
                 padding: '2px 8px'
               }}
             >
               <span
                 style={{
-                  width: '6px',
-                  height: '6px',
+                  width: '5px',
+                  height: '5px',
                   borderRadius: '50%',
-                  backgroundColor: 'var(--success)',
+                  backgroundColor: 'var(--jade)',
                   display: 'inline-block'
                 }}
               />
@@ -199,12 +193,12 @@ export const SignatureIntro: React.FC<SignatureIntroProps> = ({ onComplete }) =>
             style={{
               position: 'absolute',
               bottom: '24px',
-              fontSize: '10.5px',
-              color: 'var(--text-disabled)',
-              letterSpacing: '0.04em'
+              fontSize: '11px',
+              color: 'var(--text-graphite)',
+              letterSpacing: '0.02em'
             }}
           >
-            Press any key or click to skip
+            Click or press any key to enter
           </div>
         </motion.div>
       )}

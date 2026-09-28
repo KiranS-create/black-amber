@@ -20,7 +20,7 @@ const ThemeContext = createContext<ThemeContextType>({
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
     try {
-      const saved = localStorage.getItem('aegistrace_theme') || localStorage.getItem('sih26237_theme');
+      const saved = localStorage.getItem('aegistrace_theme');
       if (saved === 'light' || saved === 'dark' || saved === 'system') {
         return saved as ThemeMode;
       }
@@ -55,7 +55,6 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       document.documentElement.setAttribute('data-theme', resolvedTheme);
       document.documentElement.style.colorScheme = resolvedTheme;
       localStorage.setItem('aegistrace_theme', themeMode);
-      localStorage.setItem('sih26237_theme', themeMode);
     } catch {
       // Ignore storage errors in restricted contexts
     }

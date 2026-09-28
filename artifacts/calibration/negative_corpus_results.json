@@ -1,0 +1,8 @@
+{
+  "total_negative_samples": 200,
+  "false_positives_observed": 0,
+  "true_negatives_observed": 200,
+  "empirical_fpr_fraction": "0 / 200",
+  "upper_95_clopper_pearson_bound": 0.018275,
+  "status": "ALL_NEGATIVE_CASES_CORRECTLY_ABSTAINED_OR_REJECTED"
+}

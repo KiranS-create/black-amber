@@ -1,0 +1,48 @@
+{
+  "run_id": "run_phys_lab_20260927_222535_26237",
+  "created_at": "2026-09-27T22:25:35.995045+00:00",
+  "sealed_at": "2026-09-27T22:26:49.712184+00:00",
+  "is_sealed": true,
+  "events": [
+    {
+      "event_id": "cust_0001",
+      "action": "COLLECTED",
+      "artifact_hash": "a017fe74b580d0919916ef8911b2830994fd9dd3024732ab77f792fb0b598a47",
+      "artifact_path": "physical_validation\\runs\\run_phys_lab_20260927_222535_26237\\raw\\golden_source_canonical.raw",
+      "operator": "AEGISTRACE_LAB_OPERATOR_AIRGAP",
+      "device_id": "HOST_CANVAS_RENDERER",
+      "timestamp": "2026-09-27T22:25:36.005556+00:00",
+      "notes": "Golden source canvas SHA-256: a017fe74b580d0919916ef8911b2830994fd9dd3024732ab77f792fb0b598a47",
+      "metadata": {
+        "byte_length": 2400000
+      }
+    },
+    {
+      "event_id": "cust_0002",
+      "action": "PRINTED",
+      "artifact_hash": "1b2585a4711ab0bf2a03852906ff269d652156e8238b8f86d4df76fccf5bcbd8",
+      "artifact_path": "physical_validation\\runs\\run_phys_lab_20260927_222535_26237\\processed\\alice_rendered_watermarked.raw",
+      "operator": "AEGISTRACE_LAB_OPERATOR_AIRGAP",
+      "device_id": "DECRYPTION_WATERMARK_ENGINE",
+      "timestamp": "2026-09-27T22:25:39.506510+00:00",
+      "notes": "Alice trial trial_rec_alice_ses_phys DLT height 1",
+      "metadata": {
+        "byte_length": 2400000
+      }
+    },
+    {
+      "event_id": "cust_0003",
+      "action": "SEALED",
+      "artifact_hash": "a23b8e2c133b2dea10912babebce56e7b12b936152e16dcf5c885e70bdb544c3",
+      "artifact_path": "physical_validation\\runs\\run_phys_lab_20260927_222535_26237\\results\\manifest_seal.sig",
+      "operator": "AEGISTRACE_LAB_OPERATOR_AIRGAP",
+      "device_id": "AIRGAP_OFFLINE_VERIFIER",
+      "timestamp": "2026-09-27T22:26:49.712184+00:00",
+      "notes": "Physical validation run completed and sealed.",
+      "metadata": {
+        "byte_length": 64
+      }
+    }
+  ],
+  "root_custody_hash": "02a4ef7a064073ab7e95278155cf0a50a2805c87e09aced713ea1e2d76d47708"
+}

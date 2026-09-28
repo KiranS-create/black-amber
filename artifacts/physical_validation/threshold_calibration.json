@@ -1,0 +1,38 @@
+{
+  "calibrated_parameters": {
+    "confidence_threshold_tau": 0.4,
+    "tardos_decision_threshold_Z": "Dynamic (q=1 - eps^(1/c))",
+    "rs_parity_bytes_2t": 32,
+    "max_correctable_byte_errata": 16,
+    "max_acceptable_reprojection_error_px": 6.0,
+    "iqa_min_laplacian_variance": 40.0
+  },
+  "fpr_vs_fnr_tradeoff": [
+    {
+      "confidence_threshold": 0.2,
+      "calibration_FPR": "0/15",
+      "calibration_FNR": "0/15"
+    },
+    {
+      "confidence_threshold": 0.4,
+      "calibration_FPR": "0/15",
+      "calibration_FNR": "0/15"
+    },
+    {
+      "confidence_threshold": 0.6,
+      "calibration_FPR": "0/15",
+      "calibration_FNR": "1/15"
+    },
+    {
+      "confidence_threshold": 0.8,
+      "calibration_FPR": "0/15",
+      "calibration_FNR": "4/15"
+    }
+  ],
+  "held_out_evaluation_verification": {
+    "selected_tau": 0.4,
+    "evaluation_FPR": "0/30",
+    "negative_corpus_FPR": "0/50",
+    "evaluation_recovery": "24/30"
+  }
+}

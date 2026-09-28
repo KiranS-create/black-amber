@@ -1,0 +1,152 @@
+{
+  "alice": {
+    "chain_id": "PCHAIN-alice-PLAB-20260927-f124555d",
+    "run_id": "PLAB-20260927-f124555d",
+    "initial_artifact_hash": "58472edaadf3b4d7e6a490a600d40f22335fc383cff476aea564c3858d423cbc",
+    "events": [
+      {
+        "event_id": "PCEVT-74e5bd3b85",
+        "action": "IMPORTED",
+        "operator": "operator_secops",
+        "timestamp": "2026-09-27T22:33:58.515464+00:00",
+        "device_id": "RENDER_CANVAS",
+        "artifact_hash": "58472edaadf3b4d7e6a490a600d40f22335fc383cff476aea564c3858d423cbc",
+        "previous_custody_hash": "GENESIS",
+        "custody_hash": "18797f3fa0da7cc40cff511d4e8da117dde0820e84aa7a0b0e08975806f394ed",
+        "metadata": {
+          "recipient_id": "alice",
+          "stage": "INITIAL_DIGITAL_RENDER"
+        }
+      },
+      {
+        "event_id": "PCEVT-5ec16fac9a",
+        "action": "ANALYZED",
+        "operator": "operator_secops",
+        "timestamp": "2026-09-27T22:33:59.186657+00:00",
+        "device_id": "UNAVAILABLE",
+        "artifact_hash": "58472edaadf3b4d7e6a490a600d40f22335fc383cff476aea564c3858d423cbc",
+        "previous_custody_hash": "18797f3fa0da7cc40cff511d4e8da117dde0820e84aa7a0b0e08975806f394ed",
+        "custody_hash": "e9724c7cd08827f15a4da8c1018bb86591e6140a23fd18bb799080eb6c261b4e",
+        "metadata": {
+          "status": "NOT_VERIFIED",
+          "reason": "No live physical camera/printer"
+        }
+      },
+      {
+        "event_id": "PCEVT-957ca29d64",
+        "action": "SEALED",
+        "operator": "operator_secops",
+        "timestamp": "2026-09-27T22:33:59.186657+00:00",
+        "device_id": "UNAVAILABLE",
+        "artifact_hash": "58472edaadf3b4d7e6a490a600d40f22335fc383cff476aea564c3858d423cbc",
+        "previous_custody_hash": "e9724c7cd08827f15a4da8c1018bb86591e6140a23fd18bb799080eb6c261b4e",
+        "custody_hash": "792abdd6460f6a8a15d7bf6e7b0ec48d567ddcafec5e71493b7b6d36a319e2c1",
+        "metadata": {
+          "seal_status": "AUDITED_NOT_VERIFIED"
+        }
+      }
+    ],
+    "is_sealed": true,
+    "final_seal_hash": "792abdd6460f6a8a15d7bf6e7b0ec48d567ddcafec5e71493b7b6d36a319e2c1"
+  },
+  "bob": {
+    "chain_id": "PCHAIN-bob-PLAB-20260927-f124555d",
+    "run_id": "PLAB-20260927-f124555d",
+    "initial_artifact_hash": "d728bba8a5c1769e38d433504341a36d5826c9fc4cd687a72bd03785ea37324a",
+    "events": [
+      {
+        "event_id": "PCEVT-bb11b6af09",
+        "action": "IMPORTED",
+        "operator": "operator_secops",
+        "timestamp": "2026-09-27T22:33:58.863896+00:00",
+        "device_id": "RENDER_CANVAS",
+        "artifact_hash": "d728bba8a5c1769e38d433504341a36d5826c9fc4cd687a72bd03785ea37324a",
+        "previous_custody_hash": "GENESIS",
+        "custody_hash": "f4da59819a4c14fde9d24b23a3a311774659c614733c3249fd596c64c70f5137",
+        "metadata": {
+          "recipient_id": "bob",
+          "stage": "INITIAL_DIGITAL_RENDER"
+        }
+      },
+      {
+        "event_id": "PCEVT-0c03ef2ff3",
+        "action": "ANALYZED",
+        "operator": "operator_secops",
+        "timestamp": "2026-09-27T22:33:59.186657+00:00",
+        "device_id": "UNAVAILABLE",
+        "artifact_hash": "d728bba8a5c1769e38d433504341a36d5826c9fc4cd687a72bd03785ea37324a",
+        "previous_custody_hash": "f4da59819a4c14fde9d24b23a3a311774659c614733c3249fd596c64c70f5137",
+        "custody_hash": "eed5970ed3f05fb40788a53ffeed31a011bf293f5e269d5e7efcfc75f8a1ab76",
+        "metadata": {
+          "status": "NOT_VERIFIED",
+          "reason": "No live physical camera/printer"
+        }
+      },
+      {
+        "event_id": "PCEVT-d80b5f7f44",
+        "action": "SEALED",
+        "operator": "operator_secops",
+        "timestamp": "2026-09-27T22:33:59.187218+00:00",
+        "device_id": "UNAVAILABLE",
+        "artifact_hash": "d728bba8a5c1769e38d433504341a36d5826c9fc4cd687a72bd03785ea37324a",
+        "previous_custody_hash": "eed5970ed3f05fb40788a53ffeed31a011bf293f5e269d5e7efcfc75f8a1ab76",
+        "custody_hash": "d91b724ef9bc1e52df7d64df2282e56805c14711684243e074ae9220e7619803",
+        "metadata": {
+          "seal_status": "AUDITED_NOT_VERIFIED"
+        }
+      }
+    ],
+    "is_sealed": true,
+    "final_seal_hash": "d91b724ef9bc1e52df7d64df2282e56805c14711684243e074ae9220e7619803"
+  },
+  "charlie": {
+    "chain_id": "PCHAIN-charlie-PLAB-20260927-f124555d",
+    "run_id": "PLAB-20260927-f124555d",
+    "initial_artifact_hash": "62680983bd815652e66f2b6178a01f93258220bd347640abc33b5103df6bdf99",
+    "events": [
+      {
+        "event_id": "PCEVT-174781ea53",
+        "action": "IMPORTED",
+        "operator": "operator_secops",
+        "timestamp": "2026-09-27T22:33:59.185576+00:00",
+        "device_id": "RENDER_CANVAS",
+        "artifact_hash": "62680983bd815652e66f2b6178a01f93258220bd347640abc33b5103df6bdf99",
+        "previous_custody_hash": "GENESIS",
+        "custody_hash": "73829d4e549ab149f9b0f4e7fc00f2cba5a436db5a0668069c266d09ce546660",
+        "metadata": {
+          "recipient_id": "charlie",
+          "stage": "INITIAL_DIGITAL_RENDER"
+        }
+      },
+      {
+        "event_id": "PCEVT-09eb2875da",
+        "action": "ANALYZED",
+        "operator": "operator_secops",
+        "timestamp": "2026-09-27T22:33:59.187218+00:00",
+        "device_id": "UNAVAILABLE",
+        "artifact_hash": "62680983bd815652e66f2b6178a01f93258220bd347640abc33b5103df6bdf99",
+        "previous_custody_hash": "73829d4e549ab149f9b0f4e7fc00f2cba5a436db5a0668069c266d09ce546660",
+        "custody_hash": "238bde293ff340666a738dc49adf119b1543d012d7648f7eedb8e840436851d5",
+        "metadata": {
+          "status": "NOT_VERIFIED",
+          "reason": "No live physical camera/printer"
+        }
+      },
+      {
+        "event_id": "PCEVT-b3d4e7ab4c",
+        "action": "SEALED",
+        "operator": "operator_secops",
+        "timestamp": "2026-09-27T22:33:59.187218+00:00",
+        "device_id": "UNAVAILABLE",
+        "artifact_hash": "62680983bd815652e66f2b6178a01f93258220bd347640abc33b5103df6bdf99",
+        "previous_custody_hash": "238bde293ff340666a738dc49adf119b1543d012d7648f7eedb8e840436851d5",
+        "custody_hash": "f25199781083d2e935779cf7c0e19753dbbada7b31eb12303fc4cf60084d919a",
+        "metadata": {
+          "seal_status": "AUDITED_NOT_VERIFIED"
+        }
+      }
+    ],
+    "is_sealed": true,
+    "final_seal_hash": "f25199781083d2e935779cf7c0e19753dbbada7b31eb12303fc4cf60084d919a"
+  }
+}

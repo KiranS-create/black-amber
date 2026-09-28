@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "timestamp": "2026-09-27T23:01:50.482855+00:00",
+  "camera_status": "UNAVAILABLE",
+  "printer_status": "UNAVAILABLE",
+  "scanner_status": "UNAVAILABLE",
+  "safe_rejections": [
+    {
+      "capability": "CAMERA_CAPTURE",
+      "reason": "0 physical cameras detected",
+      "status": "NOT_VERIFIED"
+    },
+    {
+      "capability": "PRINT_VALIDATION",
+      "reason": "0 physical printers detected",
+      "status": "UNAVAILABLE"
+    },
+    {
+      "capability": "SCAN_VALIDATION",
+      "reason": "0 physical scanners detected",
+      "status": "UNAVAILABLE"
+    }
+  ]
+}

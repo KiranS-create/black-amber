@@ -6,6 +6,12 @@ from typing import Optional, Dict, Any, Tuple, List
 from core.release import ReleaseRecipientPackage
 from core.ledger.ledger import EvidenceEvent, TamperEvidentLedger
 from core.traceability.provider import TraceabilityMarker
+from core.attribution.evidence import (
+    EvidenceBundle,
+    EvidenceObservation,
+    EvidenceFamily,
+    TargetBinding,
+)
 
 from attacks.base import (
     BaseAttack,
@@ -140,3 +146,126 @@ def create_duplicated_ledger_fixture(ledger: TamperEvidentLedger, dup_index: int
 def create_substituted_artifact_fixture(decoy_bytes: bytes) -> bytes:
     """Return unrelated decoy bytes pretending to be the target decrypted artifact."""
     return decoy_bytes
+
+
+# =========================================================================
+# Generic Adversarial Fault-Injection Harness
+# =========================================================================
+
+def tamper_document(doc_bytes: bytes, mode: str = "append", content: Optional[bytes] = None) -> bytes:
+    """Tamper with plaintext or serialized document bytes."""
+    if content:
+        return doc_bytes + content
+    if mode == "append":
+        return doc_bytes + b"\n\n% ADVERSARIAL FORGERY INSERTION"
+    elif mode == "truncate":
+        return doc_bytes[:max(1, len(doc_bytes) // 2)]
+    elif mode == "flip":
+        if not doc_bytes:
+            return b"\xFF"
+        return bytes([doc_bytes[0] ^ 0xFF]) + doc_bytes[1:]
+    return doc_bytes + b"\x00"
+
+
+def tamper_release(package: ReleaseRecipientPackage, new_release_id: str = "rel_tampered_999") -> ReleaseRecipientPackage:
+    """Tamper with package release identifier."""
+    pkg = package.model_copy(deep=True)
+    pkg.release_id = new_release_id
+    return pkg
+
+
+def tamper_recipient(target: Any, new_recipient_id: str = "rec_adversary_mallory") -> Any:
+    """Tamper with recipient identity on package, event, or observation."""
+    t = target.model_copy(deep=True)
+    if hasattr(t, "recipient_id"):
+        t.recipient_id = new_recipient_id
+    if hasattr(t, "primary_candidate"):
+        t.primary_candidate = new_recipient_id
+    if hasattr(t, "target_binding") and t.target_binding:
+        t.target_binding.recipient_id = new_recipient_id
+    return t
+
+
+def tamper_hash(target: Any, new_hash: Optional[str] = None) -> Any:
+    """Tamper with artifact or document hash."""
+    t = target.model_copy(deep=True)
+    bad_hash = new_hash or ("bad0" * 16)
+    if hasattr(t, "document_hash"):
+        t.document_hash = bad_hash
+    if hasattr(t, "artifact_hash"):
+        t.artifact_hash = bad_hash
+    if hasattr(t, "target_binding") and t.target_binding:
+        t.target_binding.artifact_hash = bad_hash
+    return t
+
+
+def tamper_signature(event: EvidenceEvent) -> EvidenceEvent:
+    """Corrupt or flip the cryptographic signature on a ledger event."""
+    return create_modified_signature_fixture(event)
+
+
+def replay_event(event: EvidenceEvent, target_ledger: TamperEvidentLedger) -> Tuple[bool, str]:
+    """Attempt to replay an existing or stale event into a ledger."""
+    try:
+        event_hash = target_ledger.append_event(event)
+        return (True, event_hash)
+    except Exception as ex:
+        return (False, str(ex))
+
+
+def duplicate_event(event: EvidenceEvent) -> EvidenceEvent:
+    """Produce an exact clone with the same event_id to trigger anti-replay."""
+    return event.model_copy(deep=True)
+
+
+def swap_evidence(obs_a: EvidenceObservation, obs_b: EvidenceObservation) -> Tuple[EvidenceObservation, EvidenceObservation]:
+    """Swap target bindings between two observations."""
+    swapped_a = obs_a.model_copy(deep=True)
+    swapped_b = obs_b.model_copy(deep=True)
+    swapped_a.target_binding = obs_b.target_binding.model_copy(deep=True)
+    swapped_b.target_binding = obs_a.target_binding.model_copy(deep=True)
+    return (swapped_a, swapped_b)
+
+
+def remove_evidence(bundle: EvidenceBundle, family: EvidenceFamily) -> EvidenceBundle:
+    """Strip all observations of a specific family from an evidence bundle."""
+    b = bundle.model_copy(deep=True)
+    b.observations = [o for o in b.observations if o.family != family]
+    return b
+
+
+def cross_bind_evidence(obs: EvidenceObservation, target_binding: TargetBinding) -> EvidenceObservation:
+    """Bind an observation to a mismatched target binding."""
+    c = obs.model_copy(deep=True)
+    c.target_binding = target_binding.model_copy(deep=True)
+    return c
+
+
+def corrupt_payload(data: bytes, flip_ratio: float = 0.05) -> bytes:
+    """Deterministically corrupt bytes according to flip_ratio."""
+    if not data:
+        return b"\xFF"
+    ba = bytearray(data)
+    step = max(1, int(1.0 / max(0.001, flip_ratio)))
+    for i in range(0, len(ba), step):
+        ba[i] ^= 0xAA
+    return bytes(ba)
+
+
+class AdversarialFaultHarness:
+    """
+    Unified fault-injection test harness for executing cross-binding,
+    tampering, replay, and contradiction attacks against AegisTrace.
+    """
+    tamper_document = staticmethod(tamper_document)
+    tamper_release = staticmethod(tamper_release)
+    tamper_recipient = staticmethod(tamper_recipient)
+    tamper_hash = staticmethod(tamper_hash)
+    tamper_signature = staticmethod(tamper_signature)
+    replay_event = staticmethod(replay_event)
+    duplicate_event = staticmethod(duplicate_event)
+    swap_evidence = staticmethod(swap_evidence)
+    remove_evidence = staticmethod(remove_evidence)
+    cross_bind_evidence = staticmethod(cross_bind_evidence)
+    corrupt_payload = staticmethod(corrupt_payload)
+

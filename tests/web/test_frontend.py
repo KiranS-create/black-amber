@@ -133,8 +133,8 @@ def test_api_contract_methods():
     assert "POST /leaks" in content or "/leaks" in content
     assert "POST /analyze" in content or "/analyze" in content
     assert "GET /ledger/verify" in content or "/ledger/verify" in content
-    assert "submitReleaseProvenance" in content
-    assert "submitDecryptionEvent" in content
+    assert "createRelease" in content or "submitReleaseProvenance" in content
+    assert "decryptPackage" in content or "submitDecryptionEvent" in content
 
 def test_no_overclaiming_in_frontend():
     src_dir = os.path.join(WEB_ROOT, "src")

@@ -1,0 +1,7 @@
+{
+  "schema_version": "1.0.0",
+  "timestamp": "2026-09-27T23:01:50.482855+00:00",
+  "lineage_merkle_root": "856839f7669dc4d0ed0b7d9924c9e652b45eb35b0c488bee3b099a26ece66c92",
+  "events_count": 2,
+  "tree_type": "SPARSE_MERKLE_TREE"
+}

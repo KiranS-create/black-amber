@@ -1,7 +1,7 @@
 # SIH26237 — Official SIH 2026 PPTX Template QA Report
 
 **Generated Presentation File:** [`presentation/SIH26237_Final.pptx`](file:///C:/Projects/SIH26237/presentation/SIH26237_Final.pptx)  
-**Source Template:** `C:\Users\kiran akash\Downloads\SIH2026-IDEA-Presentation-Format.pptx`  
+**Source Template:** Official SIH 2026 PPTX Template (`SIH2026-IDEA-Presentation-Format.pptx`)  
 **Date:** September 26, 2026  
 **Status:** **100% PASSED — READY FOR SIH PORTAL SUBMISSION**  
 

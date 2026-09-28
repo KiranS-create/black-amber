@@ -20,9 +20,12 @@ from apps.api.errors import (
     CapacityInsufficientError,
     DocumentNotFoundError,
     ErrorCode,
+    InvalidStateError,
     RecipientNotFoundError,
     ReleaseNotFoundError,
+    ReplayDetectedError,
 )
+from apps.api.security import default_replay_cache
 from apps.api.models import (
     AnalysisJobResponse,
     ArtifactMetadata,
@@ -47,11 +50,17 @@ from apps.api.adapters import (
     EvidenceFusionAdapter,
 )
 
+from core.identity.models import Identity, Group, IdentityStatus
+from core.identity.provider import IdentityProvider, LocalIdentityProvider
+from core.identity.resolver import IdentityResolver, default_identity_resolver
+from core.identity.targeting import ReleaseTargetingService, ReleaseTargetSpec, ReleaseTargetType
+
 class SystemOrchestrator:
     """
     Central orchestration service for the SIH26237 backend.
     Orchestrates the existing cryptography, release machinery, traceability providers,
-    tamper-evident ledger, and attribution fusion engine without duplicating internal logic.
+    tamper-evident ledger, attribution fusion engine, and enterprise identity directory
+    without duplicating internal logic.
     """
     def __init__(
         self,
@@ -63,8 +72,14 @@ class SystemOrchestrator:
         artifact_storage: Optional[ArtifactStorage] = None,
         metadata_repo: Optional[MetadataRepository] = None,
         job_manager: Optional[JobManager] = None,
+        identity_provider: Optional[IdentityProvider] = None,
+        identity_resolver: Optional[IdentityResolver] = None,
+        targeting_service: Optional[ReleaseTargetingService] = None,
     ):
         self.registry = registry or default_registry
+        self.identity_provider = identity_provider or LocalIdentityProvider()
+        self.identity_resolver = identity_resolver or default_identity_resolver
+        self.targeting_service = targeting_service or ReleaseTargetingService(self.identity_provider)
         self.release_manager = release_manager or default_release_manager
         self.decryption_client = decryption_client or default_decryption_client
         self.ledger = ledger or default_ledger
@@ -85,7 +100,8 @@ class SystemOrchestrator:
         document_bytes: bytes,
         document_name: str,
         document_id: Optional[str] = None,
-        mime_type: str = "application/pdf"
+        mime_type: str = "application/pdf",
+        tenant_id: str = "default_tenant"
     ) -> DocumentMetadata:
         orig_hash = hashlib.sha256(document_bytes).hexdigest()
         doc_id = document_id or f"doc_{orig_hash[:8]}_{uuid.uuid4().hex[:6]}"
@@ -95,6 +111,7 @@ class SystemOrchestrator:
             data=document_bytes,
             artifact_type=ArtifactType.ORIGINAL_DOCUMENT,
             document_id=doc_id,
+            tenant_id=tenant_id,
             mime_type=mime_type,
             expected_hash=orig_hash
         )
@@ -103,6 +120,7 @@ class SystemOrchestrator:
             document_id=doc_id,
             document_name=document_name,
             original_document_hash=orig_hash,
+            tenant_id=tenant_id,
             size_bytes=len(document_bytes),
             mime_type=mime_type,
             created_at=artifact.created_at,
@@ -113,19 +131,66 @@ class SystemOrchestrator:
         self.metadata_repo.save_document(doc_meta)
         return doc_meta
 
-    def get_document(self, document_id: str) -> DocumentMetadata:
-        doc = self.metadata_repo.get_document(document_id)
+    def get_document(self, document_id: str, tenant_id: Optional[str] = None) -> DocumentMetadata:
+        doc = self.metadata_repo.get_document(document_id, tenant_id=tenant_id)
         if not doc:
             raise DocumentNotFoundError(document_id)
         return doc
 
-    def get_document_bytes(self, document_id: str) -> bytes:
-        doc = self.get_document(document_id)
+    def get_document_bytes(self, document_id: str, tenant_id: Optional[str] = None) -> bytes:
+        doc = self.get_document(document_id, tenant_id=tenant_id)
         return self.storage.retrieve_artifact_bytes(doc.artifact_id)
 
-    # 2. Recipient Lifecycle
-    def enroll_recipient(self, name: str, recipient_id: Optional[str] = None) -> PublicRecipient:
-        rec = self.registry.enroll(name=name, recipient_id=recipient_id)
+    # 2. Identity & Directory Lifecycle
+    def search_directory(self, query: str = "", limit: int = 20) -> List[Identity]:
+        return self.identity_provider.search_identities(query=query, limit=limit)
+
+    def get_identity(self, identity_id: str) -> Optional[Identity]:
+        return self.identity_provider.get_identity(identity_id)
+
+    def list_groups(self) -> List[Group]:
+        return self.identity_provider.get_groups()
+
+    def resolve_group_members(self, group_id: str) -> List[Identity]:
+        return self.identity_provider.resolve_group_members(group_id)
+
+    # 3. Recipient Lifecycle
+    def enroll_recipient(
+        self,
+        name: Optional[str] = None,
+        recipient_id: Optional[str] = None,
+        identity_id: Optional[str] = None
+    ) -> PublicRecipient:
+        if identity_id:
+            ident = self.identity_provider.get_identity(identity_id)
+            if not ident:
+                raise APIException(
+                    code=ErrorCode.RECIPIENT_NOT_FOUND,
+                    message=f"Identity '{identity_id}' not found in directory.",
+                    status_code=404
+                )
+            if ident.status != IdentityStatus.ACTIVE:
+                raise APIException(
+                    code=ErrorCode.INVALID_RECIPIENT if hasattr(ErrorCode, "INVALID_RECIPIENT") else ErrorCode.INVALID_RELEASE,
+                    message=f"Cannot enroll inactive or deprovisioned identity '{identity_id}' (status: {ident.status}).",
+                    status_code=400
+                )
+            rec = self.registry.enroll_identity(ident, recipient_id=recipient_id)
+        else:
+            if not name:
+                raise APIException(
+                    code=ErrorCode.INVALID_RECIPIENT if hasattr(ErrorCode, "INVALID_RECIPIENT") else ErrorCode.INVALID_RELEASE,
+                    message="Either 'name' or 'identity_id' must be provided for recipient enrollment.",
+                    status_code=400
+                )
+            rec = self.registry.enroll(name=name, recipient_id=recipient_id)
+        return rec.to_public()
+
+    def revoke_recipient(self, recipient_id: str) -> PublicRecipient:
+        success = self.registry.revoke(recipient_id)
+        if not success:
+            raise RecipientNotFoundError(recipient_id)
+        rec = self.registry.get(recipient_id)
         return rec.to_public()
 
     def list_recipients(self) -> List[PublicRecipient]:
@@ -137,7 +202,7 @@ class SystemOrchestrator:
             raise RecipientNotFoundError(recipient_id)
         return rec.to_public()
 
-    # 3. Release Lifecycle
+    # 4. Release Lifecycle
     def create_release(self, req: CreateReleaseRequest) -> DocumentRelease:
         # Resolve document bytes
         if req.document_id:
@@ -167,15 +232,56 @@ class SystemOrchestrator:
                 message="Either 'document_id' or 'document_base64' must be provided."
             )
 
+        # Resolve target recipients
+        recipient_ids: List[str] = []
+        target_summary: Optional[Dict[str, Any]] = None
+
+        if req.target_type in ["groups", "identities", "group", "identity"] and req.target_ids:
+            t_type = ReleaseTargetType.GROUP if req.target_type in ["groups", "group"] else ReleaseTargetType.INDIVIDUAL
+            spec = ReleaseTargetSpec(target_type=t_type, target_ids=req.target_ids)
+            try:
+                identities = self.targeting_service.resolve_targets(spec)
+            except ValueError as e:
+                raise APIException(
+                    code=ErrorCode.INVALID_RELEASE,
+                    message=str(e),
+                    status_code=400
+                )
+            for ident in identities:
+                rec = self.registry.get_by_identity(ident.identity_id)
+                if not rec:
+                    rec = self.registry.enroll_identity(ident)
+                recipient_ids.append(rec.recipient_id)
+            target_summary = {
+                "target_type": t_type.value,
+                "target_ids": req.target_ids,
+                "resolved_count": len(identities)
+            }
+        elif req.recipient_ids:
+            recipient_ids = req.recipient_ids
+        else:
+            raise APIException(
+                code=ErrorCode.INVALID_RELEASE,
+                message="Either 'recipient_ids' or ('target_type' + 'target_ids') must be provided.",
+                status_code=400
+            )
+
         # Validate recipient population
-        for r_id in req.recipient_ids:
-            if not self.registry.get(r_id):
+        for r_id in recipient_ids:
+            rec = self.registry.get(r_id)
+            if not rec:
                 raise RecipientNotFoundError(r_id)
+            if rec.status != "ACTIVE":
+                raise APIException(
+                    code=ErrorCode.INVALID_RELEASE,
+                    message=f"Cannot release to inactive or revoked recipient '{r_id}' (status: {rec.status}).",
+                    status_code=400
+                )
 
         # Tardos capacity check if requested
         if req.tardos_enabled:
             feasible, reason, req_len = self.traceability_adapter.validate_capacity(
-                recipient_count=len(req.recipient_ids),
+                recipient_count=len(recipient_ids),
                 coalition_size=req.coalition_size,
                 false_accusation_epsilon=req.false_accusation_epsilon,
                 carrier_budget=req.carrier_budget
@@ -191,8 +297,10 @@ class SystemOrchestrator:
             document_bytes=doc_bytes,
             document_name=doc_name,
             issuer_id=req.issuer_id,
-            recipient_ids=req.recipient_ids,
-            document_id=doc_id
+            recipient_ids=recipient_ids,
+            document_id=doc_id,
+            target_summary=target_summary,
+            tenant_id=req.tenant_id or "default_tenant"
         )
 
         return release
@@ -222,6 +330,10 @@ class SystemOrchestrator:
         recipient = self.registry.get(recipient_id)
         if not recipient:
             raise RecipientNotFoundError(recipient_id)
+        if recipient.status != "ACTIVE":
+            raise InvalidStateError(
+                f"Cannot decrypt package: recipient '{recipient_id}' is revoked or inactive (status: {recipient.status})."
+            )
 
         try:
             plaintext, traceable_copy, event, event_hash = self.decryption_client.decrypt_package(
@@ -244,6 +356,7 @@ class SystemOrchestrator:
             document_id=package.document_id,
             release_id=release_id,
             recipient_id=recipient_id,
+            tenant_id=getattr(release, "tenant_id", "default_tenant"),
             expected_hash=traceable_hash
         )
 
@@ -268,7 +381,8 @@ class SystemOrchestrator:
         leak_bytes: bytes,
         mime_type: str = "application/pdf",
         suspected_document_id: Optional[str] = None,
-        suspected_release_id: Optional[str] = None
+        suspected_release_id: Optional[str] = None,
+        tenant_id: str = "default_tenant"
     ) -> LeakMetadata:
         leak_hash = hashlib.sha256(leak_bytes).hexdigest()
         leak_id = f"leak_{leak_hash[:8]}_{uuid.uuid4().hex[:6]}"
@@ -278,6 +392,7 @@ class SystemOrchestrator:
             artifact_type=ArtifactType.LEAK_ARTIFACT,
             document_id=suspected_document_id,
             release_id=suspected_release_id,
+            tenant_id=tenant_id,
             mime_type=mime_type,
             expected_hash=leak_hash
         )
@@ -285,6 +400,7 @@ class SystemOrchestrator:
         meta = LeakMetadata(
             leak_id=leak_id,
             leak_artifact_hash=leak_hash,
+            tenant_id=tenant_id,
             size_bytes=len(leak_bytes),
             mime_type=mime_type,
             suspected_document_id=suspected_document_id,
@@ -312,7 +428,8 @@ class SystemOrchestrator:
         expected_release_id: Optional[str] = None,
         expected_document_id: Optional[str] = None,
         attack_telemetry: Optional[Any] = None,
-        async_execution: bool = False
+        async_execution: bool = False,
+        tenant_id: str = "default_tenant"
     ) -> AnalysisJobResponse:
         # Resolve leak bytes
         if leak_id:
@@ -337,7 +454,8 @@ class SystemOrchestrator:
             leak_meta = self.ingest_leak(
                 leak_bytes,
                 suspected_document_id=expected_document_id,
-                suspected_release_id=expected_release_id
+                suspected_release_id=expected_release_id,
+                tenant_id=tenant_id
             )
             leak_id = leak_meta.leak_id
             leak_hash = leak_meta.leak_artifact_hash
@@ -350,6 +468,7 @@ class SystemOrchestrator:
             )
 
         job = self.job_manager.create_job(leak_id=leak_id, leak_artifact_hash=leak_hash)
+        job.tenant_id = tenant_id
 
         def _task():
             return self.fusion_adapter.execute_fusion(
@@ -388,8 +507,15 @@ class SystemOrchestrator:
         2. Release exists and recipient is an authorized recipient.
         3. Document ID matches the release's master document.
         4. ML-DSA-65 digital signature is cryptographically valid over the bound provenance payload.
-        5. Event does not violate anti-replay constraints or hash chain continuity in the ledger.
+        5. Anti-replay verification: reject duplicates.
+        6. Event does not violate anti-replay constraints or hash chain continuity in the ledger.
         """
+        # Anti-replay freshness check
+        if not default_replay_cache.check_and_record(event.event_id):
+            raise ReplayDetectedError(
+                f"Replay detected: provenance event '{event.event_id}' has already been processed or submitted."
+            )
+
         recipient = self.registry.get(event.recipient_id)
         if not recipient:
             raise RecipientNotFoundError(event.recipient_id)
@@ -461,5 +587,38 @@ class SystemOrchestrator:
     def verify_ledger(self) -> Tuple[bool, int, str, List[str]]:
         is_valid, errors = self.ledger.verify_chain()
         return is_valid, len(self.ledger.events), self.ledger.get_last_event_hash(), errors
+
+    def reset_demo_state(self, clear_recipients: bool = True) -> Dict[str, int]:
+        """
+        Guaranteed clean reset of isolated demo state across all data collections.
+        """
+        if hasattr(self.metadata_repo, "clear"):
+            self.metadata_repo.clear()
+        if hasattr(self.storage, "clear"):
+            self.storage.clear()
+        if hasattr(self.release_manager, "clear"):
+            self.release_manager.clear()
+        else:
+            self.release_manager.releases.clear()
+        if hasattr(self.ledger, "clear"):
+            self.ledger.clear()
+        if clear_recipients:
+            if hasattr(self.registry, "clear"):
+                self.registry.clear()
+            else:
+                self.registry._recipients.clear()
+                self.registry._identity_to_recipient.clear()
+
+        if hasattr(default_replay_cache, "seen"):
+            default_replay_cache.seen.clear()
+
+        return {
+            "documents": len(self.metadata_repo.list_documents()),
+            "releases": len(self.release_manager.list_releases()),
+            "recipients": len(self.registry.list_all()),
+            "investigations": len(self.metadata_repo.list_jobs()),
+            "evidence": len(self.metadata_repo.list_leaks()),
+            "ledger_events": len(self.ledger.events),
+        }
 
 default_orchestrator = SystemOrchestrator()

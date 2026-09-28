@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 import os
 import hashlib
 import warnings
+import threading
 from typing import Optional, Dict, Any, Tuple
 from core.crypto.models import KeyPair, EncapsulationResult
 
@@ -98,13 +99,15 @@ class StandardMLKEM768Provider(MLKEMProvider):
     Module-Lattice Key Encapsulation Mechanism (ML-KEM-768) mathematics.
     """
     ALGORITHM_NAME = "ML-KEM-768"
+    _lock = threading.Lock()
 
     def __init__(self):
         if not _KYBER_PY_AVAILABLE:
             raise RuntimeError("NIST FIPS 203 Kyber engine is not available")
 
     def generate_keypair(self) -> KeyPair:
-        pk, sk = _Kyber768_Engine.keygen()
+        with self._lock:
+            pk, sk = _Kyber768_Engine.keygen()
         if len(pk) != 1184 or len(sk) != 2400:
             raise ValueError(f"Invalid ML-KEM-768 key dimensions: pk={len(pk)}, sk={len(sk)}")
         return KeyPair(
@@ -116,7 +119,8 @@ class StandardMLKEM768Provider(MLKEMProvider):
     def encapsulate(self, public_key_bytes: bytes) -> EncapsulationResult:
         if len(public_key_bytes) != 1184:
             raise ValueError(f"ML-KEM-768 public key must be exactly 1184 bytes, got {len(public_key_bytes)}")
-        shared_secret, ciphertext = _Kyber768_Engine.encaps(public_key_bytes)
+        with self._lock:
+            shared_secret, ciphertext = _Kyber768_Engine.encaps(public_key_bytes)
         if len(ciphertext) != 1088 or len(shared_secret) != 32:
             raise ValueError(f"Unexpected ML-KEM output dimensions: ct={len(ciphertext)}, ss={len(shared_secret)}")
         return EncapsulationResult(
@@ -130,7 +134,8 @@ class StandardMLKEM768Provider(MLKEMProvider):
         if len(ciphertext) != 1088:
             raise ValueError(f"ML-KEM-768 ciphertext must be exactly 1088 bytes, got {len(ciphertext)}")
         # FIPS 203 decapsulation with implicit rejection
-        shared_secret = _Kyber768_Engine.decaps(private_key_bytes, ciphertext)
+        with self._lock:
+            shared_secret = _Kyber768_Engine.decaps(private_key_bytes, ciphertext)
         return shared_secret
 
     def algorithm_metadata(self) -> Dict[str, Any]:
@@ -198,7 +203,7 @@ class DevFallbackKEMProvider(MLKEMProvider):
 
 
 # Provider Selection & Unified MLKEM768 Class
-def get_default_kem_provider() -> MLKEMProvider:
+def get_default_kem_provider(fail_closed: Optional[bool] = None) -> MLKEMProvider:
     if _OQS_AVAILABLE:
         try:
             return OQSMLKEMProvider()
@@ -206,7 +211,22 @@ def get_default_kem_provider() -> MLKEMProvider:
             pass
     if _KYBER_PY_AVAILABLE:
         return StandardMLKEM768Provider()
+    
+    # Check if production mode or explicit strictness requires fail-closed behavior
+    is_prod = (
+        os.environ.get("SIH26237_ENV", "").strip().lower() in ("production", "prod") or
+        os.environ.get("AEGISTRACE_ENV", "").strip().lower() in ("production", "prod") or
+        os.environ.get("SIH26237_STRICT_PQC", "").strip().lower() in ("1", "true", "yes")
+    )
+    should_fail_closed = fail_closed if fail_closed is not None else is_prod
+
+    if should_fail_closed:
+        raise RuntimeError(
+            "FATAL [ML-KEM-768]: No genuine post-quantum lattice provider (liboqs or kyber-py) is available. "
+            "Insecure DevFallbackKEMProvider is strictly blocked in production mode."
+        )
     return DevFallbackKEMProvider()
+
 
 
 class MLKEM768:

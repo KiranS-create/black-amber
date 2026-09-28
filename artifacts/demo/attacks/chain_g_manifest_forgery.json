@@ -1,0 +1,11 @@
+{
+  "chain_id": "CHAIN_G",
+  "chain_name": "Corrupted Package Manifest Forgery",
+  "description": "Attacker attempts to replace signed manifest digest",
+  "verdict": "DETECTED",
+  "security_maintained": true,
+  "evidence_errors": [
+    "MANIFEST_DIGEST_MISMATCH: Computed 93853271807e78f1904d56b4c630ad528bcf7ab49a640787f6ba3cde1ef2332b != Signed forged_manifest_000000000000000000000000000000000000000000000000"
+  ],
+  "mitigating_pillar": "Pillar 2 (ML-DSA-65 Manifest Signature)"
+}

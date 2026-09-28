@@ -1,0 +1,12 @@
+{
+  "chain_id": "CHAIN_F",
+  "chain_name": "Lineage Downstream Gap Violation",
+  "description": "Downstream gap introduced without preserving last known holder",
+  "verdict": "DETECTED",
+  "security_maintained": true,
+  "evidence_errors": [
+    "MERKLE_ROOT_MISMATCH: Recomputed bd62955fcc2dc60066dcbfc620d560b1b226c37ef8dab8d966f3efe2fe5dadcd != Manifest 2aa055b6da117f259d63e59e3f3ee04d7b74f7902c040efaf3dbee0196b69db3",
+    "Lineage with downstream gap must preserve last_known_holder"
+  ],
+  "mitigating_pillar": "Pillar 10 (Lineage Integrity & Boundary Preservation)"
+}

@@ -49,4 +49,5 @@ __all__ = [
     "derive_key",
     "derive_recipient_wrapping_key",
     "PROTOCOL_VERSION",
+    "lifecycle",
 ]

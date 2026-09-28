@@ -1,0 +1,11 @@
+{
+  "chain_id": "CHAIN_A",
+  "chain_name": "Stolen Account & Device/Telemetry Conflict",
+  "description": "Attacker accesses from unauthorized device and tampers telemetry",
+  "verdict": "DETECTED",
+  "security_maintained": true,
+  "evidence_errors": [
+    "MERKLE_ROOT_MISMATCH: Recomputed f8924b45233263181dfa1e6df3cd36319da04ddbb8b9311df66e7079d239d872 != Manifest 2aa055b6da117f259d63e59e3f3ee04d7b74f7902c040efaf3dbee0196b69db3"
+  ],
+  "mitigating_pillar": "Pillar 4 (Content Integrity) & Pillar 3 (Merkle Commitment)"
+}

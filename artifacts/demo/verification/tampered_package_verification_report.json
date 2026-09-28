@@ -1,0 +1,65 @@
+{
+  "package_id": "pkg_CASE_SIH_rel_2026_20260927223032",
+  "overall_status": "INVALID",
+  "verified_at": "2026-09-27T22:30:34.537050+00:00",
+  "manifest_signature_valid": false,
+  "merkle_root_valid": false,
+  "object_hashes_valid": true,
+  "dependency_graph_valid": true,
+  "recipient_signature_valid": true,
+  "historical_keys_valid": true,
+  "ledger_proof_valid": true,
+  "watermark_binding_valid": true,
+  "lineage_valid": true,
+  "custody_chain_valid": true,
+  "decision_consistent": true,
+  "step_details": {
+    "pillar_1_structure": {
+      "passed": true
+    },
+    "pillar_2_manifest_signature": {
+      "passed": false,
+      "error": "Manifest hash mismatch"
+    },
+    "pillar_3_merkle_root": {
+      "passed": false,
+      "error": "Merkle root mismatch"
+    },
+    "pillar_4_object_hashes": {
+      "passed": true,
+      "object_count": 12
+    },
+    "pillar_5_dag": {
+      "passed": true
+    },
+    "pillar_6_receipt_signatures": {
+      "passed": true,
+      "receipt_count": 1
+    },
+    "pillar_7_historical_keys": {
+      "passed": true
+    },
+    "pillar_8_ledger_proofs": {
+      "passed": true,
+      "proof_count": 1
+    },
+    "pillar_9_watermark_binding": {
+      "passed": true
+    },
+    "pillar_10_lineage": {
+      "passed": true
+    },
+    "pillar_11_custody_chain": {
+      "passed": true,
+      "event_count": 1
+    },
+    "pillar_12_decision": {
+      "passed": true
+    }
+  },
+  "errors": [
+    "MANIFEST_DIGEST_MISMATCH: Computed 3a2703f8f24f1d11a90f198d4fda9b74b58ab10c394f550e3981831918bb8d89 != Signed 93853271807e78f1904d56b4c630ad528bcf7ab49a640787f6ba3cde1ef2332b",
+    "MERKLE_ROOT_MISMATCH: Recomputed 2aa055b6da117f259d63e59e3f3ee04d7b74f7902c040efaf3dbee0196b69db3 != Manifest 0000000000000000000000000000000000000000000000000000000000000000"
+  ],
+  "warnings": []
+}

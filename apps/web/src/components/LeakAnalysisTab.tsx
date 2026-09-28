@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Search, 
+  Search,
+  Building, 
   ShieldCheck, 
   AlertTriangle, 
   XCircle, 
@@ -491,35 +492,117 @@ export const LeakAnalysisTab: React.FC<LeakAnalysisTabProps> = ({
 
                 {/* Candidate Highlight if Attributed */}
                 {leakResult.candidate && !leakResult.should_abstain ? (
-                  <div
-                    style={{
-                      marginTop: '4px',
-                      paddingTop: '12px',
-                      borderTop: '1px solid rgba(0,0,0,0.06)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      flexWrap: 'wrap',
-                      gap: 'var(--space-2)'
-                    }}
-                  >
-                    <div>
-                      <div style={{ fontSize: '11px', color: 'var(--success-text)', textTransform: 'uppercase', fontWeight: 700 }}>
-                        Attributed Recipient
+                  <div style={{ marginTop: '4px', paddingTop: '12px', borderTop: '1px solid rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        flexWrap: 'wrap',
+                        gap: 'var(--space-2)'
+                      }}
+                    >
+                      <div>
+                        <div style={{ fontSize: '11px', color: 'var(--success-text)', textTransform: 'uppercase', fontWeight: 700 }}>
+                          Cryptographically Attributed Principal
+                        </div>
+                        <div style={{ fontSize: 'var(--text-xl)', fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.01em' }}>
+                          {leakResult.candidate.name}
+                        </div>
+                        <div style={{ fontSize: '11.5px', color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)' }}>
+                          Forensic Principal ID: <code>{leakResult.candidate.recipient_id}</code>
+                        </div>
                       </div>
-                      <div style={{ fontSize: 'var(--text-xl)', fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.01em' }}>
-                        {leakResult.candidate.name}
-                      </div>
-                      <div style={{ fontSize: '11.5px', color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)' }}>
-                        Recipient ID: <code>{leakResult.candidate.recipient_id}</code>
+
+                      <div style={{ textAlign: 'right' }}>
+                        <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Separation Margin (Δ)</div>
+                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--success-text)' }}>
+                          {leakResult.margin !== undefined ? `+${leakResult.margin.toFixed(2)}` : 'N/A'}
+                        </div>
                       </div>
                     </div>
 
-                    <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Separation Margin (Δ)</div>
-                      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--success-text)' }}>
-                        {leakResult.margin !== undefined ? `+${leakResult.margin.toFixed(2)}` : 'N/A'}
+                    {/* Enterprise Identity Directory Resolution Card */}
+                    <div
+                      style={{
+                        backgroundColor: 'var(--surface)',
+                        border: '1px solid var(--border)',
+                        borderRadius: 'var(--radius-md)',
+                        padding: '12px 14px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '8px'
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <Building size={14} style={{ color: 'var(--primary-text)' }} />
+                          <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.03em', color: 'var(--text)' }}>
+                            Enterprise Identity Directory Resolution
+                          </span>
+                        </div>
+                        <StatusBadge
+                          label={
+                            leakResult.candidate.resolution_status === 'RESOLVED' ? 'RESOLVED (DIRECTORY)' :
+                            leakResult.candidate.resolution_status === 'CACHED' ? 'CACHED (OFFLINE STORE)' :
+                            leakResult.candidate.resolution_status === 'PENDING' ? 'PENDING (OUTAGE RESILIENT)' :
+                            (leakResult.candidate.resolution_status || 'LOCAL PRINCIPAL')
+                          }
+                          variant={
+                            leakResult.candidate.resolution_status === 'RESOLVED' ? 'success' :
+                            leakResult.candidate.resolution_status === 'CACHED' ? 'info' :
+                            leakResult.candidate.resolution_status === 'PENDING' ? 'warning' : 'neutral'
+                          }
+                          size="xs"
+                          dot
+                        />
                       </div>
+
+                      {leakResult.candidate.resolution_status === 'PENDING' ? (
+                        <div style={{ fontSize: '11.5px', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+                          <strong>Fail-Soft Directory Decoupling:</strong> The cryptographic principal (<code>{leakResult.candidate.recipient_id}</code>) is definitively proven via ledger hash chain and digital signature. Human directory resolution is pending external directory network synchronization.
+                        </div>
+                      ) : (
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '8px', fontSize: '11.5px' }}>
+                          <div>
+                            <span style={{ color: 'var(--text-tertiary)', fontSize: '10.5px', textTransform: 'uppercase' }}>Identity ID:</span>{' '}
+                            <code style={{ color: 'var(--text)' }}>{leakResult.candidate.identity_id || leakResult.candidate.identity_summary?.identity_id || 'N/A'}</code>
+                          </div>
+                          <div>
+                            <span style={{ color: 'var(--text-tertiary)', fontSize: '10.5px', textTransform: 'uppercase' }}>Email:</span>{' '}
+                            <span style={{ color: 'var(--text)', fontWeight: 500 }}>{leakResult.candidate.identity_summary?.email || 'N/A'}</span>
+                          </div>
+                          <div>
+                            <span style={{ color: 'var(--text-tertiary)', fontSize: '10.5px', textTransform: 'uppercase' }}>Department:</span>{' '}
+                            <span style={{ color: 'var(--text)' }}>{leakResult.candidate.identity_summary?.department || 'Operations'}</span>
+                          </div>
+                          <div>
+                            <span style={{ color: 'var(--text-tertiary)', fontSize: '10.5px', textTransform: 'uppercase' }}>Title:</span>{' '}
+                            <span style={{ color: 'var(--text)' }}>{leakResult.candidate.identity_summary?.title || 'Principal'}</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Deprovisioned / Revoked Historic Preservation Notice */}
+                      {leakResult.candidate.identity_status === 'REVOKED' && (
+                        <div
+                          style={{
+                            marginTop: '4px',
+                            padding: '6px 10px',
+                            borderRadius: 'var(--radius-xs)',
+                            backgroundColor: 'var(--danger-subtle)',
+                            border: '1px solid var(--danger-border)',
+                            fontSize: '11px',
+                            color: 'var(--danger-text)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px'
+                          }}
+                        >
+                          <ShieldAlert size={13} style={{ flexShrink: 0 }} />
+                          <span><strong>Historic Non-Repudiation:</strong> This principal is currently REVOKED/DEPROVISIONED, but remains legally and forensically attributable for their historical release.</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ) : (
@@ -527,6 +610,83 @@ export const LeakAnalysisTab: React.FC<LeakAnalysisTabProps> = ({
                     <strong>Fail-Closed Decision Policy Enforced:</strong> {leakResult.summary || 'Evidence does not exceed the mandatory threshold or margin required for high-consequence forensic attribution.'}
                   </div>
                 )}
+              </div>
+
+              {/* PEAK-END RESOLUTION SUMMARY (Peak-End Rule & Zeigarnik Effect) */}
+              <div className="peak-end-card">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <ShieldCheck size={16} style={{ color: leakResult.state === 'ATTRIBUTED' ? 'var(--success-text)' : 'var(--warning-text)' }} />
+                  <span style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--text)' }}>
+                    Attribution Resolution Summary
+                  </span>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 'var(--space-3)' }}>
+                  <div>
+                    <div style={{ fontSize: '10.5px', color: 'var(--text-tertiary)', textTransform: 'uppercase', fontWeight: 600 }}>
+                      What Happened
+                    </div>
+                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', marginTop: '2px', lineHeight: 1.4 }}>
+                      DSSS spatial watermarking, Tardos traitor tracing, and provenance certificates were correlated via Bayesian log-likelihood fusion.
+                    </div>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '10.5px', color: 'var(--text-tertiary)', textTransform: 'uppercase', fontWeight: 600 }}>
+                      What It Means
+                    </div>
+                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', marginTop: '2px', lineHeight: 1.4 }}>
+                      {leakResult.state === 'ATTRIBUTED'
+                        ? `Recipient ${leakResult.candidate?.name || 'suspect'} exceeded the fail-closed accusation threshold (Z ≥ 11.40) with margin Δ = +${leakResult.margin?.toFixed(2) || '0.00'}.`
+                        : 'System safely abstained under the fail-closed policy because the evidence did not satisfy non-repudiation margin requirements.'}
+                    </div>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '10.5px', color: 'var(--text-tertiary)', textTransform: 'uppercase', fontWeight: 600 }}>
+                      What You Can Do Next
+                    </div>
+                    <div style={{ display: 'flex', gap: '6px', marginTop: '4px', flexWrap: 'wrap' }}>
+                      <button
+                        onClick={onOpenReportModal}
+                        style={{
+                          height: '28px',
+                          padding: '0 10px',
+                          borderRadius: 'var(--radius-sm)',
+                          backgroundColor: 'var(--primary)',
+                          color: '#ffffff',
+                          border: 'none',
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px'
+                        }}
+                      >
+                        <Download size={11} />
+                        <span>Export Dossier</span>
+                      </button>
+                      <button
+                        onClick={() => setShowTechnicalDetails(!showTechnicalDetails)}
+                        style={{
+                          height: '28px',
+                          padding: '0 10px',
+                          borderRadius: 'var(--radius-sm)',
+                          backgroundColor: 'var(--surface)',
+                          border: '1px solid var(--border)',
+                          color: 'var(--text)',
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px'
+                        }}
+                      >
+                        <Sliders size={11} />
+                        <span>{showTechnicalDetails ? 'Collapse Telemetry' : 'Inspect Proofs'}</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* PROGRESSIVE DISCLOSURE TOGGLE */}

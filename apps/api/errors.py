@@ -20,6 +20,15 @@ class ErrorCode(str, Enum):
     CONFLICT = "CONFLICT"
     UNSUPPORTED_ARTIFACT_TYPE = "UNSUPPORTED_ARTIFACT_TYPE"
     PAYLOAD_TOO_LARGE = "PAYLOAD_TOO_LARGE"
+    AUTHENTICATION_FAILED = "AUTHENTICATION_FAILED"
+    AUTHORIZATION_FAILED = "AUTHORIZATION_FAILED"
+    TENANT_BOUNDARY_VIOLATION = "TENANT_BOUNDARY_VIOLATION"
+    RESOURCE_NOT_FOUND = "RESOURCE_NOT_FOUND"
+    INVALID_STATE = "INVALID_STATE"
+    INVALID_INPUT = "INVALID_INPUT"
+    RATE_LIMITED = "RATE_LIMITED"
+    INTEGRITY_FAILURE = "INTEGRITY_FAILURE"
+    REPLAY_DETECTED = "REPLAY_DETECTED"
     UNAUTHORIZED = "UNAUTHORIZED"
     FORBIDDEN = "FORBIDDEN"
     INVALID_SIGNATURE = "INVALID_SIGNATURE"
@@ -99,7 +108,82 @@ class CapacityInsufficientError(APIException):
             details=details or {}
         )
 
+class TenantBoundaryViolationError(APIException):
+    def __init__(self, resource_type: str, resource_id: str, principal_tenant: str, resource_tenant: str):
+        super().__init__(
+            code=ErrorCode.TENANT_BOUNDARY_VIOLATION,
+            message=f"Access denied: {resource_type} '{resource_id}' belongs to tenant '{resource_tenant}', caller is in tenant '{principal_tenant}'.",
+            status_code=status.HTTP_403_FORBIDDEN,
+            details={"resource_type": resource_type, "resource_id": resource_id, "principal_tenant": principal_tenant}
+        )
+
+class IDORViolationError(APIException):
+    def __init__(self, message: str = "Access denied: unauthorized access to recipient-scoped resource.", details: Optional[Dict[str, Any]] = None):
+        super().__init__(
+            code=ErrorCode.FORBIDDEN,
+            message=message,
+            status_code=status.HTTP_403_FORBIDDEN,
+            details=details or {}
+        )
+
+class InvalidStateError(APIException):
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None):
+        super().__init__(
+            code=ErrorCode.INVALID_STATE,
+            message=message,
+            status_code=status.HTTP_409_CONFLICT,
+            details=details or {}
+        )
+
+class RateLimitedError(APIException):
+    def __init__(self, retry_after: int = 60, details: Optional[Dict[str, Any]] = None):
+        d = details or {}
+        d["retry_after_seconds"] = retry_after
+        super().__init__(
+            code=ErrorCode.RATE_LIMITED,
+            message=f"Rate limit exceeded. Please retry after {retry_after} seconds.",
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            details=d
+        )
+
+class ReplayDetectedError(APIException):
+    def __init__(self, message: str = "Duplicate request nonce or timestamp replay detected.", details: Optional[Dict[str, Any]] = None):
+        super().__init__(
+            code=ErrorCode.REPLAY_DETECTED,
+            message=message,
+            status_code=status.HTTP_409_CONFLICT,
+            details=details or {}
+        )
+
+class AuthenticationFailedError(APIException):
+    def __init__(self, message: str = "Authentication failed: invalid or missing credentials."):
+        super().__init__(
+            code=ErrorCode.AUTHENTICATION_FAILED,
+            message=message,
+            status_code=status.HTTP_401_UNAUTHORIZED
+        )
+
+class AuthorizationFailedError(APIException):
+    def __init__(self, message: str = "Authorization failed: insufficient permissions."):
+        super().__init__(
+            code=ErrorCode.AUTHORIZATION_FAILED,
+            message=message,
+            status_code=status.HTTP_403_FORBIDDEN
+        )
+
+class InvalidInputError(APIException):
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None):
+        super().__init__(
+            code=ErrorCode.INVALID_INPUT,
+            message=message,
+            status_code=status.HTTP_400_BAD_REQUEST,
+            details=details or {}
+        )
+
 def register_error_handlers(app: FastAPI):
+    from fastapi.exceptions import RequestValidationError
+    from starlette.exceptions import HTTPException as StarletteHTTPException
+
     @app.exception_handler(APIException)
     async def api_exception_handler(request: Request, exc: APIException):
         req_id = getattr(request.state, "request_id", f"req_{uuid.uuid4().hex[:8]}")
@@ -111,12 +195,49 @@ def register_error_handlers(app: FastAPI):
                 request_id=req_id
             )
         )
+        headers = {}
+        if exc.code == ErrorCode.RATE_LIMITED:
+            retry_after = exc.details.get("retry_after_seconds", 60)
+            headers["Retry-After"] = str(retry_after)
+        return JSONResponse(status_code=exc.status_code, content=error_payload.model_dump(), headers=headers)
+
+    @app.exception_handler(StarletteHTTPException)
+    async def http_exception_handler(request: Request, exc: StarletteHTTPException):
+        req_id = getattr(request.state, "request_id", f"req_{uuid.uuid4().hex[:8]}")
+        code = ErrorCode.UNAUTHORIZED if exc.status_code == 401 else (
+            ErrorCode.FORBIDDEN if exc.status_code == 403 else (
+                ErrorCode.RESOURCE_NOT_FOUND if exc.status_code == 404 else (
+                    ErrorCode.RATE_LIMITED if exc.status_code == 429 else ErrorCode.INTERNAL_ERROR
+                )
+            )
+        )
+        error_payload = ErrorResponse(
+            error=ErrorDetail(
+                code=code,
+                message=str(exc.detail),
+                details={"status_code": exc.status_code},
+                request_id=req_id
+            )
+        )
         return JSONResponse(status_code=exc.status_code, content=error_payload.model_dump())
+
+    @app.exception_handler(RequestValidationError)
+    async def validation_exception_handler(request: Request, exc: RequestValidationError):
+        req_id = getattr(request.state, "request_id", f"req_{uuid.uuid4().hex[:8]}")
+        error_payload = ErrorResponse(
+            error=ErrorDetail(
+                code=ErrorCode.INVALID_INPUT,
+                message="Request body or query validation failed.",
+                details={"errors": [str(e) for e in exc.errors()]},
+                request_id=req_id
+            )
+        )
+        return JSONResponse(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, content=error_payload.model_dump())
 
     @app.exception_handler(Exception)
     async def generic_exception_handler(request: Request, exc: Exception):
         req_id = getattr(request.state, "request_id", f"req_{uuid.uuid4().hex[:8]}")
-        # Log error safely without exposing raw internal stack to client
+        # Log error safely without exposing raw internal stack or paths to client
         error_payload = ErrorResponse(
             error=ErrorDetail(
                 code=ErrorCode.INTERNAL_ERROR,

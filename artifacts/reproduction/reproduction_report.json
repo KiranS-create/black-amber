@@ -1,0 +1,127 @@
+{
+  "reproduction_timestamp_iso": "2026-09-28T04:09:51.803523+00:00",
+  "platform": "AegisTrace (SIH26237)",
+  "python_runtime": "3.9.0 (win32)",
+  "stages": {
+    "1_source_tree_integrity": {
+      "status": "PASS",
+      "duration_ms": 142.69,
+      "files_verified": 619,
+      "mismatches": []
+    },
+    "2_startup_self_tests": {
+      "status": "PASS",
+      "duration_ms": 328.29,
+      "checks_run": 6,
+      "details": {
+        "runtime": "PASS",
+        "crypto_providers": "PASS",
+        "manifest_integrity": "PASS",
+        "manifest_signature": "PASS",
+        "storage_and_keystore": "PASS",
+        "airgap_guard": "PASS"
+      }
+    },
+    "3_golden_pipeline": {
+      "status": "PASS",
+      "duration_ms": 3646.97,
+      "case_id": "CASE_SIH_rel_2026",
+      "attributed_recipient": "alice",
+      "decision_state": "ATTRIBUTED",
+      "confidence_score": 1.0,
+      "dlt_receipt_verified": true,
+      "merkle_root": "728928f7cfe12cff72bfea1b30dd78312a48606624f6454691306bcaadc097e5"
+    },
+    "4_offline_verification": {
+      "status": "PASS",
+      "duration_ms": 119.14,
+      "package_id": "pkg_CASE_SIH_rel_2026_20260928040955",
+      "overall_status": "VERIFIED",
+      "manifest_signature_valid": true,
+      "merkle_root_valid": true,
+      "object_hashes_valid": true,
+      "dependency_graph_valid": true,
+      "recipient_signature_valid": true,
+      "ledger_proof_valid": true,
+      "custody_chain_valid": true,
+      "decision_consistent": true
+    },
+    "5_blind_evaluation": {
+      "status": "PASS",
+      "duration_ms": 89.5,
+      "clean_doc_decision": "NO_SIGNAL",
+      "clean_doc_attributed": null,
+      "bob_blind_decision": "ATTRIBUTED",
+      "bob_blind_attributed": "bob"
+    },
+    "6_composed_attack_chains": {
+      "status": "PASS",
+      "duration_ms": 597.52,
+      "total_chains_tested": 7,
+      "chains_neutralized": 7,
+      "chains": {
+        "chain_a_stolen_account": {
+          "security_maintained": true,
+          "verdict": "DETECTED",
+          "mitigating_pillar": "Pillar 4 (Content Integrity) & Pillar 3 (Merkle Commitment)",
+          "errors": [
+            "MERKLE_ROOT_MISMATCH: Recomputed 246f4cdea14318a138571d01600d95c86d5a58dbc8a82edac955900d7889bae0 != Manifest 728928f7cfe12cff72bfea1b30dd78312a48606624f6454691306bcaadc097e5"
+          ]
+        },
+        "chain_b_ledger_fork": {
+          "security_maintained": true,
+          "verdict": "DETECTED",
+          "mitigating_pillar": "DLT Continuity & Parent Hash Enforcement",
+          "errors": [
+            "Broken hash chain link at height 4: expected prev 'b7f3f5f1e34d2d584b688a4335cd03ca93881b7d384beead168fd70b600bfc08', got 'forged_prev_0000000000000000000000000000000000000000000000000000'"
+          ]
+        },
+        "chain_c_transplantation": {
+          "security_maintained": true,
+          "verdict": "DETECTED",
+          "mitigating_pillar": "Pillar 6 (Canonical Payload Replay) & Pillar 9 (Watermark Binding)",
+          "errors": [
+            "MERKLE_ROOT_MISMATCH: Recomputed 28f06cdba497e0dd9e2690fb41085ac81463f8c972b2a76eac2758ff62a2cac6 != Manifest 728928f7cfe12cff72bfea1b30dd78312a48606624f6454691306bcaadc097e5",
+            "Receipt 'rcpt_evt_dec_rel_20260928_alice_5dcf331f' invalid ML-DSA-65 signature"
+          ]
+        },
+        "chain_d_post_revocation_replay": {
+          "security_maintained": true,
+          "verdict": "DETECTED",
+          "mitigating_pillar": "Pillar 7 (Key Lifecycle & Revocation Boundary)",
+          "errors": [
+            "MERKLE_ROOT_MISMATCH: Recomputed 35434d75352f90a44dd1e7cd1a3b7a2524d9368d94041008e43f90b58247aa12 != Manifest 728928f7cfe12cff72bfea1b30dd78312a48606624f6454691306bcaadc097e5",
+            "POST_REVOCATION_REJECTION: Receipt 'rcpt_evt_dec_rel_20260928_alice_5dcf331f' timestamp 2026-09-28T04:09:52.557386+00:00 occurs after key revocation at 2026-09-23T04:09:56.382757+00:00"
+          ]
+        },
+        "chain_e_cross_tenant_injection": {
+          "security_maintained": true,
+          "verdict": "DETECTED",
+          "mitigating_pillar": "Pillar 1 (Tenant Isolation Partition)",
+          "errors": [
+            "TENANT_ISOLATION_VIOLATION: Expected tenant 'tenant_bravo_foreign', package belongs to 'TENANT-REPRODUCTION-2026'"
+          ]
+        },
+        "chain_f_lineage_gap_violation": {
+          "security_maintained": true,
+          "verdict": "DETECTED",
+          "mitigating_pillar": "Pillar 10 (Lineage Integrity & Boundary Preservation)",
+          "errors": [
+            "MERKLE_ROOT_MISMATCH: Recomputed cab1fbb380a5dd393330185ac223fe0b2c475bc24ab9c81c1a3d73089e26c1e3 != Manifest 728928f7cfe12cff72bfea1b30dd78312a48606624f6454691306bcaadc097e5",
+            "Lineage with downstream gap must preserve last_known_holder"
+          ]
+        },
+        "chain_g_manifest_forgery": {
+          "security_maintained": true,
+          "verdict": "DETECTED",
+          "mitigating_pillar": "Pillar 2 (ML-DSA-65 Manifest Signature)",
+          "errors": [
+            "MANIFEST_DIGEST_MISMATCH: Computed c56f08cf775dc002d5a93f165e9d459d3f492e06e4fe4c45ebf6bc3c8ef95884 != Signed forged_manifest_000000000000000000000000000000000000000000000000"
+          ]
+        }
+      }
+    }
+  },
+  "overall_status": "PASS",
+  "total_duration_seconds": 4.924
+}

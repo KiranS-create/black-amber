@@ -1,0 +1,51 @@
+{
+  "timestamp": "2026-09-27T15:24:47.002899+00:00",
+  "codeword_length_bits": 128,
+  "recipients": [
+    "rec_alice",
+    "rec_bob",
+    "rec_charlie"
+  ],
+  "pairwise_hamming_distance_matrix": {
+    "rec_alice": {
+      "rec_alice": 0,
+      "rec_bob": 62,
+      "rec_charlie": 68
+    },
+    "rec_bob": {
+      "rec_alice": 62,
+      "rec_bob": 0,
+      "rec_charlie": 66
+    },
+    "rec_charlie": {
+      "rec_alice": 68,
+      "rec_bob": 66,
+      "rec_charlie": 0
+    }
+  },
+  "normalized_cross_correlation_matrix": {
+    "rec_alice": {
+      "rec_alice": 1.0,
+      "rec_bob": 0.0312,
+      "rec_charlie": -0.0625
+    },
+    "rec_bob": {
+      "rec_alice": 0.0312,
+      "rec_bob": 1.0,
+      "rec_charlie": -0.0312
+    },
+    "rec_charlie": {
+      "rec_alice": -0.0625,
+      "rec_bob": -0.0312,
+      "rec_charlie": 1.0
+    }
+  },
+  "zero_cross_attribution_proof": {
+    "A_never_resolves_to_B": true,
+    "B_never_resolves_to_C": true,
+    "C_never_resolves_to_A": true,
+    "self_correlation": 1.0,
+    "mean_off_diagonal_hamming_distance": 65.33
+  },
+  "verdict": "VERIFIED - ZERO CROSS ATTRIBUTION"
+}

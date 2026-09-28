@@ -238,26 +238,29 @@ export const DecryptionTab: React.FC<DecryptionTabProps> = ({
               onClick={handleDecrypt}
               disabled={loading || !selectedReleaseId || !selectedRecipientId}
               style={{
-                height: '40px',
+                height: '42px',
                 borderRadius: 'var(--radius-md)',
                 backgroundColor: 'var(--primary)',
                 color: '#ffffff',
                 border: 'none',
-                fontSize: 'var(--text-xs)',
-                fontWeight: 600,
-                cursor: 'pointer',
+                fontSize: 'var(--text-base)',
+                fontWeight: 700,
+                cursor: loading ? 'not-allowed' : 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '8px',
                 marginTop: 'var(--space-2)',
-                transition: 'background var(--transition-fast)'
+                boxShadow: '0 2px 8px rgba(37, 99, 235, 0.25)',
+                transition: 'background var(--transition-fast), transform var(--transition-fast)'
               }}
-              onMouseEnter={e => ((e.currentTarget as HTMLElement).style.backgroundColor = 'var(--primary-hover)')}
+              onMouseEnter={e => {
+                if (!loading) (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--primary-hover)';
+              }}
               onMouseLeave={e => ((e.currentTarget as HTMLElement).style.backgroundColor = 'var(--primary)')}
             >
-              <Unlock size={14} />
-              <span>{loading ? 'Decapsulating & Signing...' : `Decrypt as ${selectedRecipient?.name || selectedRecipientId}`}</span>
+              <Unlock size={16} />
+              <span>{loading ? 'Decapsulating & Signing Provenance Receipt...' : `Decrypt & Sign as ${selectedRecipient?.name || selectedRecipientId}`}</span>
             </button>
           </div>
         </div>
@@ -370,51 +373,62 @@ export const DecryptionTab: React.FC<DecryptionTabProps> = ({
                 </div>
               </div>
 
-              {/* Navigation Actions */}
-              <div style={{ display: 'flex', gap: 'var(--space-3)', marginTop: 'var(--space-2)' }}>
-                <button
-                  onClick={() => setActiveTab('ledger')}
-                  style={{
-                    flex: 1,
-                    height: '36px',
-                    borderRadius: 'var(--radius-md)',
-                    backgroundColor: 'var(--surface-subtle)',
-                    border: '1px solid var(--border)',
-                    color: 'var(--text)',
-                    fontSize: 'var(--text-xs)',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '6px'
-                  }}
-                >
-                  <Database size={13} />
-                  <span>Inspect in Ledger</span>
-                </button>
+              {/* Peak-End Rule Resolution Container */}
+              <div className="peak-end-card">
+                <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-tertiary)' }}>
+                  Provenance Verification Resolution
+                </div>
+                
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                  <div><strong>What happened:</strong> Recipient <code>{decryptionResult.recipient_id}</code> decapsulated envelope via ML-KEM-768 and signed decryption provenance receipt.</div>
+                  <div style={{ marginTop: '2px' }}><strong>What it means:</strong> Non-repudiation established. Block #{decryptionResult.event_id} appended to hash-chain ledger.</div>
+                </div>
 
-                <button
-                  onClick={() => setActiveTab('leak')}
-                  style={{
-                    flex: 1,
-                    height: '36px',
-                    borderRadius: 'var(--radius-md)',
-                    backgroundColor: 'var(--primary)',
-                    color: '#ffffff',
-                    border: 'none',
-                    fontSize: 'var(--text-xs)',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '6px'
-                  }}
-                >
-                  <span>Test Attribution</span>
-                  <ArrowRight size={13} />
-                </button>
+                <div style={{ display: 'flex', gap: 'var(--space-3)', marginTop: 'var(--space-2)' }}>
+                  <button
+                    onClick={() => setActiveTab('ledger')}
+                    style={{
+                      flex: 1,
+                      height: '38px',
+                      borderRadius: 'var(--radius-md)',
+                      backgroundColor: 'var(--surface-subtle)',
+                      border: '1px solid var(--border)',
+                      color: 'var(--text)',
+                      fontSize: 'var(--text-xs)',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '6px'
+                    }}
+                  >
+                    <Database size={14} />
+                    <span>Inspect in Ledger</span>
+                  </button>
+
+                  <button
+                    onClick={() => setActiveTab('leak')}
+                    style={{
+                      flex: 1,
+                      height: '38px',
+                      borderRadius: 'var(--radius-md)',
+                      backgroundColor: 'var(--primary)',
+                      color: '#ffffff',
+                      border: 'none',
+                      fontSize: 'var(--text-xs)',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '6px'
+                    }}
+                  >
+                    <span>Analyze Leaked Artifact</span>
+                    <ArrowRight size={14} />
+                  </button>
+                </div>
               </div>
             </div>
           ) : (

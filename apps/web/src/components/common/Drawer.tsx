@@ -12,6 +12,10 @@ interface DrawerProps {
   footer?: React.ReactNode;
 }
 
+/**
+ * Drawer Component — Layer 3 Contextual Glass Overlay
+ * Controlled blur, hairline border, preserves underlying investigation context.
+ */
 export const Drawer: React.FC<DrawerProps> = ({
   isOpen,
   onClose,
@@ -51,8 +55,9 @@ export const Drawer: React.FC<DrawerProps> = ({
             zIndex: 100,
             display: 'flex',
             justifyContent: 'flex-end',
-            backgroundColor: 'rgba(0, 0, 0, 0.45)',
-            backdropFilter: 'blur(3px)'
+            backgroundColor: 'rgba(11, 16, 21, 0.65)',
+            backdropFilter: 'blur(6px)',
+            WebkitBackdropFilter: 'blur(6px)'
           }}
           onClick={onClose}
         >
@@ -60,12 +65,14 @@ export const Drawer: React.FC<DrawerProps> = ({
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 28, stiffness: 280 }}
+            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
             style={{
               width,
               maxWidth: '100vw',
               height: '100%',
-              backgroundColor: 'var(--surface-elevated)',
+              backgroundColor: 'var(--glass-surface-elevated)',
+              backdropFilter: 'var(--glass-blur-md)',
+              WebkitBackdropFilter: 'var(--glass-blur-md)',
               borderLeft: '1px solid var(--border)',
               boxShadow: 'var(--shadow-drawer)',
               display: 'flex',
@@ -83,15 +90,15 @@ export const Drawer: React.FC<DrawerProps> = ({
                 alignItems: 'flex-start',
                 justifyContent: 'space-between',
                 gap: 'var(--space-4)',
-                backgroundColor: 'var(--surface)'
+                backgroundColor: 'rgba(255, 255, 255, 0.02)'
               }}
             >
               <div>
                 <h3
                   style={{
                     margin: 0,
-                    fontSize: 'var(--text-lg)',
-                    fontWeight: 700,
+                    fontSize: 'var(--text-md)',
+                    fontWeight: 600,
                     color: 'var(--text)',
                     letterSpacing: '-0.01em'
                   }}
@@ -101,65 +108,66 @@ export const Drawer: React.FC<DrawerProps> = ({
                 {subtitle && (
                   <p
                     style={{
-                      margin: '4px 0 0 0',
+                      margin: '2px 0 0 0',
                       fontSize: 'var(--text-xs)',
-                      color: 'var(--text-secondary)'
+                      color: 'var(--text-tertiary)'
                     }}
                   >
                     {subtitle}
                   </p>
                 )}
               </div>
+
               <button
                 onClick={onClose}
                 aria-label="Close drawer"
                 style={{
                   background: 'transparent',
-                  border: 'none',
-                  color: 'var(--text-tertiary)',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: 'var(--radius-xs)',
+                  color: 'var(--text-secondary)',
                   cursor: 'pointer',
-                  padding: '6px',
-                  borderRadius: 'var(--radius-sm)',
+                  padding: '5px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  transition: 'background var(--transition-fast), color var(--transition-fast)'
+                  transition: 'color var(--transition-fast), border-color var(--transition-fast)'
                 }}
                 onMouseEnter={e => {
-                  (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--surface-hover)';
-                  (e.currentTarget as HTMLElement).style.color = 'var(--text)';
+                  e.currentTarget.style.color = 'var(--text)';
+                  e.currentTarget.style.borderColor = 'var(--border)';
                 }}
                 onMouseLeave={e => {
-                  (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
-                  (e.currentTarget as HTMLElement).style.color = 'var(--text-tertiary)';
+                  e.currentTarget.style.color = 'var(--text-secondary)';
+                  e.currentTarget.style.borderColor = 'var(--border-subtle)';
                 }}
               >
-                <X size={18} />
+                <X size={15} />
               </button>
             </div>
 
-            {/* Drawer Body */}
+            {/* Drawer Body Viewport */}
             <div
               style={{
                 flex: 1,
                 overflowY: 'auto',
                 padding: 'var(--space-6)',
-                color: 'var(--text)',
-                fontSize: 'var(--text-base)'
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 'var(--space-5)'
               }}
             >
               {children}
             </div>
 
-            {/* Drawer Footer (optional) */}
+            {/* Optional Drawer Footer */}
             {footer && (
               <div
                 style={{
                   padding: 'var(--space-4) var(--space-6)',
                   borderTop: '1px solid var(--border)',
-                  backgroundColor: 'var(--surface)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.02)',
                   display: 'flex',
-                  alignItems: 'center',
                   justifyContent: 'flex-end',
                   gap: 'var(--space-3)'
                 }}

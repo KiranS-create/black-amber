@@ -7,6 +7,7 @@ from core.recipient import PublicRecipient
 from core.release import DocumentRelease, ReleaseRecipientPackage
 from core.attribution.engine import AttributionResult, Candidate, EvidenceItem
 from core.attribution.evidence import AttributionState, EvidenceConfidenceLevel
+from core.identity.models import Identity, Group, ResolvedIdentitySummary
 
 # --- Artifact & Plane Identity Models ---
 
@@ -20,6 +21,7 @@ class ArtifactMetadata(BaseModel):
     artifact_id: str
     artifact_type: ArtifactType
     sha256_hash: str
+    tenant_id: str = "default_tenant"
     document_id: Optional[str] = None
     release_id: Optional[str] = None
     recipient_id: Optional[str] = None
@@ -34,6 +36,7 @@ class DocumentMetadata(BaseModel):
     document_id: str
     document_name: str
     original_document_hash: str
+    tenant_id: str = "default_tenant"
     size_bytes: int
     mime_type: str
     created_at: str
@@ -43,20 +46,54 @@ class DocumentListResponse(BaseModel):
     documents: List[DocumentMetadata]
     total: int
 
+# --- Directory & Identity Models ---
+
+class IdentityResponse(BaseModel):
+    identity_id: str
+    provider: str
+    provider_subject: str
+    display_name: str
+    email: str
+    organization_id: str
+    department: Optional[str] = None
+    title: Optional[str] = None
+    status: str
+    created_at: str
+
+class DirectorySearchResponse(BaseModel):
+    identities: List[IdentityResponse]
+    total: int
+
+class GroupResponse(BaseModel):
+    group_id: str
+    display_name: str
+    description: Optional[str] = None
+    organization_id: str
+    member_count: int
+    member_identity_ids: List[str]
+
+class GroupListResponse(BaseModel):
+    groups: List[GroupResponse]
+    total: int
+
 # --- Recipient Models ---
 
 class EnrollRecipientRequest(BaseModel):
-    name: str = Field(..., min_length=1, description="Human-readable name of the recipient")
-    recipient_id: Optional[str] = Field(None, description="Unique recipient ID (auto-generated if omitted)")
+    name: Optional[str] = Field(None, description="Human-readable name of the recipient (optional if identity_id given)")
+    identity_id: Optional[str] = Field(None, description="Directory identity ID to enroll")
+    recipient_id: Optional[str] = Field(None, description="Custom recipient ID (auto-generated if omitted)")
 
 # --- Release Models ---
 
 class CreateReleaseRequest(BaseModel):
     document_id: Optional[str] = Field(None, description="ID of pre-registered document")
-    document_name: Optional[str] = Field(None, description="Document title if uploaded inline")
+    document_name: Optional[str] = Field(None, max_length=256, description="Document title if uploaded inline")
     document_base64: Optional[str] = Field(None, description="Base64 document bytes if not pre-registered")
     issuer_id: str = Field("HQ_AUTHORITY", description="Issuing authority identity")
-    recipient_ids: List[str] = Field(..., min_length=1, description="List of authorized recipient IDs")
+    recipient_ids: Optional[List[str]] = Field(None, description="List of authorized recipient IDs")
+    target_type: Optional[str] = Field("recipients", description="'recipients', 'identities', or 'groups'")
+    target_ids: Optional[List[str]] = Field(None, description="Target identity or group IDs")
+    tenant_id: Optional[str] = Field(None, description="Tenant boundary scope")
     tardos_enabled: bool = Field(False, description="Enable Tardos fingerprinting code generation")
     coalition_size: int = Field(3, ge=1, le=10, description="Target maximum collusion coalition size")
     false_accusation_epsilon: float = Field(1e-4, gt=0.0, lt=1.0, description="Max acceptable false alarm bound")
@@ -67,10 +104,12 @@ class ReleaseSummary(BaseModel):
     document_id: str
     document_name: str
     original_document_hash: str
+    tenant_id: str = "default_tenant"
     issuer_id: str
     recipient_ids: List[str]
     created_at: str
     package_count: int
+    target_summary: Optional[Dict[str, Any]] = None
 
 # --- Decryption & Provenance Models ---
 
@@ -97,6 +136,7 @@ class DecryptionResponse(BaseModel):
 class LeakMetadata(BaseModel):
     leak_id: str
     leak_artifact_hash: str
+    tenant_id: str = "default_tenant"
     size_bytes: int
     mime_type: str
     suspected_document_id: Optional[str] = None
@@ -133,12 +173,14 @@ class AnalyzeRequest(BaseModel):
     leaked_document_base64: Optional[str] = Field(None, description="Inline base64 bytes if not pre-uploaded")
     expected_release_id: Optional[str] = Field(None, description="Expected release scope (optional)")
     expected_document_id: Optional[str] = Field(None, description="Expected document scope (optional)")
+    tenant_id: Optional[str] = Field(None, description="Tenant boundary scope")
     attack_telemetry: Optional[AttackTelemetryInput] = Field(None, description="Observed attack lab telemetry")
     async_execution: bool = Field(False, description="Whether to execute as an asynchronous job")
 
 class AnalysisJobResponse(BaseModel):
     analysis_id: str
     status: JobStatus
+    tenant_id: str = "default_tenant"
     created_at: str
     started_at: Optional[str] = None
     completed_at: Optional[str] = None
@@ -146,6 +188,10 @@ class AnalysisJobResponse(BaseModel):
     leak_artifact_hash: Optional[str] = None
     result: Optional[AttributionResult] = None
     error: Optional[str] = None
+
+    @property
+    def job_id(self) -> str:
+        return self.analysis_id
 
 class AnalysisListResponse(BaseModel):
     jobs: List[AnalysisJobResponse]

@@ -1,0 +1,32 @@
+{
+  "current_traced_mb": 1.71,
+  "peak_traced_mb": 246.99,
+  "gc_stats": [
+    {
+      "collections": 1888,
+      "collected": 8435,
+      "uncollectable": 0
+    },
+    {
+      "collections": 167,
+      "collected": 1437,
+      "uncollectable": 0
+    },
+    {
+      "collections": 22,
+      "collected": 181,
+      "uncollectable": 0
+    }
+  ],
+  "gc_counts": [
+    0,
+    7,
+    4
+  ],
+  "concurrency_scaling": {
+    "1_workers_hash_2000_items_ms": 241.55,
+    "2_workers_hash_2000_items_ms": 148.02,
+    "4_workers_hash_2000_items_ms": 201.9,
+    "8_workers_hash_2000_items_ms": 193.45
+  }
+}

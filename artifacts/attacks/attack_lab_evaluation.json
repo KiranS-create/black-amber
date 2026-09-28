@@ -1,0 +1,533 @@
+{
+  "timestamp": "2026-09-26T12:50:47.952971+00:00",
+  "platform": "AegisTrace (SIH26237)",
+  "laboratory": "Adversarial Artifact & Evidence Integrity Lab",
+  "verdict": "GREEN",
+  "total_evaluations": 134,
+  "false_positives": 0,
+  "false_positive_rate": 0.0,
+  "negative_corpus_size": 100,
+  "negative_corpus_false_positives": 0,
+  "negative_corpus_fp_rate": 0.0,
+  "total_duration_ms": 11646.68,
+  "evaluations": [
+    {
+      "attack_id": "atk_digital_document_pdf_rewrite_c14ba13b_37196",
+      "category": "DIGITAL_DOCUMENT",
+      "attack_name": "DOC_PDF_REWRITE",
+      "decision_state": "NO_SIGNAL",
+      "attributed_recipient": null,
+      "expected_target": "bob",
+      "should_abstain": true,
+      "false_positive": false,
+      "duration_ms": 8.223
+    },
+    {
+      "attack_id": "atk_digital_document_pdf_metadata_modification_c14ba13b_37204",
+      "category": "DIGITAL_DOCUMENT",
+      "attack_name": "DOC_METADATA_MOD",
+      "decision_state": "NO_SIGNAL",
+      "attributed_recipient": null,
+      "expected_target": "bob",
+      "should_abstain": true,
+      "false_positive": false,
+      "duration_ms": 5.527
+    },
+    {
+      "attack_id": "atk_digital_document_pdf_object_reordering_c14ba13b_37209",
+      "category": "DIGITAL_DOCUMENT",
+      "attack_name": "DOC_OBJ_REORDER",
+      "decision_state": "NO_SIGNAL",
+      "attributed_recipient": null,
+      "expected_target": "bob",
+      "should_abstain": true,
+      "false_positive": false,
+      "duration_ms": 4.386
+    },
+    {
+      "attack_id": "atk_digital_document_pdf_page_extraction_c14ba13b_37214",
+      "category": "DIGITAL_DOCUMENT",
+      "attack_name": "DOC_PAGE_EXTRACT",
+      "decision_state": "NO_SIGNAL",
+      "attributed_recipient": null,
+      "expected_target": "bob",
+      "should_abstain": true,
+      "false_positive": false,
+      "duration_ms": 5.092
+    },
+    {
+      "attack_id": "atk_digital_document_pdf_page_duplication_c14ba13b_37219",
+      "category": "DIGITAL_DOCUMENT",
+      "attack_name": "DOC_PAGE_DUP",
+      "decision_state": "NO_SIGNAL",
+      "attributed_recipient": null,
+      "expected_target": "bob",
+      "should_abstain": true,
+      "false_positive": false,
+      "duration_ms": 5.508
+    },
+    {
+      "attack_id": "atk_digital_document_pdf_page_reordering_c14ba13b_37224",
+      "category": "DIGITAL_DOCUMENT",
+      "attack_name": "DOC_PAGE_REORDER",
+      "decision_state": "NO_SIGNAL",
+      "attributed_recipient": null,
+      "expected_target": "bob",
+      "should_abstain": true,
+      "false_positive": false,
+      "duration_ms": 7.338
+    },
+    {
+      "attack_id": "atk_digital_document_pdf_merge_c14ba13b_37232",
+      "category": "DIGITAL_DOCUMENT",
+      "attack_name": "DOC_MERGE",
+      "decision_state": "NO_SIGNAL",
+      "attributed_recipient": null,
+      "expected_target": "bob",
+      "should_abstain": true,
+      "false_positive": false,
+      "duration_ms": 14.893
+    },
+    {
+      "attack_id": "atk_digital_document_pdf_split_c14ba13b_37247",
+      "category": "DIGITAL_DOCUMENT",
+      "attack_name": "DOC_SPLIT",
+      "decision_state": "NO_SIGNAL",
+      "attributed_recipient": null,
+      "expected_target": "bob",
+      "should_abstain": true,
+      "false_positive": false,
+      "duration_ms": 4.937
+    },
+    {
+      "attack_id": "atk_digital_document_pdf_rasterization_c14ba13b_37252",
+      "category": "DIGITAL_DOCUMENT",
+      "attack_name": "DOC_RASTERIZE",
+      "decision_state": "NO_SIGNAL",
+      "attributed_recipient": null,
+      "expected_target": "bob",
+      "should_abstain": true,
+      "false_positive": false,
+      "duration_ms": 134.637
+    },
+    {
+      "attack_id": "atk_digital_document_pdf_compression_changes_c14ba13b_37387",
+      "category": "DIGITAL_DOCUMENT",
+      "attack_name": "DOC_COMPRESS",
+      "decision_state": "NO_SIGNAL",
+      "attributed_recipient": null,
+      "expected_target": "bob",
+      "should_abstain": true,
+      "false_positive": false,
+      "duration_ms": 19.958
+    },
+    {
+      "attack_id": "atk_digital_document_pdf_text_extraction_regeneration_c14ba13b_37407",
+      "category": "DIGITAL_DOCUMENT",
+      "attack_name": "DOC_TEXT_REGEN",
+      "decision_state": "NO_SIGNAL",
+      "attributed_recipient": null,
+      "expected_target": "bob",
+      "should_abstain": true,
+      "false_positive": false,
+      "duration_ms": 27.7
+    },
+    {
+      "attack_id": "atk_digital_document_pdf_screenshot_insertion_c14ba13b_37434",
+      "category": "DIGITAL_DOCUMENT",
+      "attack_name": "DOC_STAMP_INSERT",
+      "decision_state": "NO_SIGNAL",
+      "attributed_recipient": null,
+      "expected_target": "bob",
+      "should_abstain": true,
+      "false_positive": false,
+      "duration_ms": 17.159
+    },
+    {
+      "attack_id": "atk_digital_document_pdf_document_substitution_c14ba13b_37452",
+      "category": "DIGITAL_DOCUMENT",
+      "attack_name": "DOC_SUBSTITUTE",
+      "decision_state": "NO_SIGNAL",
+      "attributed_recipient": null,
+      "expected_target": "bob",
+      "should_abstain": true,
+      "false_positive": false,
+      "duration_ms": 6.095
+    },
+    {
+      "attack_id": "atk_digital_image_jpeg_recompression_b7cbf7f2_37458",
+      "category": "DIGITAL_IMAGE",
+      "attack_name": "IMG_JPEG_Q90",
+      "decision_state": "EVALUATED_IMAGE_TRANSFORMATION",
+      "success": true,
+      "metrics": {
+        "psnr": 56.35,
+        "ssim": 0.9997,
+        "mae": 0.05,
+        "file_size_ratio": 9.8081,
+        "symbol_survival_rate": null,
+        "bit_error_rate": null,
+        "hamming_distance": null,
+        "normalized_correlation": null,
+        "additional": {}
+      },
+      "duration_ms": 509.8
+    },
+    {
+      "attack_id": "atk_digital_image_jpeg_recompression_b7cbf7f2_37968",
+      "category": "DIGITAL_IMAGE",
+      "attack_name": "IMG_JPEG_Q50",
+      "decision_state": "EVALUATED_IMAGE_TRANSFORMATION",
+      "success": true,
+      "metrics": {
+        "psnr": 43.04,
+        "ssim": 0.9938,
+        "mae": 0.33,
+        "file_size_ratio": 7.2923,
+        "symbol_survival_rate": null,
+        "bit_error_rate": null,
+        "hamming_distance": null,
+        "normalized_correlation": null,
+        "additional": {}
+      },
+      "duration_ms": 469.856
+    },
+    {
+      "attack_id": "atk_digital_image_jpeg_recompression_b7cbf7f2_38438",
+      "category": "DIGITAL_IMAGE",
+      "attack_name": "IMG_JPEG_Q20",
+      "decision_state": "EVALUATED_IMAGE_TRANSFORMATION",
+      "success": true,
+      "metrics": {
+        "psnr": 35.69,
+        "ssim": 0.9827,
+        "mae": 2.38,
+        "file_size_ratio": 6.025,
+        "symbol_survival_rate": null,
+        "bit_error_rate": null,
+        "hamming_distance": null,
+        "normalized_correlation": null,
+        "additional": {}
+      },
+      "duration_ms": 550.035
+    },
+    {
+      "attack_id": "atk_digital_image_png_conversion_b7cbf7f2_38987",
+      "category": "DIGITAL_IMAGE",
+      "attack_name": "IMG_PNG_CONVERT",
+      "decision_state": "EVALUATED_IMAGE_TRANSFORMATION",
+      "success": true,
+      "metrics": {
+        "psnr": 100.0,
+        "ssim": 1.0,
+        "mae": 0.0,
+        "file_size_ratio": 0.8683,
+        "symbol_survival_rate": null,
+        "bit_error_rate": null,
+        "hamming_distance": null,
+        "normalized_correlation": null,
+        "additional": {}
+      },
+      "duration_ms": 671.118
+    },
+    {
+      "attack_id": "atk_digital_image_resizing_b7cbf7f2_39659",
+      "category": "DIGITAL_IMAGE",
+      "attack_name": "IMG_RESIZE_50",
+      "decision_state": "EVALUATED_IMAGE_TRANSFORMATION",
+      "success": true,
+      "metrics": {
+        "psnr": 24.91,
+        "ssim": 0.9299,
+        "mae": 3.01,
+        "file_size_ratio": 0.8892,
+        "symbol_survival_rate": null,
+        "bit_error_rate": null,
+        "hamming_distance": null,
+        "normalized_correlation": null,
+        "additional": {}
+      },
+      "duration_ms": 534.572
+    },
+    {
+      "attack_id": "atk_digital_image_downscale_upscale_b7cbf7f2_40194",
+      "category": "DIGITAL_IMAGE",
+      "attack_name": "IMG_DOWNSCALE_UPSCALE",
+      "decision_state": "EVALUATED_IMAGE_TRANSFORMATION",
+      "success": true,
+      "metrics": {
+        "psnr": 24.92,
+        "ssim": 0.93,
+        "mae": 3.01,
+        "file_size_ratio": 3.0216,
+        "symbol_survival_rate": null,
+        "bit_error_rate": null,
+        "hamming_distance": null,
+        "normalized_correlation": null,
+        "additional": {}
+      },
+      "duration_ms": 600.581
+    },
+    {
+      "attack_id": "atk_digital_image_gaussian_blur_b7cbf7f2_40794",
+      "category": "DIGITAL_IMAGE",
+      "attack_name": "IMG_BLUR",
+      "decision_state": "EVALUATED_IMAGE_TRANSFORMATION",
+      "success": true,
+      "metrics": {
+        "psnr": 26.97,
+        "ssim": 0.9527,
+        "mae": 2.12,
+        "file_size_ratio": 14.3635,
+        "symbol_survival_rate": null,
+        "bit_error_rate": null,
+        "hamming_distance": null,
+        "normalized_correlation": null,
+        "additional": {}
+      },
+      "duration_ms": 514.215
+    },
+    {
+      "attack_id": "atk_digital_image_sharpen_b7cbf7f2_41308",
+      "category": "DIGITAL_IMAGE",
+      "attack_name": "IMG_SHARPEN",
+      "decision_state": "EVALUATED_IMAGE_TRANSFORMATION",
+      "success": true,
+      "metrics": {
+        "psnr": 31.24,
+        "ssim": 0.9755,
+        "mae": 0.8,
+        "file_size_ratio": 7.1095,
+        "symbol_survival_rate": null,
+        "bit_error_rate": null,
+        "hamming_distance": null,
+        "normalized_correlation": null,
+        "additional": {}
+      },
+      "duration_ms": 500.667
+    },
+    {
+      "attack_id": "atk_digital_image_gaussian_noise_b7cbf7f2_41809",
+      "category": "DIGITAL_IMAGE",
+      "attack_name": "IMG_GAUSS_NOISE",
+      "decision_state": "EVALUATED_IMAGE_TRANSFORMATION",
+      "success": true,
+      "metrics": {
+        "psnr": 30.74,
+        "ssim": 0.818,
+        "mae": 4.3,
+        "file_size_ratio": 269.0389,
+        "symbol_survival_rate": null,
+        "bit_error_rate": null,
+        "hamming_distance": null,
+        "normalized_correlation": null,
+        "additional": {}
+      },
+      "duration_ms": 933.448
+    },
+    {
+      "attack_id": "atk_digital_image_salt_and_pepper_noise_b7cbf7f2_42742",
+      "category": "DIGITAL_IMAGE",
+      "attack_name": "IMG_SALT_PEPPER",
+      "decision_state": "EVALUATED_IMAGE_TRANSFORMATION",
+      "success": true,
+      "metrics": {
+        "psnr": 23.04,
+        "ssim": 0.7608,
+        "mae": 1.27,
+        "file_size_ratio": 9.8865,
+        "symbol_survival_rate": null,
+        "bit_error_rate": null,
+        "hamming_distance": null,
+        "normalized_correlation": null,
+        "additional": {}
+      },
+      "duration_ms": 524.755
+    },
+    {
+      "attack_id": "atk_digital_image_brightness_change_b7cbf7f2_43267",
+      "category": "DIGITAL_IMAGE",
+      "attack_name": "IMG_BRIGHTNESS",
+      "decision_state": "EVALUATED_IMAGE_TRANSFORMATION",
+      "success": true,
+      "metrics": {
+        "psnr": 36.0,
+        "ssim": 0.9419,
+        "mae": 0.49,
+        "file_size_ratio": 0.9255,
+        "symbol_survival_rate": null,
+        "bit_error_rate": null,
+        "hamming_distance": null,
+        "normalized_correlation": null,
+        "additional": {}
+      },
+      "duration_ms": 537.369
+    },
+    {
+      "attack_id": "atk_digital_image_contrast_change_b7cbf7f2_43804",
+      "category": "DIGITAL_IMAGE",
+      "attack_name": "IMG_CONTRAST",
+      "decision_state": "EVALUATED_IMAGE_TRANSFORMATION",
+      "success": true,
+      "metrics": {
+        "psnr": 42.27,
+        "ssim": 0.9984,
+        "mae": 0.19,
+        "file_size_ratio": 1.0059,
+        "symbol_survival_rate": null,
+        "bit_error_rate": null,
+        "hamming_distance": null,
+        "normalized_correlation": null,
+        "additional": {}
+      },
+      "duration_ms": 597.28
+    },
+    {
+      "attack_id": "atk_digital_image_grayscale_conversion_b7cbf7f2_44402",
+      "category": "DIGITAL_IMAGE",
+      "attack_name": "IMG_GRAYSCALE",
+      "decision_state": "EVALUATED_IMAGE_TRANSFORMATION",
+      "success": true,
+      "metrics": {
+        "psnr": 100.0,
+        "ssim": 1.0,
+        "mae": 0.0,
+        "file_size_ratio": 0.6328,
+        "symbol_survival_rate": null,
+        "bit_error_rate": null,
+        "hamming_distance": null,
+        "normalized_correlation": null,
+        "additional": {}
+      },
+      "duration_ms": 508.713
+    },
+    {
+      "attack_id": "atk_digital_image_colorspace_conversion_b7cbf7f2_44911",
+      "category": "DIGITAL_IMAGE",
+      "attack_name": "IMG_COLORSPACE",
+      "decision_state": "EVALUATED_IMAGE_TRANSFORMATION",
+      "success": true,
+      "metrics": {
+        "psnr": 100.0,
+        "ssim": 1.0,
+        "mae": 0.0,
+        "file_size_ratio": 6.9004,
+        "symbol_survival_rate": null,
+        "bit_error_rate": null,
+        "hamming_distance": null,
+        "normalized_correlation": null,
+        "additional": {}
+      },
+      "duration_ms": 506.389
+    },
+    {
+      "attack_id": "atk_digital_image_rotation_b7cbf7f2_45417",
+      "category": "DIGITAL_IMAGE",
+      "attack_name": "IMG_ROTATION_1DEG",
+      "decision_state": "EVALUATED_IMAGE_TRANSFORMATION",
+      "success": true,
+      "metrics": {
+        "psnr": 17.43,
+        "ssim": 0.8299,
+        "mae": 6.11,
+        "file_size_ratio": 20.5751,
+        "symbol_survival_rate": null,
+        "bit_error_rate": null,
+        "hamming_distance": null,
+        "normalized_correlation": null,
+        "additional": {}
+      },
+      "duration_ms": 534.538
+    },
+    {
+      "attack_id": "atk_digital_image_perspective_transform_b7cbf7f2_45951",
+      "category": "DIGITAL_IMAGE",
+      "attack_name": "IMG_PERSPECTIVE",
+      "decision_state": "EVALUATED_IMAGE_TRANSFORMATION",
+      "success": true,
+      "metrics": {
+        "psnr": 16.99,
+        "ssim": 0.8028,
+        "mae": 6.57,
+        "file_size_ratio": 19.0767,
+        "symbol_survival_rate": null,
+        "bit_error_rate": null,
+        "hamming_distance": null,
+        "normalized_correlation": null,
+        "additional": {}
+      },
+      "duration_ms": 492.26
+    },
+    {
+      "attack_id": "atk_digital_image_crop_b7cbf7f2_46444",
+      "category": "DIGITAL_IMAGE",
+      "attack_name": "IMG_CROP_10",
+      "decision_state": "EVALUATED_IMAGE_TRANSFORMATION",
+      "success": true,
+      "metrics": {
+        "psnr": 18.58,
+        "ssim": 0.8198,
+        "mae": 4.8,
+        "file_size_ratio": 0.8813,
+        "symbol_survival_rate": null,
+        "bit_error_rate": null,
+        "hamming_distance": null,
+        "normalized_correlation": null,
+        "additional": {}
+      },
+      "duration_ms": 505.511
+    },
+    {
+      "attack_id": "atk_digital_image_screenshot_simulation_b7cbf7f2_46950",
+      "category": "DIGITAL_IMAGE",
+      "attack_name": "SCR_SCREENSHOT_SIM",
+      "decision_state": "EVALUATED_IMAGE_TRANSFORMATION",
+      "success": true,
+      "metrics": {
+        "psnr": 12.48,
+        "ssim": 0.7628,
+        "mae": 18.0,
+        "file_size_ratio": 9.1633,
+        "symbol_survival_rate": null,
+        "bit_error_rate": null,
+        "hamming_distance": null,
+        "normalized_correlation": null,
+        "additional": {}
+      },
+      "duration_ms": 484.178
+    },
+    {
+      "attack_id": "chain_chain_pdf_raster_jpeg_crop",
+      "category": "TRANSFORMATION_CHAIN",
+      "attack_name": "chain_pdf_raster_jpeg_crop",
+      "total_steps": 4,
+      "decision_state": "NO_SIGNAL",
+      "attributed_recipient": null,
+      "should_abstain": true,
+      "false_positive": false,
+      "duration_ms": 178.809
+    },
+    {
+      "attack_id": "chain_chain_image_screenshot_noise_compression",
+      "category": "TRANSFORMATION_CHAIN",
+      "attack_name": "chain_image_screenshot_noise_compression",
+      "total_steps": 1,
+      "decision_state": "ATTRIBUTED",
+      "attributed_recipient": "bob",
+      "should_abstain": false,
+      "false_positive": false,
+      "duration_ms": 33.462
+    },
+    {
+      "attack_id": "chain_chain_multipage_reorder_extract_merge",
+      "category": "TRANSFORMATION_CHAIN",
+      "attack_name": "chain_multipage_reorder_extract_merge",
+      "total_steps": 4,
+      "decision_state": "NO_SIGNAL",
+      "attributed_recipient": null,
+      "should_abstain": true,
+      "false_positive": false,
+      "duration_ms": 34.058
+    }
+  ]
+}

@@ -220,7 +220,13 @@ class PrototypeTraceabilityProvider(TraceabilityProvider):
             marker.document_hash,
             effective_key
         )
-        return hmac.compare_digest(marker.signature_token, expected_token)
+        try:
+            return hmac.compare_digest(
+                str(marker.signature_token).encode('utf-8', errors='replace'),
+                expected_token.encode('utf-8')
+            )
+        except Exception:
+            return False
 
     def get_evidence(
         self,

@@ -11,6 +11,9 @@ import numpy as np
 import cv2
 from pydantic import BaseModel, Field
 
+# Module-level cache: (seed, num_bits, block_size, chip_scale) -> chips array
+_PN_CHIPS_CACHE: Dict[Tuple[int, int, int, int], np.ndarray] = {}
+
 
 class CarrierStrategy(str, Enum):
     """The document carrier embedding strategy."""
@@ -91,16 +94,23 @@ class CarrierModulator:
         Oversamples sub-chips by chip_scale x chip_scale to ensure mid-band frequency survival
         against optical defocus, sensor downsampling, and halftoning.
         Shape: (num_bits, block_size, block_size).
+        Result is cached by (seed, num_bits, block_size, chip_scale).
         """
-        rng = np.random.RandomState(self.config.carrier_seed)
         bs = self.config.block_size
         scale = max(1, self.config.chip_scale)
-        sub_bs = max(1, bs // scale)
+        seed = self.config.carrier_seed
+        cache_key = (seed, num_bits, bs, scale)
+        chips = _PN_CHIPS_CACHE.get(cache_key)
+        if chips is not None:
+            return chips
 
+        sub_bs = max(1, bs // scale)
+        rng = np.random.RandomState(seed)
         sub_chips = rng.choice([-1.0, 1.0], size=(num_bits, sub_bs, sub_bs)).astype(np.float32)
         chips = np.repeat(np.repeat(sub_chips, scale, axis=1), scale, axis=2)
         if chips.shape[1] != bs or chips.shape[2] != bs:
             chips = chips[:, :bs, :bs]
+        _PN_CHIPS_CACHE[cache_key] = chips
         return chips
 
 
@@ -268,31 +278,43 @@ class CarrierModulator:
                         best_p_score = p_score
                         best_dx, best_dy = dx, dy
 
-        # 2. Demodulate all payload bits at optimal offset
+        # 2. Demodulate all payload bits at optimal offset using vectorised batch correlation
         accumulated_scores = np.zeros(num_bits, dtype=np.float32)
 
         slot_idx = 0
         for _ in range(tile_count):
+            # Build (num_bits, bs, bs) tensor of patches for this tile sweep
+            patches = np.empty((num_bits, bs, bs), dtype=np.float32)
+            valid_mask = np.ones(num_bits, dtype=bool)
             for b_idx in range(num_bits):
                 r_slot = slot_idx // grid_cols
                 c_slot = slot_idx % grid_cols
                 y0 = top + r_slot * bs + best_dy
                 x0 = left + c_slot * bs + best_dx
                 if y0 >= 0 and y0 + bs <= lum.shape[0] and x0 >= 0 and x0 + bs <= lum.shape[1]:
-                    patch = lum[y0:y0 + bs, x0:x0 + bs]
-                    local_mean = np.mean(patch)
-                    corr = np.sum((patch - local_mean) * pn_chips[b_idx])
-                    accumulated_scores[b_idx] += corr
+                    patches[b_idx] = lum[y0:y0 + bs, x0:x0 + bs]
+                else:
+                    patches[b_idx] = 0.0
+                    valid_mask[b_idx] = False
                 slot_idx += 1
+
+            # Vectorised local-mean subtraction and matched-filter correlation
+            # block_means: (num_bits,)
+            block_means = patches.reshape(num_bits, -1).mean(axis=1, keepdims=False)
+            centered = patches - block_means[:, np.newaxis, np.newaxis]
+            # corrs[b] = sum(centered[b] * pn_chips[b])  ->  einsum over (B, H, W)
+            corrs = np.einsum("bhw,bhw->b", centered, pn_chips, optimize=True)
+            corrs[~valid_mask] = 0.0
+            accumulated_scores += corrs
 
         # Normalized average score per bit
         avg_scores = accumulated_scores / float(tile_count * bs * bs)
 
         # Decision rule: bit = 1 if avg_score > 0 else 0
-        raw_bits = [1 if s > 0 else 0 for s in avg_scores]
+        raw_bits = (avg_scores > 0).astype(int).tolist()
 
         # Soft confidence in [-1.0, 1.0] using hyperbolic tangent scaling
-        soft_confidences = [float(np.tanh(s * 0.5)) for s in avg_scores]
+        soft_confidences = np.tanh(avg_scores * 0.5).tolist()
 
         telemetry = {
             "demodulated_bits": num_bits,

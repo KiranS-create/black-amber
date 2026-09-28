@@ -326,3 +326,29 @@ class SymmetricTardosEngine:
                 "top_candidate_unaccused": top_recipient
             }
         )
+
+
+class TardosCodec:
+    """
+    Convenience wrapper around SymmetricTardosEngine for instance-based operations
+    with a fixed secret key, codeword length m, and user count/coalition size k.
+    """
+
+    def __init__(self, m: int = 128, k: int = 10, secret_key: Optional[bytes] = None):
+        self.m = m
+        self.k = k
+        self.secret_key = secret_key
+        self.biases = SymmetricTardosEngine.generate_biases(m=self.m, c=self.k, seed=self.secret_key)
+
+    def generate_codeword(self, user_index: int) -> List[int]:
+        rec_id = f"user_{user_index}"
+        codebook = SymmetricTardosEngine.generate_codebook([rec_id], self.biases, seed=self.secret_key)
+        return codebook[rec_id]
+
+    def score(self, observation: List[int], user_index: int) -> float:
+        user_cw = self.generate_codeword(user_index)
+        total_score = 0.0
+        for y_j, x_ij, p_j in zip(observation, user_cw, self.biases):
+            total_score += SymmetricTardosEngine.score_symbol(y_j, x_ij, p_j)
+        return total_score
+
