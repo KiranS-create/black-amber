@@ -17,8 +17,8 @@
       "size_bytes": 3917
     },
     "apps/api/main.py": {
-      "sha256": "d0e5566ce1c9087b5e14c8c772abac66b52f7c7a7c2cf2076395982e1d4a3715",
-      "size_bytes": 8151
+      "sha256": "9baf4424642d3b8a91a449184522f3edab1cf9db90cb216275de3f51e1122f94",
+      "size_bytes": 8445
     },
     "apps/api/models.py": {
       "sha256": "15670d85542e242ac28da2952b4bb716fbcc43b88f232ba98ef6e8a19dee1d44",
@@ -241,8 +241,8 @@
       "size_bytes": 248
     },
     "apps/web/src/services/api.ts": {
-      "sha256": "e25ba4d7d80b527628f5997eeca7d341ff233df5db51c4bd06c93ff32d7e29ee",
-      "size_bytes": 34630
+      "sha256": "bde0267627505afff09ffa09162af88a76418c7ab0081175e2fd8591417813e4",
+      "size_bytes": 34848
     },
     "apps/web/src/services/mockData.ts": {
       "sha256": "248f37a0faed893f271d382b8ea735681743cb11d7e4eeec4c416a480deab138",
@@ -2329,8 +2329,8 @@
       "size_bytes": 17010
     },
     "tests/test_aegistrace_cli.py": {
-      "sha256": "4e47d779773e73011046f0d0fbc1f7af7a8d922f57900b9e77e0cbc56a3aeebe",
-      "size_bytes": 6151
+      "sha256": "4068c781be19232d3c089f656a598926f13a34bf9549a5be7de64008ab32978c",
+      "size_bytes": 6190
     },
     "tests/test_api.py": {
       "sha256": "58e04fdd6a73e25160a3a99200f6942133d252e3b39d0df110b810765dc423d0",
@@ -2465,8 +2465,8 @@
       "size_bytes": 4509
     },
     "tests/web/test_frontend.py": {
-      "sha256": "17b52eb39a94b9205bb82ac85d6cfba008122734fbfa692d02bf2501dd114a89",
-      "size_bytes": 6675
+      "sha256": "5a7ee734c7ccb42f5c5989c2e6d0ef03249c48fe85df1112e668b8db94dab70a",
+      "size_bytes": 6736
     },
     "tests/web/test_frontend_e2e_flow.py": {
       "sha256": "78198761e818e152e7a9f4f43b871d25abf45614b60497cace3a6dff7009f072",
@@ -2477,10 +2477,10 @@
       "size_bytes": 2968
     }
   },
-  "generated_at_iso": "2026-09-28T04:09:44.047026+00:00",
+  "generated_at_iso": "2026-09-28T05:07:58.820629+00:00",
   "manifest_version": "1.0.0",
   "platform": "AegisTrace",
   "project_id": "SIH26237",
-  "source_tree_merkle_digest": "406ea6bbf2463d061d6451ee79a6807893132ded5ef1edda96ccdbb7f30300f8",
+  "source_tree_merkle_digest": "20bd465ec57ea040292ff5b68b4635f5dbfef4bb33c7ed57ee04120b171830f9",
   "total_tracked_files": 619
 }
