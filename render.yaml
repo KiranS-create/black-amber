@@ -5,7 +5,7 @@
 
 services:
   - type: web
-    name: aegistrace
+    name: aegistrace-sih26237
     runtime: docker
     plan: free
     region: oregon
