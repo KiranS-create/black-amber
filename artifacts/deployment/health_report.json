@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-28T03:55:23Z",
+  "timestamp": "2026-09-28T05:47:32Z",
   "status": "PASS",
   "checks": {
     "python_runtime": {
@@ -24,10 +24,10 @@
         "status": "healthy",
         "service": "SIH26237 API",
         "version": "1.0.0",
-        "ledger_events_count": 7,
-        "registered_documents_count": 2931,
-        "enrolled_recipients_count": 4,
-        "releases_count": 13,
+        "ledger_events_count": 3,
+        "registered_documents_count": 2,
+        "enrolled_recipients_count": 3,
+        "releases_count": 3,
         "active_jobs_count": 6
       },
       "ledger_valid": true

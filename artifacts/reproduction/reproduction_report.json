@@ -1,22 +1,22 @@
 {
-  "reproduction_timestamp_iso": "2026-09-28T04:09:51.803523+00:00",
+  "reproduction_timestamp_iso": "2026-09-28T05:08:55.163920+00:00",
   "platform": "AegisTrace (SIH26237)",
   "python_runtime": "3.9.0 (win32)",
   "stages": {
     "1_source_tree_integrity": {
       "status": "PASS",
-      "duration_ms": 142.69,
+      "duration_ms": 154.9,
       "files_verified": 619,
       "mismatches": []
     },
     "2_startup_self_tests": {
       "status": "PASS",
-      "duration_ms": 328.29,
+      "duration_ms": 276.03,
       "checks_run": 6,
       "details": {
         "runtime": "PASS",
         "crypto_providers": "PASS",
-        "manifest_integrity": "PASS",
+        "manifest_integrity": "WARN",
         "manifest_signature": "PASS",
         "storage_and_keystore": "PASS",
         "airgap_guard": "PASS"
@@ -24,18 +24,18 @@
     },
     "3_golden_pipeline": {
       "status": "PASS",
-      "duration_ms": 3646.97,
+      "duration_ms": 4283.4,
       "case_id": "CASE_SIH_rel_2026",
       "attributed_recipient": "alice",
       "decision_state": "ATTRIBUTED",
       "confidence_score": 1.0,
       "dlt_receipt_verified": true,
-      "merkle_root": "728928f7cfe12cff72bfea1b30dd78312a48606624f6454691306bcaadc097e5"
+      "merkle_root": "f9788d2c0409ea9f09c82a950835d0d7cda013ab666347a938abb83f1df92c3e"
     },
     "4_offline_verification": {
       "status": "PASS",
-      "duration_ms": 119.14,
-      "package_id": "pkg_CASE_SIH_rel_2026_20260928040955",
+      "duration_ms": 118.58,
+      "package_id": "pkg_CASE_SIH_rel_2026_20260928050858",
       "overall_status": "VERIFIED",
       "manifest_signature_valid": true,
       "merkle_root_valid": true,
@@ -48,7 +48,7 @@
     },
     "5_blind_evaluation": {
       "status": "PASS",
-      "duration_ms": 89.5,
+      "duration_ms": 88.73,
       "clean_doc_decision": "NO_SIGNAL",
       "clean_doc_attributed": null,
       "bob_blind_decision": "ATTRIBUTED",
@@ -56,7 +56,7 @@
     },
     "6_composed_attack_chains": {
       "status": "PASS",
-      "duration_ms": 597.52,
+      "duration_ms": 577.15,
       "total_chains_tested": 7,
       "chains_neutralized": 7,
       "chains": {
@@ -65,7 +65,7 @@
           "verdict": "DETECTED",
           "mitigating_pillar": "Pillar 4 (Content Integrity) & Pillar 3 (Merkle Commitment)",
           "errors": [
-            "MERKLE_ROOT_MISMATCH: Recomputed 246f4cdea14318a138571d01600d95c86d5a58dbc8a82edac955900d7889bae0 != Manifest 728928f7cfe12cff72bfea1b30dd78312a48606624f6454691306bcaadc097e5"
+            "MERKLE_ROOT_MISMATCH: Recomputed ccb351923d67041d15f431a11dab21ed5b9a9c031cb03ee5668c587313cfdaff != Manifest f9788d2c0409ea9f09c82a950835d0d7cda013ab666347a938abb83f1df92c3e"
           ]
         },
         "chain_b_ledger_fork": {
@@ -73,7 +73,7 @@
           "verdict": "DETECTED",
           "mitigating_pillar": "DLT Continuity & Parent Hash Enforcement",
           "errors": [
-            "Broken hash chain link at height 4: expected prev 'b7f3f5f1e34d2d584b688a4335cd03ca93881b7d384beead168fd70b600bfc08', got 'forged_prev_0000000000000000000000000000000000000000000000000000'"
+            "Broken hash chain link at height 4: expected prev '66a6f7c9dad67c4249269d74fb00cde721206626af7c9148939fb35939a6c466', got 'forged_prev_0000000000000000000000000000000000000000000000000000'"
           ]
         },
         "chain_c_transplantation": {
@@ -81,8 +81,8 @@
           "verdict": "DETECTED",
           "mitigating_pillar": "Pillar 6 (Canonical Payload Replay) & Pillar 9 (Watermark Binding)",
           "errors": [
-            "MERKLE_ROOT_MISMATCH: Recomputed 28f06cdba497e0dd9e2690fb41085ac81463f8c972b2a76eac2758ff62a2cac6 != Manifest 728928f7cfe12cff72bfea1b30dd78312a48606624f6454691306bcaadc097e5",
-            "Receipt 'rcpt_evt_dec_rel_20260928_alice_5dcf331f' invalid ML-DSA-65 signature"
+            "MERKLE_ROOT_MISMATCH: Recomputed 77954e082d052e3c0513125a065b8aa1d5602a0a514d447f907239892034abdc != Manifest f9788d2c0409ea9f09c82a950835d0d7cda013ab666347a938abb83f1df92c3e",
+            "Receipt 'rcpt_evt_dec_rel_20260928_alice_e6762442' invalid ML-DSA-65 signature"
           ]
         },
         "chain_d_post_revocation_replay": {
@@ -90,8 +90,8 @@
           "verdict": "DETECTED",
           "mitigating_pillar": "Pillar 7 (Key Lifecycle & Revocation Boundary)",
           "errors": [
-            "MERKLE_ROOT_MISMATCH: Recomputed 35434d75352f90a44dd1e7cd1a3b7a2524d9368d94041008e43f90b58247aa12 != Manifest 728928f7cfe12cff72bfea1b30dd78312a48606624f6454691306bcaadc097e5",
-            "POST_REVOCATION_REJECTION: Receipt 'rcpt_evt_dec_rel_20260928_alice_5dcf331f' timestamp 2026-09-28T04:09:52.557386+00:00 occurs after key revocation at 2026-09-23T04:09:56.382757+00:00"
+            "MERKLE_ROOT_MISMATCH: Recomputed d28c779bd16b5cd3b836bde0ab6f3de33f6187c2a80392860974b3945bd4821d != Manifest f9788d2c0409ea9f09c82a950835d0d7cda013ab666347a938abb83f1df92c3e",
+            "POST_REVOCATION_REJECTION: Receipt 'rcpt_evt_dec_rel_20260928_alice_e6762442' timestamp 2026-09-28T05:08:55.887438+00:00 occurs after key revocation at 2026-09-23T05:09:00.322559+00:00"
           ]
         },
         "chain_e_cross_tenant_injection": {
@@ -107,7 +107,7 @@
           "verdict": "DETECTED",
           "mitigating_pillar": "Pillar 10 (Lineage Integrity & Boundary Preservation)",
           "errors": [
-            "MERKLE_ROOT_MISMATCH: Recomputed cab1fbb380a5dd393330185ac223fe0b2c475bc24ab9c81c1a3d73089e26c1e3 != Manifest 728928f7cfe12cff72bfea1b30dd78312a48606624f6454691306bcaadc097e5",
+            "MERKLE_ROOT_MISMATCH: Recomputed 2d20376d1462aefd621dd984a4f4a3bee62263de1cb01bbec49813e83567eecd != Manifest f9788d2c0409ea9f09c82a950835d0d7cda013ab666347a938abb83f1df92c3e",
             "Lineage with downstream gap must preserve last_known_holder"
           ]
         },
@@ -116,12 +116,12 @@
           "verdict": "DETECTED",
           "mitigating_pillar": "Pillar 2 (ML-DSA-65 Manifest Signature)",
           "errors": [
-            "MANIFEST_DIGEST_MISMATCH: Computed c56f08cf775dc002d5a93f165e9d459d3f492e06e4fe4c45ebf6bc3c8ef95884 != Signed forged_manifest_000000000000000000000000000000000000000000000000"
+            "MANIFEST_DIGEST_MISMATCH: Computed e5d002d83838ccb2e2efe0ee19f647e9d34f5d11b43cfa83a0e34fc4664f245c != Signed forged_manifest_000000000000000000000000000000000000000000000000"
           ]
         }
       }
     }
   },
   "overall_status": "PASS",
-  "total_duration_seconds": 4.924
+  "total_duration_seconds": 5.499
 }

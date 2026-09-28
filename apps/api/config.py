@@ -31,6 +31,7 @@ class AppConfig(BaseModel):
         "text/csv",
         "application/rtf",
         "application/octet-stream",
+        "application/zip",
     ]
     
     # Cryptographic & Traceability Defaults
@@ -41,14 +42,18 @@ class AppConfig(BaseModel):
     default_tardos_recipient_hint: int = 10
     
     # CORS Configuration
-    allowed_cors_origins: list[str] = [
-        "http://localhost:5173",
-        "http://localhost:3000",
-        "http://127.0.0.1:5173",
-        "http://127.0.0.1:3000",
-        "http://localhost:8000",
-        "http://127.0.0.1:8000",
-    ]
+    allowed_cors_origins: list[str] = Field(
+        default_factory=lambda: [
+            o.strip() for o in os.getenv("CORS_ORIGINS", "").split(",") if o.strip()
+        ] if os.getenv("CORS_ORIGINS") else [
+            "http://localhost:5173",
+            "http://localhost:3000",
+            "http://127.0.0.1:5173",
+            "http://127.0.0.1:3000",
+            "http://localhost:8000",
+            "http://127.0.0.1:8000",
+        ]
+    )
     
     # Security & Role-Based Access Control
     enforce_auth: bool = False  # Set to True for strict authorization enforcement
@@ -118,6 +123,14 @@ class AppConfig(BaseModel):
         default_factory=lambda: os.getenv("DEMO_PASSWORD", "admin")
     )
     demo_tenant_id: str = "demo_tenant"
+
+    # Network Binding Configuration (Honoring Render's $PORT)
+    host: str = Field(
+        default_factory=lambda: os.getenv("SIH_HOST", os.getenv("HOST", "0.0.0.0"))
+    )
+    port: int = Field(
+        default_factory=lambda: int(os.getenv("PORT", os.getenv("SIH_PORT", "8000")))
+    )
 
     # Base URLs for Hosted & Free Deployments
     public_base_url: str = Field(

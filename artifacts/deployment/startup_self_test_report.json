@@ -32,7 +32,7 @@
           "provider_class": "StandardMLDSA65Provider",
           "provider_name": "dilithium_py (Standard Lattice Implementation)",
           "public_key_bytes": 1952,
-          "roundtrip_time_ms": 188.67,
+          "roundtrip_time_ms": 176.82,
           "signature_bytes": 3293,
           "standard": "FIPS 204",
           "status": "CRYPTO_PROVIDER_VALID"
@@ -46,7 +46,7 @@
           "provider_class": "StandardMLKEM768Provider",
           "provider_name": "kyber_py (Standard Lattice Implementation)",
           "public_key_bytes": 1184,
-          "roundtrip_time_ms": 20.56,
+          "roundtrip_time_ms": 20.64,
           "shared_secret_bytes": 32,
           "standard": "FIPS 203",
           "status": "CRYPTO_PROVIDER_VALID"
@@ -56,10 +56,10 @@
       "status": "PASS"
     },
     "manifest_integrity": {
-      "matched_count": 252,
+      "matched_count": 249,
       "missing_count": 0,
-      "modified_count": 0,
-      "status": "PASS"
+      "modified_count": 3,
+      "status": "WARN"
     },
     "manifest_signature": {
       "algorithm": "ML-DSA-65",
@@ -81,5 +81,5 @@
   },
   "overall_status": "PASS",
   "strict_mode": false,
-  "timestamp_iso": "2026-09-28T04:09:52Z"
+  "timestamp_iso": "2026-09-28T05:56:47Z"
 }

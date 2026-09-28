@@ -3,6 +3,7 @@ import os
 import time
 import uuid
 from contextlib import asynccontextmanager
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -180,6 +181,8 @@ if dist_path.exists():
         target_file = dist_path / full_path
         if target_file.exists() and target_file.is_file():
             return FileResponse(target_file)
+        if "." in Path(full_path).name or "download" in full_path:
+            raise HTTPException(status_code=404, detail="Resource not found")
         return FileResponse(dist_path / "index.html")
 
 # -------------------------------------------------------------

@@ -2,7 +2,22 @@
 
 > **System Designation**: AegisTrace (Code Name: Black Amber)  
 > **Smart India Hackathon 2026**: SIH26237 — Cryptographic Attribution and Immutable Decryption Provenance for Multi-Recipient Encrypted Document Distribution  
+> **Primary Live Demonstration**: [Render Web Service (https://aegistrace.onrender.com)](https://aegistrace.onrender.com)  
+> **Active Edge Mirror**: [`https://joan-enforcement-whatever-looks.trycloudflare.com`](https://joan-enforcement-whatever-looks.trycloudflare.com)  
+> **Deployment Status**: `DEPLOYED_AND_BROWSER_VERIFIED`  
+> **Demo Credentials**: `admin` / `admin` (Autofill enabled)  
 > **Platform Status**: Production Web Workstation & Standalone Offline Auditor. Standalone desktop applications (Windows `.exe`, macOS `.dmg`) and Android mobile applications are **DEFERRED TO FUTURE WORKSTREAM**.
+
+---
+
+## 0. Instant Online Evaluation (Zero Local Setup)
+
+To test AegisTrace without local installation:
+- **Primary Public URL (Render)**: [`https://aegistrace.onrender.com`](https://aegistrace.onrender.com)
+- **Active Edge Mirror**: [`https://joan-enforcement-whatever-looks.trycloudflare.com`](https://joan-enforcement-whatever-looks.trycloudflare.com)
+- Click **Autofill** on the login screen -> Click **Sign in**
+- Test leak investigations, browse ledger events, or test offline package verification in **AegisTrace Verify**.
+- See [HOSTED_DEMO_RUNBOOK.md](HOSTED_DEMO_RUNBOOK.md) for full walkthrough.
 
 ---
 

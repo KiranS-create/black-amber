@@ -1,8 +1,10 @@
-from typing import Any, Dict, List
-from fastapi import APIRouter, Depends, status
+from typing import Any, Dict, List, Optional
+from fastapi import APIRouter, Depends, Request, status
 
 from apps.api.orchestrator import default_orchestrator
 from apps.api.security import (
+    APIException,
+    ErrorCode,
     SecurityPrincipal,
     get_current_actor,
     require_recipient_access,
@@ -63,8 +65,8 @@ def submit_decryption_event(
 
 @router.post("/verify-package")
 async def verify_evidence_package(
-    package_file: bytes = Depends(validate_uploaded_payload),
-    tenant_id: str = None
+    request: Request,
+    tenant_id: Optional[str] = None
 ):
     """
     Independent Offline Evidence Package Verifier Endpoint:
@@ -81,9 +83,14 @@ async def verify_evidence_package(
     from core.evidence_package.exporter import EvidencePackageExporter
     from core.evidence_package.verifier import OfflineEvidenceVerifier
 
+    package_file = await request.body()
+    validate_uploaded_payload(package_file)
+
     with tempfile.NamedTemporaryFile(suffix=".zip", delete=False) as tmp:
         tmp.write(package_file)
         tmp_path = Path(tmp.name)
+
+    from datetime import datetime, timezone
 
     try:
         package = EvidencePackageExporter.load_from_zip(tmp_path)
@@ -96,6 +103,12 @@ async def verify_evidence_package(
             custody_chain=package.custody_chain,
         )
         return result.model_dump(mode="json")
+    except Exception as exc:
+        raise APIException(
+            code=ErrorCode.INVALID_INPUT,
+            message=f"Package corruption or tamper detected: {str(exc)}",
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
     finally:
         try:
             tmp_path.unlink()

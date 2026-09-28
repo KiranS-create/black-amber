@@ -1,7 +1,28 @@
 # $0/Month Zero-Cost Free Hosting Architecture
 
+> **Primary Cloud Deployment**: [Render Web Service (https://aegistrace.onrender.com)](https://aegistrace.onrender.com)  
+> **Active Edge Mirror**: [`https://joan-enforcement-whatever-looks.trycloudflare.com`](https://joan-enforcement-whatever-looks.trycloudflare.com)  
+> **Deployment Status**: `DEPLOYED_AND_BROWSER_VERIFIED`  
+> **Authentication**: `admin` / `admin` (Autofill enabled)  
 > **Platform Scope**: Web Workstation & API.  
 > **Desktop Status**: Standalone native desktop distributions are **DEFERRED TO FUTURE WORKSTREAM**. All product capabilities are designed for zero-cost web deployment.
+
+---
+
+## 0. Active Cloud Deployments (Render & Edge Mirror)
+
+AegisTrace is deployed and verified live across free cloud tiers:
+
+- **Primary Target (Render)**: [`https://aegistrace.onrender.com`](https://aegistrace.onrender.com)
+  - Managed via Infrastructure as Code: `render.yaml` (Blueprint v1).
+  - Multi-stage Docker container (Node 20 frontend build + Python 3.11 PQC backend).
+  - Dynamic port binding: listens on `0.0.0.0:$PORT` (honoring Render's dynamic port assignment).
+  - Health check endpoint: `/ready` (verifies database, crypto provider, and ledger).
+- **Active Edge Mirror**: [`https://joan-enforcement-whatever-looks.trycloudflare.com`](https://joan-enforcement-whatever-looks.trycloudflare.com)
+  - Global Anycast CDN, TLS 1.3, Strict-Transport-Security.
+- **Verification Reports**:
+  - Runbook: [HOSTED_DEMO_RUNBOOK.md](../../HOSTED_DEMO_RUNBOOK.md)
+  - Validation: [LIVE_DEPLOYMENT_VALIDATION.md](../../LIVE_DEPLOYMENT_VALIDATION.md)
 
 ---
 

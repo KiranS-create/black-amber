@@ -1,11 +1,26 @@
 # Demonstration Deployment Guide (SIH Judge Evaluation)
 
-> **Purpose**: Rapid, self-contained deployment for Smart India Hackathon 2026 jury evaluation.  
+> **Primary Live Demonstration**: [Render Web Service (https://aegistrace.onrender.com)](https://aegistrace.onrender.com)  
+> **Active Edge Mirror**: [`https://joan-enforcement-whatever-looks.trycloudflare.com`](https://joan-enforcement-whatever-looks.trycloudflare.com)  
+> **Deployment Status**: `DEPLOYED_AND_BROWSER_VERIFIED`  
+> **Demo Credentials**: `admin` / `admin` (Autofill enabled)  
 > **Platform Status**: Production Web Workstation. Standalone desktop applications (Windows `.exe`, macOS `.dmg`) and Android mobile packaging are **DEFERRED TO FUTURE WORKSTREAM**.
 
 ---
 
-## 1. Quick Launch for Evaluators
+## 0. Instant Online Evaluation (Zero Local Setup)
+
+Jury members and evaluators can immediately access the live AegisTrace demo workstation without installing Docker or running local processes:
+
+- **Primary Cloud URL (Render)**: [`https://aegistrace.onrender.com`](https://aegistrace.onrender.com)
+- **Active Edge Mirror**: [`https://joan-enforcement-whatever-looks.trycloudflare.com`](https://joan-enforcement-whatever-looks.trycloudflare.com)
+- **Login Credentials**: Username: `admin` | Password: `admin` (or click **Autofill** on the login screen).
+- **Environment**: Isolated `demo_tenant` pre-loaded with the 4 benchmark adversarial evaluation scenarios.
+- **Evaluator Guide**: Step-by-step instructions available in [HOSTED_DEMO_RUNBOOK.md](HOSTED_DEMO_RUNBOOK.md).
+
+---
+
+## 1. Quick Local Docker Launch for Evaluators
 
 Deploy an isolated demonstration instance with one command:
 

@@ -59,12 +59,12 @@ COPY --from=web-builder /web/dist /app/apps/web/dist
 # Create storage directories
 RUN mkdir -p /app/data/artifacts /app/data/demo_fixtures /app/artifacts/deployment
 
-# Expose workstation port (Unified Web + API)
+# Expose workstation port (Unified Web + API, 8000 default or $PORT on Render)
 EXPOSE 8000
 
-# Deep healthcheck against /ready
+# Deep healthcheck against /ready, honoring dynamic $PORT
 HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/ready')" || exit 1
+    CMD python -c "import urllib.request, os; port = os.getenv('PORT', '8000'); urllib.request.urlopen(f'http://127.0.0.1:{port}/ready')" || exit 1
 
-# Default entrypoint: Start FastAPI server with signal handling
-CMD ["uvicorn", "apps.api.main:app", "--host", "0.0.0.0", "--port", "8000", "--timeout-keep-alive", "30"]
+# Default entrypoint: Start FastAPI server with signal handling, honoring $PORT
+CMD ["sh", "-c", "exec uvicorn apps.api.main:app --host 0.0.0.0 --port ${PORT:-8000} --timeout-keep-alive 30"]

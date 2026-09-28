@@ -30,8 +30,9 @@ CORS_ORIGINS=https://trace.agency.gov
 PUBLIC_BASE_URL=https://trace.agency.gov
 API_BASE_URL=https://trace.agency.gov
 
-# 2. Network & Storage
+# 2. Network & Storage (Dynamic Cloud Port Binding)
 SIH_HOST=0.0.0.0
+PORT=8000
 SIH_PORT=8000
 SIH_DATA_DIR=/app/data
 
@@ -39,6 +40,8 @@ SIH_DATA_DIR=/app/data
 AUTH_RATE_LIMIT_MAX_REQUESTS=20
 AUTH_RATE_LIMIT_WINDOW_SECONDS=60
 ```
+
+> **Dynamic Cloud Port Support**: The container automatically inspects `$PORT` (injected dynamically by Render, Cloud Run, and Fly.io) and binds to `0.0.0.0:$PORT` while defaulting to port `8000` for local and Docker Compose environments.
 
 > [!CAUTION]
 > Setting `DEMO_AUTH_ENABLED=true` in production is strictly prohibited. When disabled, default `admin/admin` credentials return `401 Unauthorized`.

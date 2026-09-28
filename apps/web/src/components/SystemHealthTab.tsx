@@ -53,11 +53,11 @@ export const SystemHealthTab: React.FC<SystemHealthTabProps> = ({ isOnline, onRe
     },
     {
       name: 'FastAPI REST Gateway',
-      spec: 'Port 8000 / OpenAPI Specification',
+      spec: typeof window !== 'undefined' ? `${window.location.host} / OpenAPI Specification` : 'Port 8000 / OpenAPI Specification',
       status: isOnline ? 'CONNECTED' : 'DISCONNECTED',
       latency: isOnline ? '3.1 ms' : 'Unavailable',
       detail: isOnline 
-        ? 'Live Python backend servicing endpoints at http://localhost:8000.' 
+        ? `Live Python backend servicing endpoints on ${typeof window !== 'undefined' ? window.location.origin : 'host'}.` 
         : 'Backend API is currently unreachable. Operating in offline browser client mode.'
     }
   ];

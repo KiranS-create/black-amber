@@ -1,0 +1,26 @@
+# ==============================================================================
+# Render Blueprint Specification — AegisTrace (SIH26237)
+# Infrastructure as Code for Free-Tier Deployment
+# ==============================================================================
+
+services:
+  - type: web
+    name: aegistrace
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /ready
+    autoDeploy: true
+    envVars:
+      - key: DEMO_AUTH_ENABLED
+        value: "true"
+      - key: DEMO_USERNAME
+        value: "admin"
+      - key: DEMO_PASSWORD
+        value: "admin"
+      - key: SIH_HOST
+        value: "0.0.0.0"
+      - key: CORS_ORIGINS
+        value: "*"
