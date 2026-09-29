@@ -125,8 +125,8 @@ export function MainApp() {
       );
       // 2. Bob decrypts the package -> client watermarks -> Bob signs with ML-DSA-65 -> committed to ledger
       await apiService.decryptPackage(rel.release_id, 'bob');
-      // 3. Leak analysis for print_scan_bob scenario
-      const result = await apiService.analyzeLeak('print_scan_bob', rel.release_id);
+      // 3. Leak analysis for print_scan_camera scenario
+      const result = await apiService.analyzeLeak('print_scan_camera', rel.release_id);
       setLeakResult(result);
       await refreshData();
       setActiveTab('investigations');
