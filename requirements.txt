@@ -19,3 +19,4 @@ python-pptx>=1.0.0
 gradio>=4.44.0
 reedsolo>=1.7.0
 spaces
+huggingface_hub==0.24.7
