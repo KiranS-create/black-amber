@@ -32,6 +32,8 @@ coverage.xml
 # Node & Frontend
 node_modules/
 dist/
+!apps/web/dist/
+!apps/web/dist/**
 .next/
 out/
 .env
