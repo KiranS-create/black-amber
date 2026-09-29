@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { UserSession } from '../../types';
+import { getExperienceVariant, setExperienceVariant } from '../../variant';
 
 interface TopBarProps {
   isOnline: boolean;
@@ -40,6 +41,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   onSignOut
 }) => {
   const { theme, toggleTheme } = useTheme();
+  const activeVariant = getExperienceVariant();
 
   return (
     <header
@@ -236,6 +238,61 @@ export const TopBar: React.FC<TopBarProps> = ({
             )}
           </div>
         )}
+
+        {/* Experience Variant Switcher Pill */}
+        <div 
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            padding: '2px',
+            background: 'var(--surface-subtle)',
+            border: '1px solid var(--border)',
+            borderRadius: '20px',
+            marginRight: '6px'
+          }}
+        >
+          <button
+            onClick={() => setExperienceVariant('main')}
+            title="Switch to the Main Software User Interface"
+            style={{
+              border: 'none',
+              background: activeVariant === 'main' ? 'rgba(56, 189, 248, 0.2)' : 'transparent',
+              color: activeVariant === 'main' ? '#0284C7' : 'var(--text-tertiary)',
+              fontWeight: activeVariant === 'main' ? 600 : 500,
+              fontSize: '11px',
+              padding: '3px 9px',
+              borderRadius: '16px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              transition: 'all 0.15s ease'
+            }}
+          >
+            <span>✦ Main Workstation</span>
+          </button>
+          <button
+            onClick={() => setExperienceVariant('alternate')}
+            title="Active: Alternate Baseline UI"
+            style={{
+              border: 'none',
+              background: activeVariant === 'alternate' ? 'var(--surface)' : 'transparent',
+              color: activeVariant === 'alternate' ? 'var(--text)' : 'var(--text-tertiary)',
+              fontWeight: activeVariant === 'alternate' ? 600 : 500,
+              fontSize: '11px',
+              padding: '3px 9px',
+              borderRadius: '16px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              boxShadow: activeVariant === 'alternate' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+              transition: 'all 0.15s ease'
+            }}
+          >
+            <span>☵ Alternate UI</span>
+          </button>
+        </div>
 
         {/* Theme Toggle */}
         <button
