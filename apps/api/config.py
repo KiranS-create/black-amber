@@ -14,7 +14,11 @@ class AppConfig(BaseModel):
     
     # Storage settings
     base_dir: Path = Path(__file__).resolve().parent.parent.parent
-    data_dir: Path = base_dir / "data"
+    data_dir: Path = (
+        Path("/tmp/aegistrace_data")
+        if (os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"))
+        else Path(__file__).resolve().parent.parent.parent / "data"
+    )
     artifacts_dir: Path = data_dir / "artifacts"
     db_path: Path = data_dir / "metadata.sqlite3"
     

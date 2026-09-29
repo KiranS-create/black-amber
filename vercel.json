@@ -1,93 +1,9 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "services": {
-    "api": {
-      "root": ".",
-      "framework": "fastapi"
-    },
-    "web": {
-      "root": "apps/web",
-      "framework": "vite"
-    }
-  },
+  "version": 2,
   "rewrites": [
     {
-      "source": "/api/:path*",
-      "destination": {
-        "service": "api"
-      }
-    },
-    {
-      "source": "/auth/:path*",
-      "destination": {
-        "service": "api"
-      }
-    },
-    {
-      "source": "/documents/:path*",
-      "destination": {
-        "service": "api"
-      }
-    },
-    {
-      "source": "/releases/:path*",
-      "destination": {
-        "service": "api"
-      }
-    },
-    {
-      "source": "/recipients/:path*",
-      "destination": {
-        "service": "api"
-      }
-    },
-    {
-      "source": "/leaks/:path*",
-      "destination": {
-        "service": "api"
-      }
-    },
-    {
-      "source": "/evidence/:path*",
-      "destination": {
-        "service": "api"
-      }
-    },
-    {
-      "source": "/ledger/:path*",
-      "destination": {
-        "service": "api"
-      }
-    },
-    {
-      "source": "/directory/:path*",
-      "destination": {
-        "service": "api"
-      }
-    },
-    {
-      "source": "/health",
-      "destination": {
-        "service": "api"
-      }
-    },
-    {
-      "source": "/ready",
-      "destination": {
-        "service": "api"
-      }
-    },
-    {
-      "source": "/capabilities",
-      "destination": {
-        "service": "api"
-      }
-    },
-    {
       "source": "/(.*)",
-      "destination": {
-        "service": "web"
-      }
+      "destination": "/api/index.py"
     }
   ]
 }
