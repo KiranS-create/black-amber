@@ -19,6 +19,9 @@ import { MainEvidence } from './MainEvidence';
 import { MainSettingsModal } from './MainSettingsModal';
 import { MainLogin } from './MainLogin';
 import { MainSihComplianceModal } from './MainSihComplianceModal';
+import { MainRecipientDecryptionModal } from './MainRecipientDecryptionModal';
+import { MainVisualComparatorModal } from './MainVisualComparatorModal';
+import { MainSection65BCertificateModal } from './MainSection65BCertificateModal';
 import { VerifyTab } from '../VerifyTab';
 import '../../styles/main-experience.css';
 
@@ -30,6 +33,15 @@ export function MainApp() {
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
   const [isSihModalOpen, setIsSihModalOpen] = useState<boolean>(false);
   const [isSimulatingDemo, setIsSimulatingDemo] = useState<boolean>(false);
+
+  // Modals for the 5 SIH 26237 features
+  const [isDecryptionModalOpen, setIsDecryptionModalOpen] = useState<boolean>(false);
+  const [isComparatorModalOpen, setIsComparatorModalOpen] = useState<boolean>(false);
+  const [isCertificateModalOpen, setIsCertificateModalOpen] = useState<boolean>(false);
+  const [comparatorContext, setComparatorContext] = useState<{ docName: string; recipientName: string }>({
+    docName: 'National_Defense_Protocol_2026.pdf',
+    recipientName: 'Marcus Vance'
+  });
 
   const [documents, setDocuments] = useState<DocumentMetadata[]>([]);
   const [recipients, setRecipients] = useState<PublicRecipient[]>([]);
@@ -105,6 +117,21 @@ export function MainApp() {
     setLeakResult(result);
     await refreshData();
     setActiveTab('investigations');
+  };
+
+  const handleRunBenchmark = async (scenarioId: string) => {
+    const releaseId = releases[0]?.release_id;
+    const result = await apiService.analyzeLeak(scenarioId, releaseId);
+    setLeakResult(result);
+    await refreshData();
+  };
+
+  const handleOpenComparator = (recipientName?: string, docName?: string) => {
+    setComparatorContext({
+      recipientName: recipientName || 'Marcus Vance',
+      docName: docName || documents[0]?.document_name || 'National_Defense_Protocol_2026.pdf'
+    });
+    setIsComparatorModalOpen(true);
   };
 
   const handleSignOut = () => {
@@ -207,6 +234,9 @@ export function MainApp() {
                 onRunSihDemo={handleRunSihDemo}
                 isSimulatingDemo={isSimulatingDemo}
                 onOpenSihCompliance={() => setIsSihModalOpen(true)}
+                onOpenDecryptionPortal={() => setIsDecryptionModalOpen(true)}
+                onOpenComparator={() => handleOpenComparator()}
+                onOpenCertificate={() => setIsCertificateModalOpen(true)}
               />
             )}
 
@@ -216,6 +246,8 @@ export function MainApp() {
                 recipients={recipients}
                 onUpload={handleUploadDocument}
                 onProtectAndRelease={handleProtectAndRelease}
+                onOpenDecryptionPortal={() => setIsDecryptionModalOpen(true)}
+                onOpenComparator={() => handleOpenComparator()}
               />
             )}
 
@@ -225,6 +257,9 @@ export function MainApp() {
                 releases={releases}
                 activeResult={leakResult}
                 onIngestLeakAndAnalyze={handleIngestLeakAndAnalyze}
+                onRunBenchmark={handleRunBenchmark}
+                onOpenCertificate={() => setIsCertificateModalOpen(true)}
+                onOpenComparator={() => handleOpenComparator()}
               />
             )}
 
@@ -232,11 +267,43 @@ export function MainApp() {
               <MainEvidence
                 evidenceRecords={evidenceRecords}
                 ledgerEvents={ledgerEvents}
+                onOpenCertificate={() => setIsCertificateModalOpen(true)}
               />
             )}
           </main>
         </div>
       </div>
+
+      {/* Modal 1: Recipient Decryption Portal (Feature 1) */}
+      <MainRecipientDecryptionModal
+        isOpen={isDecryptionModalOpen}
+        onClose={() => setIsDecryptionModalOpen(false)}
+        releases={releases}
+        recipients={recipients}
+        onOpenComparator={(recName, docName) => handleOpenComparator(recName, docName)}
+        onInvestigateLeak={async (scenarioId) => {
+          await handleRunBenchmark(scenarioId);
+          setActiveTab('investigations');
+        }}
+        onRefresh={refreshData}
+      />
+
+      {/* Modal 2: Forensic Visual Comparator (Feature 2) */}
+      <MainVisualComparatorModal
+        isOpen={isComparatorModalOpen}
+        onClose={() => setIsComparatorModalOpen(false)}
+        recipientName={comparatorContext.recipientName}
+        documentName={comparatorContext.docName}
+      />
+
+      {/* Modal 3: Section 65B Indian Evidence Act Certificate (Feature 5) */}
+      <MainSection65BCertificateModal
+        isOpen={isCertificateModalOpen}
+        onClose={() => setIsCertificateModalOpen(false)}
+        result={leakResult}
+        candidateName={leakResult?.candidate?.name || 'Marcus Vance'}
+        documentName={releases[0]?.document_name || 'National_Defense_Protocol_2026.pdf'}
+      />
 
       {/* Contextual More / Settings Modal */}
       <MainSettingsModal

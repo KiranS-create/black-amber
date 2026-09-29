@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { DocumentMetadata, PublicRecipient } from '../../types';
-import { Upload, FileText, Search, Shield, ChevronRight, Check } from 'lucide-react';
+import { Upload, FileText, Search, Shield, ChevronRight, Check, Key, Eye, Sparkles } from 'lucide-react';
 import { MainDocumentDrawer } from './MainDocumentDrawer';
 
 interface MainDocumentsProps {
@@ -8,13 +8,17 @@ interface MainDocumentsProps {
   recipients: PublicRecipient[];
   onUpload: (file: File) => Promise<void>;
   onProtectAndRelease: (documentId: string, recipientIds: string[]) => Promise<void>;
+  onOpenDecryptionPortal?: (doc?: DocumentMetadata) => void;
+  onOpenComparator?: () => void;
 }
 
 export const MainDocuments: React.FC<MainDocumentsProps> = ({
   documents,
   recipients,
   onUpload,
-  onProtectAndRelease
+  onProtectAndRelease,
+  onOpenDecryptionPortal,
+  onOpenComparator
 }) => {
   const [selectedDoc, setSelectedDoc] = useState<DocumentMetadata | null>(null);
   const [isUploading, setIsUploading] = useState<boolean>(false);
@@ -80,7 +84,7 @@ export const MainDocuments: React.FC<MainDocumentsProps> = ({
   return (
     <div style={{ maxWidth: '1080px', margin: '0 auto', padding: '32px 24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <h1 className="main-title">Document Registry</h1>
           <p className="main-subtitle">
@@ -88,14 +92,91 @@ export const MainDocuments: React.FC<MainDocumentsProps> = ({
           </p>
         </div>
 
-        <button
-          onClick={handleBrowseClick}
-          disabled={isUploading}
-          className="main-btn-primary"
-        >
-          <Upload size={14} />
-          <span>{isUploading ? 'Importing...' : 'Import artifact'}</span>
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {onOpenComparator && (
+            <button
+              onClick={onOpenComparator}
+              className="main-btn-secondary"
+              style={{ fontSize: '12px' }}
+            >
+              <Eye size={13} />
+              <span>Visual Comparator</span>
+            </button>
+          )}
+
+          {onOpenDecryptionPortal && (
+            <button
+              onClick={() => onOpenDecryptionPortal()}
+              className="main-btn-secondary"
+              style={{ fontSize: '12px', borderColor: 'rgba(59, 130, 246, 0.4)', color: '#60A5FA' }}
+            >
+              <Key size={13} />
+              <span>Recipient Decryption Portal</span>
+            </button>
+          )}
+
+          <button
+            onClick={handleBrowseClick}
+            disabled={isUploading}
+            className="main-btn-primary"
+          >
+            <Upload size={14} />
+            <span>{isUploading ? 'Importing...' : 'Import artifact'}</span>
+          </button>
+        </div>
+      </div>
+
+      {/* SIH Smoking Gun Feature 1 & 2 Quick Launch Strip */}
+      <div 
+        className="main-card" 
+        style={{ 
+          background: 'linear-gradient(90deg, rgba(59, 130, 246, 0.08) 0%, rgba(16, 185, 129, 0.05) 100%)', 
+          border: '1px solid rgba(59, 130, 246, 0.25)', 
+          padding: '14px 18px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '12px'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(59, 130, 246, 0.2)', color: '#60A5FA', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Key size={16} />
+          </div>
+          <div>
+            <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
+              SIH 26237 "Smoking Gun" Decryption & Visual Imperceptibility Demo
+            </div>
+            <div style={{ fontSize: '11px', color: 'var(--main-text-secondary)', marginTop: '2px' }}>
+              Simulate Bob Martinez independently decrypting the package (ML-KEM-768) and signing with ML-DSA-65, then inspect the visual comparator.
+            </div>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: '8px' }}>
+          {onOpenDecryptionPortal && (
+            <button
+              onClick={() => onOpenDecryptionPortal()}
+              className="main-btn-primary"
+              style={{ fontSize: '12px', background: '#3B82F6', borderColor: '#2563EB' }}
+            >
+              <Key size={12} />
+              <span>Simulate Recipient Decryption →</span>
+            </button>
+          )}
+
+          {onOpenComparator && (
+            <button
+              onClick={onOpenComparator}
+              className="main-btn-secondary"
+              style={{ fontSize: '12px' }}
+            >
+              <Eye size={12} />
+              <span>Visual Comparator</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Import Dropzone */}
@@ -225,16 +306,30 @@ export const MainDocuments: React.FC<MainDocumentsProps> = ({
                     </span>
                   </td>
                   <td style={{ textAlign: 'right' }}>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedDoc(doc);
-                      }}
-                      className="main-btn-ghost"
-                      style={{ padding: '4px 8px', fontSize: '12px' }}
-                    >
-                      Inspect <ChevronRight size={12} />
-                    </button>
+                    <div style={{ display: 'inline-flex', gap: '6px' }}>
+                      {onOpenDecryptionPortal && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onOpenDecryptionPortal(doc);
+                          }}
+                          className="main-btn-secondary"
+                          style={{ padding: '3px 8px', fontSize: '11px', borderColor: 'rgba(59, 130, 246, 0.4)' }}
+                        >
+                          <Key size={11} style={{ color: '#60A5FA' }} /> Decrypt Copy
+                        </button>
+                      )}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedDoc(doc);
+                        }}
+                        className="main-btn-ghost"
+                        style={{ padding: '3px 8px', fontSize: '11px' }}
+                      >
+                        Inspect <ChevronRight size={12} />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

@@ -28,11 +28,16 @@ export function getExperienceVariant(): ExperienceVariant {
   // 2. Strict Hostname Matching
   const hostname = window.location.hostname.toLowerCase();
 
-  // The Protected Alternate Baseline Domain
-  if (hostname === 'aegistrace.vercel.app') {
+  // The Alternate Baseline Domain
+  if (hostname === 'aegistrace-kirans-create.vercel.app') {
     return 'alternate';
   }
 
-  // Default to Main Domain Experience
+  // The Main Workstation Domain
+  if (hostname === 'aegistrace.vercel.app') {
+    return 'main';
+  }
+
+  // Default to Main Domain Experience (localhost, preview URLs)
   return 'main';
 }
