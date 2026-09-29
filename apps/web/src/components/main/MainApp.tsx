@@ -18,6 +18,7 @@ import { MainInvestigations } from './MainInvestigations';
 import { MainEvidence } from './MainEvidence';
 import { MainSettingsModal } from './MainSettingsModal';
 import { MainLogin } from './MainLogin';
+import { MainSihComplianceModal } from './MainSihComplianceModal';
 import { VerifyTab } from '../VerifyTab';
 import '../../styles/main-experience.css';
 
@@ -27,6 +28,8 @@ export function MainApp() {
   const [isDemoMode, setIsDemoMode] = useState<boolean>(() => apiService.isDemoMode());
   const [isVerifyStandalone, setIsVerifyStandalone] = useState<boolean>(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
+  const [isSihModalOpen, setIsSihModalOpen] = useState<boolean>(false);
+  const [isSimulatingDemo, setIsSimulatingDemo] = useState<boolean>(false);
 
   const [documents, setDocuments] = useState<DocumentMetadata[]>([]);
   const [recipients, setRecipients] = useState<PublicRecipient[]>([]);
@@ -109,6 +112,31 @@ export function MainApp() {
     setUserSession(null);
   };
 
+  const handleRunSihDemo = async () => {
+    setIsSimulatingDemo(true);
+    try {
+      // 1. Create a release for Alice, Bob, Charlie with ML-KEM-768
+      const rel = await apiService.createRelease(
+        'Operation_Aegis_Plan.pdf',
+        'U0lIMjYyMzc=',
+        ['alice', 'bob', 'charlie'],
+        undefined,
+        true
+      );
+      // 2. Bob decrypts the package -> client watermarks -> Bob signs with ML-DSA-65 -> committed to ledger
+      await apiService.decryptPackage(rel.release_id, 'bob');
+      // 3. Leak analysis for print_scan_bob scenario
+      const result = await apiService.analyzeLeak('print_scan_bob', rel.release_id);
+      setLeakResult(result);
+      await refreshData();
+      setActiveTab('investigations');
+    } catch (err) {
+      console.error('Demo simulation error:', err);
+    } finally {
+      setIsSimulatingDemo(false);
+    }
+  };
+
   // 1. Standalone Offline Verifier Mode
   if (isVerifyStandalone) {
     return (
@@ -164,6 +192,7 @@ export function MainApp() {
             isDemoMode={isDemoMode}
             onSignOut={handleSignOut}
             onOpenSettings={() => setIsSettingsOpen(true)}
+            onOpenSihCompliance={() => setIsSihModalOpen(true)}
           />
 
           <main style={{ flex: 1, overflowY: 'auto' }}>
@@ -175,6 +204,9 @@ export function MainApp() {
                 ledgerEvents={ledgerEvents}
                 isOnline={isOnline}
                 onNavigate={setActiveTab}
+                onRunSihDemo={handleRunSihDemo}
+                isSimulatingDemo={isSimulatingDemo}
+                onOpenSihCompliance={() => setIsSihModalOpen(true)}
               />
             )}
 
@@ -213,6 +245,12 @@ export function MainApp() {
         recipients={recipients}
         ledgerEvents={ledgerEvents}
         isOnline={isOnline}
+      />
+
+      {/* SIH 26237 Problem Statement Compliance Modal */}
+      <MainSihComplianceModal
+        isOpen={isSihModalOpen}
+        onClose={() => setIsSihModalOpen(false)}
       />
     </div>
   );

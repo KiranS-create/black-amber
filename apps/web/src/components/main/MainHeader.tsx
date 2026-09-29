@@ -9,6 +9,7 @@ interface MainHeaderProps {
   isDemoMode: boolean;
   onSignOut: () => void;
   onOpenSettings: () => void;
+  onOpenSihCompliance?: () => void;
 }
 
 export const MainHeader: React.FC<MainHeaderProps> = ({
@@ -16,7 +17,8 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
   userSession,
   isDemoMode,
   onSignOut,
-  onOpenSettings
+  onOpenSettings,
+  onOpenSihCompliance
 }) => {
   const { theme, toggleTheme } = useTheme();
 
@@ -32,7 +34,19 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
         </span>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        {onOpenSihCompliance && (
+          <button
+            onClick={onOpenSihCompliance}
+            className="main-btn-secondary"
+            title="View SIH 26237 Problem Statement Implementation Matrix"
+            style={{ fontSize: '11px', padding: '4px 9px', display: 'inline-flex', alignItems: 'center', gap: '5px' }}
+          >
+            <Shield size={12} style={{ color: '#60A5FA' }} />
+            <span>SIH 26237</span>
+          </button>
+        )}
+
         {isDemoMode && (
           <div
             style={{

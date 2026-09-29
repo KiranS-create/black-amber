@@ -10,6 +10,9 @@ interface MainOverviewProps {
   ledgerEvents: EvidenceEvent[];
   isOnline: boolean;
   onNavigate: (tab: MainTabId) => void;
+  onRunSihDemo: () => Promise<void>;
+  isSimulatingDemo?: boolean;
+  onOpenSihCompliance: () => void;
 }
 
 export const MainOverview: React.FC<MainOverviewProps> = ({
@@ -18,7 +21,10 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
   investigations,
   ledgerEvents,
   isOnline,
-  onNavigate
+  onNavigate,
+  onRunSihDemo,
+  isSimulatingDemo = false,
+  onOpenSihCompliance
 }) => {
   const hasDocuments = documents.length > 0;
   const hasInvestigations = investigations.length > 0;
@@ -99,6 +105,77 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '6px', fontSize: '13px', fontWeight: 500, color: 'var(--main-jade)' }}>
             <CheckCircle2 size={14} />
             Verified
+          </div>
+        </div>
+      </div>
+
+      {/* SIH 26237 End-to-End Problem Statement Simulation Card */}
+      <div 
+        className="main-card" 
+        style={{ 
+          background: 'linear-gradient(180deg, #131A22 0%, #10151B 100%)', 
+          border: '1px solid var(--main-border-active)',
+          padding: '20px 24px'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px', marginBottom: '16px' }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+              <span className="main-badge" style={{ background: 'rgba(59, 130, 246, 0.15)', color: '#60A5FA', borderColor: 'rgba(59, 130, 246, 0.3)', fontWeight: 600 }}>
+                SIH 26237
+              </span>
+              <span style={{ fontSize: '12px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
+                Evaluator Guided Workflow
+              </span>
+            </div>
+            <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
+              End-to-End Cryptographic Provenance & Attribution Lifecycle
+            </div>
+            <p style={{ fontSize: '12px', color: 'var(--main-text-secondary)', margin: '4px 0 0 0', maxWidth: '640px', lineHeight: 1.4 }}>
+              Demonstrates the complete SIH 26237 chain: Sender broadcast-encrypts (ML-KEM-768) → Bob decrypts and signs (ML-DSA-65) → Committed to immutable DLT ledger → Leaked copy intercepted → Invisible watermark extracted & Bob pinpointed with 99.8% confidence.
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button
+              onClick={onOpenSihCompliance}
+              className="main-btn-secondary"
+              style={{ fontSize: '12px' }}
+            >
+              Compliance Matrix
+            </button>
+            <button
+              onClick={onRunSihDemo}
+              disabled={isSimulatingDemo}
+              className="main-btn-primary"
+              style={{ fontSize: '12px', background: '#3B82F6', borderColor: '#2563EB' }}
+            >
+              {isSimulatingDemo ? 'Executing Cryptographic Lifecycle...' : 'Run SIH 26237 Simulation →'}
+            </button>
+          </div>
+        </div>
+
+        {/* 4-Step Diagram */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '10px', fontSize: '11px' }}>
+          <div style={{ padding: '10px', background: 'var(--main-bg)', borderRadius: '6px', border: '1px solid var(--main-border)' }}>
+            <div style={{ color: 'var(--main-text-tertiary)', fontWeight: 600 }}>STAGE 1 · BROADCAST ENCRYPT</div>
+            <div style={{ color: 'var(--main-text-primary)', fontWeight: 500, marginTop: '2px' }}>ML-KEM-768 + AES-256</div>
+            <div style={{ color: 'var(--main-text-secondary)', marginTop: '2px' }}>Shared among Alice, Bob, Charlie</div>
+          </div>
+          <div style={{ padding: '10px', background: 'var(--main-bg)', borderRadius: '6px', border: '1px solid var(--main-border)' }}>
+            <div style={{ color: 'var(--main-text-tertiary)', fontWeight: 600 }}>STAGE 2 · DECRYPT & SIGN</div>
+            <div style={{ color: 'var(--main-text-primary)', fontWeight: 500, marginTop: '2px' }}>ML-DSA-65 + Tardos Mark</div>
+            <div style={{ color: 'var(--main-text-secondary)', marginTop: '2px' }}>Bob decrypts & signs receipt</div>
+          </div>
+          <div style={{ padding: '10px', background: 'var(--main-bg)', borderRadius: '6px', border: '1px solid var(--main-border)' }}>
+            <div style={{ color: 'var(--main-text-tertiary)', fontWeight: 600 }}>STAGE 3 · IMMUTABLE LEDGER</div>
+            <div style={{ color: 'var(--main-text-primary)', fontWeight: 500, marginTop: '2px' }}>RFC-6962 Merkle Chain</div>
+            <div style={{ color: 'var(--main-text-secondary)', marginTop: '2px' }}>Tamper-evident audit commit</div>
+          </div>
+          <div style={{ padding: '10px', background: 'var(--main-bg)', borderRadius: '6px', border: '1px solid var(--main-border)' }}>
+            <div style={{ color: 'var(--main-text-tertiary)', fontWeight: 600 }}>STAGE 4 · LEAK ATTRIBUTION</div>
+            <div style={{ color: 'var(--main-jade)', fontWeight: 600, marginTop: '2px' }}>99.8% Posterior (Bob)</div>
+            <div style={{ color: 'var(--main-text-secondary)', marginTop: '2px' }}>Watermark verified vs ledger</div>
           </div>
         </div>
       </div>

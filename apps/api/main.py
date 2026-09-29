@@ -181,9 +181,29 @@ if dist_path.exists():
         target_file = dist_path / full_path
         if target_file.exists() and target_file.is_file():
             return FileResponse(target_file)
+
+        # Fallback for cached clients requesting older asset bundles
+        if full_path.startswith("assets/"):
+            if full_path.endswith(".js"):
+                js_files = list(assets_path.glob("*.js"))
+                if js_files:
+                    return FileResponse(js_files[0], media_type="application/javascript")
+            elif full_path.endswith(".css"):
+                css_files = list(assets_path.glob("*.css"))
+                if css_files:
+                    return FileResponse(css_files[0], media_type="text/css")
+
         if "." in Path(full_path).name or "download" in full_path:
             raise HTTPException(status_code=404, detail="Resource not found")
-        return FileResponse(dist_path / "index.html")
+
+        return FileResponse(
+            dist_path / "index.html",
+            headers={
+                "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",
+                "Pragma": "no-cache",
+                "Expires": "0"
+            }
+        )
 
 # -------------------------------------------------------------
 # Backward-Compatibility Routes (v0.1 Contract Support)
