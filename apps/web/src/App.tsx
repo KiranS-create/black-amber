@@ -40,6 +40,8 @@ import { ProductGuideModal } from './components/ProductGuideModal';
 import { ForensicReportModal } from './components/ForensicReportModal';
 import { SignatureIntro } from './components/common/SignatureIntro';
 import { useLenis } from './hooks/useLenis';
+import { getExperienceVariant } from './variant';
+import { MainApp } from './components/main/MainApp';
 
 export function AppContent() {
   const [activeTab, setActiveTab] = useState<TabId>('overview');
@@ -478,6 +480,16 @@ export function AppContent() {
 }
 
 export function App() {
+  const variant = getExperienceVariant();
+
+  if (variant === 'main') {
+    return (
+      <ThemeProvider>
+        <MainApp />
+      </ThemeProvider>
+    );
+  }
+
   return (
     <ThemeProvider>
       <AppContent />
