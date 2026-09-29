@@ -15,6 +15,7 @@ import {
   Cpu
 } from 'lucide-react';
 import { MainTabId } from './MainSidebar';
+import { ThreeCryptographicLattice } from './ThreeCryptographicLattice';
 
 interface MainOverviewProps {
   documents: DocumentMetadata[];
@@ -87,15 +88,16 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
         </div>
       </div>
 
+      {/* 3D Cryptographic Lattice Core (Three.js) */}
+      <ThreeCryptographicLattice height={190} />
+
       {/* Workspace State Strip */}
       <div 
+        className="glass-card"
         style={{ 
           display: 'grid', 
           gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
           gap: '12px',
-          background: 'var(--main-surface)',
-          border: '1px solid var(--main-border)',
-          borderRadius: '8px',
           padding: '16px 20px'
         }}
       >
@@ -140,11 +142,12 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
 
       {/* SIH 26237 End-to-End Problem Statement Simulation Card */}
       <div 
-        className="main-card" 
+        className="glass-panel" 
         style={{ 
-          background: 'linear-gradient(180deg, #131A22 0%, #10151B 100%)', 
-          border: '1px solid var(--main-border-active)',
-          padding: '20px 24px'
+          borderRadius: '10px',
+          border: '1px solid rgba(59, 130, 246, 0.25)',
+          padding: '22px 26px',
+          boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.4), inset 0 0 40px rgba(59, 130, 246, 0.04)'
         }}
       >
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px', marginBottom: '16px' }}>

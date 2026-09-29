@@ -12,6 +12,9 @@ import {
   SlidersHorizontal,
   Info
 } from 'lucide-react';
+import { ThreeSpectralCarrier } from './ThreeSpectralCarrier';
+
+
 
 interface MainVisualComparatorModalProps {
   isOpen: boolean;
@@ -318,29 +321,7 @@ export const MainVisualComparatorModal: React.FC<MainVisualComparatorModalProps>
                   Seed: PRNG_BOB_768_ORTHO
                 </span>
               </div>
-              <div 
-                style={{ 
-                  height: '240px', 
-                  background: 'repeating-linear-gradient(45deg, rgba(245, 158, 11, 0.05), rgba(245, 158, 11, 0.05) 10px, rgba(16, 185, 129, 0.05) 10px, rgba(16, 185, 129, 0.05) 20px)',
-                  borderRadius: '8px', 
-                  border: '1px solid rgba(245, 158, 11, 0.3)', 
-                  display: 'flex', 
-                  flexDirection: 'column', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  padding: '20px'
-                }}
-              >
-                <div style={{ textAlign: 'center', maxWidth: '500px' }}>
-                  <Sparkles size={28} style={{ color: 'var(--main-amber)', marginBottom: '8px' }} />
-                  <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
-                    Mathematical Traitor Tracing Carrier Visualization
-                  </div>
-                  <p style={{ fontSize: '12px', color: 'var(--main-text-secondary)', marginTop: '6px' }}>
-                    Recipient {recipientName} is assigned unique orthogonal Tardos code vector <code className="main-mono" style={{ color: 'var(--main-amber)' }}>U_bob = [1, -1, 1, 1, -1, 1...]</code> modulated via pseudo-noise sequence. Orthogonality ensures zero cross-talk between co-recipients (Alice, Charlie).
-                  </p>
-                </div>
-              </div>
+              <ThreeSpectralCarrier height={260} recipientName={recipientName} />
             </div>
           )}
 

@@ -331,3 +331,126 @@
   line-height: 1.6;
   color: var(--main-text-secondary);
 }
+
+/* ==========================================================================
+   Glassmorphism & High-End Visual Design Elements
+   ========================================================================== */
+.glass-panel {
+  background: rgba(18, 24, 33, 0.65) !important;
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.glass-card {
+  background: rgba(18, 22, 28, 0.6) !important;
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.glass-card:hover {
+  background: rgba(22, 28, 36, 0.75) !important;
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+.glass-pill-container {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-pill-btn {
+  border: none;
+  background: transparent;
+  color: var(--main-text-secondary);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.glass-pill-btn.active {
+  background: rgba(56, 189, 248, 0.18);
+  color: #38BDF8;
+  font-weight: 600;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.glass-pill-btn:hover:not(.active) {
+  color: var(--main-text-primary);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Modal Styling with Glassmorphism */
+.main-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 7, 11, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.main-modal {
+  background: rgba(14, 18, 25, 0.92) !important;
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.75), 0 0 1px rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--main-border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.main-modal-title {
+  margin: 0;
+  font-weight: 600;
+  color: var(--main-text-primary);
+  letter-spacing: -0.01em;
+}
+
+.main-modal-body {
+  padding: 24px;
+}
+
+.main-modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--main-border);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  background: rgba(9, 12, 16, 0.5);
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+

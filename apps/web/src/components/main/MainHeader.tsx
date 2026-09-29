@@ -2,6 +2,7 @@ import React from 'react';
 import { UserSession } from '../../types';
 import { Sun, Moon, LogOut, Shield } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
+import { getExperienceVariant, setExperienceVariant } from '../../variant';
 
 interface MainHeaderProps {
   currentSection: string;
@@ -35,6 +36,24 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        {/* Experience Switcher Pill */}
+        <div className="glass-pill-container">
+          <button
+            onClick={() => setExperienceVariant('main')}
+            className={`glass-pill-btn ${getExperienceVariant() === 'main' ? 'active' : ''}`}
+            title="Active: Main Forensic Workstation"
+          >
+            ✦ Main Workstation
+          </button>
+          <button
+            onClick={() => setExperienceVariant('alternate')}
+            className={`glass-pill-btn ${getExperienceVariant() === 'alternate' ? 'active' : ''}`}
+            title="Switch to Alternate Baseline UI"
+          >
+            ☵ Alternate UI
+          </button>
+        </div>
+
         {onOpenSihCompliance && (
           <button
             onClick={onOpenSihCompliance}

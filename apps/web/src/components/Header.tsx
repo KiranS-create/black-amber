@@ -17,6 +17,7 @@ import {
   Moon
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import { getExperienceVariant, setExperienceVariant } from '../variant';
 
 interface HeaderProps {
   activeTab: string;
@@ -115,6 +116,42 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Action Controls */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+          {/* Experience Switcher Pill */}
+          <div style={{ display: 'inline-flex', alignItems: 'center', padding: '2px', background: 'var(--surface-hover)', border: '1px solid var(--border)', borderRadius: '20px' }}>
+            <button
+              onClick={() => setExperienceVariant('main')}
+              style={{
+                border: 'none',
+                background: getExperienceVariant() === 'main' ? 'var(--primary)' : 'transparent',
+                color: getExperienceVariant() === 'main' ? '#ffffff' : 'var(--text-secondary)',
+                fontSize: '11px',
+                fontWeight: 600,
+                padding: '4px 10px',
+                borderRadius: '16px',
+                cursor: 'pointer'
+              }}
+              title="Switch to New Minimal Workstation"
+            >
+              ✦ Main Workstation
+            </button>
+            <button
+              onClick={() => setExperienceVariant('alternate')}
+              style={{
+                border: 'none',
+                background: getExperienceVariant() === 'alternate' ? 'var(--primary)' : 'transparent',
+                color: getExperienceVariant() === 'alternate' ? '#ffffff' : 'var(--text-secondary)',
+                fontSize: '11px',
+                fontWeight: 600,
+                padding: '4px 10px',
+                borderRadius: '16px',
+                cursor: 'pointer'
+              }}
+              title="Active: Alternate Baseline UI"
+            >
+              ☵ Alternate UI
+            </button>
+          </div>
+
           {/* Guided Walkthrough Launcher */}
           <button
             onClick={onOpenWalkthrough}

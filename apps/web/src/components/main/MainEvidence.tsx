@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { apiService } from '../../services/api';
 import { VerificationService } from '../../services/semanticServices';
+import { ThreeMerkleChain } from './ThreeMerkleChain';
 
 interface MainEvidenceProps {
   evidenceRecords: EvidenceRecord[];
@@ -252,10 +253,10 @@ export const MainEvidence: React.FC<MainEvidenceProps> = ({
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           {/* Tamper Simulation Command Banner */}
           <div 
-            className="main-card" 
+            className="main-card glass-panel" 
             style={{ 
-              background: isLedgerTampered ? 'rgba(239, 68, 68, 0.08)' : 'var(--main-surface)', 
-              border: `1px solid ${isLedgerTampered ? 'var(--main-crimson)' : 'var(--main-border-active)'}`,
+              background: isLedgerTampered ? 'rgba(239, 68, 68, 0.08)' : 'rgba(15, 20, 28, 0.7)', 
+              border: `1px solid ${isLedgerTampered ? 'var(--main-crimson)' : 'rgba(56, 189, 248, 0.25)'}`,
               transition: 'all 0.2s ease'
             }}
           >
@@ -310,6 +311,9 @@ export const MainEvidence: React.FC<MainEvidenceProps> = ({
               </div>
             )}
           </div>
+
+          {/* Interactive 3D Merkle Chain Visualizer */}
+          <ThreeMerkleChain height={190} isTampered={isLedgerTampered} />
 
           {/* Merkle Hash Chain Visualizer */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
