@@ -20,29 +20,30 @@ No secrets, private keys, cloud credentials, tokens, real personal data, or auth
 ## 2. Audit Evidence & Verification Matrix
 
 ### 1. CURRENT_HEAD
-- **Commit Hash**: `d32610fbf995b674ce73601fbca3e882cd653356`
+- **Commit Hash**: `1a5edb1406e236599b8febeff96057a66b72a6b2`
 - **Branch**: `main` (`origin/main`)
 - **Working Tree State**: `Clean` (0 uncommitted modifications, 0 untracked leaks)
 
 ### 2. COMMITS_SCANNED
-- **Total Commits Audited**: **15 Commits** (from initial root commit `0582c3b` to current HEAD `d32610f`).
-- **Post-`d32610f` Check**: Verified that `d32610f` is the latest HEAD on `main`; 0 subsequent commits exist.
+- **Total Commits Audited**: **16 Commits** (from initial root commit `0582c3b` through `d32610f` and `1a5edb1`).
+- **Post-`d32610f` Check**: Scanned all commits including `1a5edb1`.
 - **Commit History**:
-  1. `d32610f` (HEAD -> main) `docs(deploy): add Render private repository deployment report`
-  2. `a11a733` `chore(deploy): update Render service name to aegistrace-sih26237`
-  3. `72e4404` `fix(api): sanitize header filename and add post-UI functional validation reports`
-  4. `2e63557` `feat(web): complete web functionality repair, multi-format upload and browser QA (CHAT 30)`
-  5. `0e2c4ed` `feat(deploy): configure Render Blueprint, dynamic binding, and live production deployment`
-  6. `d9749a1` `fix(api): configure comprehensive CSP headers for secure frontend integration`
-  7. `834f105` `fix(reproduction): synchronize canonical source manifest with final test & api adjustments`
-  8. `9a5a398` `chore: ignore ephemeral demo run directory`
-  9. `b85a562` `test: align CLI demo assertion with 12-pillar golden case output`
-  10. `72a6eb8` `feat(release): AegisTrace (Black Amber) v1.0.0-rc1 submission-ready release candidate`
-  11. `ed85496` `docs: add frontend design walkthrough and validation screenshots`
-  12. `35d4edf` `feat: complete integrated prototype and UI enhancements`
-  13. `6fbdfc3` `feat: SIH26237 integrated prototype`
-  14. `14c963b` `fix(crypto): verify and harden NIST FIPS 203 & 204 PQC foundation, domain-separated key wrapping, and isolation tests`
-  15. `0582c3b` `feat: Complete Milestone v0.1 vertical slice for SIH26237`
+  1. `1a5edb1` (HEAD -> main) `docs(audit): add final public repository security audit report`
+  2. `d32610f` `docs(deploy): add Render private repository deployment report`
+  3. `a11a733` `chore(deploy): update Render service name to aegistrace-sih26237`
+  4. `72e4404` `fix(api): sanitize header filename and add post-UI functional validation reports`
+  5. `2e63557` `feat(web): complete web functionality repair, multi-format upload and browser QA (CHAT 30)`
+  6. `0e2c4ed` `feat(deploy): configure Render Blueprint, dynamic binding, and live production deployment`
+  7. `d9749a1` `fix(api): configure comprehensive CSP headers for secure frontend integration`
+  8. `834f105` `fix(reproduction): synchronize canonical source manifest with final test & api adjustments`
+  9. `9a5a398` `chore: ignore ephemeral demo run directory`
+  10. `b85a562` `test: align CLI demo assertion with 12-pillar golden case output`
+  11. `72a6eb8` `feat(release): AegisTrace (Black Amber) v1.0.0-rc1 submission-ready release candidate`
+  12. `ed85496` `docs: add frontend design walkthrough and validation screenshots`
+  13. `35d4edf` `feat: complete integrated prototype and UI enhancements`
+  14. `6fbdfc3` `feat: SIH26237 integrated prototype`
+  15. `14c963b` `fix(crypto): verify and harden NIST FIPS 203 & 204 PQC foundation, domain-separated key wrapping, and isolation tests`
+  16. `0582c3b` `feat: Complete Milestone v0.1 vertical slice for SIH26237`
 
 ### 3. WORKING_TREE_SCAN: `CLEAN`
 - **Total Tracked Files**: **1,112 files**.
