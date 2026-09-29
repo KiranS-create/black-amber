@@ -27,6 +27,7 @@ interface MainInvestigationsProps {
   onRunBenchmark?: (scenarioId: string) => Promise<void>;
   onOpenCertificate?: () => void;
   onOpenComparator?: () => void;
+  onOpenAirGapScanner?: () => void;
 }
 
 export const MainInvestigations: React.FC<MainInvestigationsProps> = ({
@@ -36,7 +37,8 @@ export const MainInvestigations: React.FC<MainInvestigationsProps> = ({
   onIngestLeakAndAnalyze,
   onRunBenchmark,
   onOpenCertificate,
-  onOpenComparator
+  onOpenComparator,
+  onOpenAirGapScanner
 }) => {
   const [selectedCase, setSelectedCase] = useState<InvestigationRecord | null>(() => investigations[0] || null);
   const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
@@ -154,6 +156,17 @@ export const MainInvestigations: React.FC<MainInvestigationsProps> = ({
             style={{ display: 'none' }}
             onChange={handleLeakFile}
           />
+          {onOpenAirGapScanner && (
+            <button
+              onClick={onOpenAirGapScanner}
+              className="main-btn-secondary"
+              style={{ fontSize: '12px', borderColor: 'var(--main-petrol)', color: 'var(--main-petrol)' }}
+              title="Open Live Optical Camera & Air-Gap Scanner"
+            >
+              <Camera size={13} />
+              <span>Live Optical Camera Scanner</span>
+            </button>
+          )}
           <button
             onClick={() => leakInputRef.current?.click()}
             disabled={isAnalyzing}

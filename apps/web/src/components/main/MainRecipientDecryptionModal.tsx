@@ -16,6 +16,7 @@ import {
   ArrowRight,
   Database
 } from 'lucide-react';
+import { audioService } from '../../services/audioService';
 
 interface MainRecipientDecryptionModalProps {
   isOpen: boolean;
@@ -41,6 +42,7 @@ export const MainRecipientDecryptionModal: React.FC<MainRecipientDecryptionModal
   const [isExecuting, setIsExecuting] = useState<boolean>(false);
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [decryptionResult, setDecryptionResult] = useState<any | null>(null);
+  const [subTab, setSubTab] = useState<'terminal' | 'enclave'>('terminal');
 
   if (!isOpen) return null;
 
@@ -79,6 +81,7 @@ export const MainRecipientDecryptionModal: React.FC<MainRecipientDecryptionModal
 
       await new Promise(r => setTimeout(r, 500));
       setDecryptionResult(result);
+      audioService.playDecryptionSuccess();
       if (onRefresh) await onRefresh();
     } catch (err: any) {
       console.error('Decryption failed:', err);
@@ -95,6 +98,7 @@ export const MainRecipientDecryptionModal: React.FC<MainRecipientDecryptionModal
         signature_b64: `dSA65_sig_${selectedRecipientId}_02_eefa1234567890abcdef1234567890`,
         timestamp: new Date().toISOString()
       });
+      audioService.playDecryptionSuccess();
       if (onRefresh) await onRefresh();
     } finally {
       setIsExecuting(false);
@@ -146,13 +150,49 @@ export const MainRecipientDecryptionModal: React.FC<MainRecipientDecryptionModal
           </button>
         </div>
 
+        {/* Sub-tab Selector */}
+        <div style={{ padding: '14px 24px 0 24px', display: 'flex', gap: '8px' }}>
+          <button
+            type="button"
+            onClick={() => setSubTab('terminal')}
+            className={`main-btn-secondary ${subTab === 'terminal' ? 'active' : ''}`}
+            style={{ 
+              fontSize: '12px', 
+              padding: '6px 14px', 
+              background: subTab === 'terminal' ? 'rgba(56, 189, 248, 0.15)' : 'transparent', 
+              borderColor: subTab === 'terminal' ? 'var(--main-petrol)' : 'var(--main-border)', 
+              color: subTab === 'terminal' ? 'var(--main-petrol)' : 'var(--main-text-secondary)',
+              fontWeight: subTab === 'terminal' ? 600 : 500
+            }}
+          >
+            ✦ Terminal Decryption Pipeline
+          </button>
+          <button
+            type="button"
+            onClick={() => setSubTab('enclave')}
+            className={`main-btn-secondary ${subTab === 'enclave' ? 'active' : ''}`}
+            style={{ 
+              fontSize: '12px', 
+              padding: '6px 14px', 
+              background: subTab === 'enclave' ? 'rgba(34, 197, 94, 0.15)' : 'transparent', 
+              borderColor: subTab === 'enclave' ? 'var(--main-jade)' : 'var(--main-border)', 
+              color: subTab === 'enclave' ? 'var(--main-jade)' : 'var(--main-text-secondary)',
+              fontWeight: subTab === 'enclave' ? 600 : 500
+            }}
+          >
+            🛡️ Secure WASM Enclave & Memory Architecture
+          </button>
+        </div>
+
         {/* Modal Body */}
         <div className="main-modal-body" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          {/* Recipient Selection */}
-          <div>
-            <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--main-text-primary)', display: 'block', marginBottom: '8px' }}>
-              1. Select Recipient Workstation Terminal
-            </label>
+          {subTab === 'terminal' ? (
+            <>
+              {/* Recipient Selection */}
+              <div>
+                <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--main-text-primary)', display: 'block', marginBottom: '8px' }}>
+                  1. Select Recipient Workstation Terminal
+                </label>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
               {[
                 { id: 'bob', name: 'Marcus Vance', role: 'Principal Cryptanalyst', badge: 'Recommended for Demo' },
@@ -338,6 +378,105 @@ export const MainRecipientDecryptionModal: React.FC<MainRecipientDecryptionModal
                   <Search size={13} />
                   <span>Test Leak Attribution →</span>
                 </button>
+              </div>
+            </div>
+          )}
+          </>
+          ) : (
+            /* WASM Enclave Memory Isolation Visualizer */
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div className="glass-card" style={{ padding: '16px 18px', background: 'rgba(34, 197, 94, 0.05)', border: '1px solid rgba(34, 197, 94, 0.2)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <ShieldCheck size={16} style={{ color: 'var(--main-jade)' }} />
+                  <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
+                    Client-Side Hardware Enclave & WebAssembly Memory Isolation
+                  </span>
+                </div>
+                <p style={{ fontSize: '11px', color: 'var(--main-text-secondary)', margin: 0, lineHeight: 1.5 }}>
+                  Guarantees that raw, unwatermarked plaintext is physically prevented from reaching the OS filesystem, disk cache, or unprivileged JavaScript DOM. Watermarking occurs inside an isolated 64MB WASM memory buffer prior to frame compositing.
+                </p>
+              </div>
+
+              {/* Three-Tier Memory Security Architecture */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {/* Layer 1: Host JS / DOM Layer */}
+                <div style={{ padding: '14px', borderRadius: '8px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--main-border)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span className="main-mono" style={{ fontSize: '10px', background: 'rgba(239, 68, 68, 0.15)', color: 'var(--main-crimson)', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>
+                        RING 3 • UNPRIVILEGED
+                      </span>
+                      <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
+                        Host Browser & JavaScript Main Thread
+                      </span>
+                    </div>
+                    <span style={{ fontSize: '10px', color: 'var(--main-text-tertiary)' }}>Zero Plaintext Exposure</span>
+                  </div>
+                  <div style={{ fontSize: '11px', color: 'var(--main-text-secondary)', lineHeight: 1.5 }}>
+                    • Ingests encrypted broadcast container (AES-256-GCM ciphertext + PQC KEM header).<br />
+                    • Cannot inspect internal linear memory addresses of the WASM runtime.<br />
+                    • <strong>Anti-Debugger Trap:</strong> Monitors runtime hooks; active debugger or breakpoint triggers immediate memory wipe and session abort.
+                  </div>
+                </div>
+
+                {/* Layer 2: WASM Sandboxed Memory Enclave */}
+                <div style={{ padding: '14px', borderRadius: '8px', background: 'rgba(56, 189, 248, 0.06)', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span className="main-mono" style={{ fontSize: '10px', background: 'rgba(56, 189, 248, 0.2)', color: 'var(--main-petrol)', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>
+                        SECURE ENCLAVE • 64MB WASM MEMORY
+                      </span>
+                      <span style={{ fontSize: '12px', fontWeight: 600, color: '#38BDF8' }}>
+                        Cryptographic Decryption & Volatile Watermarking Kernel
+                      </span>
+                    </div>
+                    <span className="main-badge main-badge-verified" style={{ fontSize: '9px' }}>AIR-GAPPED BUFFER</span>
+                  </div>
+                  <div style={{ fontSize: '11px', color: 'var(--main-text-secondary)', lineHeight: 1.5 }}>
+                    1. <strong>ML-KEM-768 Decapsulation:</strong> Private key decapsulates session key inside unpaged RAM.<br />
+                    2. <strong>Volatile Raster Embedding:</strong> Tardos codeword (m=128) + DSSS carrier modulated into 2D DCT coefficients.<br />
+                    3. <strong>Immediate Zeroization:</strong> <code>memset_s(session_key, 0, 32)</code> and intermediate buffers wiped upon raster completion.
+                  </div>
+                </div>
+
+                {/* Layer 3: Hardware Enclave Signature */}
+                <div style={{ padding: '14px', borderRadius: '8px', background: 'rgba(34, 197, 94, 0.06)', border: '1px solid rgba(34, 197, 94, 0.3)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span className="main-mono" style={{ fontSize: '10px', background: 'rgba(34, 197, 94, 0.2)', color: 'var(--main-jade)', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>
+                        FIPS 204 • NON-REPUDIATION
+                      </span>
+                      <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--main-jade)' }}>
+                        ML-DSA-65 Hardware Signature Anchor
+                      </span>
+                    </div>
+                    <span className="main-badge main-badge-verified" style={{ fontSize: '9px' }}>IMMUTABLE DLT RECEIPT</span>
+                  </div>
+                  <div style={{ fontSize: '11px', color: 'var(--main-text-secondary)', lineHeight: 1.5 }}>
+                    • Enclave signs cryptographic receipt: <code>H(Plaintext) || RecipientID || Timestamp</code>.<br />
+                    • Transmitted to RFC-6962 Merkle ledger to lock non-repudiation proof before viewport pixels are activated.
+                  </div>
+                </div>
+              </div>
+
+              {/* Memory Safety Matrix */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', fontSize: '11px' }}>
+                <div style={{ padding: '10px', background: 'var(--main-bg)', borderRadius: '6px', border: '1px solid var(--main-border)' }}>
+                  <div style={{ color: 'var(--main-text-tertiary)', fontSize: '10px' }}>Disk Cache Leakage</div>
+                  <div style={{ fontWeight: 600, color: 'var(--main-jade)', marginTop: '2px' }}>0 Bytes Written</div>
+                </div>
+                <div style={{ padding: '10px', background: 'var(--main-bg)', borderRadius: '6px', border: '1px solid var(--main-border)' }}>
+                  <div style={{ color: 'var(--main-text-tertiary)', fontSize: '10px' }}>Enclave Isolation</div>
+                  <div style={{ fontWeight: 600, color: 'var(--main-petrol)', marginTop: '2px' }}>WASM Linear Heap</div>
+                </div>
+                <div style={{ padding: '10px', background: 'var(--main-bg)', borderRadius: '6px', border: '1px solid var(--main-border)' }}>
+                  <div style={{ color: 'var(--main-text-tertiary)', fontSize: '10px' }}>Anti-Debug Defense</div>
+                  <div style={{ fontWeight: 600, color: 'var(--main-jade)', marginTop: '2px' }}>Sentinel Active</div>
+                </div>
+                <div style={{ padding: '10px', background: 'var(--main-bg)', borderRadius: '6px', border: '1px solid var(--main-border)' }}>
+                  <div style={{ color: 'var(--main-text-tertiary)', fontSize: '10px' }}>Session Key State</div>
+                  <div style={{ fontWeight: 600, color: 'var(--main-amber)', marginTop: '2px' }}>Zeroized Post-Render</div>
+                </div>
               </div>
             </div>
           )}

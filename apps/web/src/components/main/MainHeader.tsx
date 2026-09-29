@@ -1,8 +1,9 @@
 import React from 'react';
 import { UserSession } from '../../types';
-import { Sun, Moon, LogOut, Shield } from 'lucide-react';
+import { Sun, Moon, LogOut, Shield, Volume2, VolumeX } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { getExperienceVariant, setExperienceVariant } from '../../variant';
+import { audioService } from '../../services/audioService';
 
 interface MainHeaderProps {
   currentSection: string;
@@ -22,6 +23,15 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
   onOpenSihCompliance
 }) => {
   const { theme, toggleTheme } = useTheme();
+  const [isMuted, setIsMuted] = React.useState<boolean>(audioService.getIsMuted());
+
+  const handleToggleAudio = () => {
+    const next = audioService.toggleMute();
+    setIsMuted(next);
+    if (!next) {
+      audioService.playClick();
+    }
+  };
 
   return (
     <header className="main-header">
@@ -85,6 +95,16 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
             DEMO DATA
           </div>
         )}
+
+        <button
+          onClick={handleToggleAudio}
+          className="main-btn-ghost"
+          title={isMuted ? 'Unmute cyber audio feedback' : 'Mute cyber audio feedback'}
+          aria-label={isMuted ? 'Unmute audio' : 'Mute audio'}
+          style={{ color: isMuted ? 'var(--main-text-tertiary)' : 'var(--main-petrol)' }}
+        >
+          {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
+        </button>
 
         <button
           onClick={toggleTheme}

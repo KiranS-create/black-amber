@@ -22,6 +22,8 @@ import { MainSihComplianceModal } from './MainSihComplianceModal';
 import { MainRecipientDecryptionModal } from './MainRecipientDecryptionModal';
 import { MainVisualComparatorModal } from './MainVisualComparatorModal';
 import { MainSection65BCertificateModal } from './MainSection65BCertificateModal';
+import { MainCollusionLabModal } from './MainCollusionLabModal';
+import { MainAirGapCameraModal } from './MainAirGapCameraModal';
 import { VerifyTab } from '../VerifyTab';
 import '../../styles/main-experience.css';
 
@@ -34,10 +36,12 @@ export function MainApp() {
   const [isSihModalOpen, setIsSihModalOpen] = useState<boolean>(false);
   const [isSimulatingDemo, setIsSimulatingDemo] = useState<boolean>(false);
 
-  // Modals for the 5 SIH 26237 features
+  // Modals for the 5 SIH 26237 features & Advanced Labs
   const [isDecryptionModalOpen, setIsDecryptionModalOpen] = useState<boolean>(false);
   const [isComparatorModalOpen, setIsComparatorModalOpen] = useState<boolean>(false);
   const [isCertificateModalOpen, setIsCertificateModalOpen] = useState<boolean>(false);
+  const [isCollusionModalOpen, setIsCollusionModalOpen] = useState<boolean>(false);
+  const [isCameraModalOpen, setIsCameraModalOpen] = useState<boolean>(false);
   const [comparatorContext, setComparatorContext] = useState<{ docName: string; recipientName: string }>({
     docName: 'National_Defense_Protocol_2026.pdf',
     recipientName: 'Marcus Vance'
@@ -237,6 +241,7 @@ export function MainApp() {
                 onOpenDecryptionPortal={() => setIsDecryptionModalOpen(true)}
                 onOpenComparator={() => handleOpenComparator()}
                 onOpenCertificate={() => setIsCertificateModalOpen(true)}
+                onOpenCollusionLab={() => setIsCollusionModalOpen(true)}
               />
             )}
 
@@ -260,6 +265,7 @@ export function MainApp() {
                 onRunBenchmark={handleRunBenchmark}
                 onOpenCertificate={() => setIsCertificateModalOpen(true)}
                 onOpenComparator={() => handleOpenComparator()}
+                onOpenAirGapScanner={() => setIsCameraModalOpen(true)}
               />
             )}
 
@@ -303,6 +309,23 @@ export function MainApp() {
         result={leakResult}
         candidateName={leakResult?.candidate?.name || 'Marcus Vance'}
         documentName={releases[0]?.document_name || 'National_Defense_Protocol_2026.pdf'}
+      />
+
+      {/* Advanced Lab 1: Tardos Multi-Recipient Collusion Defense */}
+      <MainCollusionLabModal
+        isOpen={isCollusionModalOpen}
+        onClose={() => setIsCollusionModalOpen(false)}
+      />
+
+      {/* Advanced Lab 2: Live Optical Camera Air-Gap Scanner */}
+      <MainAirGapCameraModal
+        isOpen={isCameraModalOpen}
+        onClose={() => setIsCameraModalOpen(false)}
+        onAttributionComplete={async () => {
+          await handleRunBenchmark('print_scan_camera');
+          setActiveTab('investigations');
+        }}
+        onOpenCertificate={() => setIsCertificateModalOpen(true)}
       />
 
       {/* Contextual More / Settings Modal */}

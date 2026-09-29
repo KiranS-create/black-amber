@@ -20,6 +20,7 @@ import {
 import { apiService } from '../../services/api';
 import { VerificationService } from '../../services/semanticServices';
 import { ThreeMerkleChain } from './ThreeMerkleChain';
+import { audioService } from '../../services/audioService';
 
 interface MainEvidenceProps {
   evidenceRecords: EvidenceRecord[];
@@ -46,12 +47,14 @@ export const MainEvidence: React.FC<MainEvidenceProps> = ({
     apiService.simulateTamperBlock(1);
     setIsLedgerTampered(true);
     setTamperError('CRYPTOGRAPHIC INTEGRITY BROKEN: Block #1 Merkle Leaf Hash Mismatch! Current root (0xDEADBEEF...) != Expected root (0x03a58e65...). Non-repudiation preserved: alteration detected and rejected.');
+    audioService.playTamperAlert();
   };
 
   const handleRestoreLedger = () => {
     apiService.resetLedgerTamper();
     setIsLedgerTampered(false);
     setTamperError(null);
+    audioService.playDecryptionSuccess();
   };
 
   const handleVerifyPackage = async (e: React.ChangeEvent<HTMLInputElement>) => {
