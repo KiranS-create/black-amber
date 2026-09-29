@@ -71,6 +71,11 @@ Thumbs.db
 cloudflared.exe
 *.exe
 
+# Large Archives & Binaries (>10MB)
+artifacts/deployment/*.tar.gz
+artifacts/deployment/*.zip
+tests/fixtures/samples/oversized_file.pdf
+
 # Ephemeral Demo Runs
 artifacts/demo/golden_run/
 
