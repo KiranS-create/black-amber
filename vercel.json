@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "buildCommand": "cd apps/web && npm ci && npm run build",
+  "outputDirectory": "apps/web/dist",
+  "builds": [
+    {
+      "src": "api/index.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(api|auth|documents|releases|recipients|leaks|analyze|evidence|ledger|directory|health|ready|capabilities)(.*)",
+      "dest": "api/index.py"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}
