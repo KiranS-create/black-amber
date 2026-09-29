@@ -3,6 +3,19 @@ import sys
 from pathlib import Path
 import uvicorn
 
+# Hugging Face ZeroGPU runtime compatibility
+try:
+    import spaces
+    @spaces.GPU
+    def _zero_gpu_keepalive():
+        return True
+    try:
+        _zero_gpu_keepalive()
+    except Exception:
+        pass
+except Exception:
+    pass
+
 # Ensure repository root is on Python module search path
 REPO_ROOT = Path(__file__).resolve().parent
 if str(REPO_ROOT) not in sys.path:
