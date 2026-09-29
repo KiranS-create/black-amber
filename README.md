@@ -1,3 +1,14 @@
+---
+title: AegisTrace
+emoji: 🛡️
+colorFrom: yellow
+colorTo: gray
+sdk: gradio
+sdk_version: 4.44.0
+app_file: app.py
+pinned: false
+---
+
 # AegisTrace (SIH26237) — Post-Quantum Forensic Attribution & Decryption Provenance Platform
 
 [![Security: Air-Gapped](https://img.shields.io/badge/Security-Air--Gapped%20Zero--Trust-green.svg)](#)
