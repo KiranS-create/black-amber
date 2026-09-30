@@ -38,6 +38,7 @@ from apps.api.routers import (
     recipients,
     releases,
     system,
+    traceability,
 )
 from core.recipient import default_registry
 from core.release import default_release_manager
@@ -154,6 +155,7 @@ app.include_router(releases.router)
 app.include_router(leaks.router)
 app.include_router(analysis.router)
 app.include_router(evidence.router)
+app.include_router(traceability.router)
 
 # -------------------------------------------------------------
 # Static Single Page Application (SPA) Serving for Production

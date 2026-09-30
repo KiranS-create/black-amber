@@ -1,390 +1,678 @@
-import React, { useState } from 'react';
-import { 
-  X, 
-  Users, 
-  ShieldAlert, 
-  CheckCircle2, 
-  AlertTriangle, 
-  Cpu, 
-  Play, 
-  RotateCcw, 
-  Sliders, 
-  Info,
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  X,
+  Users,
+  ShieldAlert,
+  CheckCircle2,
+  AlertTriangle,
+  Cpu,
+  Play,
+  RotateCcw,
+  Sliders,
   Layers,
-  Sparkles,
-  Zap
+  Zap,
+  UserCheck,
+  UserX,
+  BarChart2,
+  AlertCircle,
+  Loader2
 } from 'lucide-react';
+import { apiService } from '../../services/api';
 
 interface MainCollusionLabModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-interface SuspectProfile {
-  id: string;
+type AttackMethod = 'majority' | 'interleaving' | 'random_symbol';
+
+interface Recipient {
+  recipient_id: string;
   name: string;
-  role: string;
-  inCoalitionScore: number;
-  outOfCoalitionScore: number;
-  bits: string;
+  email?: string;
+  role?: string;
 }
+
+interface ScoreEntry {
+  recipient_id: string;
+  name: string;
+  score: number;
+  accused: boolean;
+}
+
+interface CollusionResult {
+  attack_method: string;
+  code_length: number;
+  coalition_size: number;
+  threshold: number;
+  marking_assumption_valid: boolean;
+  accused_recipients: string[];
+  scores: ScoreEntry[];
+}
+
+const ATTACK_METHODS: { value: AttackMethod; label: string; desc: string }[] = [
+  {
+    value: 'majority',
+    label: 'Majority Vote',
+    desc: 'Each piracy symbol chosen by majority vote among colluders. Classical Tardos attack.'
+  },
+  {
+    value: 'interleaving',
+    label: 'Interleaving',
+    desc: 'Colluders take turns contributing symbols. Maximises confusion over codeword structure.'
+  },
+  {
+    value: 'random_symbol',
+    label: 'Random Symbol',
+    desc: 'Each piracy bit selected uniformly at random from the coalition pool.'
+  }
+];
+
+const CODE_LENGTHS = [32, 64, 128, 256, 512];
 
 export const MainCollusionLabModal: React.FC<MainCollusionLabModalProps> = ({
   isOpen,
   onClose
 }) => {
-  const [activeCoalition, setActiveCoalition] = useState<string[]>(['alice', 'bob']);
-  const [attackMethod, setAttackMethod] = useState<'average' | 'minmax' | 'splicing'>('average');
-  const [isExecuting, setIsExecuting] = useState<boolean>(false);
-  const [executionRun, setExecutionRun] = useState<number>(0);
+  // Recipients
+  const [recipients, setRecipients] = useState<Recipient[]>([]);
+  const [loadingRecipients, setLoadingRecipients] = useState(false);
+
+  // Config
+  const [selectedCoalition, setSelectedCoalition] = useState<string[]>([]);
+  const [attackMethod, setAttackMethod] = useState<AttackMethod>('majority');
+  const [codeLength, setCodeLength] = useState<number>(64);
+
+  // Execution
+  const [isExecuting, setIsExecuting] = useState(false);
+  const [result, setResult] = useState<CollusionResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  // Bar chart ref
+  const chartRef = useRef<HTMLCanvasElement>(null);
+
+  // Load recipients on open
+  useEffect(() => {
+    if (!isOpen) return;
+    setLoadingRecipients(true);
+    apiService.getRecipients().then((data) => {
+      setRecipients(data || []);
+      setLoadingRecipients(false);
+    }).catch(() => {
+      // Provide demo recipients if backend unavailable
+      setRecipients([
+        { recipient_id: 'alice_vance', name: 'Alice Vance', role: 'Principal Cryptanalyst' },
+        { recipient_id: 'bob_martinez', name: 'Bob Martinez', role: 'Lead Systems Architect' },
+        { recipient_id: 'charlie_okonkwo', name: 'Charlie Okonkwo', role: 'Senior Analyst' },
+        { recipient_id: 'diana_reyes', name: 'Diana Reyes', role: 'Intelligence Officer' },
+        { recipient_id: 'marcus_cole', name: 'Marcus Cole', role: 'Field Operative' }
+      ]);
+      setLoadingRecipients(false);
+    });
+  }, [isOpen]);
+
+  // Draw bar chart when results arrive
+  useEffect(() => {
+    if (!result || !chartRef.current || result.scores.length === 0) return;
+    const canvas = chartRef.current;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const dpr = window.devicePixelRatio || 1;
+    const W = canvas.offsetWidth;
+    const H = canvas.offsetHeight;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    ctx.scale(dpr, dpr);
+
+    const pad = { top: 20, right: 20, bottom: 50, left: 55 };
+    const chartW = W - pad.left - pad.right;
+    const chartH = H - pad.top - pad.bottom;
+
+    // Background
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
+    ctx.fillRect(0, 0, W, H);
+
+    const scores = result.scores;
+    const maxScore = Math.max(...scores.map(s => s.score), result.threshold * 1.4) * 1.1;
+    const barW = (chartW / scores.length) * 0.65;
+    const gap = (chartW / scores.length) * 0.35;
+
+    // Grid lines
+    ctx.strokeStyle = 'rgba(100,116,139,0.2)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= 5; i++) {
+      const y = pad.top + chartH - (i / 5) * chartH;
+      ctx.beginPath();
+      ctx.moveTo(pad.left, y);
+      ctx.lineTo(pad.left + chartW, y);
+      ctx.stroke();
+      // Y labels
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '10px Inter, sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText(((maxScore * i) / 5).toFixed(1), pad.left - 6, y + 4);
+    }
+
+    // Bars
+    scores.forEach((s, i) => {
+      const x = pad.left + i * (chartW / scores.length) + gap / 2;
+      const barH = (s.score / maxScore) * chartH;
+      const y = pad.top + chartH - barH;
+
+      // Gradient fill
+      const grad = ctx.createLinearGradient(x, y, x, pad.top + chartH);
+      if (s.accused) {
+        grad.addColorStop(0, 'rgba(239,68,68,0.95)');
+        grad.addColorStop(1, 'rgba(185,28,28,0.4)');
+      } else {
+        grad.addColorStop(0, 'rgba(34,197,94,0.95)');
+        grad.addColorStop(1, 'rgba(21,128,61,0.4)');
+      }
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.roundRect(x, y, barW, barH, [4, 4, 0, 0]);
+      ctx.fill();
+
+      // Score label on top of bar
+      ctx.fillStyle = s.accused ? '#fca5a5' : '#86efac';
+      ctx.font = 'bold 10px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(s.score.toFixed(2), x + barW / 2, y - 4);
+
+      // Name label below
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '9px Inter, sans-serif';
+      const shortName = s.name.split(' ')[0] || s.recipient_id.slice(0, 8);
+      ctx.fillText(shortName, x + barW / 2, pad.top + chartH + 14);
+
+      // Accused/innocent icon label
+      ctx.fillStyle = s.accused ? '#ef4444' : '#22c55e';
+      ctx.fillText(s.accused ? '⚑ ACCUSED' : '✓ CLEAR', x + barW / 2, pad.top + chartH + 28);
+    });
+
+    // Threshold line
+    const threshY = pad.top + chartH - (result.threshold / maxScore) * chartH;
+    ctx.strokeStyle = '#f59e0b';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([6, 3]);
+    ctx.beginPath();
+    ctx.moveTo(pad.left, threshY);
+    ctx.lineTo(pad.left + chartW, threshY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Threshold label
+    ctx.fillStyle = '#f59e0b';
+    ctx.font = 'bold 10px Inter, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(`τ = ${result.threshold.toFixed(2)}`, pad.left + 4, threshY - 5);
+
+  }, [result]);
+
+  const toggleCoalitionMember = (id: string) => {
+    setSelectedCoalition(prev =>
+      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+    );
+  };
+
+  const handleRunAttack = async () => {
+    if (selectedCoalition.length < 2) {
+      setError('Select at least 2 coalition members to simulate a colluding group.');
+      return;
+    }
+    setIsExecuting(true);
+    setError(null);
+    setResult(null);
+
+    try {
+      const data = await apiService.runCollusionAttack({
+        coalition_recipient_ids: selectedCoalition,
+        attack_method: attackMethod,
+        code_length: codeLength
+      });
+      setResult(data);
+    } catch (e: any) {
+      setError('Execution failed: ' + (e?.message || 'Unknown error'));
+    } finally {
+      setIsExecuting(false);
+    }
+  };
+
+  const handleReset = () => {
+    setResult(null);
+    setError(null);
+    setSelectedCoalition([]);
+  };
 
   if (!isOpen) return null;
 
-  const suspects: SuspectProfile[] = [
-    {
-      id: 'alice',
-      name: 'Alice Vance',
-      role: 'Principal Cryptanalyst',
-      inCoalitionScore: 8.45,
-      outOfCoalitionScore: 2.12,
-      bits: '10110100110101101001011010110010'
-    },
-    {
-      id: 'bob',
-      name: 'Bob Martinez',
-      role: 'Lead Systems Architect',
-      inCoalitionScore: 8.62,
-      outOfCoalitionScore: 2.38,
-      bits: '11010110100101101011001010110100'
-    },
-    {
-      id: 'charlie',
-      name: 'Charlie Zhang',
-      role: 'Security Operations Lead',
-      inCoalitionScore: 8.20,
-      outOfCoalitionScore: 2.05,
-      bits: '00101101011001010110100110101101'
-    },
-    {
-      id: 'david',
-      name: 'David Lee',
-      role: 'Independent Auditor',
-      inCoalitionScore: 8.10,
-      outOfCoalitionScore: 1.95,
-      bits: '01011001010110100110101100101101'
-    }
-  ];
-
-  const threshold = 6.50; // Neyman-Pearson Accusation Threshold tau_Z
-
-  const toggleSuspect = (id: string) => {
-    if (activeCoalition.includes(id)) {
-      if (activeCoalition.length > 1) {
-        setActiveCoalition(activeCoalition.filter(item => item !== id));
-      }
-    } else {
-      if (activeCoalition.length < 3) {
-        setActiveCoalition([...activeCoalition, id]);
-      }
-    }
-  };
-
-  const handleRunSimulation = () => {
-    setIsExecuting(true);
-    setTimeout(() => {
-      setIsExecuting(false);
-      setExecutionRun(prev => prev + 1);
-    }, 600);
-  };
+  const isLive = apiService.isOnline();
 
   return (
-    <div className="main-modal-backdrop" onClick={onClose}>
-      <div 
-        className="main-modal glass-panel" 
-        style={{ maxWidth: '820px', width: '100%', maxHeight: '90vh', overflowY: 'auto' }}
-        onClick={(e) => e.stopPropagation()}
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+      <div
+        className="relative w-full max-w-5xl max-h-[92vh] overflow-y-auto rounded-2xl border shadow-2xl"
+        style={{
+          background: 'linear-gradient(135deg, rgba(10,10,30,0.98) 0%, rgba(15,25,50,0.98) 100%)',
+          borderColor: 'rgba(99,102,241,0.3)'
+        }}
       >
-        {/* Modal Header */}
-        <div className="main-modal-header">
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-              <span className="main-badge" style={{ background: 'rgba(245, 158, 11, 0.15)', color: 'var(--main-amber)', borderColor: 'rgba(245, 158, 11, 0.3)' }}>
-                SIH 26237
-              </span>
-              <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
-                Traitor-Tracing Anti-Collusion Lab
-              </span>
+        {/* Header */}
+        <div
+          className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 border-b"
+          style={{
+            borderColor: 'rgba(99,102,241,0.2)',
+            background: 'linear-gradient(90deg, rgba(99,102,241,0.12) 0%, rgba(139,92,246,0.08) 100%)'
+          }}
+        >
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl" style={{ background: 'rgba(99,102,241,0.2)' }}>
+              <Layers className="w-5 h-5 text-indigo-400" />
             </div>
-            <h2 className="main-modal-title" style={{ fontSize: '18px' }}>
-              Tardos Multi-Recipient Coalition Attack Defense
-            </h2>
-            <p style={{ fontSize: '12px', color: 'var(--main-text-secondary)', margin: '4px 0 0 0' }}>
-              Demonstrates mathematical tracing when multiple adversaries combine decrypted copies to eradicate individual watermarks.
-            </p>
+            <div>
+              <h2 className="text-lg font-bold text-white tracking-tight">Anti-Collusion Lab</h2>
+              <p className="text-xs text-indigo-300/70 mt-0.5">Symmetric Tardos Fingerprinting · Coalition Traceability</p>
+            </div>
+            <span
+              className="ml-3 px-2 py-0.5 rounded text-xs font-semibold"
+              style={{
+                background: isLive ? 'rgba(34,197,94,0.15)' : 'rgba(251,191,36,0.15)',
+                color: isLive ? '#4ade80' : '#fbbf24',
+                border: `1px solid ${isLive ? 'rgba(34,197,94,0.3)' : 'rgba(251,191,36,0.3)'}`
+              }}
+            >
+              {isLive ? '● LIVE BACKEND' : '◎ OFFLINE SIM'}
+            </span>
           </div>
-          <button onClick={onClose} className="main-btn-ghost" style={{ padding: '6px' }}>
-            <X size={16} />
+          <button
+            onClick={onClose}
+            className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+          >
+            <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Modal Body */}
-        <div className="main-modal-body" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          
-          {/* Coalition Configurator Card */}
-          <div className="glass-card" style={{ padding: '16px 18px', background: 'rgba(18, 24, 33, 0.7)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
-              <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
-                Step 1: Assemble Adversarial Coalition (|C| = {activeCoalition.length})
+        <div className="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* LEFT: Configuration panel */}
+          <div className="lg:col-span-1 space-y-5">
+            {/* Recipients */}
+            <div
+              className="rounded-xl p-4 border"
+              style={{ background: 'rgba(255,255,255,0.03)', borderColor: 'rgba(255,255,255,0.08)' }}
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <Users className="w-4 h-4 text-indigo-400" />
+                <span className="text-sm font-semibold text-white">Coalition Members</span>
+                {selectedCoalition.length > 0 && (
+                  <span className="ml-auto px-2 py-0.5 rounded-full text-xs bg-indigo-500/20 text-indigo-300">
+                    {selectedCoalition.length} selected
+                  </span>
+                )}
               </div>
-              <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)' }}>
-                Select 1 to 3 colluders (Max coalition bound c ≤ 5)
-              </span>
+
+              {loadingRecipients ? (
+                <div className="flex items-center gap-2 text-slate-400 py-4 justify-center">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span className="text-xs">Loading recipients…</span>
+                </div>
+              ) : (
+                <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
+                  {recipients.map(r => {
+                    const selected = selectedCoalition.includes(r.recipient_id);
+                    return (
+                      <button
+                        key={r.recipient_id}
+                        onClick={() => toggleCoalitionMember(r.recipient_id)}
+                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all duration-150"
+                        style={{
+                          background: selected
+                            ? 'rgba(239,68,68,0.18)'
+                            : 'rgba(255,255,255,0.04)',
+                          borderWidth: 1,
+                          borderStyle: 'solid',
+                          borderColor: selected ? 'rgba(239,68,68,0.4)' : 'rgba(255,255,255,0.07)'
+                        }}
+                      >
+                        <div
+                          className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
+                          style={{
+                            background: selected ? 'rgba(239,68,68,0.3)' : 'rgba(99,102,241,0.3)',
+                            color: selected ? '#f87171' : '#a5b4fc'
+                          }}
+                        >
+                          {(r.name || r.recipient_id).slice(0, 2).toUpperCase()}
+                        </div>
+                        <div className="min-w-0">
+                          <div className="text-xs font-medium text-white truncate">{r.name || r.recipient_id}</div>
+                          {r.role && <div className="text-xs text-slate-500 truncate">{r.role}</div>}
+                        </div>
+                        {selected && <ShieldAlert className="w-3.5 h-3.5 text-red-400 ml-auto flex-shrink-0" />}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '10px' }}>
-              {suspects.map(s => {
-                const isColluder = activeCoalition.includes(s.id);
-                return (
-                  <div
-                    key={s.id}
-                    onClick={() => toggleSuspect(s.id)}
+            {/* Attack Method */}
+            <div
+              className="rounded-xl p-4 border"
+              style={{ background: 'rgba(255,255,255,0.03)', borderColor: 'rgba(255,255,255,0.08)' }}
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <Sliders className="w-4 h-4 text-purple-400" />
+                <span className="text-sm font-semibold text-white">Attack Method</span>
+              </div>
+              <div className="space-y-2">
+                {ATTACK_METHODS.map(m => (
+                  <label
+                    key={m.value}
+                    className="flex items-start gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all"
                     style={{
-                      padding: '12px',
-                      borderRadius: '8px',
-                      border: `1px solid ${isColluder ? 'var(--main-crimson)' : 'var(--main-border)'}`,
-                      background: isColluder ? 'rgba(239, 68, 68, 0.12)' : 'rgba(255, 255, 255, 0.02)',
-                      cursor: 'pointer',
-                      transition: 'all 0.15s ease',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'space-between'
+                      background: attackMethod === m.value
+                        ? 'rgba(139,92,246,0.18)'
+                        : 'rgba(255,255,255,0.03)',
+                      border: `1px solid ${attackMethod === m.value ? 'rgba(139,92,246,0.4)' : 'rgba(255,255,255,0.06)'}`
                     }}
                   >
+                    <input
+                      type="radio"
+                      name="attack_method"
+                      value={m.value}
+                      checked={attackMethod === m.value}
+                      onChange={() => setAttackMethod(m.value)}
+                      className="mt-0.5 accent-purple-500"
+                    />
                     <div>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
-                        <span style={{ fontSize: '12px', fontWeight: 600, color: isColluder ? '#FCA5A5' : 'var(--main-text-primary)' }}>
-                          {s.name}
-                        </span>
-                        <span className="main-badge" style={{ fontSize: '9px', background: isColluder ? 'rgba(239, 68, 68, 0.25)' : 'rgba(34, 197, 94, 0.15)', color: isColluder ? 'var(--main-crimson)' : 'var(--main-jade)' }}>
-                          {isColluder ? 'COLLUDER' : 'INNOCENT'}
-                        </span>
-                      </div>
-                      <div style={{ fontSize: '10px', color: 'var(--main-text-tertiary)' }}>
-                        {s.role}
-                      </div>
+                      <div className="text-xs font-semibold text-white">{m.label}</div>
+                      <div className="text-xs text-slate-500 mt-0.5 leading-relaxed">{m.desc}</div>
                     </div>
+                  </label>
+                ))}
+              </div>
+            </div>
 
-                    <div style={{ marginTop: '8px', fontSize: '10px', color: isColluder ? 'var(--main-crimson)' : 'var(--main-text-secondary)', fontWeight: 500 }}>
-                      {isColluder ? 'In Coalition' : 'Click to add'}
-                    </div>
+            {/* Code Length */}
+            <div
+              className="rounded-xl p-4 border"
+              style={{ background: 'rgba(255,255,255,0.03)', borderColor: 'rgba(255,255,255,0.08)' }}
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <Cpu className="w-4 h-4 text-cyan-400" />
+                <span className="text-sm font-semibold text-white">Code Length</span>
+                <span className="ml-auto text-xs font-mono text-cyan-300">{codeLength} bits</span>
+              </div>
+              <div className="flex gap-2 flex-wrap">
+                {CODE_LENGTHS.map(n => (
+                  <button
+                    key={n}
+                    onClick={() => setCodeLength(n)}
+                    className="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold transition-all"
+                    style={{
+                      background: codeLength === n ? 'rgba(6,182,212,0.25)' : 'rgba(255,255,255,0.05)',
+                      borderWidth: 1,
+                      borderStyle: 'solid',
+                      borderColor: codeLength === n ? 'rgba(6,182,212,0.5)' : 'rgba(255,255,255,0.08)',
+                      color: codeLength === n ? '#67e8f9' : '#94a3b8'
+                    }}
+                  >
+                    {n}
+                  </button>
+                ))}
+              </div>
+              <p className="text-xs text-slate-500 mt-2">
+                Longer codes → sharper discrimination but slower. 64 bits recommended for demos.
+              </p>
+            </div>
+
+            {/* Action buttons */}
+            <button
+              onClick={handleRunAttack}
+              disabled={isExecuting || selectedCoalition.length < 2}
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm transition-all"
+              style={{
+                background: isExecuting || selectedCoalition.length < 2
+                  ? 'rgba(99,102,241,0.2)'
+                  : 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                color: isExecuting || selectedCoalition.length < 2 ? '#6366f1' : 'white',
+                cursor: isExecuting || selectedCoalition.length < 2 ? 'not-allowed' : 'pointer'
+              }}
+            >
+              {isExecuting ? (
+                <><Loader2 className="w-4 h-4 animate-spin" /> Running Tardos Analysis…</>
+              ) : (
+                <><Zap className="w-4 h-4" /> Run Coalition Attack</>
+              )}
+            </button>
+
+            {result && (
+              <button
+                onClick={handleReset}
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm text-slate-400 hover:text-white transition-colors"
+                style={{ background: 'rgba(255,255,255,0.04)' }}
+              >
+                <RotateCcw className="w-4 h-4" /> Reset Lab
+              </button>
+            )}
+
+            {error && (
+              <div className="flex items-start gap-2 p-3 rounded-xl text-red-300 text-xs"
+                style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)' }}>
+                <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                {error}
+              </div>
+            )}
+          </div>
+
+          {/* RIGHT: Results panel */}
+          <div className="lg:col-span-2 space-y-5">
+            {/* Theory explainer (pre-result) */}
+            {!result && (
+              <div
+                className="rounded-xl p-5 border"
+                style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'rgba(255,255,255,0.07)' }}
+              >
+                <div className="flex items-center gap-2 mb-4">
+                  <BarChart2 className="w-5 h-5 text-indigo-400" />
+                  <span className="text-sm font-semibold text-white">Symmetric Tardos Fingerprinting</span>
+                </div>
+                <div className="space-y-3 text-xs text-slate-400 leading-relaxed">
+                  <p>
+                    <span className="text-indigo-300 font-semibold">Tardos codes</span> are probabilistic
+                    fingerprinting codes that are robust against collusion attacks. Each recipient receives a unique
+                    binary codeword. When a pirate document is discovered, the colluding recipients can be traced
+                    even if they combine their copies.
+                  </p>
+                  <p>
+                    The <span className="text-yellow-300 font-mono">τ (tau) threshold</span> is computed from the
+                    Neyman-Pearson criterion. Any recipient whose Tardos score exceeds τ is identified as a colluder
+                    with false-positive probability below 10⁻³.
+                  </p>
+                  <div className="grid grid-cols-3 gap-3 mt-4">
+                    {[
+                      { label: 'Select Recipients', desc: 'Choose ≥ 2 colluders from the left panel', icon: '①' },
+                      { label: 'Pick Attack', desc: 'Choose how the coalition forges the piracy copy', icon: '②' },
+                      { label: 'Run Analysis', desc: 'Tardos scores computed per recipient', icon: '③' }
+                    ].map(step => (
+                      <div key={step.icon}
+                        className="rounded-lg p-3 text-center"
+                        style={{ background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.15)' }}>
+                        <div className="text-2xl text-indigo-300 font-bold mb-1">{step.icon}</div>
+                        <div className="text-white text-xs font-semibold mb-1">{step.label}</div>
+                        <div className="text-slate-500 text-xs">{step.desc}</div>
+                      </div>
+                    ))}
                   </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Attack Synthesis Options */}
-          <div className="glass-card" style={{ padding: '16px 18px', background: 'rgba(18, 24, 33, 0.7)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
-              <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
-                Step 2: Choose Coalition Synthesis Attack
-              </div>
-              <button
-                onClick={handleRunSimulation}
-                disabled={isExecuting}
-                className="main-btn-primary"
-                style={{ fontSize: '12px', padding: '6px 14px', background: 'var(--main-amber)', color: '#000', borderColor: 'var(--main-amber)' }}
-              >
-                <Zap size={13} />
-                <span>{isExecuting ? 'Computing Neyman-Pearson Scores...' : 'Synthesize & Trace Coalition'}</span>
-              </button>
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '10px' }}>
-              <button
-                type="button"
-                onClick={() => setAttackMethod('average')}
-                className={`main-btn-secondary ${attackMethod === 'average' ? 'active' : ''}`}
-                style={{
-                  padding: '10px 12px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                  textAlign: 'left',
-                  borderColor: attackMethod === 'average' ? 'var(--main-petrol)' : 'var(--main-border)',
-                  background: attackMethod === 'average' ? 'rgba(56, 189, 248, 0.1)' : 'transparent'
-                }}
-              >
-                <div style={{ fontWeight: 600, fontSize: '12px', color: 'var(--main-text-primary)' }}>
-                  Linear Pixel Averaging
-                </div>
-                <div style={{ fontSize: '10px', color: 'var(--main-text-tertiary)', marginTop: '2px' }}>
-                  Blends all coalition documents: Y = (1/c) ∑ X_j. Aims to attenuate mark below noise floor.
-                </div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setAttackMethod('minmax')}
-                className={`main-btn-secondary ${attackMethod === 'minmax' ? 'active' : ''}`}
-                style={{
-                  padding: '10px 12px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                  textAlign: 'left',
-                  borderColor: attackMethod === 'minmax' ? 'var(--main-petrol)' : 'var(--main-border)',
-                  background: attackMethod === 'minmax' ? 'rgba(56, 189, 248, 0.1)' : 'transparent'
-                }}
-              >
-                <div style={{ fontWeight: 600, fontSize: '12px', color: 'var(--main-text-primary)' }}>
-                  Min-Max Envelope Interleaving
-                </div>
-                <div style={{ fontSize: '10px', color: 'var(--main-text-tertiary)', marginTop: '2px' }}>
-                  Explores extremes to trigger bit ambiguities and flip parity in high-frequency DCT bins.
-                </div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setAttackMethod('splicing')}
-                className={`main-btn-secondary ${attackMethod === 'splicing' ? 'active' : ''}`}
-                style={{
-                  padding: '10px 12px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                  textAlign: 'left',
-                  borderColor: attackMethod === 'splicing' ? 'var(--main-petrol)' : 'var(--main-border)',
-                  background: attackMethod === 'splicing' ? 'rgba(56, 189, 248, 0.1)' : 'transparent'
-                }}
-              >
-                <div style={{ fontWeight: 600, fontSize: '12px', color: 'var(--main-text-primary)' }}>
-                  Random Mosaic Cut & Paste
-                </div>
-                <div style={{ fontSize: '10px', color: 'var(--main-text-tertiary)', marginTop: '2px' }}>
-                  Splices non-contiguous paragraphs from different copies into a hybrid composite leak.
-                </div>
-              </button>
-            </div>
-          </div>
-
-          {/* Real-Time Tardos Accusation Scores Chart */}
-          <div className="glass-card" style={{ padding: '18px 20px', background: 'rgba(18, 24, 33, 0.7)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-              <div>
-                <div style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
-                  Neyman-Pearson Accusation Score Metric (τ_Z = {threshold.toFixed(2)})
-                </div>
-                <div style={{ fontSize: '15px', fontWeight: 600, color: 'var(--main-text-primary)', marginTop: '2px' }}>
-                  Attribution Verdict Across Full Recipient Pool
                 </div>
               </div>
+            )}
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span className="main-badge main-badge-verified" style={{ fontSize: '10px' }}>
-                  P_FA ≤ 10⁻⁶ (1 in 1M)
-                </span>
-                <span className="main-badge" style={{ fontSize: '10px', background: 'rgba(56, 189, 248, 0.15)', color: 'var(--main-petrol)' }}>
-                  m = 128 Bits
-                </span>
-              </div>
-            </div>
-
-            {/* Score Bars */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              {suspects.map(s => {
-                const isColluder = activeCoalition.includes(s.id);
-                const score = isColluder ? s.inCoalitionScore : s.outOfCoalitionScore;
-                const isGuilty = score >= threshold;
-                const percent = Math.min(100, (score / 10.0) * 100);
-                const thresholdPercent = (threshold / 10.0) * 100;
-
-                return (
-                  <div key={s.id} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '12px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span style={{ fontWeight: 600, color: isGuilty ? '#FCA5A5' : 'var(--main-text-primary)' }}>
-                          {s.name}
-                        </span>
-                        <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)' }}>
-                          ({s.role})
-                        </span>
-                      </div>
-
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <span className="main-mono" style={{ fontWeight: 700, color: isGuilty ? 'var(--main-crimson)' : 'var(--main-jade)', fontSize: '12px' }}>
-                          U_j = {score.toFixed(2)}
-                        </span>
-                        <span className={`main-badge ${isGuilty ? 'main-badge-danger' : 'main-badge-verified'}`} style={{ fontSize: '9px', minWidth: '80px', textAlign: 'center', justifyContent: 'center' }}>
-                          {isGuilty ? 'ACCUSED' : 'EXONERATED'}
-                        </span>
+            {/* Result: Summary cards */}
+            {result && (
+              <>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {[
+                    {
+                      label: 'Code Length',
+                      value: `${result.code_length} bits`,
+                      color: '#67e8f9',
+                      bg: 'rgba(6,182,212,0.1)',
+                      border: 'rgba(6,182,212,0.25)'
+                    },
+                    {
+                      label: 'Coalition Size',
+                      value: `${result.coalition_size} members`,
+                      color: '#f87171',
+                      bg: 'rgba(239,68,68,0.1)',
+                      border: 'rgba(239,68,68,0.25)'
+                    },
+                    {
+                      label: 'Threshold τ',
+                      value: result.threshold.toFixed(2),
+                      color: '#fbbf24',
+                      bg: 'rgba(245,158,11,0.1)',
+                      border: 'rgba(245,158,11,0.25)'
+                    },
+                    {
+                      label: 'Accused',
+                      value: `${result.accused_recipients.length} / ${result.scores.length}`,
+                      color: result.accused_recipients.length > 0 ? '#f87171' : '#4ade80',
+                      bg: result.accused_recipients.length > 0 ? 'rgba(239,68,68,0.1)' : 'rgba(34,197,94,0.1)',
+                      border: result.accused_recipients.length > 0 ? 'rgba(239,68,68,0.25)' : 'rgba(34,197,94,0.25)'
+                    }
+                  ].map(card => (
+                    <div key={card.label}
+                      className="rounded-xl p-3 text-center"
+                      style={{ background: card.bg, border: `1px solid ${card.border}` }}>
+                      <div className="text-xs text-slate-400 mb-1">{card.label}</div>
+                      <div className="text-sm font-bold font-mono" style={{ color: card.color }}>
+                        {card.value}
                       </div>
                     </div>
+                  ))}
+                </div>
 
-                    {/* Progress Bar Container with Threshold Marker */}
-                    <div style={{ position: 'relative', width: '100%', height: '8px', background: 'rgba(255, 255, 255, 0.06)', borderRadius: '4px', overflow: 'hidden' }}>
-                      <div 
-                        style={{ 
-                          width: `${percent}%`, 
-                          height: '100%', 
-                          background: isGuilty 
-                            ? 'linear-gradient(90deg, #F59E0B 0%, #EF4444 100%)' 
-                            : 'linear-gradient(90deg, #10B981 0%, #22C55E 100%)',
-                          borderRadius: '4px',
-                          transition: 'width 0.4s ease'
-                        }} 
-                      />
-                      {/* Vertical Decision Line */}
-                      <div 
-                        style={{
-                          position: 'absolute',
-                          top: 0,
-                          bottom: 0,
-                          left: `${thresholdPercent}%`,
-                          width: '2px',
-                          background: 'rgba(255, 255, 255, 0.5)',
-                          zIndex: 2
-                        }}
-                        title={`Decision Threshold tau_Z = ${threshold}`}
-                      />
-                    </div>
+                {/* Marking Assumption */}
+                <div
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs"
+                  style={{
+                    background: result.marking_assumption_valid
+                      ? 'rgba(34,197,94,0.08)'
+                      : 'rgba(239,68,68,0.08)',
+                    border: `1px solid ${result.marking_assumption_valid ? 'rgba(34,197,94,0.25)' : 'rgba(239,68,68,0.25)'}`
+                  }}
+                >
+                  {result.marking_assumption_valid
+                    ? <CheckCircle2 className="w-4 h-4 text-green-400 flex-shrink-0" />
+                    : <AlertTriangle className="w-4 h-4 text-red-400 flex-shrink-0" />}
+                  <span className="text-slate-300">
+                    <strong className={result.marking_assumption_valid ? 'text-green-400' : 'text-red-400'}>
+                      Marking Assumption {result.marking_assumption_valid ? 'SATISFIED' : 'VIOLATED'}
+                    </strong>
+                    {result.marking_assumption_valid
+                      ? ' \u2014 All piracy bits appear in at least one colluder\u2019s codeword. Identification is provably valid.'
+                      : ' \u2014 Coalition produced bits outside their codewords. Results may be unreliable.'}
+                  </span>
+                </div>
+
+                {/* Bar chart */}
+                <div
+                  className="rounded-xl p-4 border"
+                  style={{ background: 'rgba(0,0,0,0.4)', borderColor: 'rgba(255,255,255,0.08)' }}
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <BarChart2 className="w-4 h-4 text-indigo-400" />
+                    <span className="text-sm font-semibold text-white">Tardos Score Distribution</span>
+                    <span className="ml-auto text-xs text-yellow-400 font-mono">— τ = {result.threshold.toFixed(2)}</span>
                   </div>
-                );
-              })}
-            </div>
+                  <canvas
+                    ref={chartRef}
+                    className="w-full"
+                    style={{ height: '200px', display: 'block' }}
+                  />
+                </div>
 
-            {/* Threshold Legend */}
-            <div style={{ marginTop: '14px', paddingTop: '10px', borderTop: '1px solid var(--main-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11px', color: 'var(--main-text-tertiary)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <div style={{ width: '8px', height: '2px', background: 'rgba(255, 255, 255, 0.7)' }} />
-                <span>Neyman-Pearson Decision Cutoff (τ_Z = 6.50)</span>
-              </div>
-              <div>
-                <span>All {activeCoalition.length} active colluders exceed threshold with zero false positives.</span>
-              </div>
-            </div>
+                {/* Per-recipient verdict table */}
+                <div
+                  className="rounded-xl border overflow-hidden"
+                  style={{ borderColor: 'rgba(255,255,255,0.08)' }}
+                >
+                  <div
+                    className="px-4 py-2.5 text-xs font-semibold text-slate-400 uppercase tracking-widest"
+                    style={{ background: 'rgba(255,255,255,0.04)' }}
+                  >
+                    Per-Recipient Verdict
+                  </div>
+                  <div className="divide-y" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+                    {result.scores
+                      .sort((a, b) => b.score - a.score)
+                      .map(s => (
+                        <div
+                          key={s.recipient_id}
+                          className="flex items-center gap-4 px-4 py-3"
+                          style={{
+                            background: s.accused
+                              ? 'rgba(239,68,68,0.06)'
+                              : 'rgba(34,197,94,0.03)'
+                          }}
+                        >
+                          {s.accused
+                            ? <UserX className="w-4 h-4 text-red-400 flex-shrink-0" />
+                            : <UserCheck className="w-4 h-4 text-green-400 flex-shrink-0" />}
+                          <div className="flex-1 min-w-0">
+                            <div className="text-sm font-medium text-white truncate">{s.name}</div>
+                            <div className="text-xs text-slate-500">{s.recipient_id}</div>
+                          </div>
+                          {/* Score bar */}
+                          <div className="w-32 flex-shrink-0">
+                            <div className="h-1.5 rounded-full overflow-hidden bg-white/10">
+                              <div
+                                className="h-full rounded-full transition-all duration-700"
+                                style={{
+                                  width: `${Math.min(100, (s.score / (result.threshold * 2)) * 100)}%`,
+                                  background: s.accused
+                                    ? 'linear-gradient(90deg, #ef4444, #f87171)'
+                                    : 'linear-gradient(90deg, #22c55e, #4ade80)'
+                                }}
+                              />
+                            </div>
+                          </div>
+                          <div className="text-right flex-shrink-0 w-16">
+                            <div
+                              className="text-sm font-mono font-bold"
+                              style={{ color: s.accused ? '#f87171' : '#4ade80' }}
+                            >
+                              {s.score.toFixed(3)}
+                            </div>
+                            <div className="text-xs" style={{ color: s.accused ? '#ef4444' : '#22c55e' }}>
+                              {s.accused ? 'ACCUSED' : 'INNOCENT'}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+
+                {/* Attack method info */}
+                <div
+                  className="flex items-start gap-3 px-4 py-3 rounded-xl text-xs"
+                  style={{ background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.2)' }}
+                >
+                  <Layers className="w-4 h-4 text-indigo-400 flex-shrink-0 mt-0.5" />
+                  <span className="text-slate-400">
+                    Attack: <strong className="text-indigo-300">{result.attack_method}</strong> ·
+                    Code length: <strong className="text-indigo-300">{result.code_length} bits</strong> ·
+                    Coalition of <strong className="text-red-300">{result.coalition_size}</strong>
+                  </span>
+                </div>
+              </>
+            )}
           </div>
-
-          {/* Mathematical Proof Card */}
-          <div className="glass-card" style={{ padding: '14px 16px', background: 'rgba(56, 189, 248, 0.04)', border: '1px solid rgba(56, 189, 248, 0.15)' }}>
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-              <Info size={16} style={{ color: 'var(--main-petrol)', flexShrink: 0, marginTop: '2px' }} />
-              <div style={{ fontSize: '11px', color: 'var(--main-text-secondary)', lineHeight: 1.5 }}>
-                <strong style={{ color: 'var(--main-text-primary)' }}>Mathematical Non-Repudiation Guarantee:</strong> Gabor Tardos (2003) optimal traitor tracing ensures that no coalition of size $c \le 5$ can construct an unmarked document without being indicted by the symmetric accusation function. Innocent recipients' scores are strictly bounded by the Gaussian tail $\Phi(-\tau_Z / \sigma) \le 10^{-6}$, ensuring zero innocent users can ever be framed.
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        {/* Modal Footer */}
-        <div className="main-modal-footer">
-          <button onClick={onClose} className="main-btn-secondary" style={{ fontSize: '12px' }}>
-            Close Collusion Lab
-          </button>
         </div>
       </div>
     </div>
   );
 };
+
+export default MainCollusionLabModal;
