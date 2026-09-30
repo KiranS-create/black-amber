@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Shield, ArrowRight, Eye, EyeOff, CheckCircle2, Lock, UserCheck, KeyRound } from 'lucide-react';
+import { Shield, ArrowRight, Eye, EyeOff, CheckCircle2, Lock, UserCheck, KeyRound, Sun, Moon } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { apiService } from '../../services/api';
 import { UserSession } from '../../types';
 import { useTheme } from '../../context/ThemeContext';
+import { Forensic3DBackground } from '../common/Forensic3DBackground';
 
 interface MainLoginProps {
   onLoginSuccess: (session: UserSession) => void;
@@ -15,7 +17,7 @@ export const MainLogin: React.FC<MainLoginProps> = ({
   onOpenVerifyStandalone,
   onOpenSignUp
 }) => {
-  const { theme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
   const isLight = theme === 'light';
 
   const [username, setUsername] = useState<string>('');
@@ -53,43 +55,89 @@ export const MainLogin: React.FC<MainLoginProps> = ({
     <div
       style={{
         minHeight: '100vh',
-        backgroundColor: isLight ? '#F8FAFC' : '#090C0F',
+        backgroundColor: isLight ? '#F8FAFC' : '#080C10',
         color: isLight ? '#0F172A' : '#EDEDE8',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         padding: '20px',
+        position: 'relative',
+        overflow: 'hidden',
         fontFamily: "'Geist', system-ui, sans-serif",
-        transition: 'background-color 0.2s ease, color 0.2s ease'
+        transition: 'background-color 0.3s ease, color 0.3s ease'
       }}
     >
+      {/* 3D Animated Forensic Background */}
+      <Forensic3DBackground interactive={true} intensity={1.0} />
+
+      {/* Top Header Floating Controls */}
       <div
         style={{
-          width: '380px',
+          position: 'absolute',
+          top: '20px',
+          right: '24px',
+          zIndex: 30,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
+        }}
+      >
+        <button
+          onClick={toggleTheme}
+          title={`Switch to ${isLight ? 'Dark' : 'Light'} Mode`}
+          style={{
+            width: '34px',
+            height: '34px',
+            borderRadius: '50%',
+            backgroundColor: isLight ? 'rgba(255, 255, 255, 0.85)' : 'rgba(18, 27, 35, 0.75)',
+            backdropFilter: 'blur(12px)',
+            border: `1px solid ${isLight ? '#CBD5E1' : 'rgba(255, 255, 255, 0.1)'}`,
+            color: isLight ? '#475569' : '#A9B3BD',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
+          }}
+        >
+          {isLight ? <Moon size={15} /> : <Sun size={15} />}
+        </button>
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 14, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.35, ease: 'easeOut' }}
+        style={{
+          width: '420px',
           maxWidth: '100%',
           display: 'flex',
           flexDirection: 'column',
-          gap: '24px'
+          gap: '24px',
+          position: 'relative',
+          zIndex: 10
         }}
       >
         {/* Brand Anchor */}
         <div style={{ textAlign: 'center' }}>
           <div
             style={{
-              width: '36px',
-              height: '36px',
+              width: '40px',
+              height: '40px',
               borderRadius: '8px',
               background: 'linear-gradient(135deg, #0284C7, #0369A1)',
               border: '1px solid rgba(255, 255, 255, 0.2)',
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
-              marginBottom: '12px'
+              marginBottom: '12px',
+              boxShadow: '0 8px 24px rgba(2, 132, 199, 0.25)'
             }}
           >
-            <Shield size={18} style={{ color: '#FFFFFF' }} />
+            <Shield size={20} style={{ color: '#FFFFFF' }} />
           </div>
-          <h1 style={{ fontSize: '20px', fontWeight: 600, margin: 0, letterSpacing: '-0.02em', color: isLight ? '#0F172A' : '#EDEDE8' }}>
+          <h1 style={{ fontSize: '20px', fontWeight: 700, margin: 0, letterSpacing: '-0.02em', color: isLight ? '#0F172A' : '#EDEDE8' }}>
             AegisTrace Enterprise Workstation
           </h1>
           <p style={{ fontSize: '13px', color: isLight ? '#475569' : '#9BA3AF', margin: '4px 0 0 0' }}>
@@ -100,11 +148,13 @@ export const MainLogin: React.FC<MainLoginProps> = ({
         {/* Login Box */}
         <div
           style={{
-            background: isLight ? '#FFFFFF' : '#12161B',
-            border: `1px solid ${isLight ? '#E2E8F0' : 'rgba(255, 255, 255, 0.08)'}`,
-            borderRadius: '10px',
-            padding: '24px',
-            boxShadow: isLight ? '0 4px 20px rgba(0,0,0,0.06)' : '0 8px 32px rgba(0,0,0,0.4)'
+            background: isLight ? 'rgba(255, 255, 255, 0.88)' : 'rgba(18, 27, 35, 0.82)',
+            backdropFilter: 'blur(32px) saturate(190%)',
+            WebkitBackdropFilter: 'blur(32px) saturate(190%)',
+            border: `1px solid ${isLight ? '#E2E8F0' : 'rgba(255, 255, 255, 0.12)'}`,
+            borderRadius: '12px',
+            padding: '28px',
+            boxShadow: isLight ? '0 16px 36px rgba(0,0,0,0.08)' : '0 24px 64px rgba(0,0,0,0.6)'
           }}
         >
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -277,7 +327,7 @@ export const MainLogin: React.FC<MainLoginProps> = ({
             </button>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };

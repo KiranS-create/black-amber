@@ -9,10 +9,18 @@ import {
   KeyRound,
   FileCheck2,
   Lock,
-  User
+  User,
+  Sun,
+  Moon,
+  Sparkles,
+  Zap,
+  Scale
 } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { UserSession } from '../types';
 import { apiService } from '../services/api';
+import { useTheme } from '../context/ThemeContext';
+import { Forensic3DBackground } from './common/Forensic3DBackground';
 
 interface LoginScreenProps {
   onLoginSuccess: (session: UserSession) => void;
@@ -27,10 +35,14 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
   onOpenVerifyStandalone,
   sessionExpired = false
 }) => {
+  const { theme, toggleTheme } = useTheme();
+  const isLight = theme === 'light';
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [autofillApplied, setAutofillApplied] = useState(false);
   const [demoAuthAvailable, setDemoAuthAvailable] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(
     sessionExpired ? 'Session expired. Please sign in again.' : null
@@ -87,6 +99,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
     setUsername('admin');
     setPassword('admin');
     setErrorMessage(null);
+    setAutofillApplied(true);
+    setTimeout(() => setAutofillApplied(false), 2500);
   };
 
   return (
@@ -94,62 +108,93 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
       style={{
         minHeight: '100vh',
         width: '100vw',
-        backgroundColor: 'var(--canvas)',
+        backgroundColor: isLight ? '#F8FAFC' : '#080C10',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         padding: 'var(--space-6)',
         position: 'relative',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        transition: 'background-color 0.3s ease'
       }}
     >
-      {/* Background Subtle Forensic Geometry */}
-      <svg
+      {/* 3D Animated Forensic Cryptographic Background Canvas */}
+      <Forensic3DBackground interactive={true} intensity={1.0} />
+
+      {/* Top Header Floating Controls (Theme Toggle & SIH Badging) */}
+      <div
         style={{
           position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          pointerEvents: 'none',
-          opacity: 0.04
+          top: '20px',
+          right: '24px',
+          zIndex: 30,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
         }}
-        xmlns="http://www.w3.org/2000/svg"
       >
-        <defs>
-          <pattern id="login-grid" width="60" height="60" patternUnits="userSpaceOnUse">
-            <path d="M 60 0 L 0 0 0 60" fill="none" stroke="currentColor" strokeWidth="1" />
-            <circle cx="60" cy="0" r="1.5" fill="currentColor" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#login-grid)" />
-        <path
-          d="M 100 200 C 300 150, 400 350, 700 300 S 1100 100, 1400 250"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeDasharray="4 8"
-        />
-        <path
-          d="M 200 600 C 500 500, 700 700, 1000 600 S 1300 450, 1600 550"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeDasharray="6 6"
-        />
-      </svg>
+        <div
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            padding: '4px 10px',
+            backgroundColor: isLight ? 'rgba(255, 255, 255, 0.85)' : 'rgba(18, 27, 35, 0.75)',
+            backdropFilter: 'blur(12px)',
+            border: `1px solid ${isLight ? '#CBD5E1' : 'rgba(255, 255, 255, 0.1)'}`,
+            borderRadius: '20px',
+            fontSize: '11px',
+            fontWeight: 600,
+            color: isLight ? '#0284C7' : '#38BDF8',
+            letterSpacing: '0.02em',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
+          }}
+        >
+          <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981', display: 'inline-block' }} />
+          <span>NIST FIPS 203 LWE Lattice Active</span>
+        </div>
 
-      {/* Authentication Card (Layer 2 Surface) */}
-      <div
-        className="workstation-card"
+        <button
+          onClick={toggleTheme}
+          title={`Switch to ${isLight ? 'Dark' : 'Light'} Mode`}
+          style={{
+            width: '34px',
+            height: '34px',
+            borderRadius: '50%',
+            backgroundColor: isLight ? 'rgba(255, 255, 255, 0.85)' : 'rgba(18, 27, 35, 0.75)',
+            backdropFilter: 'blur(12px)',
+            border: `1px solid ${isLight ? '#CBD5E1' : 'rgba(255, 255, 255, 0.1)'}`,
+            color: isLight ? '#475569' : '#A9B3BD',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
+          }}
+        >
+          {isLight ? <Moon size={15} /> : <Sun size={15} />}
+        </button>
+      </div>
+
+      {/* Authentication Card (Layer 2 Elevated Glass Surface) */}
+      <motion.div
+        initial={{ opacity: 0, y: 14, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.35, ease: 'easeOut' }}
+        className="workstation-card specular-border"
         style={{
           width: '100%',
-          maxWidth: '410px',
-          backgroundColor: 'var(--surface)',
-          border: '1px solid var(--border)',
+          maxWidth: '430px',
+          backgroundColor: isLight ? 'rgba(255, 255, 255, 0.88)' : 'rgba(18, 27, 35, 0.82)',
+          backdropFilter: 'blur(32px) saturate(190%)',
+          WebkitBackdropFilter: 'blur(32px) saturate(190%)',
+          border: `1px solid ${isLight ? 'rgba(226, 232, 240, 0.9)' : 'rgba(255, 255, 255, 0.12)'}`,
           borderRadius: 'var(--radius-md)',
           padding: 'var(--space-8) var(--space-7)',
-          boxShadow: '0 24px 48px -15px rgba(0, 0, 0, 0.5)',
+          boxShadow: isLight 
+            ? '0 24px 48px -12px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.8)'
+            : '0 30px 60px -15px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.06)',
           position: 'relative',
           zIndex: 10
         }}
@@ -369,22 +414,26 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             style={{
               marginTop: 'var(--space-5)',
               padding: '12px 14px',
-              backgroundColor: 'var(--surface-elevated)',
-              border: '1px solid var(--border)',
+              backgroundColor: isLight ? 'rgba(241, 245, 249, 0.8)' : 'rgba(15, 22, 29, 0.8)',
+              border: `1px solid ${autofillApplied ? 'var(--primary)' : 'var(--border)'}`,
               borderRadius: 'var(--radius-xs)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              gap: '12px'
+              gap: '12px',
+              transition: 'all 0.2s ease'
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <KeyRound size={16} style={{ color: 'var(--primary)', flexShrink: 0 }} />
               <div>
-                <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--primary)', letterSpacing: '0.04em' }}>
-                  DEMO ACCESS
+                <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--primary)', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span>SIH JUDGE EVALUATION ACCESS</span>
+                  {autofillApplied && (
+                    <span style={{ fontSize: '10px', color: '#10B981', fontWeight: 600 }}>✓ Applied</span>
+                  )}
                 </div>
-                <div style={{ fontSize: '12px', color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)' }}>
+                <div style={{ fontSize: '12px', color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)', marginTop: '2px' }}>
                   Username: <strong style={{ color: 'var(--text)' }}>admin</strong> &nbsp;|&nbsp; Password: <strong style={{ color: 'var(--text)' }}>admin</strong>
                 </div>
               </div>
@@ -396,12 +445,15 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
               className="btn-secondary"
               style={{
                 fontSize: '11px',
-                padding: '4px 8px',
-                height: '26px',
-                flexShrink: 0
+                padding: '4px 10px',
+                height: '28px',
+                flexShrink: 0,
+                backgroundColor: autofillApplied ? 'var(--primary-subtle)' : undefined,
+                borderColor: autofillApplied ? 'var(--primary)' : undefined,
+                color: autofillApplied ? 'var(--primary)' : undefined
               }}
             >
-              Autofill
+              {autofillApplied ? 'Loaded' : 'Autofill'}
             </button>
           </div>
         )}
@@ -460,7 +512,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             </button>
           </div>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 };
