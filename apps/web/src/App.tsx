@@ -44,6 +44,7 @@ import { MainRecipientDecryptionModal } from './components/main/MainRecipientDec
 import { MainVisualComparatorModal } from './components/main/MainVisualComparatorModal';
 import { MainSection65BCertificateModal } from './components/main/MainSection65BCertificateModal';
 import { MainSihComplianceModal } from './components/main/MainSihComplianceModal';
+import { JudgeRehearsalModal } from './components/JudgeRehearsalModal';
 import { SignatureIntro } from './components/common/SignatureIntro';
 import { useLenis } from './hooks/useLenis';
 import { getExperienceVariant } from './variant';
@@ -79,10 +80,17 @@ export function AppContent() {
   const [comparatorLabOpen, setComparatorLabOpen] = useState<boolean>(false);
   const [certificateLabOpen, setCertificateLabOpen] = useState<boolean>(false);
   const [complianceLabOpen, setComplianceLabOpen] = useState<boolean>(false);
+  const [rehearsalModalOpen, setRehearsalModalOpen] = useState<boolean>(false);
+  const [certificateContext, setCertificateContext] = useState<any>(null);
   const [comparatorContext, setComparatorContext] = useState<{ docName: string; recipientName: string }>({
     docName: 'National_Defense_Protocol_2026.pdf',
     recipientName: 'Marcus Vance'
   });
+
+  const handleOpenCertificate = (context?: any) => {
+    setCertificateContext(context || null);
+    setCertificateLabOpen(true);
+  };
   const [introCompleted, setIntroCompleted] = useState<boolean>(() => {
     try {
       return sessionStorage.getItem('aegistrace_intro_seen') === 'true';
@@ -325,7 +333,8 @@ export function AppContent() {
           });
           setComparatorLabOpen(true);
         }}
-        onOpenCertificate={() => setCertificateLabOpen(true)}
+        onOpenRehearsal={() => setRehearsalModalOpen(true)}
+        onOpenCertificate={handleOpenCertificate}
         onOpenCompliance={() => setComplianceLabOpen(true)}
         documentCount={documents.length}
         recipientCount={recipients.length}
@@ -371,7 +380,7 @@ export function AppContent() {
                   });
                   setComparatorLabOpen(true);
                 }}
-                onOpenCertificate={() => setCertificateLabOpen(true)}
+                onOpenCertificate={handleOpenCertificate}
                 onOpenCompliance={() => setComplianceLabOpen(true)}
               />
             )}
@@ -402,7 +411,7 @@ export function AppContent() {
                 onAnalyzeLeak={handleAnalyzeLeak}
                 onUploadLeakFile={handleUploadLeakFile}
                 onOpenReportModal={() => setReportModalOpen(true)}
-                onOpenCertificate={() => setCertificateLabOpen(true)}
+                onOpenCertificate={handleOpenCertificate}
               />
             )}
 
@@ -440,6 +449,7 @@ export function AppContent() {
               <EvidenceTab
                 records={evidenceRecords}
                 setActiveTab={setActiveTab}
+                onOpenCertificate={handleOpenCertificate}
               />
             )}
 
@@ -566,13 +576,27 @@ export function AppContent() {
           recipientName={comparatorContext.recipientName}
         />
 
-        {/* Section 65B Certificate Generator Modal */}
+        {/* Live 2-Device Demonstration Stunt Modal */}
+        <JudgeRehearsalModal
+          isOpen={rehearsalModalOpen}
+          onClose={() => setRehearsalModalOpen(false)}
+          onOpenDocket={(ctx) => handleOpenCertificate(ctx)}
+        />
+
+        {/* Section 65B Certificate & Court Docket Modal */}
         <MainSection65BCertificateModal
           isOpen={certificateLabOpen}
           onClose={() => setCertificateLabOpen(false)}
           result={leakResult}
-          candidateName={leakResult?.candidate?.name || comparatorContext.recipientName}
-          documentName={documents[0]?.document_name || comparatorContext.docName}
+          candidateName={certificateContext?.candidateName || leakResult?.candidate?.name || comparatorContext.recipientName}
+          terminalId={certificateContext?.terminalId || 'Terminal #W-842911'}
+          suspectRank={certificateContext?.suspectRank || 'Commander (Naval Operations)'}
+          secretCodeHex={certificateContext?.secretCodeHex || '0x7E9A-C401-88F3-902B-0CDA07-9AF2'}
+          merkleLeaf={certificateContext?.merkleLeaf || 'Block #842,911 (ML-DSA-65 Valid Signature)'}
+          confidence={certificateContext?.confidence || '99.98% (BCH-Verified, 0 Bit Errors)'}
+          bchStatus={certificateContext?.bchStatus || '0 Bit Errors (BCH t=3 Corrected)'}
+          routeHop={certificateContext?.routeHop}
+          documentName={certificateContext?.documentName || documents[0]?.document_name || comparatorContext.docName}
         />
 
         {/* SIH Problem Statement 26237 Compliance Matrix Modal */}

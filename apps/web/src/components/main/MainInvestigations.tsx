@@ -34,7 +34,7 @@ interface MainInvestigationsProps {
   activeResult: AttributionResult | null;
   onIngestLeakAndAnalyze: (file: File, releaseId?: string) => Promise<void>;
   onRunBenchmark?: (scenarioId: string) => Promise<void>;
-  onOpenCertificate?: () => void;
+  onOpenCertificate?: (context?: any) => void;
   onOpenComparator?: () => void;
   onOpenAirGapScanner?: () => void;
 }
@@ -713,12 +713,21 @@ export const MainInvestigations: React.FC<MainInvestigationsProps> = ({
 
               {onOpenCertificate && (
                 <button
-                  onClick={onOpenCertificate}
+                  onClick={() => onOpenCertificate({
+                    candidateName: activeScaleScenario.name,
+                    suspectRank: activeScaleScenario.rank,
+                    terminalId: activeScaleScenario.terminal,
+                    secretCodeHex: activeScaleScenario.secretCodeHex,
+                    merkleLeaf: activeScaleScenario.merkleLeaf,
+                    confidence: activeScaleScenario.confidence,
+                    routeHop: activeScaleScenario.route,
+                    bchStatus: '0 Bit Errors (BCH t=3 Corrected)'
+                  })}
                   className="main-btn-primary"
-                  style={{ fontSize: '12px', background: '#0284C7' }}
+                  style={{ fontSize: '12px', background: '#3B82F6', borderColor: '#2563EB', display: 'flex', alignItems: 'center', gap: '6px' }}
                 >
                   <Scale size={13} />
-                  <span>Generate § 65B Certificate for 1M Attribution →</span>
+                  <span>Generate Court Evidence Docket (BSA § 65B) →</span>
                 </button>
               )}
             </div>

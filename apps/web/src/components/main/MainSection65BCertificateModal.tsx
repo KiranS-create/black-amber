@@ -7,27 +7,50 @@ import {
   ShieldCheck, 
   Award, 
   Scale, 
-  CheckCircle2,
-  FileArchive
+  CheckCircle2, 
+  FileArchive,
+  QrCode,
+  Fingerprint,
+  Cpu,
+  Lock
 } from 'lucide-react';
 import JSZip from 'jszip';
 import { STANDALONE_VERIFIER_PYTHON_SCRIPT } from '../../utils/standalone_verifier_template';
 import { AttributionResult } from '../../types';
 
-interface MainSection65BCertificateModalProps {
+export interface MainSection65BCertificateModalProps {
   isOpen: boolean;
   onClose: () => void;
   result?: AttributionResult | null;
   candidateName?: string;
   documentName?: string;
+  terminalId?: string;
+  suspectRank?: string;
+  secretCodeHex?: string;
+  merkleLeaf?: string;
+  confidence?: string;
+  bchStatus?: string;
+  routeHop?: string[];
 }
 
 export const MainSection65BCertificateModal: React.FC<MainSection65BCertificateModalProps> = ({
   isOpen,
   onClose,
   result,
-  candidateName = 'Marcus Vance',
-  documentName = 'National_Defense_Protocol_2026.pdf'
+  candidateName = 'Cmdr. Rajesh Sharma',
+  documentName = 'Strategic_Defence_Dispatch_2026.pdf',
+  terminalId = 'Terminal #W-842911',
+  suspectRank = 'Commander (Naval Operations)',
+  secretCodeHex = '0x7E9A-C401-88F3-902B-0CDA07-9AF2',
+  merkleLeaf = 'Block #842,911 (ML-DSA-65 Valid Signature)',
+  confidence = '99.98% (BCH-Verified, 0 Bit Errors)',
+  bchStatus = '0 Bit Errors (BCH t=3 Corrected)',
+  routeHop = [
+    'Apex Integrated Defence HQ (New Delhi)',
+    'Western Sector Dissemination Hub (Mumbai)',
+    'Naval Operations Command Node #04',
+    'Field Terminal #W-842911 (Cmdr. Rajesh Sharma)'
+  ]
 }) => {
   if (!isOpen) return null;
 
@@ -39,10 +62,10 @@ export const MainSection65BCertificateModal: React.FC<MainSection65BCertificateM
 
   const caseId = 'CR-DL-2026-0929-SIH26237';
   const certId = 'CERT-65B-AEGIS-2026-9901';
-  const resolvedCandidate = result?.candidate?.name || candidateName || 'Marcus Vance';
+  const resolvedCandidate = result?.candidate?.name || candidateName;
   const originalDocHash = '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08';
   const leakHash = '7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b';
-  const sigDigest = 'dSA65_sig_bob_02_eefa1234567890abcdef1234567890abcdef1234567890ab';
+  const sigDigest = 'dSA65_sig_sharma_04_eefa1234567890abcdef1234567890abcdef1234567890ab';
   const merkleRoot = '03a58e65f9024b11e2890acdef1234567890abcdef1234567890abcdef123456';
 
   const handlePrint = () => {
@@ -52,7 +75,7 @@ export const MainSection65BCertificateModal: React.FC<MainSection65BCertificateM
   const handleDownloadTxt = () => {
     const textContent = `
 ================================================================================
-          GOVERNMENT OF INDIA / CYBER FORENSICS & APPELLATE TRIBUNAL
+          GOVERNMENT OF INDIA / SPECIAL CYBER FORENSICS TRIBUNAL
      CERTIFICATE UNDER SECTION 65B OF THE INDIAN EVIDENCE ACT, 1872 /
          SECTION 63 OF THE BHARATIYA SAKSHYA ADHINIYAM (BSA), 2023
              FOR ADMISSIBILITY OF ELECTRONIC FORENSIC EVIDENCE
@@ -63,25 +86,32 @@ CASE REFERENCE:     ${caseId}
 DATE OF ISSUANCE:   ${certDate}
 ISSUING SYSTEM:     AegisTrace Post-Quantum Cryptographic Provenance Platform (v1.0.0)
 
-1. DETAILS OF THE ELECTRONIC RECORD:
+1. DETAILS OF THE ELECTRONIC RECORD & ACCUSED ATTRIBUTION:
 --------------------------------------------------------------------------------
 Document Title:                  ${documentName}
 Original Broadcast Master Hash:  ${originalDocHash} (SHA-256)
 Intercepted Leak Artifact Hash:  ${leakHash} (SHA-256)
-Identified Leaker / Recipient:   ${resolvedCandidate} (Recipient ID: bob / usr_3d4e5f6a02)
-Bayesian Attribution Confidence: 99.8% (Log-Likelihood Ratio: 6.44)
+Identified Accused:              ${resolvedCandidate} (${suspectRank})
+Assigned Hardware Terminal:      ${terminalId}
+Extracted 128-bit Secret Code:   ${secretCodeHex}
+BCH Error-Correction Status:     ${bchStatus}
+Attribution Confidence:          ${confidence}
 
-2. CRYPTOGRAPHIC PROVENANCE & CHAIN OF CUSTODY:
+2. DISSEMINATION ROUTE & HOP-CHAIN TRACE:
+--------------------------------------------------------------------------------
+${routeHop.map((h, i) => `  [Hop ${i + 1}] ${h}`).join('\n')}
+
+3. CRYPTOGRAPHIC PROVENANCE & CHAIN OF CUSTODY:
 --------------------------------------------------------------------------------
 Post-Quantum KEM:                ML-KEM-768 (NIST FIPS 203)
 Digital Signature Standard:      ML-DSA-65 (NIST FIPS 204)
 Digital Signature Digest:        ${sigDigest}
-Immutable Ledger Commitment:     RFC-6962 Merkle Hash Tree Block #2
+Immutable Ledger Commitment:     RFC-6962 Merkle Hash Tree Block #842,911
 Merkle Tree Root:                ${merkleRoot}
 Traitor-Tracing Model:           Tardos Symbol-Symmetric Matrix (m=128, c<=5)
-False-Alarm Probability (PFA):   <= 10^-5 (Chebyshev-bounded)
+False-Alarm Probability (PFA):   <= 10^-6 (Chebyshev-bounded)
 
-3. STATUTORY AFFIRMATION UNDER LAW:
+4. STATUTORY AFFIRMATION UNDER SECTION 63 BHARATIYA SAKSHYA ADHINIYAM, 2023:
 --------------------------------------------------------------------------------
 I, the undersigned Authorized Digital Forensics Officer, do hereby certify:
 
@@ -106,7 +136,7 @@ Signature Digest: 4179bc892a0e41235678bcda09871234eefa1234567890abcdef1234567890
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `Section_65B_Certificate_${caseId}.txt`;
+    a.download = `Section_65B_Court_Docket_${caseId}.txt`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -121,32 +151,34 @@ Signature Digest: 4179bc892a0e41235678bcda09871234eefa1234567890abcdef1234567890
       const manifest = {
         evidence_id: certId,
         case_id: caseId,
-        channel_name: documentName,
+        document_title: documentName,
         timestamp: new Date().toISOString(),
-        suspected_candidate_name: resolvedCandidate,
-        suspected_candidate_id: resolvedCandidate.toLowerCase().includes('bob') ? 'bob' : 'suspect_001',
-        original_document_hash: originalDocHash,
-        leaked_artifact_hash: leakHash,
-        cryptographic_proofs: {
-          recipient_signature: {
-            algorithm: 'ML-DSA-65',
-            signature_digest: sigDigest,
-            status: 'VERIFIED'
-          },
-          merkle_proof: {
-            standard: 'RFC-6962',
-            merkle_root: merkleRoot,
-            leaf_hash: originalDocHash,
-            status: 'ANCHORED'
-          }
+        accused_subject: {
+          name: resolvedCandidate,
+          rank: suspectRank,
+          terminal: terminalId,
+          secret_code_hex: secretCodeHex,
+          bch_error_metric: bchStatus,
+          confidence_score: confidence
         },
-        forensic_metrics: {
-          tardos_accusation_score: 16.42,
-          decision_threshold: 11.40,
-          false_alarm_probability: '1e-6',
-          bit_error_rate: '0.00%',
-          psnr_db: 48.2,
-          ssim: 0.9982
+        route_hop_chain: routeHop,
+        hashes: {
+          original_document_sha256: originalDocHash,
+          leaked_artifact_sha256: leakHash
+        },
+        cryptographic_proofs: {
+          pqc_kem_standard: 'NIST FIPS 203 (ML-KEM-768)',
+          pqc_signature_standard: 'NIST FIPS 204 (ML-DSA-65)',
+          signature_digest: sigDigest,
+          merkle_inclusion_leaf: merkleLeaf,
+          merkle_root: merkleRoot,
+          ledger_standard: 'RFC-6962'
+        },
+        tardos_mathematical_score: {
+          accusation_score: 84.6,
+          decision_threshold: 22.4,
+          innocent_max_score: 11.2,
+          false_alarm_rate: '1e-6'
         }
       };
       zip.file('evidence_manifest.json', JSON.stringify(manifest, null, 2));
@@ -154,14 +186,14 @@ Signature Digest: 4179bc892a0e41235678bcda09871234eefa1234567890abcdef1234567890
       // 2. Merkle Inclusion Proof JSON
       const merkleProof = {
         specification: 'RFC-6962 Certificate Transparency Tree',
-        leaf_index: 2,
-        tree_size: 4,
+        leaf_index: 842911,
+        total_scale: 1000000,
         root_hash: merkleRoot,
         audit_path: [
-          { index: 3, hash: 'a1b2c3d4e5f60718293a4b5c6d7e8f90123456789abcdef0123456789abcdef0', direction: 'right' },
-          { index: 0, hash: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', direction: 'left' }
+          { index: 842910, hash: 'a1b2c3d4e5f60718293a4b5c6d7e8f90123456789abcdef0123456789abcdef0', direction: 'left' },
+          { index: 421455, hash: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', direction: 'right' }
         ],
-        commitment_status: 'VALID'
+        commitment_status: 'VALID_AUTHENTICATED'
       };
       zip.file('merkle_inclusion_proof.json', JSON.stringify(merkleProof, null, 2));
 
@@ -196,25 +228,11 @@ All signatures and Merkle paths are validated mathematically.
 `.trim();
       zip.file('README_COURT_INSTRUCTIONS.txt', readme);
 
-      // 5. Plaintext Certificate
-      zip.file('Section_65B_Certificate.txt', `
-================================================================================
-CERTIFICATE UNDER SECTION 65B OF THE INDIAN EVIDENCE ACT, 1872
-[AND SECTION 63 OF THE BHARATIYA SAKSHYA ADHINIYAM, 2023]
-================================================================================
-Certificate ID: ${certId}
-Case Reference: ${caseId}
-Subject: Electronic Provenance & Attribution of Leaked Document: ${documentName}
-Date of Issuance: ${certDate}
-Identified Suspect: ${resolvedCandidate}
-================================================================================
-      `.trim());
-
       const zipBlob = await zip.generateAsync({ type: 'blob' });
       const url = URL.createObjectURL(zipBlob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `AegisTrace_Courtroom_Package_${caseId}.zip`;
+      a.download = `AegisTrace_Forensic_Docket_${caseId}.zip`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -225,14 +243,35 @@ Identified Suspect: ${resolvedCandidate}
   };
 
   return (
-    <div className="main-modal-backdrop" onClick={onClose}>
+    <div className="main-modal-backdrop" onClick={onClose} style={{ zIndex: 120 }}>
+      {/* Inject print styles */}
+      <style>{`
+        @media print {
+          body * { visibility: hidden !important; }
+          .court-docket-printable, .court-docket-printable * { visibility: visible !important; }
+          .court-docket-printable {
+            position: absolute !important;
+            left: 0 !important;
+            top: 0 !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 15mm 20mm !important;
+            background: #ffffff !important;
+            color: #000000 !important;
+            box-shadow: none !important;
+            border: none !important;
+          }
+          .no-print { display: none !important; }
+        }
+      `}</style>
+
       <div 
         className="main-modal" 
-        style={{ maxWidth: '780px', width: '100%', maxHeight: '92vh', overflowY: 'auto' }}
+        style={{ maxWidth: '840px', width: '100%', maxHeight: '92vh', overflowY: 'auto' }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="main-modal-header">
+        <div className="main-modal-header no-print">
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(59, 130, 246, 0.15)', color: '#60A5FA', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Scale size={18} />
@@ -243,11 +282,11 @@ Identified Suspect: ${resolvedCandidate}
                   Legal Admissibility
                 </span>
                 <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
-                  Indian Evidence Act § 65B
+                  BSA 2023 § 63 / IEA § 65B
                 </span>
               </div>
               <h2 className="main-modal-title" style={{ fontSize: '17px', marginTop: '2px' }}>
-                Certificate of Electronic Evidence Admissibility
+                Court-Ready Forensic Evidence Docket
               </h2>
             </div>
           </div>
@@ -258,119 +297,249 @@ Identified Suspect: ${resolvedCandidate}
 
         {/* Certificate Printable Body */}
         <div 
-          className="main-modal-body" 
+          className="court-docket-printable" 
           style={{ 
             background: '#FFFFFF', 
             color: '#0F172A', 
             borderRadius: '6px', 
-            padding: '28px 24px', 
+            padding: '32px 28px', 
             margin: '0 20px', 
-            boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
-            fontFamily: 'serif'
+            boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+            fontFamily: '"Times New Roman", Times, serif',
+            border: '2px solid #0F172A'
           }}
         >
-          {/* Top Courtroom Header */}
-          <div style={{ textAlign: 'center', borderBottom: '2px solid #0F172A', paddingBottom: '16px', marginBottom: '20px' }}>
-            <div style={{ fontSize: '11px', letterSpacing: '0.12em', fontWeight: 700, color: '#475569', textTransform: 'uppercase' }}>
-              Government of India · Special Cyber Forensics Division
+          {/* Top Courtroom Seal & Header */}
+          <div style={{ textAlign: 'center', borderBottom: '2px double #0F172A', paddingBottom: '16px', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+              <svg width="44" height="44" viewBox="0 0 100 100" fill="none">
+                <circle cx="50" cy="50" r="46" stroke="#0F172A" strokeWidth="3" strokeDasharray="3 2" />
+                <circle cx="50" cy="50" r="41" stroke="#0F172A" strokeWidth="1.5" />
+                <path d="M50 16 L56 34 L75 34 L60 46 L66 64 L50 52 L34 64 L40 46 L25 34 L44 34 Z" fill="#B45309" opacity="0.15" />
+                <path d="M50 20 V80 M20 50 H80 M29 29 L71 71 M29 71 L71 29" stroke="#0F172A" strokeWidth="1" opacity="0.4" />
+                <circle cx="50" cy="50" r="14" fill="#0F172A" />
+                <circle cx="50" cy="50" r="10" fill="#FFFFFF" />
+                <circle cx="50" cy="50" r="4" fill="#0F172A" />
+              </svg>
             </div>
-            <div style={{ fontSize: '16px', fontWeight: 700, marginTop: '4px', letterSpacing: '0.02em', color: '#0F172A' }}>
-              CERTIFICATE UNDER SECTION 65B OF THE INDIAN EVIDENCE ACT, 1872
+
+            <div style={{ fontSize: '11px', letterSpacing: '0.14em', fontWeight: 700, color: '#334155', textTransform: 'uppercase' }}>
+              GOVERNMENT OF INDIA · SPECIAL CYBER FORENSICS TRIBUNAL
             </div>
-            <div style={{ fontSize: '12px', color: '#334155', fontStyle: 'italic', marginTop: '2px' }}>
-              (Corresponding to Section 63 of the Bharatiya Sakshya Adhiniyam, 2023)
+            <div style={{ fontSize: '17px', fontWeight: 700, marginTop: '4px', letterSpacing: '0.02em', color: '#0F172A' }}>
+              CERTIFICATE OF ELECTRONIC EVIDENCE ADMISSIBILITY
             </div>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', fontSize: '10px', color: '#64748B', marginTop: '8px', fontFamily: 'sans-serif' }}>
-              <span>Case ID: <strong>{caseId}</strong></span>
-              <span>Certificate Serial: <strong>{certId}</strong></span>
-              <span>Date: <strong>{certDate}</strong></span>
+            <div style={{ fontSize: '12px', color: '#475569', fontStyle: 'italic', marginTop: '2px' }}>
+              Under Section 63 of Bharatiya Sakshya Adhiniyam (BSA), 2023 / Section 65B of Indian Evidence Act, 1872
+            </div>
+            
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10.5px', color: '#475569', marginTop: '12px', fontFamily: 'system-ui, sans-serif', borderTop: '1px solid #E2E8F0', paddingTop: '8px' }}>
+              <span>Case Ref: <strong>{caseId}</strong></span>
+              <span>Docket ID: <strong>{certId}</strong></span>
+              <span>Date of Issuance: <strong>{certDate}</strong></span>
+              <span>Security Tier: <strong>TOP SECRET // NOFORN</strong></span>
             </div>
           </div>
 
-          {/* Section 1: Record Identification */}
-          <div style={{ marginBottom: '16px', fontSize: '12px', lineHeight: 1.6, fontFamily: 'sans-serif' }}>
-            <div style={{ fontWeight: 700, fontSize: '12px', color: '#0F172A', borderBottom: '1px solid #CBD5E1', paddingBottom: '4px', marginBottom: '8px' }}>
-              1. IDENTIFICATION OF ELECTRONIC RECORD & SUSPECTED LEAK
+          {/* Section 1: Subject Attribution & Secret Code */}
+          <div style={{ marginBottom: '16px', fontSize: '12px', lineHeight: 1.6, fontFamily: 'system-ui, sans-serif' }}>
+            <div style={{ fontWeight: 700, fontSize: '12.5px', color: '#0F172A', borderBottom: '1px solid #CBD5E1', paddingBottom: '4px', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+              1. ACCUSED ATTRIBUTION & 128-BIT CARRIER SECRET CODE
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '180px 1fr', gap: '4px', fontSize: '11px' }}>
-              <span style={{ color: '#64748B' }}>Document Title:</span>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: '190px 1fr', gap: '5px', fontSize: '11px' }}>
+              <span style={{ color: '#64748B' }}>Identified Accused:</span>
+              <span style={{ fontWeight: 700, color: '#B91C1C', fontSize: '12px' }}>
+                {resolvedCandidate} — {suspectRank}
+              </span>
+
+              <span style={{ color: '#64748B' }}>Assigned Hardware Terminal:</span>
+              <span style={{ fontWeight: 600, color: '#0F172A' }}>{terminalId}</span>
+
+              <span style={{ color: '#64748B' }}>Extracted 128-bit Secret Code:</span>
+              <span style={{ fontFamily: 'monospace', fontWeight: 700, color: '#0284C7', backgroundColor: '#F0F9FF', padding: '1px 6px', borderRadius: '3px', border: '1px solid #BAE6FD' }}>
+                {secretCodeHex}
+              </span>
+
+              <span style={{ color: '#64748B' }}>BCH Error Correction:</span>
+              <span style={{ fontWeight: 600, color: '#15803D' }}>{bchStatus}</span>
+
+              <span style={{ color: '#64748B' }}>Attribution Confidence:</span>
+              <span style={{ fontWeight: 700, color: '#15803D' }}>{confidence}</span>
+
+              <span style={{ color: '#64748B' }}>Target Document Title:</span>
               <span style={{ fontWeight: 600, color: '#0F172A' }}>{documentName}</span>
 
               <span style={{ color: '#64748B' }}>Master Document SHA-256:</span>
-              <span className="main-mono" style={{ fontSize: '10px', color: '#334155' }}>{originalDocHash}</span>
+              <span style={{ fontFamily: 'monospace', fontSize: '10px', color: '#475569' }}>{originalDocHash}</span>
 
-              <span style={{ color: '#64748B' }}>Intercepted Artifact SHA-256:</span>
-              <span className="main-mono" style={{ fontSize: '10px', color: '#334155' }}>{leakHash}</span>
-
-              <span style={{ color: '#64748B' }}>Attributed Recipient:</span>
-              <span style={{ fontWeight: 700, color: '#B91C1C' }}>{resolvedCandidate} (Principal Cryptanalyst, bob)</span>
-
-              <span style={{ color: '#64748B' }}>Forensic Posterior:</span>
-              <span style={{ fontWeight: 700, color: '#15803D' }}>99.8% (Bayesian Multi-Channel Fusion Confirmed)</span>
+              <span style={{ color: '#64748B' }}>Recovered Leak SHA-256:</span>
+              <span style={{ fontFamily: 'monospace', fontSize: '10px', color: '#475569' }}>{leakHash}</span>
             </div>
           </div>
 
-          {/* Section 2: Cryptographic Proof of Non-Repudiation */}
-          <div style={{ marginBottom: '16px', fontSize: '12px', lineHeight: 1.6, fontFamily: 'sans-serif' }}>
-            <div style={{ fontWeight: 700, fontSize: '12px', color: '#0F172A', borderBottom: '1px solid #CBD5E1', paddingBottom: '4px', marginBottom: '8px' }}>
-              2. CRYPTOGRAPHIC PROOF OF NON-REPUDIATION & LEDGER INTEGRITY
+          {/* Section 2: Hop-Chain Dissemination Trace */}
+          <div style={{ marginBottom: '16px', fontSize: '11.5px', fontFamily: 'system-ui, sans-serif' }}>
+            <div style={{ fontWeight: 700, fontSize: '12.5px', color: '#0F172A', borderBottom: '1px solid #CBD5E1', paddingBottom: '4px', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+              2. HOP-CHAIN PROVENANCE & DISSEMINATION ROUTE
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '180px 1fr', gap: '4px', fontSize: '11px' }}>
-              <span style={{ color: '#64748B' }}>Key Encapsulation Mechanism:</span>
-              <span style={{ color: '#0F172A' }}>ML-KEM-768 (NIST FIPS 203 Post-Quantum Standard)</span>
-
-              <span style={{ color: '#64748B' }}>Recipient Digital Signature:</span>
-              <span className="main-mono" style={{ fontSize: '10px', color: '#334155' }}>ML-DSA-65 (NIST FIPS 204) — Digest: {sigDigest.substring(0, 24)}...</span>
-
-              <span style={{ color: '#64748B' }}>Audit Chain Commitment:</span>
-              <span style={{ color: '#0F172A' }}>RFC-6962 Merkle Hash Tree Block #2 (Merkle Root: {merkleRoot.substring(0, 16)}...)</span>
-
-              <span style={{ color: '#64748B' }}>Tardos Traitor Score:</span>
-              <span style={{ color: '#0F172A' }}>U_j = 16.42 &gt; Cutoff Z = 11.40 (Chebyshev Bound P_FA ≤ 10⁻⁵)</span>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', background: '#F8FAFC', padding: '10px 12px', borderRadius: '4px', border: '1px solid #E2E8F0' }}>
+              {routeHop.map((hop, idx) => (
+                <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11px' }}>
+                  <span style={{ width: '18px', height: '18px', borderRadius: '50%', backgroundColor: idx === routeHop.length - 1 ? '#EF4444' : '#0284C7', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 700, flexShrink: 0 }}>
+                    {idx + 1}
+                  </span>
+                  <span style={{ color: idx === routeHop.length - 1 ? '#B91C1C' : '#334155', fontWeight: idx === routeHop.length - 1 ? 700 : 500 }}>
+                    {hop}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Section 3: Statutory Declaration */}
-          <div style={{ marginBottom: '20px', fontSize: '11px', lineHeight: 1.6, color: '#334155' }}>
-            <div style={{ fontWeight: 700, fontSize: '12px', color: '#0F172A', borderBottom: '1px solid #CBD5E1', paddingBottom: '4px', marginBottom: '8px', fontFamily: 'sans-serif' }}>
-              3. STATUTORY AFFIRMATION OF AUTHENTICITY
+          {/* Section 3: Tardos Mathematical Separation Curve (Visual Diagram) */}
+          <div style={{ marginBottom: '16px', fontFamily: 'system-ui, sans-serif' }}>
+            <div style={{ fontWeight: 700, fontSize: '12.5px', color: '#0F172A', borderBottom: '1px solid #CBD5E1', paddingBottom: '4px', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+              3. TARDOS COALITION-RESISTANT SCORING DISTRIBUTION (m=128)
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 200px', gap: '16px', alignItems: 'center', background: '#F8FAFC', padding: '10px 12px', borderRadius: '4px', border: '1px solid #E2E8F0' }}>
+              <div>
+                <svg viewBox="0 0 360 80" style={{ width: '100%', height: 'auto', display: 'block' }}>
+                  {/* Axis */}
+                  <line x1="20" y1="65" x2="340" y2="65" stroke="#CBD5E1" strokeWidth="1.5" />
+                  
+                  {/* Innocent cohort bell curve */}
+                  <path d="M 20 65 Q 60 65 90 20 Q 120 65 160 65" fill="rgba(16, 185, 129, 0.15)" stroke="#10B981" strokeWidth="1.5" />
+                  <text x="75" y="75" fontSize="8" fill="#059669" fontFamily="sans-serif">Innocent Cohort (max=11.2)</text>
+
+                  {/* Cutoff Threshold line */}
+                  <line x1="180" y1="15" x2="180" y2="65" stroke="#F59E0B" strokeWidth="1.5" strokeDasharray="3 2" />
+                  <text x="184" y="24" fontSize="8" fill="#B45309" fontWeight="bold" fontFamily="sans-serif">Threshold Z = 22.4</text>
+
+                  {/* Accused Traitor peak */}
+                  <line x1="300" y1="10" x2="300" y2="65" stroke="#EF4444" strokeWidth="2" />
+                  <circle cx="300" cy="10" r="4" fill="#EF4444" />
+                  <text x="240" y="8" fontSize="8.5" fill="#B91C1C" fontWeight="bold" fontFamily="sans-serif">Accused Score U = 84.6</text>
+                  <text x="250" y="75" fontSize="8" fill="#B91C1C" fontFamily="sans-serif">&gt; 6σ Separation</text>
+                </svg>
+              </div>
+
+              <div style={{ fontSize: '10.5px', lineHeight: 1.5, color: '#334155', borderLeft: '1px solid #E2E8F0', paddingLeft: '10px' }}>
+                <div><strong>Tardos Score:</strong> 84.6</div>
+                <div><strong>Cutoff (Z):</strong> 22.4</div>
+                <div><strong>Innocent Max:</strong> 11.2</div>
+                <div><strong>False-Alarm (P_FA):</strong> &le; 10⁻⁶</div>
+                <div><strong>Chebyshev Bounded:</strong> Validated</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Section 4: Post-Quantum Non-Repudiation Proof */}
+          <div style={{ marginBottom: '16px', fontSize: '11px', lineHeight: 1.6, fontFamily: 'system-ui, sans-serif' }}>
+            <div style={{ fontWeight: 700, fontSize: '12.5px', color: '#0F172A', borderBottom: '1px solid #CBD5E1', paddingBottom: '4px', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+              4. POST-QUANTUM CRYPTOGRAPHIC CHAIN OF CUSTODY (FIPS 203 & 204)
+            </div>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: '190px 1fr', gap: '4px' }}>
+              <span style={{ color: '#64748B' }}>PQC Key Encapsulation:</span>
+              <span style={{ color: '#0F172A', fontWeight: 600 }}>ML-KEM-768 (NIST FIPS 203) — Post-Quantum LWE Lattice</span>
+
+              <span style={{ color: '#64748B' }}>PQC Digital Signature:</span>
+              <span style={{ color: '#0F172A', fontWeight: 600 }}>ML-DSA-65 (NIST FIPS 204) — Non-Repudiation Verified</span>
+
+              <span style={{ color: '#64748B' }}>Digital Signature Digest:</span>
+              <span style={{ fontFamily: 'monospace', fontSize: '9.5px', color: '#475569' }}>{sigDigest}</span>
+
+              <span style={{ color: '#64748B' }}>Immutable Ledger Anchor:</span>
+              <span style={{ color: '#0F172A', fontWeight: 600 }}>{merkleLeaf}</span>
+
+              <span style={{ color: '#64748B' }}>RFC-6962 Merkle Root:</span>
+              <span style={{ fontFamily: 'monospace', fontSize: '9.5px', color: '#475569' }}>{merkleRoot}</span>
+            </div>
+          </div>
+
+          {/* Section 5: Statutory Affirmation pursuant to BSA 2023 */}
+          <div style={{ marginBottom: '18px', fontSize: '11px', lineHeight: 1.6, color: '#334155' }}>
+            <div style={{ fontWeight: 700, fontSize: '12.5px', color: '#0F172A', borderBottom: '1px solid #CBD5E1', paddingBottom: '4px', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.03em', fontFamily: 'system-ui, sans-serif' }}>
+              5. STATUTORY AFFIRMATION UNDER LAW (SEC 63 BSA 2023)
             </div>
             <p style={{ margin: '0 0 6px 0' }}>
-              I hereby solemnly state and affirm that the computer output described in this certificate was produced by the AegisTrace cryptographic attribution engine during regular operational usage. The cryptographic system operated under continuous integrity verification, and no tampering or alteration occurred during transmission, storage, or analysis.
+              I, the undersigned Authorized Digital Forensics Officer, hereby solemnly affirm under penalty of law that the electronic record described in this certificate was generated by the AegisTrace autonomous post-quantum provenance workstation during regular authorized operational use. The system operated under zero-trust client WASM enclave isolation, and no tampering, unauthorized simulation, or key injection occurred during the custody lifecycle.
             </p>
             <p style={{ margin: 0 }}>
-              The extraction of the orthogonal Tardos fingerprint and verification of the post-quantum ML-DSA-65 digital signature conclusively links the leaked artifact to recipient <strong>{resolvedCandidate}</strong> to the exclusion of all other co-recipients.
+              The mathematical demodulation of the spatial-frequency carrier and cryptographic verification of the ML-DSA-65 digital signature conclusively links the leaked artifact to accused recipient <strong>{resolvedCandidate} ({terminalId})</strong> to the mathematical exclusion of all other cohort members.
             </p>
           </div>
 
-          {/* Signatures & Seal */}
-          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', borderTop: '1px solid #CBD5E1', paddingTop: '16px', fontFamily: 'sans-serif' }}>
-            <div>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '6px 10px', border: '2px solid #15803D', borderRadius: '4px', color: '#15803D', fontSize: '11px', fontWeight: 700 }}>
-                <CheckCircle2 size={14} />
-                CRYPTOGRAPHICALLY CERTIFIED & VERIFIED
+          {/* Signatures, Barcode & Official Seal */}
+          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', borderTop: '2px solid #0F172A', paddingTop: '14px', fontFamily: 'system-ui, sans-serif' }}>
+            {/* Seal & Verification Badge */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+              {/* Simulated QR Code for Verification */}
+              <div style={{ border: '1px solid #CBD5E1', padding: '4px', borderRadius: '4px', background: '#FFFFFF' }}>
+                <svg width="60" height="60" viewBox="0 0 60 60">
+                  <rect width="60" height="60" fill="#FFFFFF" />
+                  {/* Position squares */}
+                  <rect x="5" y="5" width="16" height="16" fill="#0F172A" />
+                  <rect x="7" y="7" width="12" height="12" fill="#FFFFFF" />
+                  <rect x="9" y="9" width="8" height="8" fill="#0F172A" />
+
+                  <rect x="39" y="5" width="16" height="16" fill="#0F172A" />
+                  <rect x="41" y="7" width="12" height="12" fill="#FFFFFF" />
+                  <rect x="43" y="9" width="8" height="8" fill="#0F172A" />
+
+                  <rect x="5" y="39" width="16" height="16" fill="#0F172A" />
+                  <rect x="7" y="41" width="12" height="12" fill="#FFFFFF" />
+                  <rect x="9" y="43" width="8" height="8" fill="#0F172A" />
+
+                  {/* Data dots */}
+                  <rect x="25" y="8" width="4" height="4" fill="#0F172A" />
+                  <rect x="31" y="12" width="4" height="4" fill="#0F172A" />
+                  <rect x="25" y="25" width="4" height="4" fill="#0F172A" />
+                  <rect x="31" y="31" width="4" height="4" fill="#0F172A" />
+                  <rect x="25" y="45" width="4" height="4" fill="#0F172A" />
+                  <rect x="39" y="39" width="4" height="4" fill="#0F172A" />
+                  <rect x="45" y="45" width="4" height="4" fill="#0F172A" />
+                  <rect x="51" y="51" width="4" height="4" fill="#0F172A" />
+                </svg>
+              </div>
+
+              <div>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '4px 8px', border: '1.5px solid #15803D', borderRadius: '4px', color: '#15803D', fontSize: '10.5px', fontWeight: 700 }}>
+                  <CheckCircle2 size={13} />
+                  BSA § 63 COMPLIANT & CERTIFIED
+                </div>
+                <div style={{ fontSize: '9.5px', color: '#64748B', marginTop: '3px' }}>
+                  Sha-3 Digest Anchor: #AEGIS-GOV-2026
+                </div>
               </div>
             </div>
 
+            {/* Examiner Signature */}
             <div style={{ textAlign: 'right', fontSize: '11px', color: '#0F172A' }}>
-              <div style={{ fontWeight: 700 }}>AUTHORIZED FORENSIC EXAMINER</div>
-              <div style={{ color: '#64748B' }}>Cyber Security & Digital Forensics Wing</div>
-              <div className="main-mono" style={{ fontSize: '9px', color: '#94A3B8', marginTop: '2px' }}>
-                Key ID: PQC_GOV_CERT_AUTH_2026
+              <div style={{ fontFamily: 'cursive', fontSize: '16px', color: '#1E3A8A', marginBottom: '2px' }}>
+                K. R. V. Nambiar
+              </div>
+              <div style={{ fontWeight: 700 }}>DIRECTOR OF DIGITAL FORENSICS</div>
+              <div style={{ color: '#64748B', fontSize: '10px' }}>Cyber Security & Electronic Evidence Wing</div>
+              <div style={{ fontFamily: 'monospace', fontSize: '9px', color: '#94A3B8', marginTop: '2px' }}>
+                Key ID: FIPS-204-ML-DSA-65-CERT-OFFICER
               </div>
             </div>
           </div>
         </div>
 
-        {/* Modal Footer with Export Buttons */}
-        <div className="main-modal-footer">
+        {/* Modal Footer with Export Buttons (Hidden during Print) */}
+        <div className="main-modal-footer no-print">
           <button onClick={onClose} className="main-btn-secondary">
             Close
           </button>
           
           <button onClick={handleDownloadTxt} className="main-btn-secondary">
             <Download size={13} />
-            <span>Download Certificate (.txt)</span>
+            <span>Download Docket (.txt)</span>
           </button>
 
           <button onClick={handleDownloadCourtroomBundle} className="main-btn-secondary">
@@ -380,7 +549,7 @@ Identified Suspect: ${resolvedCandidate}
 
           <button onClick={handlePrint} className="main-btn-primary" style={{ background: '#3B82F6', borderColor: '#2563EB' }}>
             <Printer size={13} />
-            <span>Print Official Certificate</span>
+            <span>Print Official Court Docket (PDF)</span>
           </button>
         </div>
       </div>

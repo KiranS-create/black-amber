@@ -15,7 +15,8 @@ import {
   Download,
   CheckCircle2,
   AlertTriangle,
-  Lock
+  Lock,
+  Scale
 } from 'lucide-react';
 import { EvidenceRecord } from '../types';
 import { StatusBadge } from './common/StatusBadge';
@@ -25,11 +26,13 @@ import { EmptyState } from './common/EmptyState';
 interface EvidenceTabProps {
   records?: EvidenceRecord[];
   setActiveTab: (tab: any) => void;
+  onOpenCertificate?: (context?: any) => void;
 }
 
 export const EvidenceTab: React.FC<EvidenceTabProps> = ({ 
   records = [], 
-  setActiveTab 
+  setActiveTab,
+  onOpenCertificate
 }) => {
   const [selectedEvidence, setSelectedEvidence] = useState<EvidenceRecord | null>(null);
   const [channelFilter, setChannelFilter] = useState<string>('ALL');
@@ -449,11 +452,27 @@ export const EvidenceTab: React.FC<EvidenceTabProps> = ({
                     <span style={{ color: 'var(--text-secondary)' }}>Watermark Key Binding:</span>
                     <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--text)' }}>2D DSSS Spreading Code</span>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ color: 'var(--text-secondary)' }}>Custody DAG:</span>
-                    <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--text)' }}>Acyclic Directed Proof Graph</span>
-                  </div>
                 </div>
+              )}
+
+              {onOpenCertificate && (
+                <button
+                  onClick={() => onOpenCertificate({
+                    candidateName: selectedEvidence.suspected_candidate_name,
+                    suspectRank: 'Principal Cryptanalyst',
+                    terminalId: `Terminal #${selectedEvidence.evidence_id}`,
+                    secretCodeHex: '0x7E9A-C401-88F3-902B-0CDA07-9AF2',
+                    merkleLeaf: `Block #${selectedEvidence.evidence_id} (ML-DSA-65 Valid Signature)`,
+                    confidence: '99.8% (Bayesian Multi-Channel Confirmed)',
+                    bchStatus: '0 Bit Errors (BCH t=3 Corrected)',
+                    documentName: selectedEvidence.channel_name || 'Strategic_Defence_Dispatch_2026.pdf'
+                  })}
+                  className="btn-primary"
+                  style={{ width: '100%', marginTop: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                >
+                  <Scale size={14} />
+                  <span>Generate Court Evidence Docket (BSA § 65B)</span>
+                </button>
               )}
             </div>
           </div>

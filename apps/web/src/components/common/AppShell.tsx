@@ -20,6 +20,7 @@ interface AppShellProps {
   onOpenAirGapLab?: () => void;
   onOpenDecryptionLab?: () => void;
   onOpenComparatorLab?: (recipientName?: string, docName?: string) => void;
+  onOpenRehearsal?: () => void;
   onOpenCertificate?: () => void;
   onOpenCompliance?: () => void;
   documentCount?: number;
@@ -49,6 +50,7 @@ export const AppShell: React.FC<AppShellProps> = ({
   onOpenAirGapLab,
   onOpenDecryptionLab,
   onOpenComparatorLab,
+  onOpenRehearsal,
   onOpenCertificate,
   onOpenCompliance,
   documentCount = 0,
@@ -104,6 +106,7 @@ export const AppShell: React.FC<AppShellProps> = ({
         onOpenAirGapLab={onOpenAirGapLab}
         onOpenDecryptionLab={onOpenDecryptionLab}
         onOpenComparatorLab={onOpenComparatorLab ? () => onOpenComparatorLab() : undefined}
+        onOpenRehearsal={onOpenRehearsal}
         userSession={userSession}
         isDemoMode={isDemoMode}
         onPurgeDemo={onPurgeDemo}

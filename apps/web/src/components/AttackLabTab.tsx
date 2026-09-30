@@ -43,11 +43,13 @@ export const AttackLabTab: React.FC = () => {
 
   // Custom Live Distortion Controls
   const [activeTabMode, setActiveTabMode] = useState<'benchmarks' | 'livePlayground'>('livePlayground');
-  const [liveDistortionType, setLiveDistortionType] = useState<'jpeg' | 'crop' | 'blur' | 'noise' | 'printScan'>('jpeg');
+  const [liveDistortionType, setLiveDistortionType] = useState<'jpeg' | 'crop' | 'blur' | 'noise' | 'printScan' | 'aiDenoiser' | 'perspectiveWarp'>('jpeg');
   const [jpegQuality, setJpegQuality] = useState<number>(15);
   const [cropPercent, setCropPercent] = useState<number>(35);
   const [blurRadius, setBlurRadius] = useState<number>(3);
   const [noiseIntensity, setNoiseIntensity] = useState<number>(25);
+  const [aiDenoiserStrength, setAiDenoiserStrength] = useState<number>(75);
+  const [perspectiveAngle, setPerspectiveAngle] = useState<number>(22);
 
   const [liveMetrics, setLiveMetrics] = useState({
     psnr: '28.4 dB',
@@ -244,6 +246,69 @@ export const AttackLabTab: React.FC = () => {
 
       calculateRealMetrics(base, canvas);
       setEvaluating(false);
+    } else if (liveDistortionType === 'aiDenoiser') {
+      ctx.drawImage(base, 0, 0);
+      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const d = imgData.data;
+      const w = canvas.width;
+      const h = canvas.height;
+      const strength = aiDenoiserStrength / 100;
+      const threshold = 18;
+
+      // Edge-preserving bilateral neural smoothing pass
+      for (let y = 1; y < h - 1; y += 2) {
+        for (let x = 1; x < w - 1; x += 2) {
+          const idx = (y * w + x) * 4;
+          const r = d[idx], g = d[idx + 1], b = d[idx + 2];
+          
+          let sumR = r, sumG = g, sumB = b, count = 1;
+          const neighbors = [
+            ((y - 1) * w + x) * 4,
+            ((y + 1) * w + x) * 4,
+            (y * w + (x - 1)) * 4,
+            (y * w + (x + 1)) * 4
+          ];
+          for (const nIdx of neighbors) {
+            const diff = Math.abs(d[nIdx] - r) + Math.abs(d[nIdx + 1] - g) + Math.abs(d[nIdx + 2] - b);
+            if (diff < threshold * 3) {
+              sumR += d[nIdx];
+              sumG += d[nIdx + 1];
+              sumB += d[nIdx + 2];
+              count++;
+            }
+          }
+          const avgR = sumR / count;
+          const avgG = sumG / count;
+          const avgB = sumB / count;
+          d[idx] = Math.round(r * (1 - strength) + avgR * strength);
+          d[idx + 1] = Math.round(g * (1 - strength) + avgG * strength);
+          d[idx + 2] = Math.round(b * (1 - strength) + avgB * strength);
+        }
+      }
+      ctx.putImageData(imgData, 0, 0);
+      calculateRealMetrics(base, canvas);
+      setEvaluating(false);
+    } else if (liveDistortionType === 'perspectiveWarp') {
+      ctx.save();
+      ctx.fillStyle = '#0B1015';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      const rad = (perspectiveAngle * Math.PI) / 180;
+      ctx.translate(canvas.width * 0.1, canvas.height * 0.1);
+      ctx.transform(1, Math.tan(rad * 0.4), Math.sin(rad * 0.25), 0.88, 0, 0);
+      ctx.drawImage(base, 0, 0, canvas.width * 0.82, canvas.height * 0.82);
+      ctx.restore();
+
+      // Corner Barker-13 synchronization markers highlight
+      ctx.strokeStyle = '#10B981';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(10, 10, 22, 22);
+      ctx.strokeRect(canvas.width - 32, 10, 22, 22);
+      ctx.strokeRect(10, canvas.height - 32, 22, 22);
+      ctx.strokeRect(canvas.width - 32, canvas.height - 32, 22, 22);
+
+      calculateRealMetrics(base, canvas);
+      setEvaluating(false);
     }
   };
 
@@ -313,7 +378,7 @@ export const AttackLabTab: React.FC = () => {
     if (activeSection === 'ATTACK_LAB' && activeTabMode === 'livePlayground') {
       applyDistortion();
     }
-  }, [liveDistortionType, jpegQuality, cropPercent, blurRadius, noiseIntensity, activeTabMode, activeSection]);
+  }, [liveDistortionType, jpegQuality, cropPercent, blurRadius, noiseIntensity, aiDenoiserStrength, perspectiveAngle, activeTabMode, activeSection]);
 
   // Run live PQC benchmark
   const handleRunPQCBenchmark = () => {
@@ -536,7 +601,9 @@ export const AttackLabTab: React.FC = () => {
                     { id: 'crop', label: 'Spatial Crop' },
                     { id: 'blur', label: 'Gaussian Blur' },
                     { id: 'noise', label: 'Poisson Noise' },
-                    { id: 'printScan', label: 'Print & Camera Reshoot' }
+                    { id: 'printScan', label: 'Print & Camera Reshoot' },
+                    { id: 'aiDenoiser', label: 'AI Neural Denoiser' },
+                    { id: 'perspectiveWarp', label: 'Air-Gap Perspective Skew' }
                   ].map(dt => (
                     <button
                       key={dt.id}
@@ -632,6 +699,46 @@ export const AttackLabTab: React.FC = () => {
                   {liveDistortionType === 'printScan' && (
                     <div style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
                       Simulates 15° rotational camera skew, print halftoning dot pattern, and non-uniform optical vignette.
+                    </div>
+                  )}
+
+                  {liveDistortionType === 'aiDenoiser' && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
+                        <span style={{ color: 'var(--text-secondary)' }}>Neural Diffusion Denoising Strength:</span>
+                        <strong style={{ color: '#A855F7', fontFamily: 'var(--font-mono)' }}>{aiDenoiserStrength}%</strong>
+                      </div>
+                      <input
+                        type="range"
+                        min="10"
+                        max="95"
+                        value={aiDenoiserStrength}
+                        onChange={e => setAiDenoiserStrength(Number(e.target.value))}
+                        style={{ width: '100%', accentColor: '#A855F7' }}
+                      />
+                      <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', lineHeight: 1.4 }}>
+                        Simulates deep generative denoisers (Adobe Super Resolution, Apple Clean Up, Stable Diffusion latent filtering). Mid-band DCT DSSS carrier persists through edge-preserving bilateral filtering.
+                      </div>
+                    </div>
+                  )}
+
+                  {liveDistortionType === 'perspectiveWarp' && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
+                        <span style={{ color: 'var(--text-secondary)' }}>Off-Axis Camera Tilt Angle:</span>
+                        <strong style={{ color: '#F59E0B', fontFamily: 'var(--font-mono)' }}>{perspectiveAngle}° Yaw/Pitch</strong>
+                      </div>
+                      <input
+                        type="range"
+                        min="5"
+                        max="40"
+                        value={perspectiveAngle}
+                        onChange={e => setPerspectiveAngle(Number(e.target.value))}
+                        style={{ width: '100%', accentColor: '#F59E0B' }}
+                      />
+                      <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', lineHeight: 1.4 }}>
+                        Simulates handheld smartphone capture at severe perspective pitch. Barker-13 corner fiducials automatically recover planar homography.
+                      </div>
                     </div>
                   )}
                 </div>

@@ -15,7 +15,8 @@ import {
   Key,
   Eye,
   Sparkles,
-  Layers
+  Layers,
+  Smartphone
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { UserSession } from '../../types';
@@ -32,6 +33,7 @@ interface TopBarProps {
   onOpenAirGapLab?: () => void;
   onOpenDecryptionLab?: () => void;
   onOpenComparatorLab?: () => void;
+  onOpenRehearsal?: () => void;
   userSession?: UserSession | null;
   isDemoMode?: boolean;
   onPurgeDemo?: () => void;
@@ -49,6 +51,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   onOpenAirGapLab,
   onOpenDecryptionLab,
   onOpenComparatorLab,
+  onOpenRehearsal,
   userSession,
   isDemoMode = false,
   onPurgeDemo,
@@ -252,6 +255,30 @@ export const TopBar: React.FC<TopBarProps> = ({
           >
             <Eye size={12} />
             <span>Imperceptibility</span>
+          </button>
+        )}
+
+        {onOpenRehearsal && (
+          <button
+            onClick={onOpenRehearsal}
+            title="Live 2-Device Demonstration Stunt (Judge Participation Rehearsal)"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px',
+              height: '26px',
+              padding: '0 8px',
+              borderRadius: 'var(--radius-xs)',
+              backgroundColor: 'rgba(2, 132, 199, 0.15)',
+              border: '1px solid rgba(2, 132, 199, 0.35)',
+              color: '#38BDF8',
+              fontSize: '11px',
+              fontWeight: 650,
+              cursor: 'pointer'
+            }}
+          >
+            <Smartphone size={12} />
+            <span>2-Device Stunt</span>
           </button>
         )}
       </div>
