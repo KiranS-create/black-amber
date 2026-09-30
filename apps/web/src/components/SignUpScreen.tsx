@@ -584,37 +584,7 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({
           </button>
         </div>
 
-        {/* Standalone Verify link */}
-        {onOpenVerifyStandalone && (
-          <div 
-            style={{ 
-              marginTop: '16px', 
-              paddingTop: '14px', 
-              borderTop: `1px solid ${isLight ? '#E2E8F0' : 'rgba(255, 255, 255, 0.08)'}`, 
-              textAlign: 'center', 
-              fontSize: '12px', 
-              color: isLight ? '#64748B' : '#94A3B8' 
-            }}
-          >
-            Judicial examiner or court auditor?{' '}
-            <button
-              type="button"
-              onClick={onOpenVerifyStandalone}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: isLight ? '#0F766E' : '#2DD4BF',
-                cursor: 'pointer',
-                fontWeight: 650,
-                padding: 0,
-                fontSize: '12px',
-                textDecoration: 'underline'
-              }}
-            >
-              Open AegisTrace Verify (Zero-Server) →
-            </button>
-          </div>
-        )}
+
       </motion.div>
     </div>
   );

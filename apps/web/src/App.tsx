@@ -401,6 +401,7 @@ export function AppContent() {
                 onAnalyzeLeak={handleAnalyzeLeak}
                 onUploadLeakFile={handleUploadLeakFile}
                 onOpenReportModal={() => setReportModalOpen(true)}
+                onOpenCertificate={() => setCertificateLabOpen(true)}
               />
             )}
 
@@ -584,16 +585,6 @@ export function AppContent() {
 }
 
 export function App() {
-  const variant = getExperienceVariant();
-
-  if (variant === 'main') {
-    return (
-      <ThemeProvider>
-        <MainApp />
-      </ThemeProvider>
-    );
-  }
-
   return (
     <ThemeProvider>
       <AppContent />

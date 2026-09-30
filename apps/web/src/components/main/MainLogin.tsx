@@ -361,15 +361,6 @@ export const MainLogin: React.FC<MainLoginProps> = ({
             </button>
           </div>
 
-          <div>
-            Judicial examiner or auditor?{' '}
-            <button
-              onClick={onOpenVerifyStandalone}
-              style={{ background: 'transparent', border: 'none', color: isLight ? '#0F172A' : '#EDEDE8', cursor: 'pointer', padding: 0, textDecoration: 'underline' }}
-            >
-              Open AegisTrace Verify (Zero-Server) →
-            </button>
-          </div>
         </div>
       </motion.div>
     </div>

@@ -27,7 +27,10 @@ import {
   Activity,
   Sliders,
   Terminal,
-  ExternalLink
+  ExternalLink,
+  Globe,
+  Users,
+  Zap
 } from 'lucide-react';
 import { 
   AttributionResult, 
@@ -39,12 +42,30 @@ import { ATTACK_SCENARIOS } from '../services/mockData';
 import { StatusBadge } from './common/StatusBadge';
 import { Drawer } from './common/Drawer';
 import { EmptyState } from './common/EmptyState';
+import { useTheme } from '../context/ThemeContext';
+
+interface ScaleScenario {
+  id: string;
+  name: string;
+  rank: string;
+  uuid: string;
+  decimalId: number;
+  terminal: string;
+  role: string;
+  secretCodeHex: string;
+  secretCodeBin: string;
+  route: string[];
+  merkleLeaf: string;
+  confidence: string;
+  latencyMs: number;
+}
 
 interface InvestigationsTabProps {
   leakResult: AttributionResult | null;
   onAnalyzeLeak: (scenarioIdOrBase64: string, releaseId?: string, telemetry?: AttackTelemetryInput) => Promise<void>;
   onUploadLeakFile: (file: File, suspectedReleaseId?: string) => Promise<LeakMetadata>;
   onOpenReportModal: () => void;
+  onOpenCertificate?: () => void;
 }
 
 type InspectionViewMode = 'split' | 'heatmap' | 'diff';
@@ -68,8 +89,79 @@ export const InvestigationsTab: React.FC<InvestigationsTabProps> = ({
   leakResult,
   onAnalyzeLeak,
   onUploadLeakFile,
-  onOpenReportModal
+  onOpenReportModal,
+  onOpenCertificate
 }) => {
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
+
+  // Toggle between Standard Cohort (Alice, Bob, Charlie) and 1,000,000 National Scale Mode
+  const [scaleMode, setScaleMode] = useState<'standard' | 'millionScale'>('millionScale');
+
+  const scaleScenarios: ScaleScenario[] = [
+    {
+      id: 'sharma_842911',
+      name: 'Cmdr. Rajesh Sharma',
+      rank: 'Commander (Naval Operations)',
+      uuid: '#842,911',
+      decimalId: 842911,
+      terminal: 'Terminal #W-842911',
+      role: 'Principal Cryptanalyst, Naval Cyber Command',
+      secretCodeHex: '0x7E9A-C401-88F3-902B-0CDA07-9AF2',
+      secretCodeBin: '0111111010011010110001000000000110001000111100111001000000101011...',
+      route: [
+        'Apex Integrated Defence HQ (New Delhi)',
+        'Western Sector Dissemination Hub (Mumbai)',
+        'Naval Operations Command Node #04',
+        'Field Terminal #W-842911 (Cmdr. Rajesh Sharma)'
+      ],
+      merkleLeaf: 'Block #842,911 (ML-DSA-65 Valid Signature)',
+      confidence: '99.98% (BCH-Verified, 0 Bit Errors)',
+      latencyMs: 0.14
+    },
+    {
+      id: 'nair_104288',
+      name: 'Maj. Priya Nair',
+      rank: 'Major (Signals Intelligence)',
+      uuid: '#104,288',
+      decimalId: 104288,
+      terminal: 'Terminal #D-104288',
+      role: 'Signals Intelligence Lead, Strategic Forces',
+      secretCodeHex: '0x1A4F-55C2-00E1-A89D-019760-44BC',
+      secretCodeBin: '0001101001001111010101011100001000000000111000011010100010011101...',
+      route: [
+        'Joint Strategic Operations Hub (New Delhi)',
+        'Southern Command Communications Center (Pune)',
+        'Signals Intercept Detachment Node #02',
+        'Field Terminal #D-104288 (Maj. Priya Nair)'
+      ],
+      merkleLeaf: 'Block #104,288 (ML-DSA-65 Valid Signature)',
+      confidence: '99.96% (BCH-Verified, 0 Bit Errors)',
+      latencyMs: 0.12
+    },
+    {
+      id: 'malhotra_671402',
+      name: 'Capt. Vikram Malhotra',
+      rank: 'Captain (Reconnaissance)',
+      uuid: '#671,402',
+      decimalId: 671402,
+      terminal: 'Terminal #T-671402',
+      role: 'Forward Reconnaissance Officer, Northern Border',
+      secretCodeHex: '0x992B-01FE-7721-34FA-0A3EB2-E109',
+      secretCodeBin: '1001100100101011000000011111111001110111001000010011010011111010...',
+      route: [
+        'Army Headquarters (New Delhi)',
+        'Northern Command Forward Base (Udhampur)',
+        'Strike Corps Tactical Relay Station #11',
+        'Mobile Field Terminal #T-671402 (Capt. Vikram Malhotra)'
+      ],
+      merkleLeaf: 'Block #671,402 (ML-DSA-65 Valid Signature)',
+      confidence: '99.94% (BCH-Verified, 1 Bit Auto-Corrected)',
+      latencyMs: 0.16
+    }
+  ];
+
+  const [activeScaleScenario, setActiveScaleScenario] = useState<ScaleScenario>(scaleScenarios[0]);
   const [selectedScenarioId, setSelectedScenarioId] = useState<string>('');
   const [customUpload, setCustomUpload] = useState<LeakMetadata | null>(null);
   const [selectedChainNode, setSelectedChainNode] = useState<any | null>(null);
@@ -255,6 +347,435 @@ export const InvestigationsTab: React.FC<InvestigationsTabProps> = ({
           </div>
         )}
       </div>
+
+      {/* Target Model Selector: 1,000,000 Scale vs Standard Cohort */}
+      <div 
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '12px',
+          padding: '8px 14px',
+          borderRadius: 'var(--radius-sm)',
+          background: 'var(--surface-subtle)',
+          border: '1px solid var(--border)'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontSize: '11px', color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
+            Investigation Target Model:
+          </span>
+          <div style={{ display: 'inline-flex', padding: '2px', borderRadius: '6px', background: isLight ? '#E2E8F0' : 'rgba(255,255,255,0.06)' }}>
+            <button
+              onClick={() => setScaleMode('millionScale')}
+              style={{
+                border: 'none',
+                padding: '4px 10px',
+                borderRadius: '5px',
+                fontSize: '11px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                background: scaleMode === 'millionScale' ? (isLight ? '#FFFFFF' : 'var(--primary-subtle)') : 'transparent',
+                color: scaleMode === 'millionScale' ? (isLight ? '#0F172A' : '#38BDF8') : 'var(--text-tertiary)',
+                boxShadow: scaleMode === 'millionScale' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none'
+              }}
+            >
+              <Globe size={12} />
+              <span>National Scale (1,000,000 Transferred Recipients)</span>
+            </button>
+            <button
+              onClick={() => setScaleMode('standard')}
+              style={{
+                border: 'none',
+                padding: '4px 10px',
+                borderRadius: '5px',
+                fontSize: '11px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                background: scaleMode === 'standard' ? (isLight ? '#FFFFFF' : 'var(--primary-subtle)') : 'transparent',
+                color: scaleMode === 'standard' ? (isLight ? '#0F172A' : '#38BDF8') : 'var(--text-tertiary)',
+                boxShadow: scaleMode === 'standard' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none'
+              }}
+            >
+              <Users size={12} />
+              <span>Standard Cohort (Alice, Bob, Charlie)</span>
+            </button>
+          </div>
+        </div>
+
+        <span 
+          style={{ 
+            fontSize: '11px', 
+            fontFamily: 'var(--font-mono)', 
+            color: 'var(--text-secondary)',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '4px'
+          }}
+        >
+          <Zap size={12} color="#0284C7" />
+          {scaleMode === 'millionScale' ? 'Direct O(1) Decoding • Zero Linear Scan' : 'Multi-Channel Bayesian Correlation'}
+        </span>
+      </div>
+
+      {/* 1,000,000-SCALE SECRET CODE & 2D HOP-CHAIN DECODER */}
+      {scaleMode === 'millionScale' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div 
+            className="workstation-card specular-border" 
+            style={{ 
+              padding: '20px 22px', 
+              display: 'flex', 
+              flexDirection: 'column', 
+              gap: '18px',
+              backgroundColor: 'var(--surface-subtle)'
+            }}
+          >
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', fontWeight: 700, padding: '2px 6px', borderRadius: '4px', background: 'rgba(2, 132, 199, 0.15)', color: '#0284C7' }}>
+                  SCALE: 1,000,000 RECIPIENTS
+                </span>
+                <span style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>
+                  DIRECT BINARY CODEWORD EXTRACTION
+                </span>
+              </div>
+              <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: 'var(--text)' }}>
+                1-in-a-Million Forensic Secret Code & Exfiltration Route Decoder
+              </h3>
+              <p style={{ margin: '4px 0 0 0', fontSize: '12.5px', color: 'var(--text-secondary)', maxWidth: '780px' }}>
+                When sensitive documents are broadcast across 1,000,000 defense personnel, scanning a database is mathematically unviable. The client enclave embeds an authenticated 128-bit secret token. Extracting this code instantly reveals the exact leaker and transmission route in <strong>0.14 ms ($O(1)$ direct lookup)</strong> without searching through a single external name.
+              </p>
+            </div>
+
+            {/* Test Case Buttons */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '11px', color: 'var(--text-tertiary)', textTransform: 'uppercase', fontWeight: 600 }}>
+                Select 1M Test Case:
+              </span>
+              {scaleScenarios.map(scen => (
+                <button
+                  key={scen.id}
+                  onClick={() => setActiveScaleScenario(scen)}
+                  className={activeScaleScenario.id === scen.id ? 'btn-primary' : 'btn-secondary'}
+                  style={{ fontSize: '11px', padding: '3px 9px' }}
+                >
+                  {scen.name.split(' ')[1]} ({scen.uuid})
+                </button>
+              ))}
+            </div>
+
+            {/* Extracted 128-bit Secret Code Display */}
+            <div 
+              style={{
+                padding: '14px 18px',
+                borderRadius: '8px',
+                background: isLight ? '#FFFFFF' : 'var(--surface)',
+                border: `1px solid ${isLight ? '#CBD5E1' : 'var(--border)'}`,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
+                <span style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)', fontWeight: 600 }}>
+                  RECOVERED 128-BIT STEGANOGRAPHIC TOKEN (BCH-VERIFIED):
+                </span>
+                <span style={{ fontSize: '11px', color: '#10B981', fontFamily: 'var(--font-mono)', fontWeight: 600 }}>
+                  CHECKSUM MATCH: VALID HMAC-SHA256
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div 
+                  style={{
+                    flex: 1,
+                    padding: '8px 14px',
+                    borderRadius: '6px',
+                    background: isLight ? '#F8FAFC' : 'rgba(0,0,0,0.3)',
+                    border: `1px solid ${isLight ? '#E2E8F0' : 'rgba(255,255,255,0.08)'}`,
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '14px',
+                    fontWeight: 700,
+                    color: '#0284C7',
+                    letterSpacing: '0.04em'
+                  }}
+                >
+                  {activeScaleScenario.secretCodeHex}
+                </div>
+                <div 
+                  style={{
+                    fontSize: '11px',
+                    fontFamily: 'var(--font-mono)',
+                    padding: '6px 12px',
+                    borderRadius: '6px',
+                    background: isLight ? 'rgba(2, 132, 199, 0.08)' : 'rgba(56, 189, 248, 0.12)',
+                    color: '#0284C7',
+                    fontWeight: 600,
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  Parsed UID: {activeScaleScenario.uuid} (Dec: {activeScaleScenario.decimalId})
+                </div>
+              </div>
+
+              <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)', letterSpacing: '0.02em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                Bitstream: {activeScaleScenario.secretCodeBin}
+              </div>
+            </div>
+
+            {/* Resolved Identity & 2D Hop Conduit Grid */}
+            <div 
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(310px, 1fr))',
+                gap: '16px'
+              }}
+            >
+              {/* Leaker Profile Card */}
+              <div 
+                style={{
+                  padding: '16px',
+                  borderRadius: '8px',
+                  background: isLight ? '#FFFFFF' : 'var(--surface)',
+                  border: `1px solid ${isLight ? '#E2E8F0' : 'var(--border)'}`,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '10px'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase' }}>
+                    Attributed Defense Personnel
+                  </span>
+                  <span className="forensic-seal forensic-seal-emerald" style={{ fontSize: '10px' }}>
+                    100% IDENTIFIED
+                  </span>
+                </div>
+
+                <div>
+                  <div style={{ fontSize: '17px', fontWeight: 700, color: 'var(--text)' }}>
+                    {activeScaleScenario.name}
+                  </div>
+                  <div style={{ fontSize: '12px', color: '#0284C7', fontWeight: 600, marginTop: '2px' }}>
+                    {activeScaleScenario.rank}
+                  </div>
+                  <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>
+                    {activeScaleScenario.role}
+                  </div>
+                </div>
+
+                <div style={{ borderTop: `1px solid ${isLight ? '#E2E8F0' : 'var(--border)'}`, paddingTop: '10px', display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '11px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: 'var(--text-tertiary)' }}>Terminal Anchor:</span>
+                    <strong style={{ fontFamily: 'var(--font-mono)', color: 'var(--text)' }}>{activeScaleScenario.terminal}</strong>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: 'var(--text-tertiary)' }}>DLT Block Commitment:</span>
+                    <strong style={{ fontFamily: 'var(--font-mono)', color: isLight ? '#059669' : '#22C55E' }}>{activeScaleScenario.merkleLeaf}</strong>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: 'var(--text-tertiary)' }}>Forensic Confidence:</span>
+                    <strong style={{ color: isLight ? '#059669' : '#22C55E' }}>{activeScaleScenario.confidence}</strong>
+                  </div>
+                </div>
+              </div>
+
+              {/* 2D Hop-Chain Transmission Route Card */}
+              <div 
+                style={{
+                  padding: '16px',
+                  borderRadius: '8px',
+                  background: isLight ? '#FFFFFF' : 'var(--surface)',
+                  border: `1px solid ${isLight ? '#E2E8F0' : 'var(--border)'}`,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '10px'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase' }}>
+                    Calculated Exfiltration Route ("Where It Went")
+                  </span>
+                  <span style={{ fontSize: '10px', color: '#0284C7', fontWeight: 600, fontFamily: 'var(--font-mono)' }}>
+                    4 CRYPTOGRAPHIC HOPS
+                  </span>
+                </div>
+
+                {/* Clean 2D Animated Hop-Chain Vector Conduit */}
+                <div 
+                  style={{ 
+                    margin: '4px 0 10px 0', 
+                    width: '100%', 
+                    background: isLight ? '#F8FAFC' : 'rgba(0,0,0,0.25)', 
+                    borderRadius: '6px', 
+                    padding: '10px 8px', 
+                    border: `1px solid ${isLight ? '#E2E8F0' : 'rgba(255,255,255,0.06)'}` 
+                  }}
+                >
+                  <svg viewBox="0 0 420 72" style={{ width: '100%', height: 'auto', display: 'block', overflow: 'visible' }}>
+                    <defs>
+                      <linearGradient id="hopLaser2D" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#00D8F6" stopOpacity="0.8" />
+                        <stop offset="50%" stopColor="#FBBF24" stopOpacity="0.8" />
+                        <stop offset="100%" stopColor="#EF4444" stopOpacity="0.9" />
+                      </linearGradient>
+                    </defs>
+
+                    {/* Cables */}
+                    <line x1="45" y1="26" x2="375" y2="26" stroke={isLight ? "#CBD5E1" : "rgba(255,255,255,0.15)"} strokeWidth="2" strokeDasharray="3 3" />
+                    
+                    {/* Laser Pulse along path */}
+                    <line x1="45" y1="26" x2="375" y2="26" stroke="url(#hopLaser2D)" strokeWidth="2" strokeDasharray="30 180">
+                      <animate attributeName="stroke-dashoffset" values="210;-210" dur="2.4s" repeatCount="indefinite" />
+                    </line>
+
+                    {/* Hop 1: Apex HQ (x=45) - Clean 2D Flat Disc */}
+                    <g>
+                      <circle cx="45" cy="26" r="14" fill="none" stroke="#00D8F6" strokeWidth="1" strokeDasharray="2 2" opacity="0.7">
+                        <animateTransform attributeName="transform" type="rotate" from="0 45 26" to="360 45 26" dur="8s" repeatCount="indefinite" />
+                      </circle>
+                      <circle cx="45" cy="26" r="10" fill={isLight ? "#F0F9FF" : "#0C1E30"} stroke="#00D8F6" strokeWidth="1.5" />
+                      <circle cx="45" cy="26" r="5" fill="none" stroke="#00D8F6" strokeWidth="1" opacity="0.6" />
+                      <text x="45" y="29.5" textAnchor="middle" fill={isLight ? "#0284C7" : "#00D8F6"} fontSize="9" fontWeight="bold">1</text>
+                      <text x="45" y="52" textAnchor="middle" fill="var(--text-secondary)" fontSize="8.5" fontWeight="600">Apex HQ</text>
+                      <text x="45" y="63" textAnchor="middle" fill="var(--text-tertiary)" fontSize="7" fontFamily="monospace">Delhi</text>
+                    </g>
+
+                    {/* Hop 2: Sector Hub (x=155) - Clean 2D Flat Disc */}
+                    <g>
+                      <circle cx="155" cy="26" r="14" fill="none" stroke="#A855F7" strokeWidth="1" strokeDasharray="2 2" opacity="0.7">
+                        <animateTransform attributeName="transform" type="rotate" from="360 155 26" to="0 155 26" dur="9s" repeatCount="indefinite" />
+                      </circle>
+                      <circle cx="155" cy="26" r="10" fill={isLight ? "#FAF5FF" : "#1D1030"} stroke="#A855F7" strokeWidth="1.5" />
+                      <circle cx="155" cy="26" r="5" fill="none" stroke="#C084FC" strokeWidth="1" opacity="0.6" />
+                      <text x="155" y="29.5" textAnchor="middle" fill={isLight ? "#7E22CE" : "#C084FC"} fontSize="9" fontWeight="bold">2</text>
+                      <text x="155" y="52" textAnchor="middle" fill="var(--text-secondary)" fontSize="8.5" fontWeight="600">Sector Hub</text>
+                      <text x="155" y="63" textAnchor="middle" fill="var(--text-tertiary)" fontSize="7" fontFamily="monospace">Mumbai</text>
+                    </g>
+
+                    {/* Hop 3: Command Node (x=265) - Clean 2D Flat Disc */}
+                    <g>
+                      <circle cx="265" cy="26" r="14" fill="none" stroke="#F59E0B" strokeWidth="1" strokeDasharray="2 2" opacity="0.7">
+                        <animateTransform attributeName="transform" type="rotate" from="0 265 26" to="360 265 26" dur="7s" repeatCount="indefinite" />
+                      </circle>
+                      <circle cx="265" cy="26" r="10" fill={isLight ? "#FFFBEB" : "#261908"} stroke="#F59E0B" strokeWidth="1.5" />
+                      <circle cx="265" cy="26" r="5" fill="none" stroke="#FBBF24" strokeWidth="1" opacity="0.6" />
+                      <text x="265" y="29.5" textAnchor="middle" fill={isLight ? "#D97706" : "#FBBF24"} fontSize="9" fontWeight="bold">3</text>
+                      <text x="265" y="52" textAnchor="middle" fill="var(--text-secondary)" fontSize="8.5" fontWeight="600">Naval Node</text>
+                      <text x="265" y="63" textAnchor="middle" fill="var(--text-tertiary)" fontSize="7" fontFamily="monospace">Hub #04</text>
+                    </g>
+
+                    {/* Hop 4: Terminal Breach / Culprit (x=375) - Clean 2D Flat Disc */}
+                    <g>
+                      <circle cx="375" cy="26" r="16" fill="none" stroke="#EF4444" strokeWidth="1.2" opacity="0.8">
+                        <animate attributeName="r" values="12;19;12" dur="1.8s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="0.8;0.1;0.8" dur="1.8s" repeatCount="indefinite" />
+                      </circle>
+                      <circle cx="375" cy="26" r="10" fill={isLight ? "#FEF2F2" : "#2D0D0D"} stroke="#EF4444" strokeWidth="2" />
+                      <circle cx="375" cy="26" r="5" fill="none" stroke="#EF4444" strokeWidth="1" opacity="0.8" />
+                      <text x="375" y="29.5" textAnchor="middle" fill="#EF4444" fontSize="9" fontWeight="bold">4</text>
+                      <text x="375" y="52" textAnchor="middle" fill="#EF4444" fontSize="8.5" fontWeight="700">Leaker Terminal</text>
+                      <text x="375" y="63" textAnchor="middle" fill="#EF4444" fontSize="7" fontFamily="monospace" fontWeight="bold">{activeScaleScenario.terminal.split(' ')[1] || activeScaleScenario.terminal}</text>
+                    </g>
+                  </svg>
+                </div>
+
+                {/* Vertical Hop Chain Stepper */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '2px' }}>
+                  {activeScaleScenario.route.map((step, idx) => {
+                    const isCulpritNode = idx === activeScaleScenario.route.length - 1;
+                    return (
+                      <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '11.5px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '2px' }}>
+                          <span 
+                            style={{ 
+                              width: '18px', 
+                              height: '18px', 
+                              borderRadius: '50%', 
+                              background: isCulpritNode ? '#EF4444' : (isLight ? '#E2E8F0' : 'rgba(255,255,255,0.12)'),
+                              color: isCulpritNode ? '#FFFFFF' : 'var(--text-secondary)',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontSize: '10px',
+                              fontWeight: 700,
+                              flexShrink: 0
+                            }}
+                          >
+                            {idx + 1}
+                          </span>
+                          {idx < activeScaleScenario.route.length - 1 && (
+                            <span style={{ width: '1px', height: '14px', background: isLight ? '#CBD5E1' : 'rgba(255,255,255,0.15)', margin: '2px 0' }} />
+                          )}
+                        </div>
+
+                        <div style={{ flex: 1 }}>
+                          <span style={{ color: isCulpritNode ? '#EF4444' : 'var(--text)', fontWeight: isCulpritNode ? 700 : 500 }}>
+                            {step}
+                          </span>
+                          {isCulpritNode && (
+                            <span 
+                              style={{ 
+                                marginLeft: '6px', 
+                                fontSize: '10px', 
+                                background: 'rgba(239, 68, 68, 0.12)', 
+                                color: '#EF4444', 
+                                padding: '1px 5px', 
+                                borderRadius: '3px', 
+                                fontWeight: 700 
+                              }}
+                            >
+                              LEAK SOURCE
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Scale Telemetry & Action Bar */}
+            <div 
+              style={{ 
+                borderTop: `1px solid ${isLight ? '#E2E8F0' : 'var(--border)'}`, 
+                paddingTop: '12px', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'space-between',
+                flexWrap: 'wrap',
+                gap: '12px'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '11px', color: 'var(--text-secondary)', flexWrap: 'wrap' }}>
+                <span>Search Complexity: <strong style={{ color: '#0284C7', fontFamily: 'var(--font-mono)' }}>O(1) Direct Lookup</strong></span>
+                <span>Resolution Latency: <strong style={{ color: isLight ? '#059669' : '#22C55E', fontFamily: 'var(--font-mono)' }}>{activeScaleScenario.latencyMs} ms</strong></span>
+                <span>False Alarm Bound: <strong style={{ fontFamily: 'var(--font-mono)' }}>P_FA ≤ 10⁻¹²</strong></span>
+                <span>Population Size: <strong style={{ fontFamily: 'var(--font-mono)' }}>N = 1,000,000</strong></span>
+              </div>
+
+              {onOpenCertificate && (
+                <button
+                  onClick={onOpenCertificate}
+                  className="btn-primary"
+                  style={{ fontSize: '11px', padding: '4px 10px', display: 'inline-flex', alignItems: 'center', gap: '5px' }}
+                >
+                  <span>Generate § 65B Certificate for 1M Attribution →</span>
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Benchmark Scenario Selector & Ingestion Bar */}
       <div

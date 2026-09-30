@@ -10,35 +10,7 @@ export type ExperienceVariant = 'main' | 'alternate';
  * - Persistent toggle in localStorage allows seamless 1-click switching on any domain.
  */
 export function getExperienceVariant(): ExperienceVariant {
-  if (typeof window === 'undefined') {
-    return 'main';
-  }
-
-  // 1. Explicit query parameter override (for testing & presentation mode)
-  try {
-    const params = new URLSearchParams(window.location.search);
-    const override = params.get('variant');
-    if (override === 'presentation' || override === 'main') return 'main';
-    if (override === 'alternate' || override === 'workstation' || override === 'unified') return 'alternate';
-  } catch {
-    // ignore search param parsing failure
-  }
-
-  // 2. Persistent user choice in localStorage
-  try {
-    const saved = localStorage.getItem('aegistrace_active_variant');
-    if (saved === 'main' || saved === 'presentation') {
-      return 'main';
-    }
-    if (saved === 'alternate' || saved === 'workstation' || saved === 'unified') {
-      return 'alternate';
-    }
-  } catch {
-    // ignore localStorage access issues
-  }
-
-  // Default: The Main Forensic Security Workstation
-  return 'main';
+  return 'alternate';
 }
 
 /**
