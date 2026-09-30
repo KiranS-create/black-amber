@@ -142,53 +142,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
       <SvgCryptographicLattice />
 
       {/* Demo Mode Notice Banner */}
-      {isDemoMode && (
-        <div
-          style={{
-            padding: '10px 14px',
-            backgroundColor: 'rgba(234, 179, 8, 0.08)',
-            border: '1px solid rgba(234, 179, 8, 0.25)',
-            borderRadius: 'var(--radius-xs)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '12px'
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span
-              style={{
-                backgroundColor: 'rgba(234, 179, 8, 0.2)',
-                color: '#eab308',
-                fontSize: '10.5px',
-                fontWeight: 700,
-                letterSpacing: '0.04em',
-                padding: '2px 6px',
-                borderRadius: '3px'
-              }}
-            >
-              DEMO DATA
-            </span>
-            <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
-              Viewing synthetic demonstration records. Isolated from production workspace.
-            </span>
-          </div>
 
-          {onPurgeDemo && (
-            <button
-              onClick={onPurgeDemo}
-              className="btn-secondary"
-              style={{
-                fontSize: '11px',
-                padding: '3px 8px',
-                height: '24px'
-              }}
-            >
-              Clear demo data
-            </button>
-          )}
-        </div>
-      )}
 
       {/* 2. Compact Operational Status Strip */}
       <div

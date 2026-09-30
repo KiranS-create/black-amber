@@ -92,26 +92,6 @@ export const SvgCryptographicLattice: React.FC = () => {
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span 
-            style={{ 
-              fontSize: '11px', 
-              fontFamily: 'var(--font-mono)', 
-              padding: '3px 9px', 
-              borderRadius: '4px',
-              background: isLight ? 'rgba(16, 185, 129, 0.12)' : 'rgba(34, 197, 94, 0.15)',
-              color: isLight ? '#059669' : '#22C55E',
-              border: `1px solid ${isLight ? 'rgba(16, 185, 129, 0.25)' : 'rgba(34, 197, 94, 0.3)'}`,
-              fontWeight: 600,
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}
-          >
-            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: isLight ? '#059669' : '#22C55E' }} />
-            ACTIVE KERNEL • 2D CRYPTOGRAPHIC PIPELINE
-          </span>
-        </div>
       </div>
 
       {/* 2D SVG Pipeline Diagram with Clean Vector Nodes */}

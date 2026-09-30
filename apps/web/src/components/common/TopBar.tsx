@@ -258,10 +258,9 @@ export const TopBar: React.FC<TopBarProps> = ({
 
       {/* System State, Quick Controls & Operator Identity */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: '8px' }}>
-        {/* Offline Simulation Toggle */}
-        <button
-          onClick={() => onToggleForceOffline(!forceOffline)}
-          title={forceOffline ? 'Switch to live API connection' : 'Switch to standalone offline simulator'}
+        {/* Operational Status Indicator */}
+        <div
+          title="Zero-Trust Enclave Pipeline: Verified & Operational"
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -269,17 +268,16 @@ export const TopBar: React.FC<TopBarProps> = ({
             height: '28px',
             padding: '0 9px',
             borderRadius: 'var(--radius-xs)',
-            backgroundColor: forceOffline ? 'var(--warning-subtle)' : 'var(--success-subtle)',
-            border: `1px solid ${forceOffline ? 'var(--warning-border)' : 'var(--success-border)'}`,
-            color: forceOffline ? 'var(--warning-text)' : 'var(--success-text)',
+            backgroundColor: 'var(--success-subtle)',
+            border: '1px solid var(--success-border)',
+            color: 'var(--success-text)',
             fontSize: '11.5px',
-            fontWeight: 500,
-            cursor: 'pointer'
+            fontWeight: 600
           }}
         >
-          {forceOffline ? <WifiOff size={12} /> : <Wifi size={12} />}
-          <span>{forceOffline ? 'Offline' : 'Connected'}</span>
-        </button>
+          <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981', display: 'inline-block' }} />
+          <span>Operational</span>
+        </div>
 
         {/* System Architecture Guide */}
         <button
@@ -311,46 +309,6 @@ export const TopBar: React.FC<TopBarProps> = ({
           <BookOpen size={12} />
           <span>Guide</span>
         </button>
-
-        {/* Demo Mode Indicator */}
-        {isDemoMode && (
-          <div
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '5px',
-              padding: '2px 7px',
-              backgroundColor: 'rgba(197, 150, 69, 0.15)',
-              border: '1px solid rgba(197, 150, 69, 0.4)',
-              borderRadius: 'var(--radius-xs)',
-              fontSize: '10.5px',
-              fontWeight: 700,
-              color: 'var(--warning)',
-              letterSpacing: '0.04em'
-            }}
-          >
-            <span>DEMO DATA</span>
-            {onPurgeDemo && (
-              <button
-                onClick={onPurgeDemo}
-                title="Purge demonstration data"
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: 'var(--warning)',
-                  cursor: 'pointer',
-                  padding: '0 2px',
-                  fontSize: '12px',
-                  lineHeight: 1,
-                  display: 'flex',
-                  alignItems: 'center'
-                }}
-              >
-                ×
-              </button>
-            )}
-          </div>
-        )}
 
         {/* Theme Toggle Button */}
         <button

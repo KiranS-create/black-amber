@@ -136,28 +136,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           gap: '12px'
         }}
       >
-        <div
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px',
-            padding: '5px 12px',
-            backgroundColor: isLight ? 'rgba(255, 255, 255, 0.90)' : 'rgba(18, 27, 35, 0.85)',
-            backdropFilter: 'blur(16px)',
-            WebkitBackdropFilter: 'blur(16px)',
-            border: `1px solid ${isLight ? '#CBD5E1' : 'rgba(255, 255, 255, 0.12)'}`,
-            borderRadius: '20px',
-            fontSize: '11.5px',
-            fontWeight: 650,
-            color: isLight ? '#0284C7' : '#38BDF8',
-            letterSpacing: '0.02em',
-            boxShadow: isLight ? '0 4px 12px rgba(15, 23, 42, 0.06)' : '0 4px 14px rgba(0,0,0,0.4)'
-          }}
-        >
-          <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#10B981', display: 'inline-block', boxShadow: '0 0 8px #10B981' }} />
-          <span>NIST FIPS 203 LWE Lattice Active</span>
-        </div>
-
         <button
           onClick={toggleTheme}
           title={`Switch to ${isLight ? 'Dark' : 'Light'} Mode`}
