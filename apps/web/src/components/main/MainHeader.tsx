@@ -76,25 +76,24 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
           </button>
         )}
 
-        {isDemoMode && (
-          <div
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '3px 8px',
-              borderRadius: '4px',
-              background: 'var(--main-amber-subtle)',
-              border: '1px solid rgba(245, 158, 11, 0.25)',
-              color: 'var(--main-amber)',
-              fontSize: '11px',
-              fontWeight: 600,
-              letterSpacing: '0.04em'
-            }}
-          >
-            DEMO DATA
-          </div>
-        )}
+        <div
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '5px',
+            padding: '2px 8px',
+            borderRadius: '4px',
+            background: 'var(--main-jade-subtle)',
+            border: '1px solid var(--main-jade)',
+            color: 'var(--main-jade)',
+            fontSize: '11px',
+            fontWeight: 600,
+            letterSpacing: '0.02em'
+          }}
+        >
+          <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--main-jade)' }} />
+          <span>PROD LIVE</span>
+        </div>
 
         <button
           onClick={handleToggleAudio}

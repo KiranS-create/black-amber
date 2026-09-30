@@ -1,459 +1,531 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Search, 
-  Layers, 
   FileText, 
-  Package, 
-  ShieldAlert, 
-  Building, 
-  Users, 
-  Network, 
-  FileCheck, 
-  GitFork, 
+  Send, 
+  SearchCheck, 
+  ShieldCheck, 
   Database, 
-  Activity, 
-  Server, 
-  Play, 
-  RotateCcw, 
-  Wifi, 
-  WifiOff, 
-  ShieldCheck,
-  FileSignature
+  Fingerprint, 
+  Moon, 
+  Sun, 
+  Zap,
+  Layers,
+  ArrowRight,
+  Sparkles,
+  Command,
+  BookOpen,
+  RotateCcw,
+  AlertTriangle,
+  FileSpreadsheet,
+  Wifi,
+  WifiOff,
+  UserCheck
 } from 'lucide-react';
+import { useTheme } from '../../context/ThemeContext';
 
 export interface CommandItem {
   id: string;
-  category: 'Navigation' | 'Forensic Scenarios' | 'System Actions';
   title: string;
-  subtitle?: string;
-  icon: React.ComponentType<any>;
+  category: 'Navigation' | 'Benchmark' | 'Action' | 'Audit';
+  description: string;
+  shortcut?: string;
+  icon: React.ReactNode;
   perform: () => void;
 }
 
 interface CommandPaletteProps {
   isOpen: boolean;
   onClose: () => void;
-  setActiveTab: (tab: any) => void;
-  onQuickScenario: (scenarioId: string) => void;
-  onOpenWalkthrough: () => void;
-  onResetDemo: () => void;
-  isOnline: boolean;
-  forceOffline: boolean;
-  setForceOffline: (val: boolean) => void;
-  onSimulateTamper: () => void;
+  setActiveTab?: (tab: any) => void;
+  onNavigateTab?: (tab: string) => void;
+  onQuickScenario?: (scenarioId: string) => void;
+  onRunBenchmark?: (benchmarkId: string) => void;
+  onOpenWalkthrough?: () => void;
+  onResetDemo?: () => void;
+  isOnline?: boolean;
+  forceOffline?: boolean;
+  setForceOffline?: (val: boolean) => void;
+  onSimulateTamper?: () => void;
   onExportReport?: () => void;
+  onToggleTheme?: () => void;
+  onOpenVerify?: () => void;
 }
 
 export const CommandPalette: React.FC<CommandPaletteProps> = ({
   isOpen,
   onClose,
   setActiveTab,
+  onNavigateTab,
   onQuickScenario,
+  onRunBenchmark,
   onOpenWalkthrough,
   onResetDemo,
   isOnline,
   forceOffline,
   setForceOffline,
   onSimulateTamper,
-  onExportReport
+  onExportReport,
+  onToggleTheme,
+  onOpenVerify,
 }) => {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const inputRef = useRef<HTMLInputElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+  const { theme, toggleTheme } = useTheme();
+
+  const navigate = (tabId: string) => {
+    if (setActiveTab) setActiveTab(tabId);
+    else if (onNavigateTab) onNavigateTab(tabId);
+    onClose();
+  };
+
+  const runScenario = (scenarioId: string) => {
+    navigate('investigations');
+    if (onQuickScenario) onQuickScenario(scenarioId);
+    else if (onRunBenchmark) onRunBenchmark(scenarioId);
+    onClose();
+  };
 
   const commands: CommandItem[] = [
     // Navigation
     {
       id: 'nav-overview',
+      title: 'Overview Cockpit',
       category: 'Navigation',
-      title: 'Operations Overview',
-      subtitle: 'System posture, active releases, and operational summary',
-      icon: Layers,
-      perform: () => { setActiveTab('overview'); onClose(); }
+      description: 'System operational status and activity summary',
+      icon: <Layers size={16} className="text-emerald-400" />,
+      perform: () => navigate('overview')
     },
     {
       id: 'nav-documents',
+      title: 'Document Registry',
       category: 'Navigation',
-      title: 'Protected Documents',
-      subtitle: 'Classified documents, hashes, owners, and releases',
-      icon: FileText,
-      perform: () => { setActiveTab('documents'); onClose(); }
+      description: 'Ingest and protect multi-format documents (PDF, DOCX, XLSX, PPTX, PNG, JPEG)',
+      icon: <FileText size={16} className="text-teal-400" />,
+      perform: () => navigate('documents')
     },
     {
       id: 'nav-releases',
+      title: 'Protected Releases',
       category: 'Navigation',
-      title: 'Encrypted Releases',
-      subtitle: 'Multi-recipient hybrid encapsulation (ML-KEM-768 + AES-256-GCM)',
-      icon: Package,
-      perform: () => { setActiveTab('releases'); onClose(); }
+      description: 'Manage cryptographic distribution envelopes and recipient capsules',
+      icon: <Send size={16} className="text-blue-400" />,
+      perform: () => navigate('releases')
     },
     {
       id: 'nav-investigations',
-      category: 'Navigation',
       title: 'Forensic Investigations',
-      subtitle: 'Multi-channel Bayesian evidence fusion and attribution',
-      icon: ShieldAlert,
-      perform: () => { setActiveTab('investigations'); onClose(); }
-    },
-    {
-      id: 'nav-directory',
       category: 'Navigation',
-      title: 'Enterprise Directory',
-      subtitle: 'Microsoft Entra ID, Okta, and LDAP identity synchronization',
-      icon: Building,
-      perform: () => { setActiveTab('directory'); onClose(); }
-    },
-    {
-      id: 'nav-recipients',
-      category: 'Navigation',
-      title: 'Cryptographic Principals',
-      subtitle: 'Enrolled PQC public keys (ML-KEM-768, ML-DSA-65)',
-      icon: Users,
-      perform: () => { setActiveTab('recipients'); onClose(); }
-    },
-    {
-      id: 'nav-groups',
-      category: 'Navigation',
-      title: 'Security Groups',
-      subtitle: 'Targeting groups with zero shared keys',
-      icon: Network,
-      perform: () => { setActiveTab('groups'); onClose(); }
+      description: 'Autonomous multi-channel Bayesian leak attribution',
+      icon: <SearchCheck size={16} className="text-amber-400" />,
+      perform: () => navigate('investigations')
     },
     {
       id: 'nav-evidence',
+      title: 'Evidence Records',
       category: 'Navigation',
-      title: 'Cryptographic Evidence',
-      subtitle: 'Multi-channel evidence repository and LLR proofs',
-      icon: FileCheck,
-      perform: () => { setActiveTab('evidence'); onClose(); }
+      description: 'Cryptographic dossiers and Merkle chain of custody',
+      icon: <ShieldCheck size={16} className="text-purple-400" />,
+      perform: () => navigate('evidence')
     },
     {
-      id: 'nav-provenance',
+      id: 'nav-verify',
+      title: 'AegisTrace Verify (Zero-Server Standalone)',
       category: 'Navigation',
-      title: 'Custody & Provenance',
-      subtitle: 'Lineage DAG from document genesis to leak attribution',
-      icon: GitFork,
-      perform: () => { setActiveTab('provenance'); onClose(); }
+      description: 'Air-gapped offline evidence package audit workstation',
+      icon: <Fingerprint size={16} className="text-teal-400" />,
+      perform: () => {
+        if (onOpenVerify) onOpenVerify();
+        else navigate('verify');
+      }
+    },
+    {
+      id: 'nav-recipients',
+      title: 'Recipient Management',
+      category: 'Navigation',
+      description: 'Enrolled post-quantum identities and key certificates',
+      icon: <UserCheck size={16} className="text-blue-400" />,
+      perform: () => navigate('recipients')
     },
     {
       id: 'nav-ledger',
+      title: 'Tamper-Evident Ledger',
       category: 'Navigation',
-      title: 'Audit Ledger',
-      subtitle: 'Immutable cryptographic hash-chain and block explorer',
-      icon: Database,
-      perform: () => { setActiveTab('ledger'); onClose(); }
-    },
-    {
-      id: 'nav-security-testing',
-      category: 'Navigation',
-      title: 'Security Testing',
-      subtitle: 'Adversarial degradation benchmarks and robustness suite',
-      icon: ShieldCheck,
-      perform: () => { setActiveTab('security_testing'); onClose(); }
-    },
-    {
-      id: 'nav-health',
-      category: 'Navigation',
-      title: 'System Health',
-      subtitle: 'Cryptographic runtime health and component diagnostics',
-      icon: Server,
-      perform: () => { setActiveTab('health'); onClose(); }
+      description: 'Immutable hash chain with zero-knowledge cryptographic integrity',
+      icon: <Database size={16} className="text-emerald-400" />,
+      perform: () => navigate('ledger')
     },
 
-    // Forensic Scenarios
+    // Benchmarks
     {
-      id: 'scen-clean-bob',
-      category: 'Forensic Scenarios',
-      title: 'Evaluate Clean Digital Leak (Bob Martinez)',
-      subtitle: 'Benchmark scenario with verified spatial marker and ML-DSA signature',
-      icon: Play,
-      perform: () => { onQuickScenario('clean_bob'); onClose(); }
+      id: 'bench-bob',
+      title: 'Evaluate: Clean Digital Leak (Bob Martinez)',
+      category: 'Benchmark',
+      description: 'Evaluates baseline single-recipient leak with +18.08 LLR attribution',
+      icon: <Zap size={16} className="text-amber-400" />,
+      perform: () => runScenario('clean_bob')
     },
     {
-      id: 'scen-recapture',
-      category: 'Forensic Scenarios',
-      title: 'Evaluate Optical Print-Camera Recapture',
-      subtitle: 'Simulates geometric warp, lens distortion, and RANSAC rectification',
-      icon: Play,
-      perform: () => { onQuickScenario('recapture_camera'); onClose(); }
+      id: 'bench-photo',
+      title: 'Evaluate: Smartphone Photograph (Bob)',
+      category: 'Benchmark',
+      description: 'Physical print-camera optical descreening and perspective correction',
+      icon: <Zap size={16} className="text-amber-400" />,
+      perform: () => runScenario('photo_bob')
     },
     {
-      id: 'scen-tardos-collusion',
-      category: 'Forensic Scenarios',
-      title: 'Evaluate Tardos 2-Party Collusion Attack',
-      subtitle: '2-colluder coalition attack bounded by Tardos arcsine bias cutoff',
-      icon: Play,
-      perform: () => { onQuickScenario('tardos_collusion_2party'); onClose(); }
+      id: 'bench-forgery',
+      title: 'Evaluate: Forged Token Injection (Adversarial)',
+      category: 'Benchmark',
+      description: 'Tests fail-closed defense against counterfeit token injection',
+      icon: <Zap size={16} className="text-rose-400" />,
+      perform: () => runScenario('forged_token')
+    },
+    {
+      id: 'bench-unwatermarked',
+      title: 'Evaluate: Unwatermarked Master Document',
+      category: 'Benchmark',
+      description: 'Verifies abstention guard against pre-release master artifacts',
+      icon: <Zap size={16} className="text-amber-400" />,
+      perform: () => runScenario('unwatermarked')
+    },
+    {
+      id: 'bench-tamper-alice',
+      title: 'Evaluate: Tampered Recipient Frame (Framing Alice)',
+      category: 'Benchmark',
+      description: 'Cross-validates cryptographic signature against watermarked carrier',
+      icon: <Zap size={16} className="text-rose-400" />,
+      perform: () => runScenario('tampered_alice')
     },
 
-    // System Actions
+    // Actions & Tools
     {
-      id: 'act-export-dossier',
-      category: 'System Actions',
-      title: 'Export Forensic Evidence Dossier',
-      subtitle: 'Generate verifiable technical report with ML-DSA proofs and JSON export',
-      icon: FileSignature,
-      perform: () => { if (onExportReport) onExportReport(); onClose(); }
+      id: 'action-theme',
+      title: `Switch Theme to ${theme === 'dark' ? 'Light (Warm Ivory)' : 'Dark (Graphite & Petrol)'}`,
+      category: 'Action',
+      description: 'Toggle interface theme mode',
+      icon: theme === 'dark' ? <Sun size={16} className="text-amber-400" /> : <Moon size={16} className="text-slate-400" />,
+      perform: () => {
+        if (onToggleTheme) onToggleTheme();
+        else toggleTheme();
+        onClose();
+      }
     },
     {
-      id: 'act-tamper-test',
-      category: 'System Actions',
-      title: 'Simulate Ledger Block Tampering',
-      subtitle: 'Inject intentional hash mismatch into block #1 to test fail-closed defense',
-      icon: ShieldAlert,
-      perform: () => { onSimulateTamper(); onClose(); }
+      id: 'action-walkthrough',
+      title: 'Open System Architecture Guide',
+      category: 'Action',
+      description: 'Interactive reference on PQC encapsulation, Tardos codes, and Bayesian fusion',
+      icon: <BookOpen size={16} className="text-teal-400" />,
+      perform: () => {
+        if (onOpenWalkthrough) onOpenWalkthrough();
+        onClose();
+      }
     },
     {
-      id: 'act-toggle-offline',
-      category: 'System Actions',
-      title: forceOffline ? 'Connect to Live API Gateway' : 'Switch to Standalone Offline Simulator',
-      subtitle: 'Toggle between live Python backend and client-side simulator',
-      icon: forceOffline ? Wifi : WifiOff,
-      perform: () => { setForceOffline(!forceOffline); onClose(); }
+      id: 'action-offline',
+      title: forceOffline ? 'Connect to Live Server API' : 'Switch to Offline Simulation Mode',
+      category: 'Action',
+      description: forceOffline ? 'Enable live backend synchronization' : 'Disconnect and operate purely client-side',
+      icon: forceOffline ? <Wifi size={16} className="text-emerald-400" /> : <WifiOff size={16} className="text-amber-400" />,
+      perform: () => {
+        if (setForceOffline) setForceOffline(!forceOffline);
+        onClose();
+      }
     },
     {
-      id: 'act-reset-demo',
-      category: 'System Actions',
-      title: 'Reset Demo State & Ledger',
-      subtitle: 'Restore clean baseline state across all cryptographic subsystems',
-      icon: RotateCcw,
-      perform: () => { onResetDemo(); onClose(); }
+      id: 'action-tamper',
+      title: 'Simulate Ledger Tamper Attack',
+      category: 'Audit',
+      description: 'Mutates block payload to demonstrate cryptographic hash break detection',
+      icon: <AlertTriangle size={16} className="text-rose-400" />,
+      perform: () => {
+        navigate('ledger');
+        if (onSimulateTamper) onSimulateTamper();
+        onClose();
+      }
+    },
+    {
+      id: 'action-export-report',
+      title: 'Generate Full Forensic Investigation Dossier',
+      category: 'Audit',
+      description: 'Exports signed JSON-LD cryptographic evidence package',
+      icon: <FileSpreadsheet size={16} className="text-purple-400" />,
+      perform: () => {
+        if (onExportReport) onExportReport();
+        else navigate('evidence');
+        onClose();
+      }
     }
   ];
 
-  const filtered = commands.filter(cmd => 
-    cmd.title.toLowerCase().includes(query.toLowerCase()) ||
-    cmd.category.toLowerCase().includes(query.toLowerCase()) ||
-    (cmd.subtitle && cmd.subtitle.toLowerCase().includes(query.toLowerCase()))
-  );
+  // Filtering
+  const filtered = commands.filter((cmd) => {
+    const matchesCategory = selectedCategory === 'All' || cmd.category === selectedCategory;
+    const matchesQuery = 
+      cmd.title.toLowerCase().includes(query.toLowerCase()) ||
+      cmd.description.toLowerCase().includes(query.toLowerCase()) ||
+      cmd.category.toLowerCase().includes(query.toLowerCase());
+    return matchesCategory && matchesQuery;
+  });
+
+  useEffect(() => {
+    setSelectedIndex(0);
+  }, [query, selectedCategory]);
 
   useEffect(() => {
     if (isOpen) {
-      setQuery('');
-      setSelectedIndex(0);
       setTimeout(() => inputRef.current?.focus(), 50);
+      setQuery('');
+      setSelectedCategory('All');
     }
   }, [isOpen]);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      setSelectedIndex(prev => (prev + 1) % (filtered.length || 1));
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      setSelectedIndex(prev => (prev - 1 + (filtered.length || 1)) % (filtered.length || 1));
-    } else if (e.key === 'Enter') {
-      e.preventDefault();
-      if (filtered[selectedIndex]) {
-        filtered[selectedIndex].perform();
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isOpen) return;
+
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        setSelectedIndex((prev) => (prev + 1 < filtered.length ? prev + 1 : 0));
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        setSelectedIndex((prev) => (prev - 1 >= 0 ? prev - 1 : filtered.length - 1));
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (filtered[selectedIndex]) {
+          filtered[selectedIndex].perform();
+        }
       }
-    } else if (e.key === 'Escape') {
-      e.preventDefault();
-      onClose();
-    }
-  };
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, filtered, selectedIndex, onClose]);
+
+  if (!isOpen) return null;
+
+  const categories = ['All', 'Navigation', 'Benchmark', 'Action', 'Audit'];
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.15 }}
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 120,
-            display: 'flex',
-            alignItems: 'flex-start',
-            justifyContent: 'center',
-            paddingTop: '12vh',
-            backgroundColor: 'rgba(11, 16, 21, 0.7)',
-            backdropFilter: 'blur(8px)',
-            WebkitBackdropFilter: 'blur(8px)'
+    <div className="command-palette-backdrop" onClick={onClose}>
+      <div 
+        className="command-palette-dialog" 
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          border: '1px solid var(--border-strong, rgba(255, 255, 255, 0.14))',
+          background: 'var(--surface-elevated, #141D26)',
+        }}
+      >
+        {/* Search Header */}
+        <div 
+          style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            padding: '12px 16px',
+            borderBottom: '1px solid var(--border, rgba(255, 255, 255, 0.08))',
+            gap: '12px'
           }}
-          onClick={onClose}
         >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.98, y: -6 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.98, y: -6 }}
-            transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+          <Search size={18} style={{ color: 'var(--primary, #4C9A9A)' }} />
+          <input
+            ref={inputRef}
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Type a command, jump to tab, or run benchmark..."
             style={{
-              width: '100%',
-              maxWidth: '600px',
-              backgroundColor: 'var(--glass-surface-elevated)',
-              backdropFilter: 'var(--glass-blur-md)',
-              WebkitBackdropFilter: 'var(--glass-blur-md)',
-              border: '1px solid var(--border-strong)',
-              borderRadius: 'var(--radius-lg)',
-              boxShadow: 'var(--shadow-lg)',
-              overflow: 'hidden',
-              display: 'flex',
-              flexDirection: 'column'
+              flex: 1,
+              background: 'transparent',
+              border: 'none',
+              outline: 'none',
+              color: 'var(--text, #F2EFE8)',
+              fontSize: '14px',
+              fontFamily: 'var(--font-family)',
             }}
-            onClick={e => e.stopPropagation()}
-            onKeyDown={handleKeyDown}
+          />
+          <kbd 
+            style={{
+              padding: '2px 6px',
+              fontSize: '10px',
+              background: 'rgba(255, 255, 255, 0.08)',
+              border: '1px solid var(--border-subtle, rgba(255, 255, 255, 0.12))',
+              borderRadius: '4px',
+              color: 'var(--text-tertiary, #73808C)',
+              fontFamily: 'var(--font-mono)'
+            }}
           >
-            {/* Search Input Bar */}
-            <div
+            ESC
+          </kbd>
+        </div>
+
+        {/* Category Filter Pills */}
+        <div 
+          style={{ 
+            display: 'flex', 
+            gap: '6px', 
+            padding: '8px 16px',
+            borderBottom: '1px solid var(--border-subtle, rgba(255, 255, 255, 0.05))',
+            background: 'rgba(0, 0, 0, 0.18)'
+          }}
+        >
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                padding: '14px 18px',
-                borderBottom: '1px solid var(--border)'
+                padding: '3px 10px',
+                borderRadius: '4px',
+                fontSize: '11px',
+                fontWeight: 500,
+                border: selectedCategory === cat 
+                  ? '1px solid rgba(76, 154, 154, 0.4)' 
+                  : '1px solid transparent',
+                background: selectedCategory === cat 
+                  ? 'rgba(76, 154, 154, 0.15)' 
+                  : 'transparent',
+                color: selectedCategory === cat 
+                  ? 'var(--primary-text, #68B7B0)' 
+                  : 'var(--text-tertiary, #73808C)',
+                cursor: 'pointer',
+                transition: 'all 0.15s ease'
               }}
             >
-              <Search size={16} style={{ color: 'var(--primary-text)' }} />
-              <input
-                ref={inputRef}
-                value={query}
-                onChange={e => {
-                  setQuery(e.target.value);
-                  setSelectedIndex(0);
-                }}
-                placeholder="Type a command or search documents, evidence, ledger..."
-                style={{
-                  flex: 1,
-                  background: 'transparent',
-                  border: 'none',
-                  outline: 'none',
-                  color: 'var(--text)',
-                  fontSize: 'var(--text-base)',
-                  fontFamily: 'inherit'
-                }}
-              />
-              <kbd
-                style={{
-                  fontSize: '10.5px',
-                  fontFamily: 'var(--font-mono)',
-                  padding: '2px 6px',
-                  borderRadius: 'var(--radius-xs)',
-                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                  border: '1px solid var(--border-subtle)',
-                  color: 'var(--text-tertiary)'
-                }}
-              >
-                ESC
-              </kbd>
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        {/* Command List */}
+        <div 
+          ref={listRef}
+          style={{ 
+            maxHeight: '360px', 
+            overflowY: 'auto', 
+            padding: '8px 0' 
+          }}
+        >
+          {filtered.length === 0 ? (
+            <div style={{ padding: '32px 16px', textAlign: 'center', color: 'var(--text-tertiary)' }}>
+              <p style={{ fontSize: '13px', margin: 0 }}>No matching commands found.</p>
+              <p style={{ fontSize: '11px', marginTop: '4px' }}>Try searching "investigation", "verify", "benchmark", or "theme"</p>
             </div>
-
-            {/* Results List */}
-            <div
-              style={{
-                maxHeight: '380px',
-                overflowY: 'auto',
-                padding: '8px'
-              }}
-            >
-              {filtered.length === 0 ? (
-                <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text-tertiary)', fontSize: 'var(--text-sm)' }}>
-                  No matching commands or navigation routes.
-                </div>
-              ) : (
-                filtered.map((item, idx) => {
-                  const Icon = item.icon;
-                  const isSelected = idx === selectedIndex;
-
-                  return (
-                    <div
-                      key={item.id}
-                      onClick={() => item.perform()}
-                      onMouseEnter={() => setSelectedIndex(idx)}
+          ) : (
+            filtered.map((cmd, idx) => {
+              const isSelected = idx === selectedIndex;
+              return (
+                <div
+                  key={cmd.id}
+                  onClick={() => cmd.perform()}
+                  onMouseEnter={() => setSelectedIndex(idx)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '9px 16px',
+                    cursor: 'pointer',
+                    background: isSelected ? 'rgba(76, 154, 154, 0.12)' : 'transparent',
+                    borderLeft: isSelected ? '3px solid var(--primary, #4C9A9A)' : '3px solid transparent',
+                    transition: 'background 0.1s ease'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0 }}>
+                    <div 
                       style={{
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'space-between',
-                        padding: '9px 12px',
-                        borderRadius: 'var(--radius-sm)',
-                        backgroundColor: isSelected ? 'var(--primary-subtle)' : 'transparent',
-                        border: isSelected ? '1px solid var(--primary-border)' : '1px solid transparent',
-                        cursor: 'pointer',
-                        transition: 'background-color var(--transition-fast)'
+                        justifyContent: 'center',
+                        width: '28px',
+                        height: '28px',
+                        borderRadius: '6px',
+                        background: isSelected ? 'rgba(76, 154, 154, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                        border: '1px solid rgba(255, 255, 255, 0.08)'
                       }}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <div
-                          style={{
-                            width: '28px',
-                            height: '28px',
-                            borderRadius: 'var(--radius-xs)',
-                            backgroundColor: isSelected ? 'rgba(76, 154, 154, 0.2)' : 'rgba(255, 255, 255, 0.04)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: isSelected ? 'var(--primary-text)' : 'var(--text-secondary)'
+                      {cmd.icon}
+                    </div>
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span 
+                          style={{ 
+                            fontSize: '13px', 
+                            fontWeight: 500, 
+                            color: isSelected ? '#FFFFFF' : 'var(--text, #F2EFE8)' 
                           }}
                         >
-                          <Icon size={15} />
-                        </div>
-                        <div>
-                          <div
-                            style={{
-                              fontSize: 'var(--text-sm)',
-                              fontWeight: isSelected ? 600 : 500,
-                              color: isSelected ? 'var(--text)' : 'var(--text-secondary)'
-                            }}
-                          >
-                            {item.title}
-                          </div>
-                          {item.subtitle && (
-                            <div
-                              style={{
-                                fontSize: '11px',
-                                color: 'var(--text-tertiary)',
-                                marginTop: '1px'
-                              }}
-                            >
-                              {item.subtitle}
-                            </div>
-                          )}
-                        </div>
+                          {cmd.title}
+                        </span>
+                        <span 
+                          style={{
+                            fontSize: '9px',
+                            fontWeight: 600,
+                            textTransform: 'uppercase',
+                            padding: '1px 5px',
+                            borderRadius: '3px',
+                            background: 'rgba(255, 255, 255, 0.06)',
+                            color: 'var(--text-tertiary, #73808C)'
+                          }}
+                        >
+                          {cmd.category}
+                        </span>
                       </div>
-
-                      <span
-                        style={{
-                          fontSize: '10.5px',
-                          color: 'var(--text-tertiary)',
-                          padding: '2px 6px',
-                          borderRadius: 'var(--radius-xs)',
-                          backgroundColor: 'rgba(255, 255, 255, 0.03)'
+                      <p 
+                        style={{ 
+                          fontSize: '11.5px', 
+                          color: 'var(--text-secondary, #A9B3BD)', 
+                          margin: '2px 0 0 0',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis'
                         }}
                       >
-                        {item.category}
-                      </span>
+                        {cmd.description}
+                      </p>
                     </div>
-                  );
-                })
-              )}
-            </div>
+                  </div>
 
-            {/* Footer Navigation Hints */}
-            <div
-              style={{
-                padding: '8px 16px',
-                borderTop: '1px solid var(--border-subtle)',
-                backgroundColor: 'rgba(255, 255, 255, 0.01)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                fontSize: '11px',
-                color: 'var(--text-tertiary)'
-              }}
-            >
-              <div style={{ display: 'flex', gap: '12px' }}>
-                <span>↑↓ Navigate</span>
-                <span>↵ Select</span>
-                <span>ESC Close</span>
-              </div>
-              <span>NIST FIPS 203/204</span>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+                  {isSelected && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--primary, #4C9A9A)' }}>
+                      <span style={{ fontSize: '10px', fontWeight: 600 }}>Execute</span>
+                      <ArrowRight size={12} />
+                    </div>
+                  )}
+                </div>
+              );
+            })
+          )}
+        </div>
+
+        {/* Footer */}
+        <div 
+          style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'space-between',
+            padding: '8px 16px',
+            borderTop: '1px solid var(--border-subtle, rgba(255, 255, 255, 0.06))',
+            background: 'rgba(0, 0, 0, 0.25)',
+            fontSize: '11px',
+            color: 'var(--text-tertiary, #73808C)'
+          }}
+        >
+          <div style={{ display: 'flex', gap: '12px' }}>
+            <span><kbd style={{ padding: '1px 4px', background: 'rgba(255,255,255,0.08)', borderRadius: '3px' }}>↑↓</kbd> to navigate</span>
+            <span><kbd style={{ padding: '1px 4px', background: 'rgba(255,255,255,0.08)', borderRadius: '3px' }}>↵</kbd> to select</span>
+            <span><kbd style={{ padding: '1px 4px', background: 'rgba(255,255,255,0.08)', borderRadius: '3px' }}>ESC</kbd> to close</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <Command size={11} />
+            <span>AegisTrace Fast Action Bar</span>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };

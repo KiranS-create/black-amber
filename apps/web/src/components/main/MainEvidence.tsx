@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 import { apiService } from '../../services/api';
 import { VerificationService } from '../../services/semanticServices';
-import { ThreeMerkleChain } from './ThreeMerkleChain';
+import { SvgMerkleChain } from './SvgMerkleChain';
 import { audioService } from '../../services/audioService';
 
 interface MainEvidenceProps {
@@ -315,8 +315,8 @@ export const MainEvidence: React.FC<MainEvidenceProps> = ({
             )}
           </div>
 
-          {/* Interactive 3D Merkle Chain Visualizer */}
-          <ThreeMerkleChain height={190} isTampered={isLedgerTampered} />
+          {/* Interactive 2D SVG Merkle Chain Visualizer */}
+          <SvgMerkleChain isTampered={isLedgerTampered} />
 
           {/* Merkle Hash Chain Visualizer */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>

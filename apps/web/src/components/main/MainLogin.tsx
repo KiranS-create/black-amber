@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Shield, ArrowRight, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
+import { Shield, ArrowRight, Eye, EyeOff, CheckCircle2, Lock, UserCheck, KeyRound } from 'lucide-react';
 import { apiService } from '../../services/api';
 import { UserSession } from '../../types';
+import { useTheme } from '../../context/ThemeContext';
 
 interface MainLoginProps {
   onLoginSuccess: (session: UserSession) => void;
@@ -14,6 +15,9 @@ export const MainLogin: React.FC<MainLoginProps> = ({
   onOpenVerifyStandalone,
   onOpenSignUp
 }) => {
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
+
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -39,7 +43,7 @@ export const MainLogin: React.FC<MainLoginProps> = ({
     }
   };
 
-  const handleAutofillDemo = () => {
+  const handleAutofillCredentials = () => {
     setUsername('admin');
     setPassword('admin');
     setErrorMessage(null);
@@ -49,13 +53,14 @@ export const MainLogin: React.FC<MainLoginProps> = ({
     <div
       style={{
         minHeight: '100vh',
-        backgroundColor: '#090C0F',
-        color: '#EDEDE8',
+        backgroundColor: isLight ? '#F8FAFC' : '#090C0F',
+        color: isLight ? '#0F172A' : '#EDEDE8',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         padding: '20px',
-        fontFamily: "'Geist', system-ui, sans-serif"
+        fontFamily: "'Geist', system-ui, sans-serif",
+        transition: 'background-color 0.2s ease, color 0.2s ease'
       }}
     >
       <div
@@ -74,31 +79,32 @@ export const MainLogin: React.FC<MainLoginProps> = ({
               width: '36px',
               height: '36px',
               borderRadius: '8px',
-              background: 'linear-gradient(135deg, #1E293B, #0F172A)',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
+              background: 'linear-gradient(135deg, #0284C7, #0369A1)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
               marginBottom: '12px'
             }}
           >
-            <Shield size={18} style={{ color: '#EDEDE8' }} />
+            <Shield size={18} style={{ color: '#FFFFFF' }} />
           </div>
-          <h1 style={{ fontSize: '20px', fontWeight: 600, margin: 0, letterSpacing: '-0.02em', color: '#EDEDE8' }}>
-            AegisTrace
+          <h1 style={{ fontSize: '20px', fontWeight: 600, margin: 0, letterSpacing: '-0.02em', color: isLight ? '#0F172A' : '#EDEDE8' }}>
+            AegisTrace Enterprise Workstation
           </h1>
-          <p style={{ fontSize: '13px', color: '#9BA3AF', margin: '4px 0 0 0' }}>
-            Secure forensic workstation.
+          <p style={{ fontSize: '13px', color: isLight ? '#475569' : '#9BA3AF', margin: '4px 0 0 0' }}>
+            Post-quantum cryptographic document attribution.
           </p>
         </div>
 
         {/* Login Box */}
         <div
           style={{
-            background: '#12161B',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
+            background: isLight ? '#FFFFFF' : '#12161B',
+            border: `1px solid ${isLight ? '#E2E8F0' : 'rgba(255, 255, 255, 0.08)'}`,
             borderRadius: '10px',
-            padding: '24px'
+            padding: '24px',
+            boxShadow: isLight ? '0 4px 20px rgba(0,0,0,0.06)' : '0 8px 32px rgba(0,0,0,0.4)'
           }}
         >
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -118,8 +124,8 @@ export const MainLogin: React.FC<MainLoginProps> = ({
             )}
 
             <div>
-              <label style={{ display: 'block', fontSize: '12px', fontWeight: 500, color: '#9BA3AF', marginBottom: '6px' }}>
-                Username
+              <label style={{ display: 'block', fontSize: '12px', fontWeight: 500, color: isLight ? '#475569' : '#9BA3AF', marginBottom: '6px' }}>
+                Username / Principal ID
               </label>
               <input
                 type="text"
@@ -129,11 +135,11 @@ export const MainLogin: React.FC<MainLoginProps> = ({
                 autoComplete="username"
                 style={{
                   width: '100%',
-                  background: '#090C0F',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  background: isLight ? '#F8FAFC' : '#090C0F',
+                  border: `1px solid ${isLight ? '#CBD5E1' : 'rgba(255, 255, 255, 0.12)'}`,
                   borderRadius: '6px',
                   padding: '9px 12px',
-                  color: '#EDEDE8',
+                  color: isLight ? '#0F172A' : '#EDEDE8',
                   fontSize: '13px',
                   outline: 'none',
                   boxSizing: 'border-box'
@@ -142,8 +148,8 @@ export const MainLogin: React.FC<MainLoginProps> = ({
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '12px', fontWeight: 500, color: '#9BA3AF', marginBottom: '6px' }}>
-                Password
+              <label style={{ display: 'block', fontSize: '12px', fontWeight: 500, color: isLight ? '#475569' : '#9BA3AF', marginBottom: '6px' }}>
+                Passkey / Master Secret
               </label>
               <div style={{ position: 'relative' }}>
                 <input
@@ -154,11 +160,11 @@ export const MainLogin: React.FC<MainLoginProps> = ({
                   autoComplete="current-password"
                   style={{
                     width: '100%',
-                    background: '#090C0F',
-                    border: '1px solid rgba(255, 255, 255, 0.12)',
+                    background: isLight ? '#F8FAFC' : '#090C0F',
+                    border: `1px solid ${isLight ? '#CBD5E1' : 'rgba(255, 255, 255, 0.12)'}`,
                     borderRadius: '6px',
                     padding: '9px 36px 9px 12px',
-                    color: '#EDEDE8',
+                    color: isLight ? '#0F172A' : '#EDEDE8',
                     fontSize: '13px',
                     outline: 'none',
                     boxSizing: 'border-box'
@@ -174,7 +180,7 @@ export const MainLogin: React.FC<MainLoginProps> = ({
                     transform: 'translateY(-50%)',
                     background: 'transparent',
                     border: 'none',
-                    color: '#9BA3AF',
+                    color: isLight ? '#64748B' : '#9BA3AF',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
@@ -193,8 +199,8 @@ export const MainLogin: React.FC<MainLoginProps> = ({
               disabled={isLoading}
               style={{
                 width: '100%',
-                background: '#EDEDE8',
-                color: '#090C0F',
+                background: isLight ? '#0F172A' : '#EDEDE8',
+                color: isLight ? '#FFFFFF' : '#090C0F',
                 border: 'none',
                 borderRadius: '6px',
                 padding: '9px 16px',
@@ -205,16 +211,16 @@ export const MainLogin: React.FC<MainLoginProps> = ({
                 transition: 'background 0.15s ease'
               }}
             >
-              {isLoading ? 'Signing in...' : 'Sign in'}
+              {isLoading ? 'Authenticating...' : 'Sign In to Workstation'}
             </button>
           </form>
 
-          {/* Discreet Demo Access */}
+          {/* Quick Evaluator Access */}
           <div
             style={{
               marginTop: '18px',
               paddingTop: '16px',
-              borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+              borderTop: `1px solid ${isLight ? '#E2E8F0' : 'rgba(255, 255, 255, 0.08)'}`,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -222,21 +228,21 @@ export const MainLogin: React.FC<MainLoginProps> = ({
             }}
           >
             <div>
-              <span style={{ color: '#5D6675', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600, display: 'block' }}>
-                DEMO ACCESS
+              <span style={{ color: isLight ? '#64748B' : '#5D6675', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600, display: 'block' }}>
+                EVALUATOR CLEARANCE
               </span>
-              <span style={{ color: '#9BA3AF', fontSize: '12px' }}>
+              <span style={{ color: isLight ? '#334155' : '#9BA3AF', fontSize: '12px', fontFamily: 'monospace' }}>
                 admin / admin
               </span>
             </div>
 
             <button
               type="button"
-              onClick={handleAutofillDemo}
+              onClick={handleAutofillCredentials}
               style={{
-                background: 'rgba(255, 255, 255, 0.06)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                color: '#EDEDE8',
+                background: isLight ? '#F1F5F9' : 'rgba(255, 255, 255, 0.06)',
+                border: `1px solid ${isLight ? '#E2E8F0' : 'rgba(255, 255, 255, 0.1)'}`,
+                color: isLight ? '#0F172A' : '#EDEDE8',
                 borderRadius: '4px',
                 padding: '4px 10px',
                 fontSize: '11px',
@@ -250,12 +256,12 @@ export const MainLogin: React.FC<MainLoginProps> = ({
         </div>
 
         {/* Bottom Auxiliary Links */}
-        <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '12px', color: '#5D6675' }}>
+        <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '12px', color: isLight ? '#64748B' : '#5D6675' }}>
           <div>
-            Need an account?{' '}
+            Need clearance registration?{' '}
             <button
               onClick={onOpenSignUp}
-              style={{ background: 'transparent', border: 'none', color: '#9BA3AF', cursor: 'pointer', padding: 0, textDecoration: 'underline' }}
+              style={{ background: 'transparent', border: 'none', color: '#0284C7', cursor: 'pointer', padding: 0, textDecoration: 'underline' }}
             >
               Create workspace
             </button>
@@ -265,7 +271,7 @@ export const MainLogin: React.FC<MainLoginProps> = ({
             Judicial examiner or auditor?{' '}
             <button
               onClick={onOpenVerifyStandalone}
-              style={{ background: 'transparent', border: 'none', color: '#EDEDE8', cursor: 'pointer', padding: 0, textDecoration: 'underline' }}
+              style={{ background: 'transparent', border: 'none', color: isLight ? '#0F172A' : '#EDEDE8', cursor: 'pointer', padding: 0, textDecoration: 'underline' }}
             >
               Open AegisTrace Verify (Zero-Server) →
             </button>

@@ -13,7 +13,12 @@ import {
   Database, 
   ArrowLeft,
   Loader2,
-  ExternalLink
+  ExternalLink,
+  Sparkles,
+  Zap,
+  Terminal,
+  Copy,
+  Check
 } from 'lucide-react';
 import { VerificationService, PackageVerificationOutcome } from '../services/semanticServices';
 
@@ -31,6 +36,7 @@ export const VerifyTab: React.FC<VerifyTabProps> = ({
   const [verifying, setVerifying] = useState(false);
   const [outcome, setOutcome] = useState<PackageVerificationOutcome | null>(null);
   const [showTechnicalDetails, setShowTechnicalDetails] = useState(false);
+  const [copiedCli, setCopiedCli] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileDrop = async (file: File) => {
@@ -72,10 +78,16 @@ export const VerifyTab: React.FC<VerifyTabProps> = ({
     e.target.value = '';
   };
 
+  const handleCopyCli = () => {
+    navigator.clipboard.writeText(`python aegistrace.py verify-package artifacts/demo/golden_case/golden_evidence_package.zip`);
+    setCopiedCli(true);
+    setTimeout(() => setCopiedCli(false), 2000);
+  };
+
   return (
     <div
       style={{
-        maxWidth: '880px',
+        maxWidth: '920px',
         margin: '0 auto',
         padding: isStandalone ? 'var(--space-8) var(--space-6)' : 'var(--space-2) 0 var(--space-8) 0',
         display: 'flex',
@@ -100,7 +112,7 @@ export const VerifyTab: React.FC<VerifyTabProps> = ({
             <button
               onClick={onBackToApp}
               className="btn-secondary"
-              style={{ fontSize: '12px', height: '32px' }}
+              style={{ fontSize: '12px', height: '32px', display: 'flex', alignItems: 'center', gap: '6px' }}
             >
               <ArrowLeft size={14} />
               <span>Back to Workspace</span>
@@ -111,6 +123,14 @@ export const VerifyTab: React.FC<VerifyTabProps> = ({
 
       {/* Main Title Section */}
       <div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+          <span style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            Judicial & Regulatory Evidence Audit
+          </span>
+          <span className="forensic-seal forensic-seal-petrol">
+            Zero-Server Offline
+          </span>
+        </div>
         <h1
           style={{
             margin: 0,
@@ -128,11 +148,11 @@ export const VerifyTab: React.FC<VerifyTabProps> = ({
             margin: '6px 0 0 0',
             fontSize: 'var(--text-sm)',
             color: 'var(--text-secondary)',
-            maxWidth: '680px',
+            maxWidth: '720px',
             lineHeight: 1.5
           }}
         >
-          Independent offline audit workstation. Ingest sealed forensic evidence packages to verify integrity, post-quantum digital signatures, and Merkle chain of custody without server dependencies.
+          Independent offline audit workstation. Ingest sealed forensic evidence packages to verify integrity, post-quantum digital signatures (NIST FIPS 204 ML-DSA-65), and Merkle chain of custody without server dependencies.
         </p>
       </div>
 
@@ -142,6 +162,7 @@ export const VerifyTab: React.FC<VerifyTabProps> = ({
         onDragLeave={onDragLeave}
         onDrop={onDrop}
         onClick={() => fileInputRef.current?.click()}
+        className="specular-border"
         style={{
           border: `2px dashed ${isDragging ? 'var(--primary)' : 'var(--border)'}`,
           borderRadius: 'var(--radius-md)',
@@ -164,18 +185,19 @@ export const VerifyTab: React.FC<VerifyTabProps> = ({
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
           <div
             style={{
-              width: '52px',
-              height: '52px',
+              width: '56px',
+              height: '56px',
               borderRadius: '50%',
               backgroundColor: 'var(--surface-elevated)',
               border: '1px solid var(--border)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: isDragging ? 'var(--primary)' : 'var(--text-secondary)'
+              color: isDragging ? 'var(--primary)' : 'var(--primary)',
+              transition: 'all 0.2s ease'
             }}
           >
-            <UploadCloud size={24} />
+            <UploadCloud size={26} />
           </div>
 
           <div>
@@ -201,10 +223,52 @@ export const VerifyTab: React.FC<VerifyTabProps> = ({
         </div>
       </div>
 
+      {/* CLI Auditor Quick Reference */}
+      <div 
+        className="workstation-card specular-border"
+        style={{
+          padding: '12px 16px',
+          backgroundColor: 'var(--surface-subtle)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '10px'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Terminal size={14} className="text-teal-400" />
+          <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
+            Offline Terminal Auditor CLI:
+          </span>
+          <code style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--text)', backgroundColor: '#090E12', padding: '2px 6px', borderRadius: '3px', border: '1px solid var(--border-subtle)' }}>
+            python aegistrace.py verify-package &lt;path-to-package.zip&gt;
+          </code>
+        </div>
+
+        <button
+          onClick={handleCopyCli}
+          style={{
+            background: 'transparent',
+            border: 'none',
+            color: copiedCli ? 'var(--success)' : 'var(--primary)',
+            fontSize: '11.5px',
+            fontWeight: 600,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px'
+          }}
+        >
+          {copiedCli ? <Check size={13} /> : <Copy size={13} />}
+          <span>{copiedCli ? 'Copied' : 'Copy command'}</span>
+        </button>
+      </div>
+
       {/* Loading State */}
       {verifying && (
         <div
-          className="workstation-card"
+          className="workstation-card specular-border"
           style={{
             padding: 'var(--space-8)',
             display: 'flex',
@@ -229,7 +293,7 @@ export const VerifyTab: React.FC<VerifyTabProps> = ({
       {/* Verification Result Banner */}
       {outcome && !verifying && (
         <div
-          className="workstation-card"
+          className="workstation-card specular-border"
           style={{
             backgroundColor: 'var(--surface)',
             border: `1px solid ${outcome.isVerified ? 'var(--success-border)' : 'var(--danger-border)'}`,
@@ -259,6 +323,9 @@ export const VerifyTab: React.FC<VerifyTabProps> = ({
                   <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 700, color: outcome.isVerified ? 'var(--success)' : 'var(--danger)' }}>
                     {outcome.isVerified ? 'PACKAGE VERIFIED' : 'VERIFICATION FAILED'}
                   </h2>
+                  <span className={`forensic-seal ${outcome.isVerified ? 'forensic-seal-emerald' : 'forensic-seal-crimson'}`}>
+                    {outcome.isVerified ? '12/12 CHECKS PASS' : 'TAMPER DETECTED'}
+                  </span>
                 </div>
                 <p style={{ margin: '3px 0 0 0', fontSize: '12.5px', color: 'var(--text-secondary)' }}>
                   {outcome.isVerified 
@@ -270,7 +337,7 @@ export const VerifyTab: React.FC<VerifyTabProps> = ({
 
             <div style={{ textAlign: 'right', fontSize: '12px', color: 'var(--text-tertiary)' }}>
               <div>Package: <strong style={{ color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>{outcome.packageId}</strong></div>
-              <div>Audited: {new Date(outcome.verifiedAt).toLocaleTimeString()}</div>
+              <div className="tabular-nums">Audited: {new Date(outcome.verifiedAt).toLocaleTimeString()}</div>
             </div>
           </div>
 
@@ -303,61 +370,61 @@ export const VerifyTab: React.FC<VerifyTabProps> = ({
                 gap: '6px'
               }}
             >
-              <span>Technical details</span>
+              <span>Technical details (12-Pillar Verification Grid)</span>
               {showTechnicalDetails ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
             </button>
 
             {showTechnicalDetails && (
               <div
+                className="specular-border"
                 style={{
                   marginTop: 'var(--space-4)',
                   padding: '16px',
                   backgroundColor: 'var(--surface-elevated)',
-                  border: '1px solid var(--border)',
                   borderRadius: 'var(--radius-xs)',
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-                  gap: '12px'
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+                  gap: '10px'
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 10px', backgroundColor: 'var(--surface)', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border-subtle)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', backgroundColor: 'var(--surface)', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border-subtle)' }}>
                   <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Manifest Signature</span>
-                  <span style={{ fontSize: '12px', fontWeight: 600, color: outcome.technicalDetails.manifestSignatureValid ? 'var(--success)' : 'var(--danger)' }}>
+                  <span className={`forensic-seal ${outcome.technicalDetails.manifestSignatureValid ? 'forensic-seal-emerald' : 'forensic-seal-crimson'}`} style={{ fontSize: '10px' }}>
                     {outcome.technicalDetails.manifestSignatureValid ? 'VALID (ML-DSA-65)' : 'INVALID'}
                   </span>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 10px', backgroundColor: 'var(--surface)', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border-subtle)' }}>
-                  <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Merkle Commitment</span>
-                  <span style={{ fontSize: '12px', fontWeight: 600, color: outcome.technicalDetails.merkleRootValid ? 'var(--success)' : 'var(--danger)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', backgroundColor: 'var(--surface)', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border-subtle)' }}>
+                  <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Merkle Root Commitment</span>
+                  <span className={`forensic-seal ${outcome.technicalDetails.merkleRootValid ? 'forensic-seal-emerald' : 'forensic-seal-crimson'}`} style={{ fontSize: '10px' }}>
                     {outcome.technicalDetails.merkleRootValid ? 'VALID (RFC-6962)' : 'INVALID'}
                   </span>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 10px', backgroundColor: 'var(--surface)', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border-subtle)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', backgroundColor: 'var(--surface)', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border-subtle)' }}>
                   <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Content-Addressed Hashes</span>
-                  <span style={{ fontSize: '12px', fontWeight: 600, color: outcome.technicalDetails.objectHashesValid ? 'var(--success)' : 'var(--danger)' }}>
+                  <span className={`forensic-seal ${outcome.technicalDetails.objectHashesValid ? 'forensic-seal-emerald' : 'forensic-seal-crimson'}`} style={{ fontSize: '10px' }}>
                     {outcome.technicalDetails.objectHashesValid ? 'VALID (SHA-256)' : 'INVALID'}
                   </span>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 10px', backgroundColor: 'var(--surface)', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border-subtle)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', backgroundColor: 'var(--surface)', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border-subtle)' }}>
                   <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Dependency DAG</span>
-                  <span style={{ fontSize: '12px', fontWeight: 600, color: outcome.technicalDetails.dependencyGraphValid ? 'var(--success)' : 'var(--danger)' }}>
+                  <span className={`forensic-seal ${outcome.technicalDetails.dependencyGraphValid ? 'forensic-seal-emerald' : 'forensic-seal-crimson'}`} style={{ fontSize: '10px' }}>
                     {outcome.technicalDetails.dependencyGraphValid ? 'VALID (Acyclic)' : 'INVALID'}
                   </span>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 10px', backgroundColor: 'var(--surface)', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border-subtle)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', backgroundColor: 'var(--surface)', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border-subtle)' }}>
                   <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Chain of Custody</span>
-                  <span style={{ fontSize: '12px', fontWeight: 600, color: outcome.technicalDetails.custodyChainValid ? 'var(--success)' : 'var(--danger)' }}>
+                  <span className={`forensic-seal ${outcome.technicalDetails.custodyChainValid ? 'forensic-seal-emerald' : 'forensic-seal-crimson'}`} style={{ fontSize: '10px' }}>
                     {outcome.technicalDetails.custodyChainValid ? 'VALID (Hash Chain)' : 'INVALID'}
                   </span>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 10px', backgroundColor: 'var(--surface)', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border-subtle)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', backgroundColor: 'var(--surface)', borderRadius: 'var(--radius-xs)', border: '1px solid var(--border-subtle)' }}>
                   <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Temporal Key Invariant</span>
-                  <span style={{ fontSize: '12px', fontWeight: 600, color: outcome.technicalDetails.historicalKeysValid ? 'var(--success)' : 'var(--danger)' }}>
+                  <span className={`forensic-seal ${outcome.technicalDetails.historicalKeysValid ? 'forensic-seal-emerald' : 'forensic-seal-crimson'}`} style={{ fontSize: '10px' }}>
                     {outcome.technicalDetails.historicalKeysValid ? 'VALID (Bound)' : 'INVALID'}
                   </span>
                 </div>

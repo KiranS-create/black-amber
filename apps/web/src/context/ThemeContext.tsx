@@ -54,6 +54,13 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     try {
       document.documentElement.setAttribute('data-theme', resolvedTheme);
       document.documentElement.style.colorScheme = resolvedTheme;
+      document.documentElement.classList.remove('theme-dark', 'theme-light', 'dark', 'light');
+      document.documentElement.classList.add(`theme-${resolvedTheme}`, resolvedTheme);
+      if (document.body) {
+        document.body.setAttribute('data-theme', resolvedTheme);
+        document.body.classList.remove('theme-dark', 'theme-light', 'dark', 'light');
+        document.body.classList.add(`theme-${resolvedTheme}`, resolvedTheme);
+      }
       localStorage.setItem('aegistrace_theme', themeMode);
     } catch {
       // Ignore storage errors in restricted contexts

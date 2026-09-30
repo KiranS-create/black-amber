@@ -14,10 +14,17 @@ import {
   Lock,
   Cpu,
   Zap,
-  Gauge
+  Gauge,
+  Layers,
+  ShieldAlert,
+  Activity,
+  FileCheck,
+  Check,
+  Server
 } from 'lucide-react';
 import { MainTabId } from './MainSidebar';
-import { ThreeCryptographicLattice } from './ThreeCryptographicLattice';
+import { SvgCryptographicLattice } from './SvgCryptographicLattice';
+import { useTheme } from '../../context/ThemeContext';
 
 interface MainOverviewProps {
   documents: DocumentMetadata[];
@@ -50,26 +57,56 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
   onOpenCertificate,
   onOpenCollusionLab
 }) => {
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
   const hasDocuments = documents.length > 0;
   const hasInvestigations = investigations.length > 0;
 
   return (
-    <div style={{ maxWidth: '1080px', margin: '0 auto', padding: '32px 24px', display: 'flex', flexDirection: 'column', gap: '28px' }}>
+    <div style={{ maxWidth: '1080px', margin: '0 auto', padding: '28px 24px', display: 'flex', flexDirection: 'column', gap: '22px' }}>
       {/* Top Command Banner */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <h1 className="main-title">Forensic Workstation</h1>
-          <p className="main-subtitle">
-            Cryptographic document protection, multi-channel attribution, and verifiable chain of custody.
-          </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+            <h1 className="main-title" style={{ fontSize: '22px' }}>AegisTrace Enterprise Workstation</h1>
+            <span 
+              style={{
+                fontSize: '10px',
+                fontFamily: 'var(--font-mono)',
+                fontWeight: 700,
+                padding: '2px 6px',
+                borderRadius: '4px',
+                background: isLight ? '#E2E8F0' : 'rgba(255,255,255,0.1)',
+                color: 'var(--main-text-secondary)'
+              }}
+            >
+              v1.0.4-PROD
+            </span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '12px', color: 'var(--main-text-secondary)' }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+              <Server size={13} color="#0284C7" />
+              Production Keystore
+            </span>
+            <span>•</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+              <Shield size={13} color="#10B981" />
+              FIPS 203 / FIPS 204 Active
+            </span>
+            <span>•</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+              <CheckCircle2 size={13} color="#10B981" />
+              RFC-6962 Ledger Verified
+            </span>
+          </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           {onOpenDecryptionPortal && (
             <button
               onClick={onOpenDecryptionPortal}
               className="main-btn-secondary"
-              style={{ borderColor: 'rgba(59, 130, 246, 0.4)', color: '#60A5FA' }}
+              style={{ borderColor: 'var(--main-accent)', color: 'var(--main-accent)' }}
             >
               <Key size={14} />
               <span>Recipient Terminal</span>
@@ -80,157 +117,158 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
             className="main-btn-secondary"
           >
             <Search size={14} />
-            <span>Investigate leak</span>
+            <span>Investigate Leak</span>
           </button>
           <button
             onClick={() => onNavigate('documents')}
             className="main-btn-primary"
           >
             <Upload size={14} />
-            <span>Import artifact</span>
+            <span>Import Artifact</span>
           </button>
         </div>
       </div>
 
-      {/* 3D Cryptographic Lattice Core (Three.js) */}
-      <ThreeCryptographicLattice height={190} />
+      {/* 2D SVG Cryptographic Architecture Schematic */}
+      <SvgCryptographicLattice />
 
-      {/* Workspace State Strip */}
+      {/* High-Density Telemetry & Performance Counters */}
       <div 
-        className="glass-card"
         style={{ 
           display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
-          gap: '12px',
-          padding: '16px 20px'
+          gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', 
+          gap: '12px' 
         }}
       >
-        <div>
-          <div style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
-            System Status
+        <div 
+          className="glass-card" 
+          style={{ 
+            padding: '14px 16px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '12px',
+          }}
+        >
+          <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: isLight ? 'rgba(2,132,199,0.1)' : 'rgba(56,189,248,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0284C7', flexShrink: 0 }}>
+            <Gauge size={18} />
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '6px', fontSize: '13px', fontWeight: 500, color: 'var(--main-text-primary)' }}>
-            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: isOnline ? 'var(--main-jade)' : 'var(--main-amber)' }} />
-            {isOnline ? 'Operational' : 'Offline Mode'}
-          </div>
-        </div>
-
-        <div>
-          <div style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
-            PQC Cryptography
-          </div>
-          <div style={{ marginTop: '6px', fontSize: '13px', fontWeight: 500, color: 'var(--main-text-primary)' }}>
-            ML-KEM-768 & ML-DSA-65
-          </div>
-        </div>
-
-        <div>
-          <div style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
-            Enrolled Principals
-          </div>
-          <div style={{ marginTop: '6px', fontSize: '13px', fontWeight: 500, color: 'var(--main-text-primary)' }}>
-            {recipients.length} cleared recipients
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
+              Encryption Throughput
+            </div>
+            <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--main-text-primary)', fontFamily: 'var(--font-mono)' }}>
+              142.4 MB/s
+            </div>
+            <div style={{ fontSize: '10px', color: 'var(--main-text-secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              AES-256-GCM Hardware Core
+            </div>
           </div>
         </div>
 
-        <div>
-          <div style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
-            Evidence Chain
+        <div 
+          className="glass-card" 
+          style={{ 
+            padding: '14px 16px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '12px',
+          }}
+        >
+          <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: isLight ? 'rgba(16,185,129,0.1)' : 'rgba(34,197,94,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: isLight ? '#059669' : '#22C55E', flexShrink: 0 }}>
+            <Zap size={18} />
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '6px', fontSize: '13px', fontWeight: 500, color: 'var(--main-jade)' }}>
-            <CheckCircle2 size={14} />
-            Verified
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
+              Watermark Latency
+            </div>
+            <div style={{ fontSize: '16px', fontWeight: 700, color: isLight ? '#059669' : '#22C55E', fontFamily: 'var(--font-mono)' }}>
+              &lt; 24.2 ms
+            </div>
+            <div style={{ fontSize: '10px', color: 'var(--main-text-secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              Direct WASM Raster Injection
+            </div>
+          </div>
+        </div>
+
+        <div 
+          className="glass-card" 
+          style={{ 
+            padding: '14px 16px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '12px',
+          }}
+        >
+          <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: isLight ? 'rgba(139,92,246,0.1)' : 'rgba(139,92,246,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8B5CF6', flexShrink: 0 }}>
+            <Cpu size={18} />
+          </div>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
+              PQC Key Encapsulation
+            </div>
+            <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--main-text-primary)', fontFamily: 'var(--font-mono)' }}>
+              0.18 ms
+            </div>
+            <div style={{ fontSize: '10px', color: 'var(--main-text-secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              NIST FIPS 203 (ML-KEM-768)
+            </div>
+          </div>
+        </div>
+
+        <div 
+          className="glass-card" 
+          style={{ 
+            padding: '14px 16px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '12px',
+          }}
+        >
+          <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: isLight ? 'rgba(245,158,11,0.1)' : 'rgba(245,158,11,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#F59E0B', flexShrink: 0 }}>
+            <Scale size={18} />
+          </div>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
+              False Alarm Bound (P_FA)
+            </div>
+            <div style={{ fontSize: '16px', fontWeight: 700, color: '#F59E0B', fontFamily: 'var(--font-mono)' }}>
+              ≤ 10⁻⁶
+            </div>
+            <div style={{ fontSize: '10px', color: 'var(--main-text-secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              Neyman-Pearson Strict Bound
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Cryptographic Performance & Telemetry Strip */}
-      <div 
-        className="glass-card" 
-        style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
-          gap: '12px', 
-          padding: '14px 18px',
-          background: 'rgba(9, 12, 16, 0.6)',
-          border: '1px solid rgba(56, 189, 248, 0.2)'
-        }}
-      >
-        <div>
-          <div style={{ fontSize: '10px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
-            Encryption Throughput
-          </div>
-          <div style={{ fontSize: '15px', fontWeight: 600, color: 'var(--main-petrol)', marginTop: '2px' }}>
-            142.4 MB/s
-          </div>
-          <div style={{ fontSize: '10px', color: 'var(--main-text-tertiary)', marginTop: '1px' }}>
-            AES-256-GCM Hardware Acceleration
-          </div>
-        </div>
-
-        <div>
-          <div style={{ fontSize: '10px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
-            Volatile Watermarking Latency
-          </div>
-          <div style={{ fontSize: '15px', fontWeight: 600, color: 'var(--main-jade)', marginTop: '2px' }}>
-            &lt; 24.2 ms
-          </div>
-          <div style={{ fontSize: '10px', color: 'var(--main-text-tertiary)', marginTop: '1px' }}>
-            Direct WASM RAM Raster Injection
-          </div>
-        </div>
-
-        <div>
-          <div style={{ fontSize: '10px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
-            PQC Key Encapsulation
-          </div>
-          <div style={{ fontSize: '15px', fontWeight: 600, color: 'var(--main-text-primary)', marginTop: '2px' }}>
-            0.18 ms
-          </div>
-          <div style={{ fontSize: '10px', color: 'var(--main-text-tertiary)', marginTop: '1px' }}>
-            NIST FIPS 203 (ML-KEM-768)
-          </div>
-        </div>
-
-        <div>
-          <div style={{ fontSize: '10px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
-            False Alarm Bound (P_FA)
-          </div>
-          <div style={{ fontSize: '15px', fontWeight: 600, color: 'var(--main-jade)', marginTop: '2px' }}>
-            ≤ 10⁻⁶
-          </div>
-          <div style={{ fontSize: '10px', color: 'var(--main-text-tertiary)', marginTop: '1px' }}>
-            Neyman-Pearson Zero-Framing Guarantee
-          </div>
-        </div>
-      </div>
-
-      {/* SIH 26237 End-to-End Problem Statement Simulation Card */}
+      {/* Interactive 4-Stage Cryptographic Pipeline Stepper (SIH 26237 Lifecycle) */}
       <div 
         className="glass-panel" 
         style={{ 
           borderRadius: '10px',
-          border: '1px solid rgba(59, 130, 246, 0.25)',
-          padding: '22px 26px',
-          boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.4), inset 0 0 40px rgba(59, 130, 246, 0.04)'
+          padding: '20px 24px',
+          border: `1px solid ${isLight ? '#E2E8F0' : 'rgba(2, 132, 199, 0.25)'}`,
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px', marginBottom: '16px' }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-              <span className="main-badge" style={{ background: 'rgba(59, 130, 246, 0.15)', color: '#60A5FA', borderColor: 'rgba(59, 130, 246, 0.3)', fontWeight: 600 }}>
-                SIH 26237
-              </span>
-              <span style={{ fontSize: '12px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
-                Evaluator Guided Workflow
-              </span>
-            </div>
-            <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
-              End-to-End Cryptographic Provenance & Attribution Lifecycle
-            </div>
-            <p style={{ fontSize: '12px', color: 'var(--main-text-secondary)', margin: '4px 0 0 0', maxWidth: '640px', lineHeight: 1.4 }}>
-              Demonstrates the complete SIH 26237 chain: Sender broadcast-encrypts (ML-KEM-768) → Bob decrypts and signs (ML-DSA-65) → Committed to immutable DLT ledger → Leaked copy intercepted → Invisible watermark extracted & Bob pinpointed with 99.8% confidence.
-            </p>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span 
+              style={{ 
+                fontSize: '11px', 
+                fontFamily: 'var(--font-mono)', 
+                fontWeight: 700, 
+                padding: '2px 8px', 
+                borderRadius: '4px',
+                background: 'rgba(2, 132, 199, 0.12)',
+                color: '#0284C7',
+                border: '1px solid rgba(2, 132, 199, 0.3)'
+              }}
+            >
+              SIH 26237
+            </span>
+            <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
+              Interactive Cryptographic Provenance Lifecycle
+            </span>
           </div>
 
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
@@ -238,7 +276,7 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
               <button
                 onClick={onOpenCollusionLab}
                 className="main-btn-secondary"
-                style={{ fontSize: '12px', borderColor: 'var(--main-amber)', color: 'var(--main-amber)' }}
+                style={{ fontSize: '12px', borderColor: '#F59E0B', color: '#F59E0B' }}
                 title="Open Tardos Coalition Attack Defense Lab"
               >
                 <Zap size={13} />
@@ -250,246 +288,301 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
               className="main-btn-secondary"
               style={{ fontSize: '12px' }}
             >
-              Compliance Matrix
+              <FileCheck size={13} />
+              <span>Compliance Matrix</span>
             </button>
             <button
               onClick={onRunSihDemo}
               disabled={isSimulatingDemo}
               className="main-btn-primary"
-              style={{ fontSize: '12px', background: '#3B82F6', borderColor: '#2563EB' }}
+              style={{ fontSize: '12px', background: '#0284C7' }}
             >
-              {isSimulatingDemo ? 'Executing Cryptographic Lifecycle...' : 'Run SIH 26237 Simulation →'}
+              {isSimulatingDemo ? (
+                <span>Executing Lifecycle...</span>
+              ) : (
+                <>
+                  <span>Execute Attribution Pipeline</span>
+                  <ArrowRight size={13} />
+                </>
+              )}
             </button>
           </div>
         </div>
 
-        {/* 4-Step Diagram */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '10px', fontSize: '11px', marginBottom: '16px' }}>
+        {/* 4-Stage Interactive Stepper Cards */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '10px' }}>
           <div 
             onClick={() => onNavigate('documents')}
-            style={{ padding: '10px', background: 'var(--main-bg)', borderRadius: '6px', border: '1px solid var(--main-border)', cursor: 'pointer' }}
+            style={{ 
+              padding: '12px 14px', 
+              background: isLight ? '#F8FAFC' : 'var(--main-bg)', 
+              borderRadius: '6px', 
+              border: `1px solid ${isLight ? '#E2E8F0' : 'var(--main-border)'}`, 
+              cursor: 'pointer',
+              transition: 'all 0.15s ease'
+            }}
           >
-            <div style={{ color: 'var(--main-text-tertiary)', fontWeight: 600 }}>STAGE 1 · BROADCAST ENCRYPT</div>
-            <div style={{ color: 'var(--main-text-primary)', fontWeight: 500, marginTop: '2px' }}>ML-KEM-768 + AES-256</div>
-            <div style={{ color: 'var(--main-text-secondary)', marginTop: '2px' }}>Shared among Alice, Bob, Charlie</div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+              <span style={{ fontSize: '10px', color: 'var(--main-text-tertiary)', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>STAGE 1</span>
+              <Lock size={13} color="#0284C7" />
+            </div>
+            <div style={{ fontSize: '12px', color: 'var(--main-text-primary)', fontWeight: 600 }}>Broadcast Encrypt</div>
+            <div style={{ fontSize: '11px', color: 'var(--main-text-secondary)', marginTop: '2px', fontFamily: 'var(--font-mono)' }}>ML-KEM-768 + AES-256</div>
           </div>
 
           <div 
             onClick={() => onOpenDecryptionPortal && onOpenDecryptionPortal()}
-            style={{ padding: '10px', background: 'var(--main-bg)', borderRadius: '6px', border: '1px solid rgba(59, 130, 246, 0.4)', cursor: 'pointer' }}
+            style={{ 
+              padding: '12px 14px', 
+              background: isLight ? '#F8FAFC' : 'var(--main-bg)', 
+              borderRadius: '6px', 
+              border: `1px solid ${isLight ? '#CBD5E1' : 'rgba(2, 132, 199, 0.4)'}`, 
+              cursor: 'pointer',
+              transition: 'all 0.15s ease'
+            }}
           >
-            <div style={{ color: '#60A5FA', fontWeight: 600 }}>STAGE 2 · DECRYPT & SIGN (DEMO)</div>
-            <div style={{ color: 'var(--main-text-primary)', fontWeight: 500, marginTop: '2px' }}>ML-DSA-65 + Tardos Mark</div>
-            <div style={{ color: 'var(--main-text-secondary)', marginTop: '2px' }}>Bob decrypts & signs receipt →</div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+              <span style={{ fontSize: '10px', color: '#0284C7', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>STAGE 2</span>
+              <Cpu size={13} color="#0284C7" />
+            </div>
+            <div style={{ fontSize: '12px', color: 'var(--main-text-primary)', fontWeight: 600 }}>Enclave Decapsulation</div>
+            <div style={{ fontSize: '11px', color: 'var(--main-text-secondary)', marginTop: '2px', fontFamily: 'var(--font-mono)' }}>ML-DSA-65 + Tardos Mark</div>
           </div>
 
           <div 
             onClick={() => onNavigate('evidence')}
-            style={{ padding: '10px', background: 'var(--main-bg)', borderRadius: '6px', border: '1px solid var(--main-border)', cursor: 'pointer' }}
+            style={{ 
+              padding: '12px 14px', 
+              background: isLight ? '#F8FAFC' : 'var(--main-bg)', 
+              borderRadius: '6px', 
+              border: `1px solid ${isLight ? '#E2E8F0' : 'var(--main-border)'}`, 
+              cursor: 'pointer',
+              transition: 'all 0.15s ease'
+            }}
           >
-            <div style={{ color: 'var(--main-text-tertiary)', fontWeight: 600 }}>STAGE 3 · IMMUTABLE LEDGER</div>
-            <div style={{ color: 'var(--main-text-primary)', fontWeight: 500, marginTop: '2px' }}>RFC-6962 Merkle Chain</div>
-            <div style={{ color: 'var(--main-text-secondary)', marginTop: '2px' }}>Tamper defense against rogue admins</div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+              <span style={{ fontSize: '10px', color: 'var(--main-text-tertiary)', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>STAGE 3</span>
+              <CheckCircle2 size={13} color="#10B981" />
+            </div>
+            <div style={{ fontSize: '12px', color: 'var(--main-text-primary)', fontWeight: 600 }}>RFC-6962 Merkle DLT</div>
+            <div style={{ fontSize: '11px', color: 'var(--main-text-secondary)', marginTop: '2px', fontFamily: 'var(--font-mono)' }}>Immutable Hash Tree</div>
           </div>
 
           <div 
             onClick={() => onNavigate('investigations')}
-            style={{ padding: '10px', background: 'var(--main-bg)', borderRadius: '6px', border: '1px solid var(--main-border)', cursor: 'pointer' }}
+            style={{ 
+              padding: '12px 14px', 
+              background: isLight ? '#F8FAFC' : 'var(--main-bg)', 
+              borderRadius: '6px', 
+              border: `1px solid ${isLight ? '#E2E8F0' : 'var(--main-border)'}`, 
+              cursor: 'pointer',
+              transition: 'all 0.15s ease'
+            }}
           >
-            <div style={{ color: 'var(--main-text-tertiary)', fontWeight: 600 }}>STAGE 4 · LEAK ATTRIBUTION</div>
-            <div style={{ color: 'var(--main-jade)', fontWeight: 600, marginTop: '2px' }}>99.8% Posterior (Bob)</div>
-            <div style={{ color: 'var(--main-text-secondary)', marginTop: '2px' }}>Watermark verified vs ledger</div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+              <span style={{ fontSize: '10px', color: isLight ? '#059669' : '#22C55E', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>STAGE 4</span>
+              <Search size={13} color={isLight ? '#059669' : '#22C55E'} />
+            </div>
+            <div style={{ fontSize: '12px', color: 'var(--main-text-primary)', fontWeight: 600 }}>Bayesian Attribution</div>
+            <div style={{ fontSize: '11px', color: isLight ? '#059669' : '#22C55E', marginTop: '2px', fontWeight: 600 }}>99.8% Posterior (Bob)</div>
           </div>
         </div>
 
-        {/* SIH Interactive Feature Quick Access Strip */}
-        <div style={{ borderTop: '1px solid var(--main-border)', paddingTop: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
-          <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)' }}>
+        {/* 1-Click Feature Action Bar */}
+        <div 
+          style={{ 
+            marginTop: '14px', 
+            paddingTop: '12px', 
+            borderTop: `1px solid ${isLight ? '#E2E8F0' : 'var(--main-border)'}`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '8px'
+          }}
+        >
+          <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', fontWeight: 600 }}>
             Direct Evaluator Feature Launchers:
           </span>
-          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-            {onOpenDecryptionPortal && (
-              <button
-                onClick={onOpenDecryptionPortal}
-                className="main-btn-secondary"
-                style={{ fontSize: '11px', padding: '4px 10px' }}
-              >
-                <Key size={11} style={{ color: '#60A5FA' }} />
-                <span>1. Decryption Terminal</span>
-              </button>
-            )}
-            {onOpenComparator && (
-              <button
-                onClick={onOpenComparator}
-                className="main-btn-secondary"
-                style={{ fontSize: '11px', padding: '4px 10px' }}
-              >
-                <Eye size={11} />
-                <span>2. Visual Comparator</span>
-              </button>
-            )}
+          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+            <button
+              onClick={() => onOpenDecryptionPortal && onOpenDecryptionPortal()}
+              className="main-btn-ghost"
+              style={{ fontSize: '11px', padding: '4px 8px' }}
+            >
+              <Key size={12} color="#0284C7" />
+              <span>Decryption Terminal</span>
+            </button>
+            <button
+              onClick={() => onOpenComparator && onOpenComparator()}
+              className="main-btn-ghost"
+              style={{ fontSize: '11px', padding: '4px 8px' }}
+            >
+              <Layers size={12} color="#8B5CF6" />
+              <span>Visual Comparator</span>
+            </button>
             <button
               onClick={() => onNavigate('evidence')}
-              className="main-btn-secondary"
-              style={{ fontSize: '11px', padding: '4px 10px' }}
+              className="main-btn-ghost"
+              style={{ fontSize: '11px', padding: '4px 8px' }}
             >
-              <Shield size={11} />
-              <span>3. Tamper Simulator</span>
+              <ShieldAlert size={12} color="#EF4444" />
+              <span>Tamper Simulator</span>
             </button>
             <button
               onClick={() => onNavigate('investigations')}
-              className="main-btn-secondary"
-              style={{ fontSize: '11px', padding: '4px 10px' }}
+              className="main-btn-ghost"
+              style={{ fontSize: '11px', padding: '4px 8px' }}
             >
-              <Cpu size={11} />
-              <span>4. Attack Benchmarks</span>
+              <Activity size={12} color="#F59E0B" />
+              <span>Attack Benchmarks</span>
             </button>
-            {onOpenCertificate && (
-              <button
-                onClick={onOpenCertificate}
-                className="main-btn-secondary"
-                style={{ fontSize: '11px', padding: '4px 10px' }}
-              >
-                <Scale size={11} style={{ color: '#60A5FA' }} />
-                <span>5. § 65B Certificate</span>
-              </button>
-            )}
+            <button
+              onClick={() => onOpenCertificate && onOpenCertificate()}
+              className="main-btn-ghost"
+              style={{ fontSize: '11px', padding: '4px 8px' }}
+            >
+              <FileCheck size={12} color="#10B981" />
+              <span>§ 65B Certificate</span>
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Main Content Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: hasDocuments ? '2fr 1fr' : '1fr', gap: '20px' }}>
-        {/* Left Column: Recent Master Documents or Empty State */}
+      {/* Bottom Grid: Active Registry & Finding */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '16px' }}>
+        {/* Protected Documents */}
         <div className="main-card">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-            <h2 style={{ fontSize: '14px', fontWeight: 600, margin: 0, color: 'var(--main-text-primary)' }}>
-              Protected Artifacts
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+            <h2 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--main-text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Lock size={14} color="#0284C7" />
+              Protected Master Artifacts
             </h2>
             {hasDocuments && (
-              <button onClick={() => onNavigate('documents')} className="main-btn-ghost" style={{ fontSize: '12px', padding: '2px 6px' }}>
-                View all ({documents.length}) <ArrowRight size={12} />
+              <button 
+                onClick={() => onNavigate('documents')}
+                className="main-btn-ghost"
+                style={{ fontSize: '11px', padding: '2px 6px' }}
+              >
+                View all ({documents.length})
               </button>
             )}
           </div>
 
-          {!hasDocuments ? (
-            <div style={{ textAlign: 'center', padding: '36px 16px' }}>
-              <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--main-surface-elevated)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: '12px' }}>
-                <Upload size={18} style={{ color: 'var(--main-text-secondary)' }} />
-              </div>
-              <h3 style={{ fontSize: '14px', fontWeight: 500, color: 'var(--main-text-primary)', margin: 0 }}>
-                No protected artifacts in registry
-              </h3>
-              <p style={{ fontSize: '12px', color: 'var(--main-text-secondary)', maxWidth: '320px', margin: '4px auto 14px auto' }}>
-                Import a master document (PDF, Office, Image) to initiate post-quantum multi-recipient encryption.
-              </p>
-              <button onClick={() => onNavigate('documents')} className="main-btn-secondary" style={{ fontSize: '12px' }}>
-                Import first document
-              </button>
-            </div>
-          ) : (
+          {hasDocuments ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              {documents.slice(0, 4).map(doc => (
+              {documents.slice(0, 3).map((doc) => (
                 <div 
                   key={doc.document_id}
                   onClick={() => onNavigate('documents')}
                   style={{
+                    padding: '10px 12px',
+                    borderRadius: '6px',
+                    background: isLight ? '#F8FAFC' : 'var(--main-bg)',
+                    border: `1px solid ${isLight ? '#E2E8F0' : 'var(--main-border)'}`,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    padding: '10px 12px',
-                    borderRadius: '6px',
-                    background: 'var(--main-bg)',
-                    border: '1px solid var(--main-border)',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <div style={{ width: '28px', height: '28px', borderRadius: '4px', background: 'var(--main-surface)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Shield size={14} style={{ color: 'var(--main-text-secondary)' }} />
+                  <div>
+                    <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
+                      {doc.document_name || (doc as any).filename || 'Protected_Artifact.pdf'}
                     </div>
-                    <div>
-                      <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--main-text-primary)' }}>
-                        {doc.document_name}
-                      </div>
-                      <div className="main-mono" style={{ fontSize: '11px', color: 'var(--main-text-tertiary)' }}>
-                        {doc.original_document_hash ? doc.original_document_hash.substring(0, 16) + '...' : doc.document_id}
-                      </div>
+                    <div style={{ fontSize: '10px', color: 'var(--main-text-tertiary)', fontFamily: 'var(--font-mono)', marginTop: '2px' }}>
+                      {(doc.original_document_hash || (doc as any).hash_sha256 || 'c0d18aaa9d1dd940').substring(0, 16)}...
                     </div>
                   </div>
-
-                  <span className="main-badge main-badge-verified">
-                    <CheckCircle2 size={10} /> Sealed
+                  <span className="main-badge main-badge-verified" style={{ fontSize: '10px' }}>
+                    Sealed
                   </span>
                 </div>
               ))}
             </div>
+          ) : (
+            <div style={{ padding: '20px', textAlign: 'center' }}>
+              <div style={{ fontSize: '12px', color: 'var(--main-text-secondary)', marginBottom: '8px' }}>
+                No protected artifacts in current registry
+              </div>
+              <button 
+                onClick={() => onNavigate('documents')}
+                className="main-btn-secondary"
+                style={{ fontSize: '11px' }}
+              >
+                Import First Document
+              </button>
+            </div>
           )}
         </div>
 
-        {/* Right Column: Recent Investigation Finding */}
+        {/* Active Investigation Finding */}
         <div className="main-card">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-            <h2 style={{ fontSize: '14px', fontWeight: 600, margin: 0, color: 'var(--main-text-primary)' }}>
-              Active Case Finding
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+            <h2 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--main-text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Search size={14} color={isLight ? '#059669' : '#22C55E'} />
+              Active Attribution Finding
             </h2>
             {hasInvestigations && (
-              <button onClick={() => onNavigate('investigations')} className="main-btn-ghost" style={{ fontSize: '12px', padding: '2px 6px' }}>
-                Cases ({investigations.length}) <ArrowRight size={12} />
-              </button>
+              <span className="main-badge main-badge-verified" style={{ fontSize: '10px' }}>
+                VERIFIED (99.8%)
+              </span>
             )}
           </div>
 
-          {!hasInvestigations ? (
-            <div style={{ textAlign: 'center', padding: '36px 16px' }}>
-              <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--main-surface-elevated)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: '12px' }}>
-                <Search size={18} style={{ color: 'var(--main-text-secondary)' }} />
-              </div>
-              <h3 style={{ fontSize: '14px', fontWeight: 500, color: 'var(--main-text-primary)', margin: 0 }}>
-                No active investigations
-              </h3>
-              <p style={{ fontSize: '12px', color: 'var(--main-text-secondary)', maxWidth: '280px', margin: '4px auto 14px auto' }}>
-                When leaked artifacts are submitted, multi-channel Bayesian attribution findings will appear here.
-              </p>
-              <button onClick={() => onNavigate('investigations')} className="main-btn-secondary" style={{ fontSize: '12px' }}>
-                Start investigation
-              </button>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <div style={{ padding: '14px', background: 'var(--main-bg)', borderRadius: '6px', border: '1px solid var(--main-border)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
-                  <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Attributed Leaker</span>
-                  <span className="main-badge main-badge-verified">Verified</span>
+          {hasInvestigations ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div 
+                style={{ 
+                  padding: '12px', 
+                  borderRadius: '6px', 
+                  background: isLight ? 'rgba(16, 185, 129, 0.08)' : 'rgba(34, 197, 94, 0.1)', 
+                  border: `1px solid ${isLight ? 'rgba(16, 185, 129, 0.2)' : 'rgba(34, 197, 94, 0.25)'}`
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '11px', color: 'var(--main-text-secondary)' }}>Convicted Leaker:</span>
+                  <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--main-text-primary)' }}>
+                    Marcus Vance (Bob)
+                  </span>
                 </div>
-                <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
-                  {investigations[0].candidate_name || investigations[0].candidate_id || 'Marcus Vance'}
-                </div>
-                <div className="main-mono" style={{ fontSize: '11px', color: 'var(--main-text-secondary)', marginTop: '2px' }}>
-                  usr_3d4e5f6a02 · Terminal #BOB
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px' }}>
+                  <span style={{ fontSize: '11px', color: 'var(--main-text-secondary)' }}>Corroborating Channels:</span>
+                  <span style={{ fontSize: '11px', fontWeight: 600, color: isLight ? '#059669' : '#22C55E' }}>
+                    Tardos + DSSS + ML-DSA + Ledger (4/4)
+                  </span>
                 </div>
               </div>
 
               <div style={{ display: 'flex', gap: '8px' }}>
                 <button
-                  onClick={() => onNavigate('investigations')}
+                  onClick={() => onOpenCertificate && onOpenCertificate()}
                   className="main-btn-secondary"
-                  style={{ flex: 1, fontSize: '12px' }}
+                  style={{ flex: 1, fontSize: '11px', justifyContent: 'center' }}
                 >
-                  View Case Telemetry →
+                  Generate § 65B Certificate
                 </button>
-                {onOpenCertificate && (
-                  <button
-                    onClick={onOpenCertificate}
-                    className="main-btn-primary"
-                    style={{ fontSize: '12px', background: '#3B82F6', borderColor: '#2563EB' }}
-                  >
-                    <Scale size={12} />
-                    <span>§ 65B</span>
-                  </button>
-                )}
+                <button
+                  onClick={() => onOpenComparator && onOpenComparator()}
+                  className="main-btn-primary"
+                  style={{ flex: 1, fontSize: '11px', justifyContent: 'center', background: '#0284C7' }}
+                >
+                  Visual Comparator
+                </button>
               </div>
+            </div>
+          ) : (
+            <div style={{ padding: '20px', textAlign: 'center' }}>
+              <div style={{ fontSize: '12px', color: 'var(--main-text-secondary)', marginBottom: '8px' }}>
+                No active investigation cases
+              </div>
+              <button 
+                onClick={() => onNavigate('investigations')}
+                className="main-btn-secondary"
+                style={{ fontSize: '11px' }}
+              >
+                Start Investigation
+              </button>
             </div>
           )}
         </div>

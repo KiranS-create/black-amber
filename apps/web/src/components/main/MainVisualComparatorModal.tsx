@@ -12,7 +12,7 @@ import {
   SlidersHorizontal,
   Info
 } from 'lucide-react';
-import { ThreeSpectralCarrier } from './ThreeSpectralCarrier';
+import { SvgSpectralCarrier } from './SvgSpectralCarrier';
 
 
 
@@ -313,15 +313,7 @@ export const MainVisualComparatorModal: React.FC<MainVisualComparatorModalProps>
 
           {viewMode === 'dsssCarrier' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
-                  Direct-Sequence Spread Spectrum (DSSS) Orthogonal Carrier Layer
-                </span>
-                <span className="main-mono" style={{ fontSize: '11px', color: 'var(--main-amber)' }}>
-                  Seed: PRNG_BOB_768_ORTHO
-                </span>
-              </div>
-              <ThreeSpectralCarrier height={260} recipientName={recipientName} />
+              <SvgSpectralCarrier />
             </div>
           )}
 
