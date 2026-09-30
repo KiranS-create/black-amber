@@ -94,16 +94,67 @@ export const EvidenceTab: React.FC<EvidenceTabProps> = ({
           </p>
         </div>
 
-        <button
-          onClick={() => setActiveTab('investigations')}
-          className="btn-secondary"
-        >
-          <Search size={14} />
-          <span>New investigation</span>
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+          <div 
+            style={{ 
+              display: 'flex', 
+              background: 'var(--surface-subtle)', 
+              padding: '3px', 
+              borderRadius: '6px', 
+              border: '1px solid var(--border)' 
+            }}
+          >
+            <button
+              onClick={() => setViewMode('ledger')}
+              style={{
+                padding: '5px 12px',
+                fontSize: '12px',
+                fontWeight: 600,
+                borderRadius: '4px',
+                border: 'none',
+                cursor: 'pointer',
+                backgroundColor: viewMode === 'ledger' ? 'var(--surface-elevated)' : 'transparent',
+                color: viewMode === 'ledger' ? 'var(--text)' : 'var(--text-secondary)'
+              }}
+            >
+              Forensic Evidence Ledger
+            </button>
+            <button
+              onClick={() => setViewMode('magistrateTerminal')}
+              style={{
+                padding: '5px 12px',
+                fontSize: '12px',
+                fontWeight: 600,
+                borderRadius: '4px',
+                border: 'none',
+                cursor: 'pointer',
+                backgroundColor: viewMode === 'magistrateTerminal' ? 'rgba(56, 189, 248, 0.15)' : 'transparent',
+                color: viewMode === 'magistrateTerminal' ? '#38BDF8' : 'var(--text-secondary)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px'
+              }}
+            >
+              <Terminal size={13} />
+              <span>Air-Gapped Magistrate Terminal</span>
+            </button>
+          </div>
+
+          <button
+            onClick={() => setActiveTab('investigations')}
+            className="btn-secondary"
+          >
+            <Search size={14} />
+            <span>New investigation</span>
+          </button>
+        </div>
       </div>
 
-      {records.length === 0 ? (
+      {viewMode === 'magistrateTerminal' ? (
+        <MagistrateVerifierTerminal />
+      ) : (
+        <>
+          {records.length === 0 ? (
         <EmptyState
           icon={FileCheck}
           title="No evidence has been generated yet"
@@ -478,6 +529,8 @@ export const EvidenceTab: React.FC<EvidenceTabProps> = ({
           </div>
         )}
       </Drawer>
+        </>
+      )}
     </div>
   );
 };

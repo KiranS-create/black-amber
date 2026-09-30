@@ -2,19 +2,47 @@ export type ExperienceVariant = 'main' | 'alternate';
 
 /**
  * Determines whether to serve the Unified Forensic Security Workstation
- * across all domains (including https://aegistrace-kirans-create.vercel.app).
+ * or the Executive Presentation / Briefing mode.
  *
- * Rules:
- * - Default: 'alternate' (The complete 12-tab workstation fused with all interactive labs and tools).
- * - Query param `?variant=presentation` allows launching the compact 4-tab briefing mode.
- * - Persistent toggle in localStorage allows seamless 1-click switching on any domain.
+ * Switching Logic:
+ * - https://aegistrace.vercel.app -> 'main' (Main Workstation)
+ * - https://aegistrace-kirans-create.vercel.app -> 'alternate' (Briefing / Presentation mode)
+ * - Explicit ?variant=main or ?variant=alternate overrides hostname for testing
+ * - Localhost / default defaults to 'main'
  */
 export function getExperienceVariant(): ExperienceVariant {
-  return 'alternate';
+  if (typeof window === 'undefined') return 'main';
+
+  // 1. Explicit query parameter override (audit & testing)
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const qVariant = params.get('variant');
+    if (qVariant === 'main') return 'main';
+    if (qVariant === 'alternate') return 'alternate';
+
+    // 2. Saved user preference in localStorage
+    const saved = localStorage.getItem('aegistrace_active_variant') as ExperienceVariant;
+    if (saved === 'main' || saved === 'alternate') {
+      return saved;
+    }
+  } catch {
+    // ignore
+  }
+
+  // 3. Hostname Switching
+  const host = window.location.hostname.toLowerCase();
+  if (host === 'aegistrace-kirans-create.vercel.app') {
+    return 'alternate';
+  }
+  if (host === 'aegistrace.vercel.app') {
+    return 'main';
+  }
+
+  return 'main';
 }
 
 /**
- * Instantly flips between the Complete Workstation UI and Compact Briefing UI,
+ * Instantly flips between the Workstation UI and Briefing UI,
  * persisting the choice in localStorage and updating URL state.
  */
 export function setExperienceVariant(variant: ExperienceVariant): void {

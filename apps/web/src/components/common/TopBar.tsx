@@ -283,6 +283,42 @@ export const TopBar: React.FC<TopBarProps> = ({
         )}
       </div>
 
+      {/* Experience Switcher Pill */}
+      <div className="glass-pill-container" style={{ display: 'flex', gap: '3px', background: 'rgba(255,255,255,0.05)', padding: '2px', borderRadius: '6px', border: '1px solid var(--border)' }}>
+          <button
+            onClick={() => setExperienceVariant('main')}
+            style={{
+              padding: '3px 8px',
+              fontSize: '11px',
+              fontWeight: 600,
+              borderRadius: '4px',
+              border: 'none',
+              background: getExperienceVariant() === 'main' ? 'rgba(59, 130, 246, 0.25)' : 'transparent',
+              color: getExperienceVariant() === 'main' ? '#60A5FA' : 'var(--text-tertiary)',
+              cursor: 'pointer'
+            }}
+            title="Switch to Main Forensic Workstation"
+          >
+            ✦ Main Workstation
+          </button>
+          <button
+            onClick={() => setExperienceVariant('alternate')}
+            style={{
+              padding: '3px 8px',
+              fontSize: '11px',
+              fontWeight: 600,
+              borderRadius: '4px',
+              border: 'none',
+              background: getExperienceVariant() === 'alternate' ? 'rgba(59, 130, 246, 0.25)' : 'transparent',
+              color: getExperienceVariant() === 'alternate' ? '#60A5FA' : 'var(--text-tertiary)',
+              cursor: 'pointer'
+            }}
+            title="Active: Briefing / Full Hub UI"
+          >
+            ☵ Briefing UI
+          </button>
+        </div>
+
       {/* System State, Quick Controls & Operator Identity */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: '8px' }}>
         {/* Operational Status Indicator */}

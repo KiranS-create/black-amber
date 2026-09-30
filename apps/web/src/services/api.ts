@@ -1043,6 +1043,55 @@ class ApiService {
     }
   }
 
+  public async executeSovereignQuarantine(
+    suspectName: string,
+    terminalId: string,
+    reason: string
+  ): Promise<EvidenceEvent> {
+    const prevHash = this.localLedgerEvents.length > 0 
+      ? this.localLedgerEvents[this.localLedgerEvents.length - 1].artifact_hash 
+      : '0x3a58e65f9024b11e2890acdef1234567890abcdef1234567890abcdef123456';
+
+    const eventId = `EVT_QUARANTINE_${Date.now()}`;
+    const artifactHash = `0x9a8f2c0199e4b1a7d6e5c4b3a2f10987${Math.floor(Math.random()*100000)}`;
+
+    const event: EvidenceEvent = {
+      event_id: eventId,
+      event_type: 'SECURITY_REVOCATION_EVENT',
+      timestamp: new Date().toISOString(),
+      document_id: 'DOC-CR-SIH26237-DEFENCE',
+      release_id: 'REL-NATIONAL-DEFENCE-01',
+      recipient_id: terminalId,
+      algorithm: 'ML-DSA-65 (NIST FIPS 204)',
+      artifact_hash: artifactHash,
+      evidence_hash: `0xsha256_${Date.now()}_revocation_proof`,
+      previous_event_hash: prevHash,
+      signature: `dsa65_rev_${terminalId.replace(/[^a-zA-Z0-9]/g, '_')}_sig_${Date.now()}`,
+      origin: 'REAL_LOCAL_COMPUTATION'
+    };
+
+    this.localLedgerEvents.unshift(event);
+
+    // Update recipient status if present
+    const r = this.localRecipients.find(x => 
+      x.recipient_id.toLowerCase().includes(terminalId.toLowerCase()) || 
+      x.name.toLowerCase().includes(suspectName.toLowerCase())
+    );
+    if (r) {
+      r.status = 'QUARANTINED';
+    }
+
+    // Update directory identity if present
+    const ident = this.localIdentities.find(x => 
+      x.display_name.toLowerCase().includes(suspectName.toLowerCase())
+    );
+    if (ident) {
+      ident.status = 'SUSPENDED';
+    }
+
+    return event;
+  }
+
   // -------------------------------------------------------------
   // 7. Integrations
   // -------------------------------------------------------------

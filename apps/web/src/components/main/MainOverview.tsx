@@ -20,7 +20,8 @@ import {
   Activity,
   FileCheck,
   Check,
-  Server
+  Server,
+  Camera
 } from 'lucide-react';
 import { MainTabId } from './MainSidebar';
 import { SvgCryptographicLattice } from './SvgCryptographicLattice';
@@ -40,6 +41,7 @@ interface MainOverviewProps {
   onOpenComparator?: () => void;
   onOpenCertificate?: () => void;
   onOpenCollusionLab?: () => void;
+  onOpenAirGapLab?: () => void;
 }
 
 export const MainOverview: React.FC<MainOverviewProps> = ({
@@ -55,7 +57,8 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
   onOpenDecryptionPortal,
   onOpenComparator,
   onOpenCertificate,
-  onOpenCollusionLab
+  onOpenCollusionLab,
+  onOpenAirGapLab
 }) => {
   const { theme } = useTheme();
   const isLight = theme === 'light';
@@ -283,6 +286,17 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
                 <span>Tardos Collusion Lab</span>
               </button>
             )}
+            {onOpenAirGapLab && (
+              <button
+                onClick={onOpenAirGapLab}
+                className="main-btn-secondary"
+                style={{ fontSize: '12px', borderColor: '#38BDF8', color: '#38BDF8' }}
+                title="Open Live Optical Camera Air-Gap Scanner"
+              >
+                <Camera size={13} />
+                <span>Air-Gap Camera</span>
+              </button>
+            )}
             <button
               onClick={onOpenSihCompliance}
               className="main-btn-secondary"
@@ -421,6 +435,16 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
               <Layers size={12} color="#8B5CF6" />
               <span>Visual Comparator</span>
             </button>
+            {onOpenAirGapLab && (
+              <button
+                onClick={onOpenAirGapLab}
+                className="main-btn-ghost"
+                style={{ fontSize: '11px', padding: '4px 8px' }}
+              >
+                <Camera size={12} color="#38BDF8" />
+                <span>Air-Gap Camera</span>
+              </button>
+            )}
             <button
               onClick={() => onNavigate('evidence')}
               className="main-btn-ghost"

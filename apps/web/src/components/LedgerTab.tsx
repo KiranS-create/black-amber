@@ -205,9 +205,26 @@ export const LedgerTab: React.FC<LedgerTabProps> = ({
                     </td>
 
                     <td>
-                      <span style={{ fontWeight: 500, color: 'var(--text-ivory)' }}>
-                        {evt.event_type}
-                      </span>
+                      {evt.event_type === 'SECURITY_REVOCATION_EVENT' ? (
+                        <span style={{ 
+                          fontWeight: 700, 
+                          color: '#EF4444', 
+                          background: 'rgba(239, 68, 68, 0.14)', 
+                          padding: '2px 8px', 
+                          borderRadius: '4px',
+                          border: '1px solid rgba(239, 68, 68, 0.35)',
+                          fontSize: '11px',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px'
+                        }}>
+                          ● ENCLAVE REVOKED
+                        </span>
+                      ) : (
+                        <span style={{ fontWeight: 500, color: 'var(--text-ivory)' }}>
+                          {evt.event_type}
+                        </span>
+                      )}
                     </td>
 
                     <td>

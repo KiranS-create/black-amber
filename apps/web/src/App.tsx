@@ -610,6 +610,16 @@ export function AppContent() {
 }
 
 export function App() {
+  const variant = getExperienceVariant();
+
+  if (variant === 'main') {
+    return (
+      <ThemeProvider>
+        <MainApp />
+      </ThemeProvider>
+    );
+  }
+
   return (
     <ThemeProvider>
       <AppContent />

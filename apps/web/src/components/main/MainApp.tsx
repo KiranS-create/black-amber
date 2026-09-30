@@ -242,6 +242,7 @@ export function MainApp() {
                 onOpenComparator={() => handleOpenComparator()}
                 onOpenCertificate={() => setIsCertificateModalOpen(true)}
                 onOpenCollusionLab={() => setIsCollusionModalOpen(true)}
+                onOpenAirGapLab={() => setIsCameraModalOpen(true)}
               />
             )}
 
@@ -266,6 +267,10 @@ export function MainApp() {
                 onOpenCertificate={() => setIsCertificateModalOpen(true)}
                 onOpenComparator={() => handleOpenComparator()}
                 onOpenAirGapScanner={() => setIsCameraModalOpen(true)}
+                onExecuteQuarantine={async (suspectName, terminalId, reason) => {
+                  await apiService.executeSovereignQuarantine(suspectName, terminalId, reason);
+                  await refreshData();
+                }}
               />
             )}
 

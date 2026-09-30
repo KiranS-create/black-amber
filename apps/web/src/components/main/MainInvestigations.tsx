@@ -23,10 +23,12 @@ import {
   Key,
   Database,
   Compass,
-  CornerDownRight
+  CornerDownRight,
+  Flame
 } from 'lucide-react';
 import { apiService } from '../../services/api';
 import { useTheme } from '../../context/ThemeContext';
+import { MainQuarantineModal } from './MainQuarantineModal';
 
 interface MainInvestigationsProps {
   investigations: InvestigationRecord[];
@@ -37,6 +39,8 @@ interface MainInvestigationsProps {
   onOpenCertificate?: (context?: any) => void;
   onOpenComparator?: () => void;
   onOpenAirGapScanner?: () => void;
+  onExecuteQuarantine?: (suspectName: string, terminalId: string, reason: string) => Promise<void>;
+  onViewLedger?: () => void;
 }
 
 interface ScaleScenario {
@@ -63,13 +67,17 @@ export const MainInvestigations: React.FC<MainInvestigationsProps> = ({
   onRunBenchmark,
   onOpenCertificate,
   onOpenComparator,
-  onOpenAirGapScanner
+  onOpenAirGapScanner,
+  onExecuteQuarantine,
+  onViewLedger
 }) => {
   const { theme } = useTheme();
   const isLight = theme === 'light';
 
   // Toggle between Standard Cohort (Alice, Bob, Charlie) and 1,000,000 National Scale Mode
   const [scaleMode, setScaleMode] = useState<'standard' | 'millionScale'>('millionScale');
+  const [quarantineModalOpen, setQuarantineModalOpen] = useState(false);
+  const [quarantineTarget, setQuarantineTarget] = useState<{ name: string; rank: string; terminal: string; secretCode: string } | null>(null);
 
   // Million-Scale state
   const scaleScenarios: ScaleScenario[] = [
@@ -711,25 +719,52 @@ export const MainInvestigations: React.FC<MainInvestigationsProps> = ({
                 <span><strong>Population Size:</strong> <code>N = 1,000,000</code></span>
               </div>
 
-              {onOpenCertificate && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                 <button
-                  onClick={() => onOpenCertificate({
-                    candidateName: activeScaleScenario.name,
-                    suspectRank: activeScaleScenario.rank,
-                    terminalId: activeScaleScenario.terminal,
-                    secretCodeHex: activeScaleScenario.secretCodeHex,
-                    merkleLeaf: activeScaleScenario.merkleLeaf,
-                    confidence: activeScaleScenario.confidence,
-                    routeHop: activeScaleScenario.route,
-                    bchStatus: '0 Bit Errors (BCH t=3 Corrected)'
-                  })}
-                  className="main-btn-primary"
-                  style={{ fontSize: '12px', background: '#3B82F6', borderColor: '#2563EB', display: 'flex', alignItems: 'center', gap: '6px' }}
+                  onClick={() => {
+                    setQuarantineTarget({
+                      name: activeScaleScenario.name,
+                      rank: activeScaleScenario.rank,
+                      terminal: activeScaleScenario.terminal,
+                      secretCode: activeScaleScenario.secretCodeHex
+                    });
+                    setQuarantineModalOpen(true);
+                  }}
+                  className="main-btn-secondary"
+                  style={{
+                    fontSize: '12px',
+                    borderColor: '#EF4444',
+                    color: '#EF4444',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                  title="Sever client WASM enclave and commit ML-DSA-65 revocation event to ledger"
                 >
-                  <Scale size={13} />
-                  <span>Generate Court Evidence Docket (BSA § 65B) →</span>
+                  <Flame size={13} />
+                  <span>Enclave Kill-Switch</span>
                 </button>
-              )}
+
+                {onOpenCertificate && (
+                  <button
+                    onClick={() => onOpenCertificate({
+                      candidateName: activeScaleScenario.name,
+                      suspectRank: activeScaleScenario.rank,
+                      terminalId: activeScaleScenario.terminal,
+                      secretCodeHex: activeScaleScenario.secretCodeHex,
+                      merkleLeaf: activeScaleScenario.merkleLeaf,
+                      confidence: activeScaleScenario.confidence,
+                      routeHop: activeScaleScenario.route,
+                      bchStatus: '0 Bit Errors (BCH t=3 Corrected)'
+                    })}
+                    className="main-btn-primary"
+                    style={{ fontSize: '12px', background: '#3B82F6', borderColor: '#2563EB', display: 'flex', alignItems: 'center', gap: '6px' }}
+                  >
+                    <Scale size={13} />
+                    <span>Generate Court Evidence Docket (BSA § 65B) →</span>
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -868,6 +903,33 @@ export const MainInvestigations: React.FC<MainInvestigationsProps> = ({
 
               {/* Quick Action Buttons on Investigation Result */}
               <div style={{ display: 'flex', gap: '10px', marginBottom: '16px', flexWrap: 'wrap' }}>
+                {!isAbstain && (
+                  <button
+                    onClick={() => {
+                      setQuarantineTarget({
+                        name: currentSuspect,
+                        rank: 'Principal Recipient Officer',
+                        terminal: 'Terminal #W-4102',
+                        secretCode: '0x4A12-B890-77C1-33D9-5EF011-88A2'
+                      });
+                      setQuarantineModalOpen(true);
+                    }}
+                    className="main-btn-secondary"
+                    style={{
+                      fontSize: '12px',
+                      borderColor: '#EF4444',
+                      color: '#EF4444',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px'
+                    }}
+                    title="Sever client WASM enclave and commit ML-DSA-65 revocation event to ledger"
+                  >
+                    <Flame size={13} />
+                    <span>Enclave Kill-Switch</span>
+                  </button>
+                )}
+
                 {onOpenCertificate && !isAbstain && (
                   <button
                     onClick={onOpenCertificate}
@@ -978,6 +1040,26 @@ export const MainInvestigations: React.FC<MainInvestigationsProps> = ({
             </tbody>
           </table>
         </div>
+      )}
+
+      {/* Sovereign Quarantine Kill-Switch Modal */}
+      {quarantineModalOpen && quarantineTarget && (
+        <MainQuarantineModal
+          isOpen={quarantineModalOpen}
+          onClose={() => setQuarantineModalOpen(false)}
+          suspectName={quarantineTarget.name}
+          suspectRank={quarantineTarget.rank}
+          terminalId={quarantineTarget.terminal}
+          secretCodeHex={quarantineTarget.secretCode}
+          onExecuteQuarantine={async (suspectName, terminalId, reason) => {
+            if (onExecuteQuarantine) {
+              await onExecuteQuarantine(suspectName, terminalId, reason);
+            } else {
+              await apiService.executeSovereignQuarantine(suspectName, terminalId, reason);
+            }
+          }}
+          onViewLedger={onViewLedger}
+        />
       )}
     </div>
   );
