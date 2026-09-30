@@ -16,6 +16,12 @@ interface AppShellProps {
   onQuickScenario: (scenarioId: string) => void;
   onSimulateTamper: () => void;
   onExportReport?: () => void;
+  onOpenCollusionLab?: () => void;
+  onOpenAirGapLab?: () => void;
+  onOpenDecryptionLab?: () => void;
+  onOpenComparatorLab?: (recipientName?: string, docName?: string) => void;
+  onOpenCertificate?: () => void;
+  onOpenCompliance?: () => void;
   documentCount?: number;
   recipientCount?: number;
   releaseCount?: number;
@@ -39,6 +45,12 @@ export const AppShell: React.FC<AppShellProps> = ({
   onQuickScenario,
   onSimulateTamper,
   onExportReport,
+  onOpenCollusionLab,
+  onOpenAirGapLab,
+  onOpenDecryptionLab,
+  onOpenComparatorLab,
+  onOpenCertificate,
+  onOpenCompliance,
   documentCount = 0,
   recipientCount = 0,
   releaseCount = 0,
@@ -88,6 +100,10 @@ export const AppShell: React.FC<AppShellProps> = ({
         onOpenWalkthrough={onOpenWalkthrough}
         onResetDemo={onResetDemo}
         onOpenCommandPalette={() => setCommandPaletteOpen(true)}
+        onOpenCollusionLab={onOpenCollusionLab}
+        onOpenAirGapLab={onOpenAirGapLab}
+        onOpenDecryptionLab={onOpenDecryptionLab}
+        onOpenComparatorLab={onOpenComparatorLab ? () => onOpenComparatorLab() : undefined}
         userSession={userSession}
         isDemoMode={isDemoMode}
         onPurgeDemo={onPurgeDemo}
@@ -147,6 +163,12 @@ export const AppShell: React.FC<AppShellProps> = ({
         setForceOffline={onToggleForceOffline}
         onSimulateTamper={onSimulateTamper}
         onExportReport={onExportReport}
+        onOpenCollusionLab={onOpenCollusionLab}
+        onOpenAirGapLab={onOpenAirGapLab}
+        onOpenDecryptionLab={onOpenDecryptionLab}
+        onOpenComparatorLab={onOpenComparatorLab ? () => onOpenComparatorLab() : undefined}
+        onOpenCertificate={onOpenCertificate}
+        onOpenCompliance={onOpenCompliance}
       />
     </div>
   );

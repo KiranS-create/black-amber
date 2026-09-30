@@ -20,14 +20,20 @@ import {
   FileSpreadsheet,
   Wifi,
   WifiOff,
-  UserCheck
+  UserCheck,
+  Users,
+  Camera,
+  Key,
+  Eye,
+  Award,
+  Scale
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 
 export interface CommandItem {
   id: string;
   title: string;
-  category: 'Navigation' | 'Benchmark' | 'Action' | 'Audit';
+  category: 'Navigation' | 'Benchmark' | 'Action' | 'Audit' | 'Labs';
   description: string;
   shortcut?: string;
   icon: React.ReactNode;
@@ -50,6 +56,12 @@ interface CommandPaletteProps {
   onExportReport?: () => void;
   onToggleTheme?: () => void;
   onOpenVerify?: () => void;
+  onOpenCollusionLab?: () => void;
+  onOpenAirGapLab?: () => void;
+  onOpenDecryptionLab?: () => void;
+  onOpenComparatorLab?: () => void;
+  onOpenCertificate?: () => void;
+  onOpenCompliance?: () => void;
 }
 
 export const CommandPalette: React.FC<CommandPaletteProps> = ({
@@ -68,6 +80,12 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   onExportReport,
   onToggleTheme,
   onOpenVerify,
+  onOpenCollusionLab,
+  onOpenAirGapLab,
+  onOpenDecryptionLab,
+  onOpenComparatorLab,
+  onOpenCertificate,
+  onOpenCompliance
 }) => {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -257,6 +275,74 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       perform: () => {
         if (onExportReport) onExportReport();
         else navigate('evidence');
+        onClose();
+      }
+    },
+
+    // Interactive Forensic Labs & Simulators
+    {
+      id: 'lab-collusion',
+      title: 'Collusion Resistance Lab (Tardos Code Simulator)',
+      category: 'Labs',
+      description: 'Simulate dynamic coalitions with averaging, minmax, and splicing attack vectors',
+      icon: <Users size={16} className="text-purple-400" />,
+      perform: () => {
+        if (onOpenCollusionLab) onOpenCollusionLab();
+        onClose();
+      }
+    },
+    {
+      id: 'lab-airgap',
+      title: 'Air-Gap Optical Camera Lab (Smartphone Demodulation)',
+      category: 'Labs',
+      description: 'Live camera stream demodulation with homography rectification and print descreening',
+      icon: <Camera size={16} className="text-amber-400" />,
+      perform: () => {
+        if (onOpenAirGapLab) onOpenAirGapLab();
+        onClose();
+      }
+    },
+    {
+      id: 'lab-decryption',
+      title: 'Recipient Decapsulation Enclave (ML-KEM-768)',
+      category: 'Labs',
+      description: 'Test NIST FIPS 203 post-quantum decapsulation and ephemeral watermark injection',
+      icon: <Key size={16} className="text-sky-400" />,
+      perform: () => {
+        if (onOpenDecryptionLab) onOpenDecryptionLab();
+        onClose();
+      }
+    },
+    {
+      id: 'lab-comparator',
+      title: 'Proof of Visual Imperceptibility (Spectral Carrier Comparator)',
+      category: 'Labs',
+      description: 'Side-by-side DSSS spatial carrier comparator and difference heatmap (>45dB PSNR)',
+      icon: <Eye size={16} className="text-teal-400" />,
+      perform: () => {
+        if (onOpenComparatorLab) onOpenComparatorLab();
+        onClose();
+      }
+    },
+    {
+      id: 'lab-certificate',
+      title: 'Section 65B Electronic Evidence Certificate Generator',
+      category: 'Audit',
+      description: 'Indian Evidence Act Section 65B certified chain of custody with downloadable proof archive',
+      icon: <Scale size={16} className="text-emerald-400" />,
+      perform: () => {
+        if (onOpenCertificate) onOpenCertificate();
+        onClose();
+      }
+    },
+    {
+      id: 'lab-compliance',
+      title: 'SIH Problem Statement 26237 Compliance Matrix',
+      category: 'Audit',
+      description: 'Review complete 10-pillar architecture verification matrix against Ministry requirements',
+      icon: <Award size={16} className="text-amber-400" />,
+      perform: () => {
+        if (onOpenCompliance) onOpenCompliance();
         onClose();
       }
     }

@@ -9,7 +9,13 @@ import {
   Moon, 
   BookOpen,
   UserCheck,
-  LogOut
+  LogOut,
+  Users,
+  Camera,
+  Key,
+  Eye,
+  Sparkles,
+  Layers
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { UserSession } from '../../types';
@@ -22,6 +28,10 @@ interface TopBarProps {
   onOpenWalkthrough: () => void;
   onResetDemo: () => void;
   onOpenCommandPalette: () => void;
+  onOpenCollusionLab?: () => void;
+  onOpenAirGapLab?: () => void;
+  onOpenDecryptionLab?: () => void;
+  onOpenComparatorLab?: () => void;
   userSession?: UserSession | null;
   isDemoMode?: boolean;
   onPurgeDemo?: () => void;
@@ -35,6 +45,10 @@ export const TopBar: React.FC<TopBarProps> = ({
   onOpenWalkthrough,
   onResetDemo,
   onOpenCommandPalette,
+  onOpenCollusionLab,
+  onOpenAirGapLab,
+  onOpenDecryptionLab,
+  onOpenComparatorLab,
   userSession,
   isDemoMode = false,
   onPurgeDemo,
@@ -101,7 +115,7 @@ export const TopBar: React.FC<TopBarProps> = ({
       </div>
 
       {/* Global Search / Command Palette Trigger (Layer 2 Surface) */}
-      <div style={{ flex: 1, maxWidth: '440px', margin: '0 var(--space-6)' }}>
+      <div style={{ flex: 1, maxWidth: '400px', margin: '0 var(--space-4)' }}>
         <button
           onClick={onOpenCommandPalette}
           className="topbar-search-container"
@@ -125,7 +139,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Search size={13} style={{ color: 'var(--text-tertiary)' }} />
-            <span>Search documents, cases, evidence, or ledger...</span>
+            <span>Search artifacts, cases, evidence, or labs...</span>
           </div>
           <kbd
             style={{
@@ -143,8 +157,107 @@ export const TopBar: React.FC<TopBarProps> = ({
         </button>
       </div>
 
+      {/* Quick Interactive Labs Launcher */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+        {onOpenCollusionLab && (
+          <button
+            onClick={onOpenCollusionLab}
+            title="Collusion Resistance Simulator (Tardos Coalition Scoring)"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px',
+              height: '26px',
+              padding: '0 8px',
+              borderRadius: 'var(--radius-xs)',
+              backgroundColor: 'rgba(139, 92, 246, 0.12)',
+              border: '1px solid rgba(139, 92, 246, 0.3)',
+              color: '#A78BFA',
+              fontSize: '11px',
+              fontWeight: 600,
+              cursor: 'pointer'
+            }}
+          >
+            <Users size={12} />
+            <span>Collusion Lab</span>
+          </button>
+        )}
+
+        {onOpenAirGapLab && (
+          <button
+            onClick={onOpenAirGapLab}
+            title="Air-Gap Optical Camera Lab (Smartphone Demodulation)"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px',
+              height: '26px',
+              padding: '0 8px',
+              borderRadius: 'var(--radius-xs)',
+              backgroundColor: 'rgba(245, 158, 11, 0.12)',
+              border: '1px solid rgba(245, 158, 11, 0.3)',
+              color: '#FBBF24',
+              fontSize: '11px',
+              fontWeight: 600,
+              cursor: 'pointer'
+            }}
+          >
+            <Camera size={12} />
+            <span>Air-Gap Cam</span>
+          </button>
+        )}
+
+        {onOpenDecryptionLab && (
+          <button
+            onClick={onOpenDecryptionLab}
+            title="Recipient Decapsulation Enclave (ML-KEM-768)"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px',
+              height: '26px',
+              padding: '0 8px',
+              borderRadius: 'var(--radius-xs)',
+              backgroundColor: 'rgba(56, 189, 248, 0.12)',
+              border: '1px solid rgba(56, 189, 248, 0.3)',
+              color: '#38BDF8',
+              fontSize: '11px',
+              fontWeight: 600,
+              cursor: 'pointer'
+            }}
+          >
+            <Key size={12} />
+            <span>Decapsulator</span>
+          </button>
+        )}
+
+        {onOpenComparatorLab && (
+          <button
+            onClick={onOpenComparatorLab}
+            title="Visual Imperceptibility Proof (Spectral Carrier Comparator)"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px',
+              height: '26px',
+              padding: '0 8px',
+              borderRadius: 'var(--radius-xs)',
+              backgroundColor: 'rgba(76, 154, 154, 0.12)',
+              border: '1px solid rgba(76, 154, 154, 0.3)',
+              color: 'var(--primary-text)',
+              fontSize: '11px',
+              fontWeight: 600,
+              cursor: 'pointer'
+            }}
+          >
+            <Eye size={12} />
+            <span>Imperceptibility</span>
+          </button>
+        )}
+      </div>
+
       {/* System State, Quick Controls & Operator Identity */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: '8px' }}>
         {/* Offline Simulation Toggle */}
         <button
           onClick={() => onToggleForceOffline(!forceOffline)}
@@ -154,7 +267,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             alignItems: 'center',
             gap: '6px',
             height: '28px',
-            padding: '0 10px',
+            padding: '0 9px',
             borderRadius: 'var(--radius-xs)',
             backgroundColor: forceOffline ? 'var(--warning-subtle)' : 'var(--success-subtle)',
             border: `1px solid ${forceOffline ? 'var(--warning-border)' : 'var(--success-border)'}`,
@@ -165,7 +278,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           }}
         >
           {forceOffline ? <WifiOff size={12} /> : <Wifi size={12} />}
-          <span>{forceOffline ? 'Offline mode' : 'Connected'}</span>
+          <span>{forceOffline ? 'Offline' : 'Connected'}</span>
         </button>
 
         {/* System Architecture Guide */}
@@ -175,9 +288,9 @@ export const TopBar: React.FC<TopBarProps> = ({
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '6px',
+            gap: '5px',
             height: '28px',
-            padding: '0 10px',
+            padding: '0 9px',
             borderRadius: 'var(--radius-xs)',
             backgroundColor: 'transparent',
             border: '1px solid var(--border)',
@@ -196,7 +309,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           }}
         >
           <BookOpen size={12} />
-          <span>System guide</span>
+          <span>Guide</span>
         </button>
 
         {/* Demo Mode Indicator */}
@@ -205,12 +318,12 @@ export const TopBar: React.FC<TopBarProps> = ({
             style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '6px',
-              padding: '3px 8px',
+              gap: '5px',
+              padding: '2px 7px',
               backgroundColor: 'rgba(197, 150, 69, 0.15)',
               border: '1px solid rgba(197, 150, 69, 0.4)',
               borderRadius: 'var(--radius-xs)',
-              fontSize: '11px',
+              fontSize: '10.5px',
               fontWeight: 700,
               color: 'var(--warning)',
               letterSpacing: '0.04em'
@@ -220,14 +333,14 @@ export const TopBar: React.FC<TopBarProps> = ({
             {onPurgeDemo && (
               <button
                 onClick={onPurgeDemo}
-                title="Purge demonstration data and return to clean state"
+                title="Purge demonstration data"
                 style={{
                   background: 'none',
                   border: 'none',
                   color: 'var(--warning)',
                   cursor: 'pointer',
                   padding: '0 2px',
-                  fontSize: '13px',
+                  fontSize: '12px',
                   lineHeight: 1,
                   display: 'flex',
                   alignItems: 'center'
@@ -239,122 +352,45 @@ export const TopBar: React.FC<TopBarProps> = ({
           </div>
         )}
 
-        {/* Experience Variant Switcher Pill */}
-        <div 
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            padding: '2px',
-            background: 'var(--surface-subtle)',
-            border: '1px solid var(--border)',
-            borderRadius: '20px',
-            marginRight: '6px'
-          }}
-        >
-          <button
-            onClick={() => setExperienceVariant('main')}
-            title="Switch to the Main Software User Interface"
-            style={{
-              border: 'none',
-              background: activeVariant === 'main' ? 'rgba(56, 189, 248, 0.2)' : 'transparent',
-              color: activeVariant === 'main' ? '#0284C7' : 'var(--text-tertiary)',
-              fontWeight: activeVariant === 'main' ? 600 : 500,
-              fontSize: '11px',
-              padding: '3px 9px',
-              borderRadius: '16px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              transition: 'all 0.15s ease'
-            }}
-          >
-            <span>✦ Main Workstation</span>
-          </button>
-          <button
-            onClick={() => setExperienceVariant('alternate')}
-            title="Active: Alternate Baseline UI"
-            style={{
-              border: 'none',
-              background: activeVariant === 'alternate' ? 'var(--surface)' : 'transparent',
-              color: activeVariant === 'alternate' ? 'var(--text)' : 'var(--text-tertiary)',
-              fontWeight: activeVariant === 'alternate' ? 600 : 500,
-              fontSize: '11px',
-              padding: '3px 9px',
-              borderRadius: '16px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              boxShadow: activeVariant === 'alternate' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
-              transition: 'all 0.15s ease'
-            }}
-          >
-            <span>☵ Alternate UI</span>
-          </button>
-        </div>
-
-        {/* Theme Toggle */}
+        {/* Theme Toggle Button */}
         <button
           onClick={toggleTheme}
-          title="Toggle interface theme"
+          title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
           style={{
             width: '28px',
             height: '28px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
             borderRadius: 'var(--radius-xs)',
             backgroundColor: 'transparent',
             border: '1px solid var(--border)',
-            color: 'var(--text-tertiary)',
+            color: 'var(--text-secondary)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
             cursor: 'pointer'
           }}
-          onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
-          onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-tertiary)')}
         >
           {theme === 'dark' ? <Sun size={13} /> : <Moon size={13} />}
         </button>
 
-        {/* Operator Profile */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            paddingLeft: '6px',
-            borderLeft: '1px solid var(--border-subtle)'
-          }}
-        >
+        {/* Operator Profile / Sign Out */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', paddingLeft: '4px', borderLeft: '1px solid var(--border)' }}>
           <div
             style={{
-              width: '26px',
-              height: '26px',
-              borderRadius: 'var(--radius-xs)',
-              backgroundColor: 'var(--surface-subtle)',
-              border: '1px solid var(--border)',
+              width: '24px',
+              height: '24px',
+              borderRadius: '50%',
+              backgroundColor: 'var(--primary-subtle)',
+              border: '1px solid var(--primary-border)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '11px',
-              fontWeight: 600,
-              color: 'var(--text)',
-              textTransform: 'uppercase'
+              fontSize: '10px',
+              fontWeight: 700,
+              color: 'var(--primary)'
             }}
           >
-            {userSession?.display_name 
-              ? userSession.display_name.substring(0, 2) 
-              : userSession?.actor_id ? userSession.actor_id.substring(0, 2) : 'EX'}
+            SI
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text)', lineHeight: 1.1 }}>
-              {userSession?.display_name || userSession?.email || 'Examiner'}
-            </span>
-            <span style={{ fontSize: '10px', color: 'var(--text-tertiary)', lineHeight: 1.1, textTransform: 'capitalize' }}>
-              {userSession?.role || 'Operator'}
-            </span>
-          </div>
-
           {onSignOut && (
             <button
               onClick={onSignOut}
@@ -365,10 +401,8 @@ export const TopBar: React.FC<TopBarProps> = ({
                 color: 'var(--text-tertiary)',
                 cursor: 'pointer',
                 padding: '4px',
-                marginLeft: '4px',
                 display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
+                alignItems: 'center'
               }}
               onMouseEnter={e => (e.currentTarget.style.color = 'var(--danger)')}
               onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-tertiary)')}

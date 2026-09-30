@@ -1,27 +1,25 @@
 export type ExperienceVariant = 'main' | 'alternate';
 
 /**
- * Determines whether to serve the New Premium Minimal Main UI
- * or the Alternate Baseline UI based on current hostname, user preference, or query param.
+ * Determines whether to serve the Unified Forensic Security Workstation
+ * across all domains (including https://aegistrace-kirans-create.vercel.app).
  *
  * Rules:
- * - https://aegistrace.vercel.app -> 'main' (Main software user interface)
- * - https://aegistrace-kirans-create.vercel.app -> 'alternate' (Alternate domain)
- * - Query param `?variant=alternate` or `?variant=main` allows instant audit & testing.
+ * - Default: 'alternate' (The complete 12-tab workstation fused with all interactive labs and tools).
+ * - Query param `?variant=presentation` allows launching the compact 4-tab briefing mode.
  * - Persistent toggle in localStorage allows seamless 1-click switching on any domain.
- * - All other hosts (localhost, Vercel preview URLs) default to 'main'.
  */
 export function getExperienceVariant(): ExperienceVariant {
   if (typeof window === 'undefined') {
-    return 'main';
+    return 'alternate';
   }
 
-  // 1. Explicit query parameter override (for testing & auditor side-by-side verification)
+  // 1. Explicit query parameter override (for testing & presentation mode)
   try {
     const params = new URLSearchParams(window.location.search);
     const override = params.get('variant');
-    if (override === 'alternate') return 'alternate';
-    if (override === 'main') return 'main';
+    if (override === 'presentation' || override === 'main') return 'main';
+    if (override === 'alternate' || override === 'workstation' || override === 'unified') return 'alternate';
   } catch {
     // ignore search param parsing failure
   }
@@ -29,32 +27,22 @@ export function getExperienceVariant(): ExperienceVariant {
   // 2. Persistent user choice in localStorage
   try {
     const saved = localStorage.getItem('aegistrace_active_variant');
-    if (saved === 'alternate' || saved === 'main') {
-      return saved as ExperienceVariant;
+    if (saved === 'main' || saved === 'presentation') {
+      return 'main';
+    }
+    if (saved === 'alternate' || saved === 'workstation' || saved === 'unified') {
+      return 'alternate';
     }
   } catch {
     // ignore localStorage access issues
   }
 
-  // 3. Strict Hostname Matching
-  const hostname = window.location.hostname.toLowerCase();
-
-  // The Alternate Baseline Domain (kiran-vercel URL)
-  if (hostname.includes('aegistrace-kirans-create.vercel.app')) {
-    return 'alternate';
-  }
-
-  // The Main Workstation Domain
-  if (hostname.includes('aegistrace.vercel.app')) {
-    return 'main';
-  }
-
-  // Default to Main Domain Experience (localhost, preview URLs)
-  return 'main';
+  // Default: The Unified Complete Workstation with all features and interactive labs
+  return 'alternate';
 }
 
 /**
- * Instantly flips between the Main Software UI and Alternate UI,
+ * Instantly flips between the Complete Workstation UI and Compact Briefing UI,
  * persisting the choice in localStorage and updating URL state.
  */
 export function setExperienceVariant(variant: ExperienceVariant): void {

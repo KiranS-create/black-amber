@@ -4,6 +4,10 @@
    ========================================================================== */
 
 /* DARK THEME TOKENS (Default / Security Operations Standard) */
+:root,
+:root[data-theme="dark"],
+.theme-dark,
+.dark,
 .main-experience,
 :root[data-theme="dark"] .main-experience,
 .theme-dark .main-experience,
@@ -48,6 +52,9 @@
 }
 
 /* LIGHT THEME TOKENS (Pure Slate / Crisp White Sovereign Standard) */
+:root[data-theme="light"],
+.theme-light,
+.light,
 :root[data-theme="light"] .main-experience,
 .theme-light .main-experience,
 .light .main-experience {

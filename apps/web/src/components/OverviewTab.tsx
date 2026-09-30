@@ -8,7 +8,16 @@ import {
   ArrowRight,
   Database,
   Plus,
-  Users
+  Users,
+  Camera,
+  Key,
+  Eye,
+  Award,
+  Scale,
+  Sparkles,
+  Zap,
+  Layers,
+  Cpu
 } from 'lucide-react';
 import { 
   PublicRecipient, 
@@ -21,6 +30,8 @@ import {
 import { StatusBadge } from './common/StatusBadge';
 import { Drawer } from './common/Drawer';
 import { EmptyState } from './common/EmptyState';
+import { SvgCryptographicLattice } from './main/SvgCryptographicLattice';
+import { SvgMerkleChain } from './main/SvgMerkleChain';
 
 interface OverviewTabProps {
   documents: DocumentMetadata[];
@@ -35,6 +46,12 @@ interface OverviewTabProps {
   onQuickScenario?: (scenarioId: string) => void;
   onLoadDemo?: () => void;
   onPurgeDemo?: () => void;
+  onOpenCollusionLab?: () => void;
+  onOpenAirGapLab?: () => void;
+  onOpenDecryptionLab?: () => void;
+  onOpenComparatorLab?: (recipientName?: string, docName?: string) => void;
+  onOpenCertificate?: () => void;
+  onOpenCompliance?: () => void;
 }
 
 export const OverviewTab: React.FC<OverviewTabProps> = ({
@@ -49,7 +66,13 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
   setActiveTab,
   onQuickScenario,
   onLoadDemo,
-  onPurgeDemo
+  onPurgeDemo,
+  onOpenCollusionLab,
+  onOpenAirGapLab,
+  onOpenDecryptionLab,
+  onOpenComparatorLab,
+  onOpenCertificate,
+  onOpenCompliance
 }) => {
   const [selectedInvestigation, setSelectedInvestigation] = useState<InvestigationRecord | null>(null);
 
@@ -287,7 +310,264 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
         </div>
       </div>
 
-      {/* 4. Recent Investigations Section */}
+      {/* 4. Interactive Forensic Laboratories & Simulators */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <h2 style={{ margin: 0, fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span>Interactive Forensic Laboratories & Simulators</span>
+              <span className="forensic-seal-verified" style={{ fontSize: '10px', padding: '1px 6px' }}>SIH 26237</span>
+            </h2>
+            <p style={{ margin: '2px 0 0 0', fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
+              Live interactive simulators for collusion resilience, optical air-gap descreening, NIST PQC decapsulation, and Section 65B legal admissibility.
+            </p>
+          </div>
+          {onOpenCompliance && (
+            <button
+              onClick={onOpenCompliance}
+              className="btn-secondary"
+              style={{ fontSize: '11.5px', height: '28px', padding: '0 10px', display: 'flex', alignItems: 'center', gap: '6px' }}
+            >
+              <Award size={13} style={{ color: '#F59E0B' }} />
+              <span>SIH 26237 Matrix</span>
+            </button>
+          )}
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'var(--space-3)' }}>
+          {/* Card 1: Collusion Resistance Simulator */}
+          <div 
+            className="workstation-card specular-border"
+            style={{ 
+              padding: 'var(--space-4)', 
+              display: 'flex', 
+              flexDirection: 'column', 
+              justifyContent: 'space-between',
+              cursor: onOpenCollusionLab ? 'pointer' : 'default',
+              transition: 'all var(--transition-normal)'
+            }}
+            onClick={onOpenCollusionLab}
+          >
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                <span className="forensic-seal-verified" style={{ fontSize: '10px' }}>Tardos Codes</span>
+                <div style={{ width: '28px', height: '28px', borderRadius: 'var(--radius-xs)', backgroundColor: 'rgba(139, 92, 246, 0.12)', border: '1px solid rgba(139, 92, 246, 0.3)', color: '#A78BFA', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Users size={14} />
+                </div>
+              </div>
+              <h3 style={{ margin: '0 0 4px 0', fontSize: '13.5px', fontWeight: 600, color: 'var(--text)' }}>
+                Collusion Resistance Simulator
+              </h3>
+              <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+                Simulate traitor coalitions fusing watermarked copies across averaging, minmax, and splicing attack vectors.
+              </p>
+            </div>
+            <div style={{ marginTop: '14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--border-subtle)', paddingTop: '10px' }}>
+              <span style={{ fontSize: '11px', color: '#A78BFA', fontFamily: 'var(--font-mono)' }}>c=3 Coalition Bound</span>
+              <span style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                Launch Lab <ArrowRight size={12} />
+              </span>
+            </div>
+          </div>
+
+          {/* Card 2: Air-Gap Optical Camera Lab */}
+          <div 
+            className="workstation-card specular-border"
+            style={{ 
+              padding: 'var(--space-4)', 
+              display: 'flex', 
+              flexDirection: 'column', 
+              justifyContent: 'space-between',
+              cursor: onOpenAirGapLab ? 'pointer' : 'default',
+              transition: 'all var(--transition-normal)'
+            }}
+            onClick={onOpenAirGapLab}
+          >
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                <span className="forensic-seal-verified" style={{ fontSize: '10px' }}>Optical Demod</span>
+                <div style={{ width: '28px', height: '28px', borderRadius: 'var(--radius-xs)', backgroundColor: 'rgba(245, 158, 11, 0.12)', border: '1px solid rgba(245, 158, 11, 0.3)', color: '#FBBF24', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Camera size={14} />
+                </div>
+              </div>
+              <h3 style={{ margin: '0 0 4px 0', fontSize: '13.5px', fontWeight: 600, color: 'var(--text)' }}>
+                Air-Gap Optical Camera Lab
+              </h3>
+              <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+                Real-time optical demodulation from smartphone camera capture with homography rectification and print descreening.
+              </p>
+            </div>
+            <div style={{ marginTop: '14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--border-subtle)', paddingTop: '10px' }}>
+              <span style={{ fontSize: '11px', color: '#FBBF24', fontFamily: 'var(--font-mono)' }}>Live WebCam Stream</span>
+              <span style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                Open Camera <ArrowRight size={12} />
+              </span>
+            </div>
+          </div>
+
+          {/* Card 3: Post-Quantum Decryption Enclave */}
+          <div 
+            className="workstation-card specular-border"
+            style={{ 
+              padding: 'var(--space-4)', 
+              display: 'flex', 
+              flexDirection: 'column', 
+              justifyContent: 'space-between',
+              cursor: onOpenDecryptionLab ? 'pointer' : 'default',
+              transition: 'all var(--transition-normal)'
+            }}
+            onClick={onOpenDecryptionLab}
+          >
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                <span className="forensic-seal-verified" style={{ fontSize: '10px' }}>NIST FIPS 203</span>
+                <div style={{ width: '28px', height: '28px', borderRadius: 'var(--radius-xs)', backgroundColor: 'rgba(56, 189, 248, 0.12)', border: '1px solid rgba(56, 189, 248, 0.3)', color: '#38BDF8', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Key size={14} />
+                </div>
+              </div>
+              <h3 style={{ margin: '0 0 4px 0', fontSize: '13.5px', fontWeight: 600, color: 'var(--text)' }}>
+                Recipient Decapsulation Enclave
+              </h3>
+              <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+                Step-by-step interactive ML-KEM-768 key decapsulation and volatile raster watermark injection.
+              </p>
+            </div>
+            <div style={{ marginTop: '14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--border-subtle)', paddingTop: '10px' }}>
+              <span style={{ fontSize: '11px', color: '#38BDF8', fontFamily: 'var(--font-mono)' }}>ML-KEM-768 Enclave</span>
+              <span style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                Decapsulate <ArrowRight size={12} />
+              </span>
+            </div>
+          </div>
+
+          {/* Card 4: Visual Imperceptibility Proof */}
+          <div 
+            className="workstation-card specular-border"
+            style={{ 
+              padding: 'var(--space-4)', 
+              display: 'flex', 
+              flexDirection: 'column', 
+              justifyContent: 'space-between',
+              cursor: onOpenComparatorLab ? 'pointer' : 'default',
+              transition: 'all var(--transition-normal)'
+            }}
+            onClick={() => onOpenComparatorLab && onOpenComparatorLab()}
+          >
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                <span className="forensic-seal-verified" style={{ fontSize: '10px' }}>PSNR &gt; 45dB</span>
+                <div style={{ width: '28px', height: '28px', borderRadius: 'var(--radius-xs)', backgroundColor: 'rgba(76, 154, 154, 0.12)', border: '1px solid rgba(76, 154, 154, 0.3)', color: 'var(--primary-text)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Eye size={14} />
+                </div>
+              </div>
+              <h3 style={{ margin: '0 0 4px 0', fontSize: '13.5px', fontWeight: 600, color: 'var(--text)' }}>
+                Proof of Visual Imperceptibility
+              </h3>
+              <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+                Side-by-side DSSS spatial carrier comparator, amplified difference heatmaps, and SSIM index validation.
+              </p>
+            </div>
+            <div style={{ marginTop: '14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--border-subtle)', paddingTop: '10px' }}>
+              <span style={{ fontSize: '11px', color: 'var(--primary-text)', fontFamily: 'var(--font-mono)' }}>SSIM 0.9982</span>
+              <span style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                Compare Proof <ArrowRight size={12} />
+              </span>
+            </div>
+          </div>
+
+          {/* Card 5: Section 65B Certificate */}
+          <div 
+            className="workstation-card specular-border"
+            style={{ 
+              padding: 'var(--space-4)', 
+              display: 'flex', 
+              flexDirection: 'column', 
+              justifyContent: 'space-between',
+              cursor: onOpenCertificate ? 'pointer' : 'default',
+              transition: 'all var(--transition-normal)'
+            }}
+            onClick={onOpenCertificate}
+          >
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                <span className="forensic-seal-verified" style={{ fontSize: '10px' }}>Legal Proof</span>
+                <div style={{ width: '28px', height: '28px', borderRadius: 'var(--radius-xs)', backgroundColor: 'rgba(16, 185, 129, 0.12)', border: '1px solid rgba(16, 185, 129, 0.3)', color: '#10B981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Scale size={14} />
+                </div>
+              </div>
+              <h3 style={{ margin: '0 0 4px 0', fontSize: '13.5px', fontWeight: 600, color: 'var(--text)' }}>
+                Section 65B Evidence Certificate
+              </h3>
+              <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+                Indian Evidence Act certified chain of custody with downloadable proof archive (.zip) for courtroom admissibility.
+              </p>
+            </div>
+            <div style={{ marginTop: '14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--border-subtle)', paddingTop: '10px' }}>
+              <span style={{ fontSize: '11px', color: '#10B981', fontFamily: 'var(--font-mono)' }}>Courtroom Ready</span>
+              <span style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                Generate Cert <ArrowRight size={12} />
+              </span>
+            </div>
+          </div>
+
+          {/* Card 6: Standalone Offline Verify Engine */}
+          <div 
+            className="workstation-card specular-border"
+            style={{ 
+              padding: 'var(--space-4)', 
+              display: 'flex', 
+              flexDirection: 'column', 
+              justifyContent: 'space-between',
+              cursor: 'pointer',
+              transition: 'all var(--transition-normal)'
+            }}
+            onClick={() => setActiveTab('verify')}
+          >
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                <span className="forensic-seal-verified" style={{ fontSize: '10px' }}>Zero Trust</span>
+                <div style={{ width: '28px', height: '28px', borderRadius: 'var(--radius-xs)', backgroundColor: 'rgba(14, 165, 233, 0.12)', border: '1px solid rgba(14, 165, 233, 0.3)', color: '#38BDF8', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <ShieldCheck size={14} />
+                </div>
+              </div>
+              <h3 style={{ margin: '0 0 4px 0', fontSize: '13.5px', fontWeight: 600, color: 'var(--text)' }}>
+                AegisTrace Standalone Verifier
+              </h3>
+              <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+                Air-gapped verification workstation for third-party judicial auditors with zero network calls and full client-side crypto.
+              </p>
+            </div>
+            <div style={{ marginTop: '14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--border-subtle)', paddingTop: '10px' }}>
+              <span style={{ fontSize: '11px', color: '#38BDF8', fontFamily: 'var(--font-mono)' }}>Zero-Network Proof</span>
+              <span style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                Audit Workstation <ArrowRight size={12} />
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 5. Live Cryptographic Pipeline & Tamper-Evident Ledger Visualizers */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <h2 style={{ margin: 0, fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)' }}>
+              Cryptographic Architecture & Ledger Integrity
+            </h2>
+            <p style={{ margin: '2px 0 0 0', fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
+              Real-time visualization of post-quantum envelope decapsulation and RFC-6962 tamper-evident Merkle hash chain.
+            </p>
+          </div>
+        </div>
+
+        {/* Interactive Lattice Pipeline */}
+        <SvgCryptographicLattice />
+
+        {/* Live Merkle Chain Visualizer */}
+        <SvgMerkleChain isTampered={!isLedgerValid} />
+      </div>
+
+      {/* 6. Recent Investigations Section */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <h2 style={{ margin: 0, fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)' }}>

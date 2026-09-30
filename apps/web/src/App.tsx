@@ -38,10 +38,17 @@ import { IntegrationsTab } from './components/IntegrationsTab';
 import { SettingsTab } from './components/SettingsTab';
 import { ProductGuideModal } from './components/ProductGuideModal';
 import { ForensicReportModal } from './components/ForensicReportModal';
+import { MainCollusionLabModal } from './components/main/MainCollusionLabModal';
+import { MainAirGapCameraModal } from './components/main/MainAirGapCameraModal';
+import { MainRecipientDecryptionModal } from './components/main/MainRecipientDecryptionModal';
+import { MainVisualComparatorModal } from './components/main/MainVisualComparatorModal';
+import { MainSection65BCertificateModal } from './components/main/MainSection65BCertificateModal';
+import { MainSihComplianceModal } from './components/main/MainSihComplianceModal';
 import { SignatureIntro } from './components/common/SignatureIntro';
 import { useLenis } from './hooks/useLenis';
 import { getExperienceVariant } from './variant';
 import { MainApp } from './components/main/MainApp';
+import './styles/main-experience.css';
 
 export function AppContent() {
   const [activeTab, setActiveTab] = useState<TabId>('overview');
@@ -66,6 +73,16 @@ export function AppContent() {
   const [forceOffline, setForceOffline] = useState<boolean>(false);
   const [guideOpen, setGuideOpen] = useState<boolean>(false);
   const [reportModalOpen, setReportModalOpen] = useState<boolean>(false);
+  const [collusionLabOpen, setCollusionLabOpen] = useState<boolean>(false);
+  const [airGapLabOpen, setAirGapLabOpen] = useState<boolean>(false);
+  const [decryptionLabOpen, setDecryptionLabOpen] = useState<boolean>(false);
+  const [comparatorLabOpen, setComparatorLabOpen] = useState<boolean>(false);
+  const [certificateLabOpen, setCertificateLabOpen] = useState<boolean>(false);
+  const [complianceLabOpen, setComplianceLabOpen] = useState<boolean>(false);
+  const [comparatorContext, setComparatorContext] = useState<{ docName: string; recipientName: string }>({
+    docName: 'National_Defense_Protocol_2026.pdf',
+    recipientName: 'Marcus Vance'
+  });
   const [introCompleted, setIntroCompleted] = useState<boolean>(() => {
     try {
       return sessionStorage.getItem('aegistrace_intro_seen') === 'true';
@@ -297,6 +314,18 @@ export function AppContent() {
         onQuickScenario={handleQuickScenario}
         onSimulateTamper={() => handleSimulateTamper(1)}
         onExportReport={() => setReportModalOpen(true)}
+        onOpenCollusionLab={() => setCollusionLabOpen(true)}
+        onOpenAirGapLab={() => setAirGapLabOpen(true)}
+        onOpenDecryptionLab={() => setDecryptionLabOpen(true)}
+        onOpenComparatorLab={(recipientName, docName) => {
+          setComparatorContext({
+            recipientName: recipientName || 'Marcus Vance',
+            docName: docName || documents[0]?.document_name || 'National_Defense_Protocol_2026.pdf'
+          });
+          setComparatorLabOpen(true);
+        }}
+        onOpenCertificate={() => setCertificateLabOpen(true)}
+        onOpenCompliance={() => setComplianceLabOpen(true)}
         documentCount={documents.length}
         recipientCount={recipients.length}
         releaseCount={releases.length}
@@ -331,6 +360,18 @@ export function AppContent() {
                 onQuickScenario={handleQuickScenario}
                 onLoadDemo={handleLoadDemoData}
                 onPurgeDemo={handlePurgeDemoData}
+                onOpenCollusionLab={() => setCollusionLabOpen(true)}
+                onOpenAirGapLab={() => setAirGapLabOpen(true)}
+                onOpenDecryptionLab={() => setDecryptionLabOpen(true)}
+                onOpenComparatorLab={(recipientName, docName) => {
+                  setComparatorContext({
+                    recipientName: recipientName || 'Marcus Vance',
+                    docName: docName || documents[0]?.document_name || 'National_Defense_Protocol_2026.pdf'
+                  });
+                  setComparatorLabOpen(true);
+                }}
+                onOpenCertificate={() => setCertificateLabOpen(true)}
+                onOpenCompliance={() => setComplianceLabOpen(true)}
               />
             )}
 
@@ -473,6 +514,69 @@ export function AppContent() {
           onClose={() => setReportModalOpen(false)}
           leakResult={leakResult}
           ledgerEvents={ledgerEvents}
+        />
+
+        {/* Interactive Collusion Resistance Simulator Modal */}
+        <MainCollusionLabModal
+          isOpen={collusionLabOpen}
+          onClose={() => setCollusionLabOpen(false)}
+        />
+
+        {/* Interactive Air-Gap Optical Camera Lab Modal */}
+        <MainAirGapCameraModal
+          isOpen={airGapLabOpen}
+          onClose={() => setAirGapLabOpen(false)}
+          onAttributionComplete={async (suspect) => {
+            await handleAnalyzeLeak('photo_bob');
+            setActiveTab('investigations');
+          }}
+          onOpenCertificate={() => {
+            setAirGapLabOpen(false);
+            setCertificateLabOpen(true);
+          }}
+        />
+
+        {/* Interactive Recipient Decapsulation Enclave Modal */}
+        <MainRecipientDecryptionModal
+          isOpen={decryptionLabOpen}
+          onClose={() => setDecryptionLabOpen(false)}
+          releases={releases}
+          recipients={recipients}
+          onOpenComparator={(recName, docName) => {
+            setComparatorContext({
+              recipientName: recName || 'Marcus Vance',
+              docName: docName || documents[0]?.document_name || 'National_Defense_Protocol_2026.pdf'
+            });
+            setComparatorLabOpen(true);
+          }}
+          onInvestigateLeak={async (scenarioId) => {
+            await handleAnalyzeLeak(scenarioId);
+            setActiveTab('investigations');
+          }}
+          onRefresh={refreshAllData}
+        />
+
+        {/* Interactive Proof of Visual Imperceptibility Modal */}
+        <MainVisualComparatorModal
+          isOpen={comparatorLabOpen}
+          onClose={() => setComparatorLabOpen(false)}
+          documentName={comparatorContext.docName}
+          recipientName={comparatorContext.recipientName}
+        />
+
+        {/* Section 65B Certificate Generator Modal */}
+        <MainSection65BCertificateModal
+          isOpen={certificateLabOpen}
+          onClose={() => setCertificateLabOpen(false)}
+          result={leakResult}
+          candidateName={leakResult?.candidate?.name || comparatorContext.recipientName}
+          documentName={documents[0]?.document_name || comparatorContext.docName}
+        />
+
+        {/* SIH Problem Statement 26237 Compliance Matrix Modal */}
+        <MainSihComplianceModal
+          isOpen={complianceLabOpen}
+          onClose={() => setComplianceLabOpen(false)}
         />
       </AppShell>
     </>
