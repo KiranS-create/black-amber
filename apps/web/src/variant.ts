@@ -11,7 +11,7 @@ export type ExperienceVariant = 'main' | 'alternate';
  */
 export function getExperienceVariant(): ExperienceVariant {
   if (typeof window === 'undefined') {
-    return 'alternate';
+    return 'main';
   }
 
   // 1. Explicit query parameter override (for testing & presentation mode)
@@ -37,8 +37,8 @@ export function getExperienceVariant(): ExperienceVariant {
     // ignore localStorage access issues
   }
 
-  // Default: The Unified Complete Workstation with all features and interactive labs
-  return 'alternate';
+  // Default: The Main Forensic Security Workstation
+  return 'main';
 }
 
 /**

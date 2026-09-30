@@ -138,6 +138,9 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
         </div>
       </div>
 
+      {/* Cryptographic Architecture & Signal Pipeline with Dual-Theme Animated Fusion Orbs */}
+      <SvgCryptographicLattice />
+
       {/* Demo Mode Notice Banner */}
       {isDemoMode && (
         <div

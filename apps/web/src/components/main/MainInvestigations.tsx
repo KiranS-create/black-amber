@@ -536,6 +536,106 @@ export const MainInvestigations: React.FC<MainInvestigationsProps> = ({
                   </span>
                 </div>
 
+                {/* Visual Animated Hop-Chain Fusion Orbs */}
+                <div 
+                  style={{ 
+                    margin: '4px 0 10px 0', 
+                    width: '100%', 
+                    background: isLight ? 'rgba(241,245,249,0.7)' : 'rgba(0,0,0,0.3)', 
+                    borderRadius: '6px', 
+                    padding: '10px 8px', 
+                    border: `1px solid ${isLight ? '#E2E8F0' : 'rgba(255,255,255,0.06)'}` 
+                  }}
+                >
+                  <svg viewBox="0 0 420 72" style={{ width: '100%', height: 'auto', display: 'block', overflow: 'visible' }}>
+                    <defs>
+                      <radialGradient id="hopOrb1" cx="35%" cy="30%" r="70%">
+                        <stop offset="0%" stopColor="#E0F7FF" />
+                        <stop offset="40%" stopColor="#00D8F6" />
+                        <stop offset="100%" stopColor="#0284C7" />
+                      </radialGradient>
+                      <radialGradient id="hopOrb2" cx="35%" cy="30%" r="70%">
+                        <stop offset="0%" stopColor="#F5EDFF" />
+                        <stop offset="40%" stopColor="#C084FC" />
+                        <stop offset="100%" stopColor="#7E22CE" />
+                      </radialGradient>
+                      <radialGradient id="hopOrb3" cx="35%" cy="30%" r="70%">
+                        <stop offset="0%" stopColor="#FFFBEB" />
+                        <stop offset="40%" stopColor="#FBBF24" />
+                        <stop offset="100%" stopColor="#D97706" />
+                      </radialGradient>
+                      <radialGradient id="hopOrb4" cx="35%" cy="30%" r="70%">
+                        <stop offset="0%" stopColor="#FEE2E2" />
+                        <stop offset="40%" stopColor="#F87171" />
+                        <stop offset="85%" stopColor="#DC2626" />
+                        <stop offset="100%" stopColor="#7F1D1D" />
+                      </radialGradient>
+                      <linearGradient id="hopLaser" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#00D8F6" stopOpacity="0.8" />
+                        <stop offset="50%" stopColor="#FBBF24" stopOpacity="0.8" />
+                        <stop offset="100%" stopColor="#EF4444" stopOpacity="0.9" />
+                      </linearGradient>
+                    </defs>
+
+                    {/* Cables */}
+                    <line x1="45" y1="26" x2="375" y2="26" stroke={isLight ? "#CBD5E1" : "rgba(255,255,255,0.15)"} strokeWidth="2" strokeDasharray="3 3" />
+                    
+                    {/* Laser Pulse along path */}
+                    <line x1="45" y1="26" x2="375" y2="26" stroke="url(#hopLaser)" strokeWidth="2" strokeDasharray="30 180">
+                      <animate attributeName="stroke-dashoffset" values="210;-210" dur="2.4s" repeatCount="indefinite" />
+                    </line>
+
+                    {/* Hop 1: Apex HQ (x=45) */}
+                    <g>
+                      <circle cx="45" cy="26" r="14" fill="none" stroke="#00D8F6" strokeWidth="1" strokeDasharray="2 2" opacity="0.6">
+                        <animateTransform attributeName="transform" type="rotate" from="0 45 26" to="360 45 26" dur="8s" repeatCount="indefinite" />
+                      </circle>
+                      <circle cx="45" cy="26" r="10" fill="url(#hopOrb1)" filter={isLight ? undefined : "drop-shadow(0 0 6px rgba(0,216,246,0.6))"} />
+                      <circle cx="42" cy="22" r="3.5" fill="#FFFFFF" opacity="0.65" />
+                      <text x="45" y="29.5" textAnchor="middle" fill="#FFFFFF" fontSize="9" fontWeight="bold">1</text>
+                      <text x="45" y="52" textAnchor="middle" fill="var(--main-text-secondary)" fontSize="8.5" fontWeight="600">Apex HQ</text>
+                      <text x="45" y="63" textAnchor="middle" fill="var(--main-text-tertiary)" fontSize="7" fontFamily="monospace">Delhi</text>
+                    </g>
+
+                    {/* Hop 2: Sector Hub (x=155) */}
+                    <g>
+                      <circle cx="155" cy="26" r="14" fill="none" stroke="#A855F7" strokeWidth="1" strokeDasharray="2 2" opacity="0.6">
+                        <animateTransform attributeName="transform" type="rotate" from="360 155 26" to="0 155 26" dur="9s" repeatCount="indefinite" />
+                      </circle>
+                      <circle cx="155" cy="26" r="10" fill="url(#hopOrb2)" filter={isLight ? undefined : "drop-shadow(0 0 6px rgba(168,85,247,0.6))"} />
+                      <circle cx="152" cy="22" r="3.5" fill="#FFFFFF" opacity="0.65" />
+                      <text x="155" y="29.5" textAnchor="middle" fill="#FFFFFF" fontSize="9" fontWeight="bold">2</text>
+                      <text x="155" y="52" textAnchor="middle" fill="var(--main-text-secondary)" fontSize="8.5" fontWeight="600">Sector Hub</text>
+                      <text x="155" y="63" textAnchor="middle" fill="var(--main-text-tertiary)" fontSize="7" fontFamily="monospace">Mumbai</text>
+                    </g>
+
+                    {/* Hop 3: Command Node (x=265) */}
+                    <g>
+                      <circle cx="265" cy="26" r="14" fill="none" stroke="#F59E0B" strokeWidth="1" strokeDasharray="2 2" opacity="0.6">
+                        <animateTransform attributeName="transform" type="rotate" from="0 265 26" to="360 265 26" dur="7s" repeatCount="indefinite" />
+                      </circle>
+                      <circle cx="265" cy="26" r="10" fill="url(#hopOrb3)" filter={isLight ? undefined : "drop-shadow(0 0 6px rgba(245,158,11,0.6))"} />
+                      <circle cx="262" cy="22" r="3.5" fill="#FFFFFF" opacity="0.65" />
+                      <text x="265" y="29.5" textAnchor="middle" fill="#FFFFFF" fontSize="9" fontWeight="bold">3</text>
+                      <text x="265" y="52" textAnchor="middle" fill="var(--main-text-secondary)" fontSize="8.5" fontWeight="600">Naval Node</text>
+                      <text x="265" y="63" textAnchor="middle" fill="var(--main-text-tertiary)" fontSize="7" fontFamily="monospace">Hub #04</text>
+                    </g>
+
+                    {/* Hop 4: Terminal Breach / Culprit (x=375) */}
+                    <g>
+                      <circle cx="375" cy="26" r="16" fill="none" stroke="#EF4444" strokeWidth="1.5" opacity="0.8">
+                        <animate attributeName="r" values="12;19;12" dur="1.8s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="0.8;0.1;0.8" dur="1.8s" repeatCount="indefinite" />
+                      </circle>
+                      <circle cx="375" cy="26" r="11" fill="url(#hopOrb4)" filter={isLight ? undefined : "drop-shadow(0 0 8px rgba(239,68,68,0.8))"} />
+                      <circle cx="372" cy="22" r="4" fill="#FFFFFF" opacity="0.75" />
+                      <text x="375" y="29.5" textAnchor="middle" fill="#FFFFFF" fontSize="9" fontWeight="bold">4</text>
+                      <text x="375" y="52" textAnchor="middle" fill="#EF4444" fontSize="8.5" fontWeight="700">Leaker Terminal</text>
+                      <text x="375" y="63" textAnchor="middle" fill="#EF4444" fontSize="7" fontFamily="monospace" fontWeight="bold">{activeScaleScenario.terminal.split(' ')[1] || activeScaleScenario.terminal}</text>
+                    </g>
+                  </svg>
+                </div>
+
                 {/* Vertical Hop Chain Stepper */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '2px' }}>
                   {activeScaleScenario.route.map((step, idx) => {
