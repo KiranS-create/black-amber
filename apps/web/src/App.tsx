@@ -412,6 +412,15 @@ export function AppContent() {
                 onUploadLeakFile={handleUploadLeakFile}
                 onOpenReportModal={() => setReportModalOpen(true)}
                 onOpenCertificate={handleOpenCertificate}
+                onExecuteQuarantine={async (suspectName, terminalId, reason) => {
+                  await apiService.executeSovereignQuarantine(suspectName, terminalId, reason);
+                  const [events, recs] = await Promise.all([
+                    apiService.getLedgerEvents(),
+                    apiService.getRecipients()
+                  ]);
+                  setLedgerEvents(events);
+                  setRecipients(recs);
+                }}
               />
             )}
 

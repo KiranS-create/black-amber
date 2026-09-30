@@ -31,7 +31,8 @@ import {
   Globe,
   Users,
   Zap,
-  Scale
+  Scale,
+  Flame
 } from 'lucide-react';
 import { 
   AttributionResult, 
@@ -44,6 +45,8 @@ import { StatusBadge } from './common/StatusBadge';
 import { Drawer } from './common/Drawer';
 import { EmptyState } from './common/EmptyState';
 import { useTheme } from '../context/ThemeContext';
+import { MainQuarantineModal } from './main/MainQuarantineModal';
+import { apiService } from '../services/api';
 
 interface ScaleScenario {
   id: string;
@@ -67,6 +70,7 @@ interface InvestigationsTabProps {
   onUploadLeakFile: (file: File, suspectedReleaseId?: string) => Promise<LeakMetadata>;
   onOpenReportModal: () => void;
   onOpenCertificate?: (context?: any) => void;
+  onExecuteQuarantine?: (suspectName: string, terminalId: string, reason: string) => Promise<void>;
 }
 
 type InspectionViewMode = 'split' | 'heatmap' | 'diff';
@@ -91,7 +95,8 @@ export const InvestigationsTab: React.FC<InvestigationsTabProps> = ({
   onAnalyzeLeak,
   onUploadLeakFile,
   onOpenReportModal,
-  onOpenCertificate
+  onOpenCertificate,
+  onExecuteQuarantine
 }) => {
   const { theme } = useTheme();
   const isLight = theme === 'light';
@@ -174,6 +179,8 @@ export const InvestigationsTab: React.FC<InvestigationsTabProps> = ({
   const [copiedHash, setCopiedHash] = useState(false);
   const [copiedCli, setCopiedCli] = useState(false);
   const [showTechDetails, setShowTechDetails] = useState(false);
+  const [quarantineModalOpen, setQuarantineModalOpen] = useState(false);
+  const [quarantineTarget, setQuarantineTarget] = useState<{ name: string; rank: string; terminal: string; secretCode: string } | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -359,6 +366,32 @@ export const InvestigationsTab: React.FC<InvestigationsTabProps> = ({
               >
                 <Scale size={14} />
                 <span>Court Docket (BSA § 65B)</span>
+              </button>
+            )}
+
+            {!leakResult.should_abstain && candidateName && (
+              <button
+                onClick={() => {
+                  setQuarantineTarget({
+                    name: candidateName,
+                    rank: 'Principal Suspect',
+                    terminal: 'Terminal #W-ATTRIBUTED',
+                    secretCode: '0x7E9A-C401-88F3-902B-0CDA07-9AF2'
+                  });
+                  setQuarantineModalOpen(true);
+                }}
+                className="btn-secondary"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  borderColor: '#EF4444',
+                  color: '#EF4444'
+                }}
+                title="Sever client WASM enclave and commit ML-DSA-65 revocation event to ledger"
+              >
+                <Flame size={14} />
+                <span>Enclave Kill-Switch</span>
               </button>
             )}
           </div>
@@ -780,25 +813,53 @@ export const InvestigationsTab: React.FC<InvestigationsTabProps> = ({
                 <span>Population Size: <strong style={{ fontFamily: 'var(--font-mono)' }}>N = 1,000,000</strong></span>
               </div>
 
-              {onOpenCertificate && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                 <button
-                  onClick={() => onOpenCertificate({
-                    candidateName: activeScaleScenario.name,
-                    suspectRank: activeScaleScenario.rank,
-                    terminalId: activeScaleScenario.terminal,
-                    secretCodeHex: activeScaleScenario.secretCodeHex,
-                    merkleLeaf: activeScaleScenario.merkleLeaf,
-                    confidence: activeScaleScenario.confidence,
-                    routeHop: activeScaleScenario.route,
-                    bchStatus: '0 Bit Errors (BCH t=3 Corrected)'
-                  })}
-                  className="btn-primary"
-                  style={{ fontSize: '11px', padding: '6px 12px', display: 'inline-flex', alignItems: 'center', gap: '6px', backgroundColor: '#3B82F6' }}
+                  onClick={() => {
+                    setQuarantineTarget({
+                      name: activeScaleScenario.name,
+                      rank: activeScaleScenario.rank,
+                      terminal: activeScaleScenario.terminal,
+                      secretCode: activeScaleScenario.secretCodeHex
+                    });
+                    setQuarantineModalOpen(true);
+                  }}
+                  className="btn-secondary"
+                  style={{
+                    fontSize: '11px',
+                    padding: '6px 12px',
+                    borderColor: '#EF4444',
+                    color: '#EF4444',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                  title="Sever client WASM enclave and commit ML-DSA-65 revocation event to ledger"
                 >
-                  <Scale size={13} />
-                  <span>Generate Court Evidence Docket (BSA § 65B) →</span>
+                  <Flame size={13} />
+                  <span>Enclave Kill-Switch</span>
                 </button>
-              )}
+
+                {onOpenCertificate && (
+                  <button
+                    onClick={() => onOpenCertificate({
+                      candidateName: activeScaleScenario.name,
+                      suspectRank: activeScaleScenario.rank,
+                      terminalId: activeScaleScenario.terminal,
+                      secretCodeHex: activeScaleScenario.secretCodeHex,
+                      merkleLeaf: activeScaleScenario.merkleLeaf,
+                      confidence: activeScaleScenario.confidence,
+                      routeHop: activeScaleScenario.route,
+                      bchStatus: '0 Bit Errors (BCH t=3 Corrected)'
+                    })}
+                    className="btn-primary"
+                    style={{ fontSize: '11px', padding: '6px 12px', display: 'inline-flex', alignItems: 'center', gap: '6px', backgroundColor: '#3B82F6' }}
+                  >
+                    <Scale size={13} />
+                    <span>Generate Court Evidence Docket (BSA § 65B) →</span>
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -1677,6 +1738,25 @@ export const InvestigationsTab: React.FC<InvestigationsTabProps> = ({
           </div>
         )}
       </Drawer>
+
+      {/* Sovereign Quarantine Kill-Switch Modal */}
+      {quarantineTarget && (
+        <MainQuarantineModal
+          isOpen={quarantineModalOpen}
+          onClose={() => setQuarantineModalOpen(false)}
+          suspectName={quarantineTarget.name}
+          suspectRank={quarantineTarget.rank}
+          terminalId={quarantineTarget.terminal}
+          secretCodeHex={quarantineTarget.secretCode}
+          onExecuteQuarantine={async (suspectName, terminalId, reason) => {
+            if (onExecuteQuarantine) {
+              await onExecuteQuarantine(suspectName, terminalId, reason);
+            } else {
+              await apiService.executeSovereignQuarantine(suspectName, terminalId, reason);
+            }
+          }}
+        />
+      )}
     </div>
   );
 };
