@@ -199,8 +199,9 @@ export function AppContent() {
     tardosEnabled?: boolean,
     targets?: Array<{ target_type: 'INDIVIDUAL' | 'GROUP', target_id: string }>
   ) => {
-    await apiService.createRelease(docName, docBase64, recipientIds, docId, tardosEnabled, targets);
+    const rel = await apiService.createRelease(docName, docBase64, recipientIds, docId, tardosEnabled, targets);
     await refreshAllData();
+    return rel;
   };
 
   const handleDecrypt = async (releaseId: string, recipientId: string) => {
