@@ -16,12 +16,14 @@ import {
   CheckCircle2,
   AlertTriangle,
   Lock,
-  Scale
+  Scale,
+  Terminal
 } from 'lucide-react';
 import { EvidenceRecord } from '../types';
 import { StatusBadge } from './common/StatusBadge';
 import { Drawer } from './common/Drawer';
 import { EmptyState } from './common/EmptyState';
+import { MagistrateVerifierTerminal } from './common/MagistrateVerifierTerminal';
 
 interface EvidenceTabProps {
   records?: EvidenceRecord[];
@@ -34,6 +36,7 @@ export const EvidenceTab: React.FC<EvidenceTabProps> = ({
   setActiveTab,
   onOpenCertificate
 }) => {
+  const [viewMode, setViewMode] = useState<'ledger' | 'magistrateTerminal'>('ledger');
   const [selectedEvidence, setSelectedEvidence] = useState<EvidenceRecord | null>(null);
   const [channelFilter, setChannelFilter] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
