@@ -22,6 +22,15 @@ pinned: false
 
 ---
 
+> [!TIP]
+> **Evaluation & Submission Quickstart:**
+> - **Judges' Guide:** Please see [`JUDGES_INSPECTION_GUIDE.md`](./JUDGES_INSPECTION_GUIDE.md) for the 3-minute golden demo, credentials table, and verification commands.
+> - **Windows (One-Click):** Double-click `start_workstation.bat` to launch backend (:8000), frontend (:3000), and auto-open the browser.
+> - **Linux / macOS:** Run `chmod +x start_workstation.sh && ./start_workstation.sh`.
+> - **Demo Login:** `admin` / `admin` (or `op_a` / `password123`)
+
+---
+
 ## 🏛️ Executive Architectural Summary
 
 In broadcast-encryption distribution, sensitive documents are encrypted once by a sender and independently decrypted by multiple authorized recipients. Because the decrypted contents are visually and textually identical, any recipient who possessed access becomes an indistinguishable suspect after a document leak.
