@@ -24,12 +24,21 @@ import { MainSection65BCertificateModal } from './MainSection65BCertificateModal
 import { MainCollusionLabModal } from './MainCollusionLabModal';
 import { MainAirGapCameraModal } from './MainAirGapCameraModal';
 import { MainSihComplianceModal } from './MainSihComplianceModal';
+import { LandingPage } from '../LandingPage';
 import { VerifyTab } from '../VerifyTab';
 import '../../styles/main-experience.css';
 
 export function MainApp() {
   const [activeTab, setActiveTab] = useState<MainTabId>('overview');
   const [userSession, setUserSession] = useState<UserSession | null>(() => apiService.getCurrentUser());
+  const [viewMode, setViewMode] = useState<'landing' | 'login' | 'workstation'>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('view') === 'login') return 'login';
+      if (params.get('view') === 'workstation' || params.get('view') === 'app') return 'workstation';
+    }
+    return apiService.getCurrentUser() ? 'workstation' : 'landing';
+  });
   const [isDemoMode] = useState<boolean>(() => apiService.isDemoMode());
   const [isVerifyStandalone, setIsVerifyStandalone] = useState<boolean>(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
@@ -140,6 +149,7 @@ export function MainApp() {
   const handleSignOut = () => {
     apiService.logout();
     setUserSession(null);
+    setViewMode('landing');
   };
 
   // 1. Standalone Offline Verifier Mode
@@ -152,7 +162,7 @@ export function MainApp() {
             className="main-btn-secondary"
             style={{ marginBottom: '16px' }}
           >
-            ← Back to Workstation
+            ← Back to Platform Overview
           </button>
           <VerifyTab onBackToApp={() => setIsVerifyStandalone(false)} isStandalone={true} />
         </div>
@@ -160,17 +170,28 @@ export function MainApp() {
     );
   }
 
-  // 2. Unauthenticated Login Screen
+  // 2. Unauthenticated State: Landing Page or Secure Workstation Login
   if (!userSession) {
+    if (viewMode === 'landing') {
+      return (
+        <LandingPage
+          onEnterApp={() => setViewMode('login')}
+          onOpenVerify={() => setIsVerifyStandalone(true)}
+        />
+      );
+    }
+
     return (
       <MainLogin
         onLoginSuccess={(session) => {
           setUserSession(session);
+          setViewMode('workstation');
           refreshData();
         }}
+        onBackToLanding={() => setViewMode('landing')}
         onOpenVerifyStandalone={() => setIsVerifyStandalone(true)}
         onOpenSignUp={() => {
-          alert('Self-registration is disabled in this deployment.');
+          alert('Self-registration is disabled in this sovereign deployment.');
         }}
       />
     );

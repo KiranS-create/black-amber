@@ -28,6 +28,9 @@ export const MainLogin: React.FC<MainLoginProps> = ({
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [showEvaluatorAccess, setShowEvaluatorAccess] = useState<boolean>(() => {
+    return typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('demo') === 'true';
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,6 +82,39 @@ export const MainLogin: React.FC<MainLoginProps> = ({
       <MagneticCursor />
 
       {/* Top Header Floating Controls */}
+      {onBackToLanding && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '20px',
+            left: '24px',
+            zIndex: 30
+          }}
+        >
+          <button
+            onClick={onBackToLanding}
+            style={{
+              padding: '8px 16px',
+              borderRadius: '9999px',
+              backgroundColor: isLight ? 'rgba(255, 255, 255, 0.90)' : 'rgba(18, 27, 35, 0.85)',
+              backdropFilter: 'blur(16px)',
+              border: `1px solid ${isLight ? '#CBD5E1' : 'rgba(255, 255, 255, 0.12)'}`,
+              color: isLight ? '#0F172A' : '#F8FAFC',
+              fontSize: '12.5px',
+              fontWeight: 600,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              boxShadow: isLight ? '0 4px 12px rgba(15, 23, 42, 0.06)' : '0 4px 14px rgba(0,0,0,0.4)'
+            }}
+          >
+            ← Platform Overview
+          </button>
+        </div>
+      )}
+
       <div
         style={{
           position: 'absolute',
@@ -315,45 +351,65 @@ export const MainLogin: React.FC<MainLoginProps> = ({
             </button>
           </form>
 
-          {/* Quick Evaluator Access */}
-          <div
-            style={{
-              marginTop: '22px',
-              paddingTop: '18px',
-              borderTop: `1px solid ${isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255, 255, 255, 0.08)'}`,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              fontSize: '12px'
-            }}
-          >
-            <div>
-              <span style={{ color: isLight ? '#86868B' : '#A1A1A6', fontSize: '10.5px', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 650, display: 'block' }}>
-                EVALUATOR CLEARANCE
-              </span>
-              <span style={{ color: isLight ? '#1D1D1F' : '#F5F5F7', fontSize: '12.5px', fontFamily: 'SF Mono, monospace', fontWeight: 500 }}>
-                admin / admin
-              </span>
-            </div>
-
-            <button
-              type="button"
-              onClick={handleAutofillCredentials}
+          {/* Quick Evaluator Access - Discrete for Production */}
+          {showEvaluatorAccess ? (
+            <div
               style={{
-                background: isLight ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.08)',
-                border: `1px solid ${isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.12)'}`,
-                color: isLight ? '#1D1D1F' : '#F5F5F7',
-                borderRadius: '9999px',
-                padding: '4px 12px',
-                fontSize: '11px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                transition: 'all 0.15s ease'
+                marginTop: '22px',
+                paddingTop: '18px',
+                borderTop: `1px solid ${isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255, 255, 255, 0.08)'}`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                fontSize: '12px'
               }}
             >
-              Autofill
-            </button>
-          </div>
+              <div>
+                <span style={{ color: isLight ? '#86868B' : '#A1A1A6', fontSize: '10.5px', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 650, display: 'block' }}>
+                  EVALUATOR CLEARANCE
+                </span>
+                <span style={{ color: isLight ? '#1D1D1F' : '#F5F5F7', fontSize: '12.5px', fontFamily: 'SF Mono, monospace', fontWeight: 500 }}>
+                  admin / admin
+                </span>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleAutofillCredentials}
+                style={{
+                  background: isLight ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.08)',
+                  border: `1px solid ${isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.12)'}`,
+                  color: isLight ? '#1D1D1F' : '#F5F5F7',
+                  borderRadius: '9999px',
+                  padding: '4px 12px',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                Autofill
+              </button>
+            </div>
+          ) : (
+            <div style={{ textAlign: 'center', marginTop: '16px' }}>
+              <button
+                type="button"
+                onClick={() => setShowEvaluatorAccess(true)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: isLight ? '#94A3B8' : '#64748B',
+                  fontSize: '11.5px',
+                  cursor: 'pointer',
+                  padding: '4px 8px',
+                  transition: 'color 0.15s'
+                }}
+              >
+                Evaluator Clearance Enclave
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Bottom Auxiliary Links */}

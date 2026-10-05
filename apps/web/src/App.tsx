@@ -45,6 +45,7 @@ import { MainVisualComparatorModal } from './components/main/MainVisualComparato
 import { MainSection65BCertificateModal } from './components/main/MainSection65BCertificateModal';
 import { MainSihComplianceModal } from './components/main/MainSihComplianceModal';
 import { JudgeRehearsalModal } from './components/JudgeRehearsalModal';
+import { LandingPage } from './components/LandingPage';
 import { useLenis } from './hooks/useLenis';
 import { getExperienceVariant } from './variant';
 import { MainApp } from './components/main/MainApp';
@@ -54,6 +55,13 @@ export function AppContent() {
   const [activeTab, setActiveTab] = useState<TabId>('overview');
 
   const [userSession, setUserSession] = useState<UserSession | null>(() => apiService.getCurrentUser());
+  const [isLandingMode, setIsLandingMode] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('view') === 'login' || params.get('view') === 'workstation' || params.get('view') === 'app') return false;
+    }
+    return !apiService.getCurrentUser();
+  });
   const [isDemoMode, setIsDemoMode] = useState<boolean>(() => apiService.isDemoMode());
   const [isSignUpMode, setIsSignUpMode] = useState<boolean>(false);
   const [isVerifyStandalone, setIsVerifyStandalone] = useState<boolean>(false);
@@ -242,6 +250,7 @@ export function AppContent() {
   const handleSignOut = async () => {
     await apiService.logout();
     setUserSession(null);
+    setIsLandingMode(true);
   };
 
   const handleLoadDemoData = () => {
@@ -272,6 +281,16 @@ export function AppContent() {
   }
 
   if (!userSession) {
+    if (isLandingMode) {
+      return (
+        <LandingPage
+          onEnterApp={() => setIsLandingMode(false)}
+          onOpenVerify={() => setIsVerifyStandalone(true)}
+          onOpenRehearsal={() => setRehearsalModalOpen(true)}
+        />
+      );
+    }
+
     if (isSignUpMode) {
       return (
         <SignUpScreen
@@ -284,6 +303,7 @@ export function AppContent() {
       <LoginScreen
         onLoginSuccess={(session) => {
           setUserSession(session);
+          setIsLandingMode(false);
           refreshAllData();
         }}
         onSwitchToSignUp={() => setIsSignUpMode(true)}
