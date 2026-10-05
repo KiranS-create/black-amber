@@ -506,7 +506,7 @@ export const ProductGuideModal: React.FC<ProductGuideModalProps> = ({
                     a: 'Unlike naive systems that perform linear O(N) correlation scans across 1M records, AegisTrace extracts a structured 128-bit BCH-encoded token directly from the carrier. The 24-bit recipient ID indexes directly to the Merkle tree leaf in O(1) time (< 0.2 ms), operating seamlessly at national defense scale.'
                   },
                   {
-                    q: '5. Is this evidence legally admissible in an Indian court of law?',
+                    q: '5. Is this evidence admissible under statutory framework (BSA 2023 / Section 65B)?',
                     a: 'Yes. AegisTrace generates statutory certificates under Section 63 of the Bharatiya Sakshya Adhiniyam (BSA), 2023 (formerly Section 65B of the Indian Evidence Act, 1872). It also exports a zero-dependency standalone Python verifier script that allows judicial magistrates to independently verify all signatures and Merkle proofs 100% offline.'
                   }
                 ].map((faq, idx) => (
