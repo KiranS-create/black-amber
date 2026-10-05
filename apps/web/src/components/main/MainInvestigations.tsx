@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { InvestigationRecord, AttributionResult, DocumentRelease } from '../../types';
 import { 
   Search, 
@@ -120,6 +120,12 @@ export const MainInvestigations: React.FC<MainInvestigationsProps> = ({
     }
     setIsAnalyzing(false);
   };
+
+  useEffect(() => {
+    if (activeResult) {
+      executePipelineAnimation();
+    }
+  }, [activeResult]);
 
   const handleSelectBenchmark = (benchId: string) => {
     setActiveBenchmark(benchId);
