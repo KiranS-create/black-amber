@@ -81,17 +81,17 @@ export const MainSihComplianceModal: React.FC<MainSihComplianceModalProps> = ({
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
               <span className="main-badge" style={{ background: 'rgba(59, 130, 246, 0.15)', color: '#60A5FA', borderColor: 'rgba(59, 130, 246, 0.3)' }}>
-                SIH Problem Statement 26237
+                Sovereign Defense Specification
               </span>
               <span className="main-badge main-badge-verified">
-                <CheckCircle2 size={11} /> 100% SPECIFICATION COMPLIANT
+                <CheckCircle2 size={11} /> SPECIFICATION VERIFIED
               </span>
             </div>
             <h2 className="main-modal-title" style={{ fontSize: '18px' }}>
               Cryptographic Attribution & Immutable Decryption Provenance
             </h2>
             <p style={{ fontSize: '12px', color: 'var(--main-text-secondary)', margin: '4px 0 0 0' }}>
-              Architectural implementation mapping for SIH 26237 (Internal Code Name: Black Amber).
+              Architectural implementation mapping for Ministry of Defence / Naval Systems (WESEE Specification).
             </p>
           </div>
 

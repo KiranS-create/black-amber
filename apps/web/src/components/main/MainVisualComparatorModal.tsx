@@ -226,7 +226,7 @@ export const MainVisualComparatorModal: React.FC<MainVisualComparatorModalProps>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
               <span className="main-badge" style={{ background: 'rgba(0, 113, 227, 0.12)', color: 'var(--apple-blue)', borderColor: 'rgba(0, 113, 227, 0.25)', borderRadius: '9999px', padding: '3px 9px', fontSize: '10px', fontWeight: 650 }}>
-                SIH 26237
+                Sovereign Directive
               </span>
               <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 650 }}>
                 Forensic Visual Comparator

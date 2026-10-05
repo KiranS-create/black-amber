@@ -132,7 +132,7 @@ export const MainRecipientDecryptionModal: React.FC<MainRecipientDecryptionModal
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
               <span className="main-badge" style={{ background: 'rgba(59, 130, 246, 0.15)', color: '#60A5FA', borderColor: 'rgba(59, 130, 246, 0.3)' }}>
-                SIH 26237
+                Sovereign Directive
               </span>
               <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
                 Interactive Recipient Portal

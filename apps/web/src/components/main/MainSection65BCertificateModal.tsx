@@ -64,7 +64,7 @@ export const MainSection65BCertificateModal: React.FC<MainSection65BCertificateM
     year: 'numeric'
   });
 
-  const caseId = 'CR-DL-2026-0929-SIH26237';
+  const caseId = 'CR-DL-2026-0929-DEFENCE';
   const certId = 'CERT-65B-AEGIS-2026-9901';
   const resolvedCandidate = result?.candidate?.name || candidateName;
   const originalDocHash = '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08';

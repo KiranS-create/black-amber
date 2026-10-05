@@ -1059,7 +1059,7 @@ class ApiService {
       event_id: eventId,
       event_type: 'SECURITY_REVOCATION_EVENT',
       timestamp: new Date().toISOString(),
-      document_id: 'DOC-CR-SIH26237-DEFENCE',
+      document_id: 'DOC-CR-2026-DEFENCE',
       release_id: 'REL-NATIONAL-DEFENCE-01',
       recipient_id: terminalId,
       algorithm: 'ML-DSA-65 (NIST FIPS 204)',

@@ -337,7 +337,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     },
     {
       id: 'lab-compliance',
-      title: 'SIH Problem Statement 26237 Compliance Matrix',
+      title: 'Sovereign Defense Compliance Matrix',
       category: 'Audit',
       description: 'Review complete 10-pillar architecture verification matrix against Ministry requirements',
       icon: <Award size={16} className="text-amber-400" />,

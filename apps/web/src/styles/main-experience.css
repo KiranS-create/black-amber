@@ -697,3 +697,21 @@
   border-bottom-right-radius: 24px;
 }
 
+/* ==========================================================================
+   Responsive Landing Page Utilities & Mobile Micro-Polish
+   ========================================================================== */
+@media (max-width: 920px) {
+  .landing-nav-links {
+    display: none !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .landing-hide-mobile {
+    display: none !important;
+  }
+  .landing-nav-container {
+    padding: 0 16px !important;
+  }
+}
+

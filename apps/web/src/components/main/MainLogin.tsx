@@ -28,9 +28,7 @@ export const MainLogin: React.FC<MainLoginProps> = ({
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [showEvaluatorAccess, setShowEvaluatorAccess] = useState<boolean>(() => {
-    return typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('demo') === 'true';
-  });
+  const [autofillApplied, setAutofillApplied] = useState<boolean>(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,7 +40,7 @@ export const MainLogin: React.FC<MainLoginProps> = ({
     setIsLoading(true);
     setErrorMessage(null);
     try {
-      const session = await apiService.login({ email: username, password });
+      const session = await apiService.login({ email: username.trim(), password: password.trim() });
       onLoginSuccess(session);
     } catch (err: any) {
       setErrorMessage(err?.message || 'Authentication failed. Please verify credentials.');
@@ -55,6 +53,24 @@ export const MainLogin: React.FC<MainLoginProps> = ({
     setUsername('admin');
     setPassword('admin');
     setErrorMessage(null);
+    setAutofillApplied(true);
+    setTimeout(() => setAutofillApplied(false), 3000);
+  };
+
+  const handleQuickSignIn = async () => {
+    setUsername('admin');
+    setPassword('admin');
+    setErrorMessage(null);
+    setAutofillApplied(true);
+    setIsLoading(true);
+    try {
+      const session = await apiService.login({ email: 'admin', password: 'admin' });
+      onLoginSuccess(session);
+    } catch (err: any) {
+      setErrorMessage(err?.message || 'Authentication failed. Please verify credentials.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -351,65 +367,81 @@ export const MainLogin: React.FC<MainLoginProps> = ({
             </button>
           </form>
 
-          {/* Quick Evaluator Access - Discrete for Production */}
-          {showEvaluatorAccess ? (
-            <div
-              style={{
-                marginTop: '22px',
-                paddingTop: '18px',
-                borderTop: `1px solid ${isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255, 255, 255, 0.08)'}`,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                fontSize: '12px'
-              }}
-            >
+          {/* Quick Evaluator Access & Demo Autofill */}
+          <div
+            style={{
+              marginTop: '22px',
+              padding: '14px 16px',
+              backgroundColor: isLight ? 'rgba(0, 0, 0, 0.03)' : 'rgba(255, 255, 255, 0.04)',
+              border: `1px solid ${autofillApplied ? (isLight ? '#0071E3' : '#2997FF') : (isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255, 255, 255, 0.10)')}`,
+              borderRadius: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '12px',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <KeyRound size={16} style={{ color: isLight ? '#0071E3' : '#2997FF', flexShrink: 0 }} />
               <div>
-                <span style={{ color: isLight ? '#86868B' : '#A1A1A6', fontSize: '10.5px', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 650, display: 'block' }}>
-                  EVALUATOR CLEARANCE
-                </span>
-                <span style={{ color: isLight ? '#1D1D1F' : '#F5F5F7', fontSize: '12.5px', fontFamily: 'SF Mono, monospace', fontWeight: 500 }}>
-                  admin / admin
-                </span>
+                <div style={{ fontSize: '10.5px', fontWeight: 700, color: isLight ? '#0071E3' : '#2997FF', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span>EVALUATOR DEMO ACCESS</span>
+                  {autofillApplied && (
+                    <span style={{ fontSize: '10.5px', color: '#10B981', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                      <CheckCircle2 size={12} /> Credentials Applied
+                    </span>
+                  )}
+                </div>
+                <div style={{ fontSize: '12px', color: isLight ? '#64748B' : '#94A3B8', fontFamily: 'SF Mono, monospace', marginTop: '2px' }}>
+                  User: <strong style={{ color: isLight ? '#0F172A' : '#F8FAFC' }}>admin</strong> &nbsp;|&nbsp; Pass: <strong style={{ color: isLight ? '#0F172A' : '#F8FAFC' }}>admin</strong>
+                </div>
               </div>
+            </div>
 
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <button
                 type="button"
                 onClick={handleAutofillCredentials}
                 style={{
-                  background: isLight ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.08)',
-                  border: `1px solid ${isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.12)'}`,
-                  color: isLight ? '#1D1D1F' : '#F5F5F7',
-                  borderRadius: '9999px',
-                  padding: '4px 12px',
                   fontSize: '11px',
                   fontWeight: 600,
+                  padding: '5px 12px',
+                  borderRadius: '9999px',
+                  backgroundColor: autofillApplied 
+                    ? (isLight ? 'rgba(0, 113, 227, 0.12)' : 'rgba(41, 151, 255, 0.2)') 
+                    : (isLight ? '#FFFFFF' : 'rgba(255, 255, 255, 0.08)'),
+                  border: `1px solid ${autofillApplied ? (isLight ? '#0071E3' : '#2997FF') : (isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255, 255, 255, 0.15)')}`,
+                  color: autofillApplied ? (isLight ? '#0071E3' : '#2997FF') : (isLight ? '#0F172A' : '#F8FAFC'),
                   cursor: 'pointer',
                   transition: 'all 0.15s ease'
                 }}
+                title="Autofill username 'admin' and password 'admin'"
               >
-                Autofill
+                {autofillApplied ? '✔ Filled' : 'Autofill'}
               </button>
-            </div>
-          ) : (
-            <div style={{ textAlign: 'center', marginTop: '16px' }}>
+
               <button
                 type="button"
-                onClick={() => setShowEvaluatorAccess(true)}
+                onClick={handleQuickSignIn}
+                disabled={isLoading}
                 style={{
-                  background: 'none',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  padding: '5px 12px',
+                  borderRadius: '9999px',
+                  backgroundColor: isLight ? '#0071E3' : '#2997FF',
                   border: 'none',
-                  color: isLight ? '#94A3B8' : '#64748B',
-                  fontSize: '11.5px',
-                  cursor: 'pointer',
-                  padding: '4px 8px',
-                  transition: 'color 0.15s'
+                  color: isLight ? '#FFFFFF' : '#000000',
+                  cursor: isLoading ? 'not-allowed' : 'pointer',
+                  transition: 'all 0.15s ease'
                 }}
+                title="Autofill and sign in immediately with demo clearance"
               >
-                Evaluator Clearance Enclave
+                Quick Enter →
               </button>
             </div>
-          )}
+          </div>
         </div>
 
         {/* Bottom Auxiliary Links */}

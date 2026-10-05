@@ -51,7 +51,7 @@ export const WeseeCredentialModal: React.FC<WeseeCredentialModalProps> = ({ isOp
                   MoD Credential
                 </span>
                 <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', fontWeight: 600 }}>
-                  SIH 26237
+                  Sovereign Directive
                 </span>
               </div>
               <h3 className="main-modal-title" style={{ fontSize: '16px' }}>
@@ -65,7 +65,7 @@ export const WeseeCredentialModal: React.FC<WeseeCredentialModalProps> = ({ isOp
                   fontFamily: 'var(--font-mono)'
                 }}
               >
-                Problem Statement SIH26237 · Weapons & Electronics Systems Engineering Establishment
+                Sovereign Defense Specification · Weapons & Electronics Systems Engineering Establishment
               </p>
             </div>
           </div>

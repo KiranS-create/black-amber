@@ -273,7 +273,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
           <div>
             <h2 style={{ margin: 0, fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span>Interactive Forensic Laboratories & Simulators</span>
-              <span className="forensic-seal-verified" style={{ fontSize: '10px', padding: '1px 6px' }}>SIH 26237</span>
+              <span className="forensic-seal-verified" style={{ fontSize: '10px', padding: '1px 6px' }}>MoD WESEE</span>
             </h2>
             <p style={{ margin: '2px 0 0 0', fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
               Live interactive simulators for collusion resilience, optical air-gap descreening, NIST PQC decapsulation, and Section 65B legal admissibility.
@@ -286,7 +286,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
               style={{ fontSize: '11.5px', height: '28px', padding: '0 10px', display: 'flex', alignItems: 'center', gap: '6px' }}
             >
               <Award size={13} style={{ color: '#F59E0B' }} />
-              <span>SIH 26237 Matrix</span>
+              <span>Defense Compliance Matrix</span>
             </button>
           )}
         </div>

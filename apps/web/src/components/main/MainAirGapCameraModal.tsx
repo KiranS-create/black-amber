@@ -247,7 +247,7 @@ export const MainAirGapCameraModal: React.FC<MainAirGapCameraModalProps> = ({
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
               <span className="main-badge" style={{ background: 'rgba(34, 197, 94, 0.15)', color: 'var(--main-jade)', borderColor: 'rgba(34, 197, 94, 0.3)' }}>
-                SIH 26237
+                Sovereign Enclave
               </span>
               <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
                 Analog Hole Defense System

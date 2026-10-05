@@ -146,6 +146,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           1. TOP NAVIGATION BAR
           ========================================================================= */}
       <nav
+        className="landing-nav-container"
         style={{
           position: 'sticky',
           top: 0,
@@ -203,7 +204,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
 
         {/* Desktop Anchor Links */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '24px', fontSize: '13px', fontWeight: 500 }}>
+        <div className="landing-nav-links" style={{ display: 'flex', alignItems: 'center', gap: '24px', fontSize: '13px', fontWeight: 500 }}>
           <a href="#capabilities" style={{ color: isLight ? '#475569' : '#94A3B8', textDecoration: 'none', transition: 'color 0.15s' }}>
             Capabilities
           </a>
@@ -246,7 +247,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           {/* Standalone Verifier Button */}
           <button
             onClick={onOpenVerify}
-            className="main-btn-secondary"
+            className="main-btn-secondary landing-hide-mobile"
             style={{
               padding: '6px 14px',
               fontSize: '12.5px',
