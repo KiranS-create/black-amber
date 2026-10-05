@@ -23,16 +23,32 @@ interface MainVisualComparatorModalProps {
   recipientName?: string;
 }
 
+const AVAILABLE_RECIPIENTS = [
+  { id: 'rec_marcus', name: 'Marcus Vance', role: 'Senior Naval Analyst' },
+  { id: 'rec_sarah', name: 'Sarah Jenkins', role: 'Operational Lead' },
+  { id: 'rec_david', name: 'David Ross', role: 'Strategic Logistics' },
+  { id: 'rec_elena', name: 'Elena Rostova', role: 'Communications Specialist' }
+];
+
 export const MainVisualComparatorModal: React.FC<MainVisualComparatorModalProps> = ({
   isOpen,
   onClose,
   documentName = 'National_Defense_Protocol_2026.pdf',
   recipientName = 'Marcus Vance'
 }) => {
+  const [activeRecipient, setActiveRecipient] = useState<string>(recipientName);
   const [viewMode, setViewMode] = useState<'sideBySide' | 'splitSlider' | 'differenceHeatmap' | 'dsssCarrier'>('sideBySide');
   const [showSpectralOverlay, setShowSpectralOverlay] = useState<boolean>(false);
   const [ampFactor, setAmpFactor] = useState<number>(30);
   const [sliderPos, setSliderPos] = useState<number>(50); // Split slider percentage (0 - 100)
+  const [isDraggingSlider, setIsDraggingSlider] = useState<boolean>(false);
+
+  // Sync activeRecipient when prop changes
+  useEffect(() => {
+    if (recipientName) {
+      setActiveRecipient(recipientName);
+    }
+  }, [recipientName]);
 
   // Real-time calculated mathematical metrics
   const [metrics, setMetrics] = useState({
@@ -46,6 +62,7 @@ export const MainVisualComparatorModal: React.FC<MainVisualComparatorModalProps>
   const masterCanvasRef = useRef<HTMLCanvasElement>(null);
   const recipientCanvasRef = useRef<HTMLCanvasElement>(null);
   const heatmapCanvasRef = useRef<HTMLCanvasElement>(null);
+  const splitContainerRef = useRef<HTMLDivElement>(null);
 
   // Generate authentic master and watermarked image canvases and compute real metrics
   useEffect(() => {
@@ -124,8 +141,8 @@ export const MainVisualComparatorModal: React.FC<MainVisualComparatorModalProps>
     // Embed invisible pseudo-random DSSS watermark pattern (imperceptible delta +/- 1 or 2)
     // Seeded by recipient name hash
     let hashVal = 0;
-    for (let c = 0; c < recipientName.length; c++) {
-      hashVal = ((hashVal << 5) - hashVal) + recipientName.charCodeAt(c);
+    for (let c = 0; c < activeRecipient.length; c++) {
+      hashVal = ((hashVal << 5) - hashVal) + activeRecipient.charCodeAt(c);
       hashVal |= 0;
     }
 
@@ -210,7 +227,33 @@ export const MainVisualComparatorModal: React.FC<MainVisualComparatorModalProps>
         hCtx.putImageData(heatImgData, 0, 0);
       }
     }
-  }, [isOpen, documentName, recipientName, ampFactor]);
+  }, [isOpen, documentName, activeRecipient, ampFactor, viewMode]);
+
+  // Pointer drag handler for Split Slider
+  const updateSliderFromPointer = (clientX: number) => {
+    if (!splitContainerRef.current) return;
+    const rect = splitContainerRef.current.getBoundingClientRect();
+    const x = Math.max(0, Math.min(rect.width, clientX - rect.left));
+    const pct = Math.round((x / rect.width) * 100);
+    setSliderPos(pct);
+  };
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    setIsDraggingSlider(true);
+    updateSliderFromPointer(e.clientX);
+    (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (isDraggingSlider) {
+      updateSliderFromPointer(e.clientX);
+    }
+  };
+
+  const handlePointerUp = (e: React.PointerEvent) => {
+    setIsDraggingSlider(false);
+    (e.target as HTMLElement).releasePointerCapture?.(e.pointerId);
+  };
 
   if (!isOpen) return null;
 
@@ -235,9 +278,29 @@ export const MainVisualComparatorModal: React.FC<MainVisualComparatorModalProps>
             <h2 className="main-modal-title" style={{ fontSize: '19px', fontWeight: 700, letterSpacing: '-0.02em', margin: 0 }}>
               Proof of Visual Imperceptibility
             </h2>
-            <p style={{ fontSize: '12.5px', color: 'var(--main-text-secondary)', margin: '4px 0 0 0', lineHeight: 1.5 }}>
-              Mathematical verification demonstrating that <strong style={{ color: 'var(--main-text-primary)' }}>{recipientName}</strong>'s decrypted watermarked copy is optically indistinguishable from the broadcast master.
-            </p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '6px', flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '12.5px', color: 'var(--main-text-secondary)' }}>
+                Comparing Broadcast Master against recipient copy:
+              </span>
+              <select
+                value={activeRecipient}
+                onChange={(e) => setActiveRecipient(e.target.value)}
+                style={{
+                  background: 'var(--main-surface)',
+                  color: 'var(--main-text-primary)',
+                  border: '1px solid var(--main-border-active)',
+                  borderRadius: '6px',
+                  padding: '3px 8px',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  cursor: 'pointer'
+                }}
+              >
+                {AVAILABLE_RECIPIENTS.map(r => (
+                  <option key={r.id} value={r.name}>{r.name} ({r.role})</option>
+                ))}
+              </select>
+            </div>
           </div>
           <button onClick={onClose} className="main-btn-ghost" style={{ padding: '8px', borderRadius: '9999px' }} aria-label="Close">
             <X size={16} />
@@ -362,7 +425,7 @@ export const MainVisualComparatorModal: React.FC<MainVisualComparatorModalProps>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <span style={{ fontSize: '12px', fontWeight: 650, color: 'var(--main-text-primary)' }}>
-                    Decrypted Copy ({recipientName})
+                    Decrypted Copy ({activeRecipient})
                   </span>
                   <span className="main-badge main-badge-verified" style={{ fontSize: '10px', borderRadius: '9999px', padding: '2px 8px' }}>
                     <CheckCircle2 size={11} /> Watermarked
@@ -396,6 +459,10 @@ export const MainVisualComparatorModal: React.FC<MainVisualComparatorModalProps>
               </div>
 
               <div 
+                ref={splitContainerRef}
+                onPointerDown={handlePointerDown}
+                onPointerMove={handlePointerMove}
+                onPointerUp={handlePointerUp}
                 style={{ 
                   position: 'relative', 
                   maxWidth: '540px', 
@@ -404,7 +471,9 @@ export const MainVisualComparatorModal: React.FC<MainVisualComparatorModalProps>
                   overflow: 'hidden', 
                   border: '1px solid var(--main-border)',
                   boxShadow: '0 12px 36px rgba(0,0,0,0.2)',
-                  userSelect: 'none'
+                  userSelect: 'none',
+                  touchAction: 'none',
+                  cursor: isDraggingSlider ? 'grabbing' : 'ew-resize'
                 }}
               >
                 {/* Master Image Base */}
@@ -447,7 +516,7 @@ export const MainVisualComparatorModal: React.FC<MainVisualComparatorModalProps>
                   ◀ Original Master
                 </div>
                 <div style={{ position: 'absolute', bottom: 12, right: 12, padding: '4px 10px', background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(8px)', borderRadius: '9999px', fontSize: '10.5px', color: 'var(--apple-blue)' }}>
-                  Watermarked ({recipientName}) ▶
+                  Watermarked ({activeRecipient}) ▶
                 </div>
               </div>
 
