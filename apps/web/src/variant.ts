@@ -5,8 +5,8 @@ export type ExperienceVariant = 'main' | 'alternate';
  * or the Executive Presentation / Briefing mode.
  *
  * Switching Logic:
- * - https://aegistrace.vercel.app -> 'main' (Main Workstation)
- * - https://aegistrace-kirans-create.vercel.app -> 'alternate' (Briefing / Presentation mode)
+ * - https://aegistrace.vercel.app -> 'alternate' (Executive Presentation / Briefing mode)
+ * - https://aegistrace-kirans-create.vercel.app -> 'main' (Main Workstation)
  * - Explicit ?variant=main or ?variant=alternate overrides hostname for testing
  * - Localhost / default defaults to 'main'
  */
@@ -32,10 +32,10 @@ export function getExperienceVariant(): ExperienceVariant {
   // 3. Hostname Switching
   const host = window.location.hostname.toLowerCase();
   if (host === 'aegistrace-kirans-create.vercel.app') {
-    return 'alternate';
+    return 'main';
   }
   if (host === 'aegistrace.vercel.app') {
-    return 'main';
+    return 'alternate';
   }
 
   return 'main';

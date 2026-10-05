@@ -45,7 +45,6 @@ import { MainVisualComparatorModal } from './components/main/MainVisualComparato
 import { MainSection65BCertificateModal } from './components/main/MainSection65BCertificateModal';
 import { MainSihComplianceModal } from './components/main/MainSihComplianceModal';
 import { JudgeRehearsalModal } from './components/JudgeRehearsalModal';
-import { SignatureIntro } from './components/common/SignatureIntro';
 import { useLenis } from './hooks/useLenis';
 import { getExperienceVariant } from './variant';
 import { MainApp } from './components/main/MainApp';
@@ -91,13 +90,6 @@ export function AppContent() {
     setCertificateContext(context || null);
     setCertificateLabOpen(true);
   };
-  const [introCompleted, setIntroCompleted] = useState<boolean>(() => {
-    try {
-      return sessionStorage.getItem('aegistrace_intro_seen') === 'true';
-    } catch {
-      return false;
-    }
-  });
 
   // Initial load
   useEffect(() => {
@@ -302,16 +294,6 @@ export function AppContent() {
 
   return (
     <>
-      {!introCompleted && (
-        <SignatureIntro
-          onComplete={() => {
-            setIntroCompleted(true);
-            try {
-              sessionStorage.setItem('aegistrace_intro_seen', 'true');
-            } catch {}
-          }}
-        />
-      )}
       <AppShell
         activeTab={activeTab}
         setActiveTab={setActiveTab}

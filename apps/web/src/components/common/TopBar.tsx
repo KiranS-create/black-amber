@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   ShieldCheck, 
   Search, 
@@ -16,7 +16,12 @@ import {
   Eye,
   Sparkles,
   Layers,
-  Smartphone
+  Smartphone,
+  Anchor,
+  Award,
+  FileCode,
+  CheckCircle2,
+  X
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { UserSession } from '../../types';
@@ -59,9 +64,11 @@ export const TopBar: React.FC<TopBarProps> = ({
 }) => {
   const { theme, toggleTheme } = useTheme();
   const activeVariant = getExperienceVariant();
+  const [showWeseeModal, setShowWeseeModal] = useState(false);
 
   return (
-    <header
+    <>
+      <header
       style={{
         height: '52px',
         backgroundColor: 'var(--surface)',
@@ -115,6 +122,43 @@ export const TopBar: React.FC<TopBarProps> = ({
             Forensic Workstation
           </span>
         </div>
+
+        {/* MoD / Indian Navy (WESEE) & CERT-In CBOM Credential Pill */}
+        <button
+          onClick={() => setShowWeseeModal(true)}
+          title="Click to view Problem Statement SIH26237 Sponsoring Agency & CERT-In CBOM Specifications"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            padding: '3px 8px',
+            borderRadius: '4px',
+            backgroundColor: 'rgba(2, 132, 199, 0.08)',
+            border: '1px solid rgba(2, 132, 199, 0.28)',
+            color: '#0284C7',
+            fontSize: '10.5px',
+            fontFamily: 'var(--font-mono)',
+            fontWeight: 600,
+            cursor: 'pointer',
+            transition: 'all 0.15s ease'
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.backgroundColor = 'rgba(2, 132, 199, 0.16)';
+            e.currentTarget.style.borderColor = '#0284C7';
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.backgroundColor = 'rgba(2, 132, 199, 0.08)';
+            e.currentTarget.style.borderColor = 'rgba(2, 132, 199, 0.28)';
+          }}
+        >
+          <Anchor size={11} style={{ color: '#0284C7' }} />
+          <span>MoD / Indian Navy (WESEE) · SIH26237</span>
+          <span style={{ color: 'var(--text-tertiary)', opacity: 0.6 }}>|</span>
+          <span style={{ color: '#10B981', display: 'flex', alignItems: 'center', gap: '3px' }}>
+            <span style={{ width: '4px', height: '4px', borderRadius: '50%', backgroundColor: '#10B981' }} />
+            CERT-In CBOM
+          </span>
+        </button>
       </div>
 
       {/* Global Search / Command Palette Trigger (Layer 2 Surface) */}
@@ -434,5 +478,125 @@ export const TopBar: React.FC<TopBarProps> = ({
         </div>
       </div>
     </header>
+
+      {/* MoD / Indian Navy WESEE & CERT-In CBOM Modal */}
+      {showWeseeModal && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+            backdropFilter: 'blur(4px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 100,
+            padding: '20px'
+          }}
+          onClick={() => setShowWeseeModal(false)}
+        >
+          <div
+            style={{
+              width: '100%',
+              maxWidth: '680px',
+              backgroundColor: 'var(--surface)',
+              border: '1px solid var(--border)',
+              borderRadius: '12px',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+              overflow: 'hidden'
+            }}
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div
+              style={{
+                padding: '16px 20px',
+                borderBottom: '1px solid var(--border)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                background: 'linear-gradient(90deg, rgba(2, 132, 199, 0.12) 0%, rgba(16, 185, 129, 0.08) 100%)'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '8px', backgroundColor: 'rgba(2, 132, 199, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0284C7' }}>
+                  <Anchor size={18} />
+                </div>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 700, color: 'var(--text)' }}>
+                    Ministry of Defence / Indian Navy (WESEE)
+                  </h3>
+                  <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}>
+                    Problem Statement SIH26237 · Weapons and Electronics Systems Engineering Establishment
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowWeseeModal(false)}
+                style={{ background: 'none', border: 'none', color: 'var(--text-tertiary)', cursor: 'pointer', padding: '4px' }}
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Body */}
+            <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px', maxHeight: '75vh', overflowY: 'auto' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+                <div style={{ padding: '12px', borderRadius: '8px', backgroundColor: 'var(--surface-subtle)', border: '1px solid var(--border)' }}>
+                  <div style={{ fontSize: '10.5px', color: 'var(--text-tertiary)', textTransform: 'uppercase', fontWeight: 600 }}>OPERATIONAL DOMAIN</div>
+                  <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text)', marginTop: '4px' }}>Naval Command Broadcast-Encrypt</div>
+                  <p style={{ fontSize: '11px', color: 'var(--text-secondary)', margin: '4px 0 0 0', lineHeight: 1.4 }}>
+                    Tactical routing coordinates, fleet operational dispatches, and intelligence briefs distributed air-gapped to naval command vessels.
+                  </p>
+                </div>
+                <div style={{ padding: '12px', borderRadius: '8px', backgroundColor: 'var(--surface-subtle)', border: '1px solid var(--border)' }}>
+                  <div style={{ fontSize: '10.5px', color: 'var(--text-tertiary)', textTransform: 'uppercase', fontWeight: 600 }}>SECURITY REGIME</div>
+                  <div style={{ fontSize: '13px', fontWeight: 600, color: '#10B981', marginTop: '4px' }}>Strictly Offline / Air-Gapped</div>
+                  <p style={{ fontSize: '11px', color: 'var(--text-secondary)', margin: '4px 0 0 0', lineHeight: 1.4 }}>
+                    Zero external cloud KMS, zero public blockchains, zero network dependencies. Fully autonomous operation on naval workstations.
+                  </p>
+                </div>
+              </div>
+
+              {/* Cryptographic Standards Table */}
+              <div style={{ borderRadius: '8px', border: '1px solid var(--border)', overflow: 'hidden' }}>
+                <div style={{ padding: '8px 12px', backgroundColor: 'var(--surface-subtle)', fontSize: '11px', fontWeight: 600, color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>
+                  CERT-In Cryptographic Bill of Materials (CBOM) & NIST PQC Alignment
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', fontSize: '11.5px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 12px', borderBottom: '1px solid var(--border)' }}>
+                    <span style={{ color: 'var(--text-secondary)' }}>Post-Quantum Key Encapsulation (KEM):</span>
+                    <strong style={{ fontFamily: 'var(--font-mono)', color: '#0284C7' }}>NIST FIPS 203 (ML-KEM-768)</strong>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 12px', borderBottom: '1px solid var(--border)' }}>
+                    <span style={{ color: 'var(--text-secondary)' }}>Post-Quantum Digital Signatures (DSA):</span>
+                    <strong style={{ fontFamily: 'var(--font-mono)', color: '#10B981' }}>NIST FIPS 204 (ML-DSA-65)</strong>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 12px', borderBottom: '1px solid var(--border)' }}>
+                    <span style={{ color: 'var(--text-secondary)' }}>Collusion-Resistant Traitor Tracing:</span>
+                    <strong style={{ fontFamily: 'var(--font-mono)', color: 'var(--text)' }}>Gabor Tardos Code (m=128, c≤5, P_FA ≤ 10⁻⁶)</strong>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 12px', borderBottom: '1px solid var(--border)' }}>
+                    <span style={{ color: 'var(--text-secondary)' }}>Optical Air-Gap Homography Registration:</span>
+                    <strong style={{ fontFamily: 'var(--font-mono)', color: 'var(--text)' }}>Barker-13 Spectral DCT (Yaw/Pitch ≤ 40°)</strong>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 12px' }}>
+                    <span style={{ color: 'var(--text-secondary)' }}>Statutory Legal Admissibility:</span>
+                    <strong style={{ fontFamily: 'var(--font-mono)', color: '#C59645' }}>BSA 2023 § 63 & IEA 1872 § 65B</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div style={{ padding: '12px 20px', borderTop: '1px solid var(--border)', backgroundColor: 'var(--surface-subtle)', display: 'flex', justifyContent: 'flex-end' }}>
+              <button onClick={() => setShowWeseeModal(false)} className="btn-primary" style={{ padding: '6px 16px', fontSize: '12px' }}>
+                Close Specifications
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };

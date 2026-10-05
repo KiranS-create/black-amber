@@ -207,6 +207,27 @@ export interface AttributionResult {
     perspective_skew?: number;
     execution_mode?: 'PHYSICAL' | 'SIMULATED';
   };
+  multi_vector_fusion?: {
+    watermark_score: number;      // W (w1 = 0.35)
+    hash_score: number;           // H (w2 = 0.15)
+    semantic_score: number;       // S (w3 = 0.30)
+    ledger_score: number;         // A (w4 = 0.20)
+    composite_score: number;      // E = 0.35W + 0.15H + 0.30S + 0.20A
+    formula: string;              // "E = 0.35·W + 0.15·H + 0.30·S + 0.20·A"
+    commitment_bound_hash?: string; // HKDF-SHA256(Sig || DocID)
+    semantic_paraphrase_similarity?: number;
+  };
+  sabha_attestation?: {
+    investigator_name: string;
+    investigator_role: string;
+    investigator_signed: boolean;
+    magistrate_name: string;
+    magistrate_role: string;
+    magistrate_signed: boolean;
+    quorum_status: 'PENDING_COUNTERSIGN' | 'SABHA_SEALED';
+    docket_seal_id?: string;
+    sealed_at?: string;
+  };
   explanation?: string[];
   assumptions?: Record<string, any>;
   origin?: DataSourceOrigin;
