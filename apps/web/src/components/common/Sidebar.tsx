@@ -149,31 +149,34 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <aside
       className="sidebar-container"
       style={{
-        width: collapsed ? '60px' : '230px',
+        width: collapsed ? '64px' : '232px',
         backgroundColor: 'var(--surface-subtle)',
+        backdropFilter: 'blur(28px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(28px) saturate(180%)',
         borderRight: '1px solid var(--border)',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
         flexShrink: 0,
-        transition: 'width var(--transition-normal)',
+        transition: 'width 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
         position: 'relative',
         zIndex: 20
       }}
     >
       {/* Navigation Sections */}
-      <div style={{ padding: collapsed ? '12px 6px' : '16px 12px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
+      <div style={{ padding: collapsed ? '14px 8px' : '16px 10px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {navSections.map(section => (
-          <div key={section.title} style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+          <div key={section.title} style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
             {!collapsed && (
               <div
                 className="sidebar-section-title"
                 style={{
-                  fontSize: '11px',
-                  fontWeight: 600,
+                  fontSize: '10.5px',
+                  fontWeight: 650,
                   color: 'var(--text-tertiary)',
-                  padding: '4px 10px 6px 10px',
-                  letterSpacing: '0.04em'
+                  padding: '4px 10px 4px 10px',
+                  letterSpacing: '0.06em',
+                  textTransform: 'uppercase'
                 }}
               >
                 {section.title}
@@ -194,16 +197,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: collapsed ? 'center' : 'space-between',
-                    padding: collapsed ? '9px' : '7px 10px',
-                    borderRadius: 'var(--radius-sm)',
-                    backgroundColor: isActive ? 'var(--primary-subtle)' : 'transparent',
+                    padding: collapsed ? '9px' : '7px 11px',
+                    borderRadius: '10px',
+                    backgroundColor: isActive ? 'var(--surface)' : 'transparent',
                     color: isActive ? 'var(--text)' : 'var(--text-secondary)',
-                    border: 'none',
-                    borderLeft: isActive ? '2px solid var(--primary)' : '2px solid transparent',
+                    border: isActive ? '1px solid var(--border)' : '1px solid transparent',
+                    boxShadow: isActive ? '0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.12)' : 'none',
                     cursor: 'pointer',
-                    fontSize: 'var(--text-sm)',
-                    fontWeight: isActive ? 600 : 400,
-                    transition: 'all var(--transition-fast)',
+                    fontSize: '13px',
+                    fontWeight: isActive ? 600 : 500,
+                    letterSpacing: '-0.01em',
+                    transition: 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)',
                     textAlign: 'left',
                     position: 'relative'
                   }}
@@ -222,9 +226,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
                     <Icon
-                      size={16}
+                      size={15}
                       style={{
-                        color: isActive ? 'var(--primary-text)' : 'var(--text-tertiary)',
+                        color: isActive ? 'var(--primary)' : 'var(--text-tertiary)',
                         flexShrink: 0
                       }}
                     />
@@ -246,12 +250,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     <span
                       className="sidebar-badge"
                       style={{
-                        fontSize: '11px',
-                        padding: '1px 6px',
-                        borderRadius: 'var(--radius-xs)',
-                        backgroundColor: isActive ? 'rgba(76, 154, 154, 0.2)' : 'rgba(255, 255, 255, 0.05)',
-                        color: isActive ? 'var(--primary-text)' : 'var(--text-tertiary)',
-                        fontWeight: 500,
+                        fontSize: '10.5px',
+                        padding: '1px 8px',
+                        borderRadius: '9999px',
+                        backgroundColor: isActive ? 'var(--primary-subtle)' : 'rgba(255, 255, 255, 0.06)',
+                        color: isActive ? 'var(--primary)' : 'var(--text-tertiary)',
+                        border: '1px solid var(--border)',
+                        fontWeight: 600,
                         marginLeft: '8px'
                       }}
                     >
@@ -268,8 +273,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Sidebar Collapse Toggle & Footer Status */}
       <div
         style={{
-          padding: '10px 12px',
-          borderTop: '1px solid var(--border-subtle)',
+          padding: '12px 14px',
+          borderTop: '1px solid var(--border)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: collapsed ? 'center' : 'space-between'
@@ -277,7 +282,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       >
         {!collapsed && (
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)' }}>
+            <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text)', letterSpacing: '-0.01em' }}>
               AegisTrace 1.0
             </span>
             <span style={{ fontSize: '10px', color: 'var(--text-tertiary)' }}>
@@ -289,20 +294,28 @@ export const Sidebar: React.FC<SidebarProps> = ({
           onClick={() => setCollapsed(!collapsed)}
           title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           style={{
-            padding: '6px',
-            borderRadius: 'var(--radius-xs)',
-            backgroundColor: 'transparent',
-            border: '1px solid var(--border-subtle)',
+            width: '24px',
+            height: '24px',
+            borderRadius: '50%',
+            backgroundColor: 'var(--surface)',
+            border: '1px solid var(--border)',
             color: 'var(--text-tertiary)',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            transition: 'all 0.15s ease'
           }}
-          onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
-          onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-tertiary)')}
+          onMouseEnter={e => {
+            e.currentTarget.style.color = 'var(--text)';
+            e.currentTarget.style.borderColor = 'var(--border-strong)';
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.color = 'var(--text-tertiary)';
+            e.currentTarget.style.borderColor = 'var(--border)';
+          }}
         >
-          {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+          {collapsed ? <ChevronRight size={13} /> : <ChevronLeft size={13} />}
         </button>
       </div>
     </aside>

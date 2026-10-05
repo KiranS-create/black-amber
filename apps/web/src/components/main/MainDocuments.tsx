@@ -168,11 +168,13 @@ export const MainDocuments: React.FC<MainDocumentsProps> = ({
               width: '100%',
               background: 'var(--main-surface)',
               border: '1px solid var(--main-border)',
-              borderRadius: '6px',
-              padding: '8px 12px 8px 32px',
+              borderRadius: '9999px',
+              padding: '8px 14px 8px 34px',
               color: 'var(--main-text-primary)',
-              fontSize: '12px',
-              outline: 'none'
+              fontSize: '12.5px',
+              outline: 'none',
+              boxShadow: 'inset 0 1px 2px rgba(0, 0, 0, 0.06)',
+              transition: 'border-color 0.15s ease, box-shadow 0.15s ease'
             }}
           />
         </div>

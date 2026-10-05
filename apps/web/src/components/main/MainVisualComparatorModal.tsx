@@ -217,43 +217,43 @@ export const MainVisualComparatorModal: React.FC<MainVisualComparatorModalProps>
   return (
     <div className="main-modal-backdrop" onClick={onClose}>
       <div 
-        className="main-modal" 
-        style={{ maxWidth: '900px', width: '100%', maxHeight: '92vh', overflowY: 'auto' }}
+        className="main-modal glass-panel" 
+        style={{ maxWidth: '920px', width: '100%', maxHeight: '92vh', overflowY: 'auto', borderRadius: '24px' }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="main-modal-header">
+        <div className="main-modal-header" style={{ padding: '20px 24px', borderBottom: '1px solid var(--main-border)' }}>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-              <span className="main-badge" style={{ background: 'rgba(59, 130, 246, 0.15)', color: '#60A5FA', borderColor: 'rgba(59, 130, 246, 0.3)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+              <span className="main-badge" style={{ background: 'rgba(0, 113, 227, 0.12)', color: 'var(--apple-blue)', borderColor: 'rgba(0, 113, 227, 0.25)', borderRadius: '9999px', padding: '3px 9px', fontSize: '10px', fontWeight: 650 }}>
                 SIH 26237
               </span>
-              <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
+              <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 650 }}>
                 Forensic Visual Comparator
               </span>
             </div>
-            <h2 className="main-modal-title" style={{ fontSize: '18px' }}>
+            <h2 className="main-modal-title" style={{ fontSize: '19px', fontWeight: 700, letterSpacing: '-0.02em', margin: 0 }}>
               Proof of Visual Imperceptibility
             </h2>
-            <p style={{ fontSize: '12px', color: 'var(--main-text-secondary)', margin: '4px 0 0 0' }}>
-              Mathematical verification demonstrating that {recipientName}'s decrypted watermarked copy is optically indistinguishable from the broadcast master.
+            <p style={{ fontSize: '12.5px', color: 'var(--main-text-secondary)', margin: '4px 0 0 0', lineHeight: 1.5 }}>
+              Mathematical verification demonstrating that <strong style={{ color: 'var(--main-text-primary)' }}>{recipientName}</strong>'s decrypted watermarked copy is optically indistinguishable from the broadcast master.
             </p>
           </div>
-          <button onClick={onClose} className="main-btn-ghost" style={{ padding: '6px' }}>
+          <button onClick={onClose} className="main-btn-ghost" style={{ padding: '8px', borderRadius: '9999px' }} aria-label="Close">
             <X size={16} />
           </button>
         </div>
 
         {/* Body */}
-        <div className="main-modal-body" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <div className="main-modal-body" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '22px' }}>
           
           {/* Controls Bar */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', background: 'var(--main-bg)', padding: '10px 14px', borderRadius: '8px', border: '1px solid var(--main-border)' }}>
-            <div style={{ display: 'flex', gap: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
+            <div className="glass-pill-container" style={{ display: 'flex', gap: '4px', padding: '4px', borderRadius: '9999px', background: 'var(--main-surface)' }}>
               <button
                 onClick={() => setViewMode('sideBySide')}
-                className={`main-btn-secondary ${viewMode === 'sideBySide' ? 'active' : ''}`}
-                style={{ fontSize: '12px', background: viewMode === 'sideBySide' ? 'var(--main-surface-hover)' : 'transparent' }}
+                className={`glass-pill-btn ${viewMode === 'sideBySide' ? 'active' : ''}`}
+                style={{ fontSize: '12px', padding: '6px 14px', borderRadius: '9999px' }}
               >
                 <FileText size={13} />
                 <span>Side-by-Side</span>
@@ -261,8 +261,8 @@ export const MainVisualComparatorModal: React.FC<MainVisualComparatorModalProps>
 
               <button
                 onClick={() => setViewMode('splitSlider')}
-                className={`main-btn-secondary ${viewMode === 'splitSlider' ? 'active' : ''}`}
-                style={{ fontSize: '12px', background: viewMode === 'splitSlider' ? 'var(--main-surface-hover)' : 'transparent' }}
+                className={`glass-pill-btn ${viewMode === 'splitSlider' ? 'active' : ''}`}
+                style={{ fontSize: '12px', padding: '6px 14px', borderRadius: '9999px' }}
               >
                 <Sliders size={13} />
                 <span>Split-Wipe Slider</span>
@@ -270,17 +270,17 @@ export const MainVisualComparatorModal: React.FC<MainVisualComparatorModalProps>
 
               <button
                 onClick={() => setViewMode('differenceHeatmap')}
-                className={`main-btn-secondary ${viewMode === 'differenceHeatmap' ? 'active' : ''}`}
-                style={{ fontSize: '12px', background: viewMode === 'differenceHeatmap' ? 'var(--main-surface-hover)' : 'transparent' }}
+                className={`glass-pill-btn ${viewMode === 'differenceHeatmap' ? 'active' : ''}`}
+                style={{ fontSize: '12px', padding: '6px 14px', borderRadius: '9999px' }}
               >
                 <SlidersHorizontal size={13} />
-                <span>Difference Heatmap (×{ampFactor} Amp)</span>
+                <span>Difference Heatmap (×{ampFactor})</span>
               </button>
 
               <button
                 onClick={() => setViewMode('dsssCarrier')}
-                className={`main-btn-secondary ${viewMode === 'dsssCarrier' ? 'active' : ''}`}
-                style={{ fontSize: '12px', background: viewMode === 'dsssCarrier' ? 'var(--main-surface-hover)' : 'transparent' }}
+                className={`glass-pill-btn ${viewMode === 'dsssCarrier' ? 'active' : ''}`}
+                style={{ fontSize: '12px', padding: '6px 14px', borderRadius: '9999px' }}
               >
                 <Sparkles size={13} />
                 <span>DSSS Carrier Layer</span>
@@ -290,8 +290,8 @@ export const MainVisualComparatorModal: React.FC<MainVisualComparatorModalProps>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <button
                 onClick={() => setShowSpectralOverlay(!showSpectralOverlay)}
-                className="main-btn-ghost"
-                style={{ fontSize: '11px', padding: '4px 8px', color: showSpectralOverlay ? '#F59E0B' : 'var(--main-text-tertiary)' }}
+                className="main-btn-secondary"
+                style={{ fontSize: '11.5px', padding: '6px 14px', borderRadius: '9999px', color: showSpectralOverlay ? '#F59E0B' : 'var(--main-text-secondary)' }}
               >
                 {showSpectralOverlay ? <Eye size={12} /> : <EyeOff size={12} />}
                 <span>Barker-13 Fiducials: {showSpectralOverlay ? 'ON' : 'OFF'}</span>
@@ -300,43 +300,43 @@ export const MainVisualComparatorModal: React.FC<MainVisualComparatorModalProps>
           </div>
 
           {/* Real Mathematical Metrics Bar */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '10px' }}>
-            <div style={{ padding: '10px 12px', background: 'var(--main-surface)', borderRadius: '6px', border: '1px solid var(--main-border)' }}>
-              <div style={{ fontSize: '11px', color: 'var(--main-text-tertiary)' }}>Peak SNR (PSNR)</div>
-              <div style={{ fontSize: '17px', fontWeight: 650, color: '#10B981', marginTop: '2px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '12px' }}>
+            <div className="glass-card" style={{ padding: '14px 16px', borderRadius: '16px', border: '1px solid var(--main-border)', background: 'var(--main-surface)' }}>
+              <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Peak SNR (PSNR)</div>
+              <div style={{ fontSize: '20px', fontWeight: 700, color: '#10B981', marginTop: '4px', letterSpacing: '-0.02em', fontVariantNumeric: 'tabular-nums' }}>
                 {metrics.psnr} dB
               </div>
-              <div style={{ fontSize: '10.5px', color: 'var(--main-text-secondary)', marginTop: '2px' }}>
+              <div style={{ fontSize: '11px', color: 'var(--main-text-secondary)', marginTop: '4px' }}>
                 Threshold &gt; 38 dB (Imperceptible)
               </div>
             </div>
 
-            <div style={{ padding: '10px 12px', background: 'var(--main-surface)', borderRadius: '6px', border: '1px solid var(--main-border)' }}>
-              <div style={{ fontSize: '11px', color: 'var(--main-text-tertiary)' }}>Structural Similarity (SSIM)</div>
-              <div style={{ fontSize: '17px', fontWeight: 650, color: '#10B981', marginTop: '2px' }}>
+            <div className="glass-card" style={{ padding: '14px 16px', borderRadius: '16px', border: '1px solid var(--main-border)', background: 'var(--main-surface)' }}>
+              <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Structural Similarity</div>
+              <div style={{ fontSize: '20px', fontWeight: 700, color: '#10B981', marginTop: '4px', letterSpacing: '-0.02em', fontVariantNumeric: 'tabular-nums' }}>
                 {metrics.ssim}
               </div>
-              <div style={{ fontSize: '10.5px', color: 'var(--main-text-secondary)', marginTop: '2px' }}>
+              <div style={{ fontSize: '11px', color: 'var(--main-text-secondary)', marginTop: '4px' }}>
                 SSIM &gt; 0.99 (Double-Blind Match)
               </div>
             </div>
 
-            <div style={{ padding: '10px 12px', background: 'var(--main-surface)', borderRadius: '6px', border: '1px solid var(--main-border)' }}>
-              <div style={{ fontSize: '11px', color: 'var(--main-text-tertiary)' }}>Max Pixel Delta (\Delta L)</div>
-              <div style={{ fontSize: '17px', fontWeight: 650, color: '#38BDF8', marginTop: '2px' }}>
+            <div className="glass-card" style={{ padding: '14px 16px', borderRadius: '16px', border: '1px solid var(--main-border)', background: 'var(--main-surface)' }}>
+              <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Max Pixel Delta (ΔL)</div>
+              <div style={{ fontSize: '20px', fontWeight: 700, color: '#0071E3', marginTop: '4px', letterSpacing: '-0.02em', fontVariantNumeric: 'tabular-nums' }}>
                 {metrics.maxDelta} / 255
               </div>
-              <div style={{ fontSize: '10.5px', color: 'var(--main-text-secondary)', marginTop: '2px' }}>
+              <div style={{ fontSize: '11px', color: 'var(--main-text-secondary)', marginTop: '4px' }}>
                 Below human JND threshold
               </div>
             </div>
 
-            <div style={{ padding: '10px 12px', background: 'var(--main-surface)', borderRadius: '6px', border: '1px solid var(--main-border)' }}>
-              <div style={{ fontSize: '11px', color: 'var(--main-text-tertiary)' }}>Codeword Symbol Loss</div>
-              <div style={{ fontSize: '17px', fontWeight: 650, color: '#10B981', marginTop: '2px' }}>
+            <div className="glass-card" style={{ padding: '14px 16px', borderRadius: '16px', border: '1px solid var(--main-border)', background: 'var(--main-surface)' }}>
+              <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Codeword Symbol Loss</div>
+              <div style={{ fontSize: '20px', fontWeight: 700, color: '#10B981', marginTop: '4px', letterSpacing: '-0.02em', fontVariantNumeric: 'tabular-nums' }}>
                 0.00% BER
               </div>
-              <div style={{ fontSize: '10.5px', color: 'var(--main-text-secondary)', marginTop: '2px' }}>
+              <div style={{ fontSize: '11px', color: 'var(--main-text-secondary)', marginTop: '4px' }}>
                 Complete watermark extraction
               </div>
             </div>
@@ -344,38 +344,38 @@ export const MainVisualComparatorModal: React.FC<MainVisualComparatorModalProps>
 
           {/* 1. Side-by-Side View */}
           {viewMode === 'sideBySide' && (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <span style={{ fontSize: '12px', fontWeight: 650, color: 'var(--main-text-primary)' }}>
                     Original Broadcast Master (Plaintext)
                   </span>
-                  <span className="main-badge" style={{ fontSize: '10px' }}>
+                  <span className="main-badge" style={{ fontSize: '10px', borderRadius: '9999px', padding: '2px 8px' }}>
                     Reference Master
                   </span>
                 </div>
-                <div style={{ borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--main-border)', boxShadow: '0 4px 14px rgba(0,0,0,0.3)', background: '#FFFFFF' }}>
+                <div style={{ borderRadius: '16px', overflow: 'hidden', border: '1px solid var(--main-border)', boxShadow: '0 8px 30px rgba(0,0,0,0.12)', background: '#FFFFFF' }}>
                   <canvas ref={masterCanvasRef} style={{ width: '100%', height: 'auto', display: 'block' }} />
                 </div>
               </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <span style={{ fontSize: '12px', fontWeight: 650, color: 'var(--main-text-primary)' }}>
                     Decrypted Copy ({recipientName})
                   </span>
-                  <span className="main-badge main-badge-verified" style={{ fontSize: '10px' }}>
+                  <span className="main-badge main-badge-verified" style={{ fontSize: '10px', borderRadius: '9999px', padding: '2px 8px' }}>
                     <CheckCircle2 size={11} /> Watermarked
                   </span>
                 </div>
-                <div style={{ position: 'relative', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--main-border)', boxShadow: '0 4px 14px rgba(0,0,0,0.3)', background: '#FFFFFF' }}>
+                <div style={{ position: 'relative', borderRadius: '16px', overflow: 'hidden', border: '1px solid var(--main-border)', boxShadow: '0 8px 30px rgba(0,0,0,0.12)', background: '#FFFFFF' }}>
                   <canvas ref={recipientCanvasRef} style={{ width: '100%', height: 'auto', display: 'block' }} />
                   {showSpectralOverlay && (
                     <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', border: '2px solid rgba(245, 158, 11, 0.4)' }}>
-                      <div style={{ position: 'absolute', top: 4, left: 4, width: 14, height: 14, borderTop: '3px solid #F59E0B', borderLeft: '3px solid #F59E0B' }} />
-                      <div style={{ position: 'absolute', top: 4, right: 4, width: 14, height: 14, borderTop: '3px solid #F59E0B', borderRight: '3px solid #F59E0B' }} />
-                      <div style={{ position: 'absolute', bottom: 4, left: 4, width: 14, height: 14, borderBottom: '3px solid #F59E0B', borderLeft: '3px solid #F59E0B' }} />
-                      <div style={{ position: 'absolute', bottom: 4, right: 4, width: 14, height: 14, borderBottom: '3px solid #F59E0B', borderRight: '3px solid #F59E0B' }} />
+                      <div style={{ position: 'absolute', top: 6, left: 6, width: 16, height: 16, borderTop: '3px solid #F59E0B', borderLeft: '3px solid #F59E0B', borderRadius: '2px' }} />
+                      <div style={{ position: 'absolute', top: 6, right: 6, width: 16, height: 16, borderTop: '3px solid #F59E0B', borderRight: '3px solid #F59E0B', borderRadius: '2px' }} />
+                      <div style={{ position: 'absolute', bottom: 6, left: 6, width: 16, height: 16, borderBottom: '3px solid #F59E0B', borderLeft: '3px solid #F59E0B', borderRadius: '2px' }} />
+                      <div style={{ position: 'absolute', bottom: 6, right: 6, width: 16, height: 16, borderBottom: '3px solid #F59E0B', borderRight: '3px solid #F59E0B', borderRadius: '2px' }} />
                     </div>
                   )}
                 </div>
@@ -385,9 +385,9 @@ export const MainVisualComparatorModal: React.FC<MainVisualComparatorModalProps>
 
           {/* 2. Interactive Split-Wipe Slider */}
           {viewMode === 'splitSlider' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '12.5px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
+                <span style={{ fontSize: '12.5px', fontWeight: 650, color: 'var(--main-text-primary)' }}>
                   Interactive Split-Screen Wipe (Master vs Watermarked)
                 </span>
                 <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', fontFamily: 'monospace' }}>
@@ -400,10 +400,10 @@ export const MainVisualComparatorModal: React.FC<MainVisualComparatorModalProps>
                   position: 'relative', 
                   maxWidth: '540px', 
                   margin: '0 auto', 
-                  borderRadius: '8px', 
+                  borderRadius: '16px', 
                   overflow: 'hidden', 
                   border: '1px solid var(--main-border)',
-                  boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+                  boxShadow: '0 12px 36px rgba(0,0,0,0.2)',
                   userSelect: 'none'
                 }}
               >
@@ -432,21 +432,21 @@ export const MainVisualComparatorModal: React.FC<MainVisualComparatorModalProps>
                     bottom: 0, 
                     left: `${sliderPos}%`, 
                     width: '2px', 
-                    backgroundColor: '#38BDF8', 
-                    boxShadow: '0 0 10px #38BDF8',
+                    backgroundColor: 'var(--apple-blue)', 
+                    boxShadow: '0 0 12px rgba(0,113,227,0.6)',
                     cursor: 'ew-resize'
                   }}
                 >
-                  <div style={{ position: 'absolute', top: '50%', left: '-12px', transform: 'translateY(-50%)', width: '26px', height: '26px', borderRadius: '50%', background: '#38BDF8', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 700 }}>
+                  <div style={{ position: 'absolute', top: '50%', left: '-13px', transform: 'translateY(-50%)', width: '28px', height: '28px', borderRadius: '50%', background: 'var(--apple-blue)', color: '#FFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 700, boxShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>
                     ⇄
                   </div>
                 </div>
 
                 {/* Labels */}
-                <div style={{ position: 'absolute', bottom: 12, left: 12, padding: '4px 8px', background: 'rgba(0,0,0,0.7)', borderRadius: '4px', fontSize: '10px', color: '#FFF' }}>
+                <div style={{ position: 'absolute', bottom: 12, left: 12, padding: '4px 10px', background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(8px)', borderRadius: '9999px', fontSize: '10.5px', color: '#FFF' }}>
                   ◀ Original Master
                 </div>
-                <div style={{ position: 'absolute', bottom: 12, right: 12, padding: '4px 8px', background: 'rgba(0,0,0,0.7)', borderRadius: '4px', fontSize: '10px', color: '#38BDF8' }}>
+                <div style={{ position: 'absolute', bottom: 12, right: 12, padding: '4px 10px', background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(8px)', borderRadius: '9999px', fontSize: '10.5px', color: 'var(--apple-blue)' }}>
                   Watermarked ({recipientName}) ▶
                 </div>
               </div>
@@ -458,34 +458,35 @@ export const MainVisualComparatorModal: React.FC<MainVisualComparatorModalProps>
                 max="100" 
                 value={sliderPos} 
                 onChange={(e) => setSliderPos(Number(e.target.value))}
-                style={{ width: '100%', maxWidth: '540px', margin: '0 auto', accentColor: '#38BDF8', cursor: 'pointer' }}
+                style={{ width: '100%', maxWidth: '540px', margin: '0 auto', accentColor: 'var(--apple-blue)', cursor: 'pointer' }}
               />
             </div>
           )}
 
           {/* 3. Difference Heatmap */}
           {viewMode === 'differenceHeatmap' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
                 <span style={{ fontSize: '12.5px', fontWeight: 650, color: 'var(--main-text-primary)' }}>
                   Amplified Pixel Delta Heatmap: |I_{`master`} − I_{`recipient`}| × {ampFactor}
                 </span>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11px', color: 'var(--main-text-secondary)' }}>
-                  <span>Amplification Gain:</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: 'var(--main-text-secondary)' }}>
+                  <span>Gain:</span>
                   {[20, 30, 50, 100].map(factor => (
                     <button
                       key={factor}
                       onClick={() => setAmpFactor(factor)}
                       style={{
-                        padding: '3px 8px',
-                        borderRadius: '4px',
+                        padding: '3px 10px',
+                        borderRadius: '9999px',
                         border: '1px solid var(--main-border)',
-                        background: ampFactor === factor ? '#0284C7' : 'transparent',
+                        background: ampFactor === factor ? 'var(--apple-blue)' : 'var(--main-surface)',
                         color: ampFactor === factor ? '#FFF' : 'var(--main-text-secondary)',
                         fontSize: '11px',
-                        fontWeight: 600,
-                        cursor: 'pointer'
+                        fontWeight: 650,
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease'
                       }}
                     >
                       {factor}×
@@ -494,26 +495,26 @@ export const MainVisualComparatorModal: React.FC<MainVisualComparatorModalProps>
                 </div>
               </div>
 
-              <div style={{ maxWidth: '500px', margin: '0 auto', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--main-border)', boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }}>
+              <div style={{ maxWidth: '500px', margin: '0 auto', borderRadius: '16px', overflow: 'hidden', border: '1px solid var(--main-border)', boxShadow: '0 12px 36px rgba(0,0,0,0.2)' }}>
                 <canvas ref={heatmapCanvasRef} style={{ width: '100%', height: 'auto', display: 'block' }} />
               </div>
 
               {/* Heatmap Legend */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', fontSize: '11px', color: 'var(--main-text-secondary)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '18px', fontSize: '11px', color: 'var(--main-text-secondary)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: '#0A0F19' }} />
+                  <span style={{ width: '10px', height: '10px', borderRadius: '3px', background: '#0A0F19' }} />
                   <span>Zero Delta (Identical)</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: '#0EA5E9' }} />
-                  <span>Subtle DSSS Carrier (\pm 1)</span>
+                  <span style={{ width: '10px', height: '10px', borderRadius: '3px', background: '#0EA5E9' }} />
+                  <span>Subtle DSSS Carrier (±1)</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: '#10B981' }} />
+                  <span style={{ width: '10px', height: '10px', borderRadius: '3px', background: '#10B981' }} />
                   <span>Mid Frequencies</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: '#F59E0B' }} />
+                  <span style={{ width: '10px', height: '10px', borderRadius: '3px', background: '#F59E0B' }} />
                   <span>Barker-13 Fiducials</span>
                 </div>
               </div>
@@ -533,8 +534,8 @@ export const MainVisualComparatorModal: React.FC<MainVisualComparatorModalProps>
         </div>
 
         {/* Footer */}
-        <div className="main-modal-footer">
-          <button onClick={onClose} className="main-btn-secondary" style={{ fontSize: '12px' }}>
+        <div className="main-modal-footer" style={{ padding: '16px 24px', borderTop: '1px solid var(--main-border)', display: 'flex', justifyContent: 'flex-end' }}>
+          <button onClick={onClose} className="main-btn-secondary" style={{ fontSize: '12px', borderRadius: '9999px', padding: '8px 20px' }}>
             Close Comparator
           </button>
         </div>

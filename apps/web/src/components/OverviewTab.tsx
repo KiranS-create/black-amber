@@ -155,7 +155,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
           flexWrap: 'wrap',
           gap: 'var(--space-4)',
           backgroundColor: 'var(--surface-subtle)',
-          borderRadius: 'var(--radius-sm)'
+          borderRadius: 'var(--radius-xl)'
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '24px', flexWrap: 'wrap' }}>
@@ -308,7 +308,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
             <div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
                 <span className="forensic-seal-verified" style={{ fontSize: '10px' }}>Tardos Codes</span>
-                <div style={{ width: '28px', height: '28px', borderRadius: 'var(--radius-xs)', backgroundColor: 'rgba(139, 92, 246, 0.12)', border: '1px solid rgba(139, 92, 246, 0.3)', color: '#A78BFA', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '10px', backgroundColor: 'rgba(139, 92, 246, 0.12)', border: '1px solid rgba(139, 92, 246, 0.3)', color: '#A78BFA', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Users size={14} />
                 </div>
               </div>
@@ -343,7 +343,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
             <div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
                 <span className="forensic-seal-verified" style={{ fontSize: '10px' }}>Optical Demod</span>
-                <div style={{ width: '28px', height: '28px', borderRadius: 'var(--radius-xs)', backgroundColor: 'rgba(245, 158, 11, 0.12)', border: '1px solid rgba(245, 158, 11, 0.3)', color: '#FBBF24', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '10px', backgroundColor: 'rgba(245, 158, 11, 0.12)', border: '1px solid rgba(245, 158, 11, 0.3)', color: '#FBBF24', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Camera size={14} />
                 </div>
               </div>
@@ -378,7 +378,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
             <div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
                 <span className="forensic-seal-verified" style={{ fontSize: '10px' }}>NIST FIPS 203</span>
-                <div style={{ width: '28px', height: '28px', borderRadius: 'var(--radius-xs)', backgroundColor: 'rgba(56, 189, 248, 0.12)', border: '1px solid rgba(56, 189, 248, 0.3)', color: '#38BDF8', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '10px', backgroundColor: 'rgba(56, 189, 248, 0.12)', border: '1px solid rgba(56, 189, 248, 0.3)', color: '#38BDF8', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Key size={14} />
                 </div>
               </div>
@@ -413,7 +413,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
             <div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
                 <span className="forensic-seal-verified" style={{ fontSize: '10px' }}>PSNR &gt; 45dB</span>
-                <div style={{ width: '28px', height: '28px', borderRadius: 'var(--radius-xs)', backgroundColor: 'rgba(76, 154, 154, 0.12)', border: '1px solid rgba(76, 154, 154, 0.3)', color: 'var(--primary-text)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '10px', backgroundColor: 'rgba(76, 154, 154, 0.12)', border: '1px solid rgba(76, 154, 154, 0.3)', color: 'var(--primary-text)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Eye size={14} />
                 </div>
               </div>
@@ -448,7 +448,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
             <div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
                 <span className="forensic-seal-verified" style={{ fontSize: '10px' }}>Legal Proof</span>
-                <div style={{ width: '28px', height: '28px', borderRadius: 'var(--radius-xs)', backgroundColor: 'rgba(16, 185, 129, 0.12)', border: '1px solid rgba(16, 185, 129, 0.3)', color: '#10B981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '10px', backgroundColor: 'rgba(16, 185, 129, 0.12)', border: '1px solid rgba(16, 185, 129, 0.3)', color: '#10B981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Scale size={14} />
                 </div>
               </div>
@@ -483,7 +483,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
             <div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
                 <span className="forensic-seal-verified" style={{ fontSize: '10px' }}>Zero Trust</span>
-                <div style={{ width: '28px', height: '28px', borderRadius: 'var(--radius-xs)', backgroundColor: 'rgba(14, 165, 233, 0.12)', border: '1px solid rgba(14, 165, 233, 0.3)', color: '#38BDF8', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '10px', backgroundColor: 'rgba(14, 165, 233, 0.12)', border: '1px solid rgba(14, 165, 233, 0.3)', color: '#38BDF8', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <ShieldCheck size={14} />
                 </div>
               </div>

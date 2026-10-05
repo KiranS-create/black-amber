@@ -67,9 +67,9 @@ export const JudgeRehearsalModal: React.FC<JudgeRehearsalModalProps> = ({
   };
 
   const judgeDocketContext = {
-    candidateName: 'Judge Evaluator / Director General',
-    suspectRank: 'Director General (Apex Evaluation Command)',
-    terminalId: 'Terminal #M-7719 (Mobile Enclave)',
+    candidateName: 'Director General / Evaluator Command',
+    suspectRank: 'Director General (Command Inspection Enclave)',
+    terminalId: 'Terminal #M-7719 (Mobile Field Enclave)',
     secretCodeHex: '0x7E9A-C401-88F3-902B-0CDA07-9AF2',
     merkleLeaf: 'Block #842,911 (ML-DSA-65 Valid Signature)',
     confidence: '99.98% (BCH-Verified, 0 Bit Errors)',
@@ -78,8 +78,8 @@ export const JudgeRehearsalModal: React.FC<JudgeRehearsalModalProps> = ({
     routeHop: [
       'Apex Integrated Defence HQ (New Delhi)',
       'Western Sector Dissemination Hub (Mumbai)',
-      'Evaluation Command Secure Enclave',
-      'Judge Smartphone Terminal #M-7719'
+      'Command Secure Enclave',
+      'Operational Smartphone Terminal #M-7719'
     ]
   };
 
@@ -99,14 +99,14 @@ export const JudgeRehearsalModal: React.FC<JudgeRehearsalModalProps> = ({
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span className="main-badge" style={{ background: 'rgba(2, 132, 199, 0.15)', color: '#0284C7', borderColor: 'rgba(2, 132, 199, 0.3)' }}>
-                  Interactive Jury Stunt
+                  Field Validation Protocol
                 </span>
                 <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
                   Live 2-Device Proof
                 </span>
               </div>
               <h2 className="main-modal-title" style={{ fontSize: '17px', marginTop: '2px' }}>
-                Live 2-Device Judge Participation Rehearsal
+                Live 2-Device Optical Capture & Attribution Demonstration
               </h2>
             </div>
           </div>

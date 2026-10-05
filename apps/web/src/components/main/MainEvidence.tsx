@@ -104,25 +104,22 @@ export const MainEvidence: React.FC<MainEvidenceProps> = ({
             </button>
           )}
 
-          <div style={{ display: 'flex', gap: '4px', background: 'var(--main-surface)', padding: '2px', borderRadius: '6px', border: '1px solid var(--main-border)' }}>
+          <div className="glass-pill-container">
             <button
               onClick={() => setActiveSubTab('packages')}
-              className={`main-btn-ghost ${activeSubTab === 'packages' ? 'active' : ''}`}
-              style={{ fontSize: '12px', padding: '6px 12px', background: activeSubTab === 'packages' ? 'var(--main-surface-hover)' : 'transparent', color: activeSubTab === 'packages' ? 'var(--main-text-primary)' : 'var(--main-text-tertiary)' }}
+              className={`glass-pill-btn ${activeSubTab === 'packages' ? 'active' : ''}`}
             >
               Evidence Packages
             </button>
             <button
               onClick={() => setActiveSubTab('ledger')}
-              className={`main-btn-ghost ${activeSubTab === 'ledger' ? 'active' : ''}`}
-              style={{ fontSize: '12px', padding: '6px 12px', background: activeSubTab === 'ledger' ? 'var(--main-surface-hover)' : 'transparent', color: activeSubTab === 'ledger' ? 'var(--main-text-primary)' : 'var(--main-text-tertiary)' }}
+              className={`glass-pill-btn ${activeSubTab === 'ledger' ? 'active' : ''}`}
             >
               Ledger Chain
             </button>
             <button
               onClick={() => setActiveSubTab('verify')}
-              className={`main-btn-ghost ${activeSubTab === 'verify' ? 'active' : ''}`}
-              style={{ fontSize: '12px', padding: '6px 12px', background: activeSubTab === 'verify' ? 'var(--main-surface-hover)' : 'transparent', color: activeSubTab === 'verify' ? 'var(--main-text-primary)' : 'var(--main-text-tertiary)' }}
+              className={`glass-pill-btn ${activeSubTab === 'verify' ? 'active' : ''}`}
             >
               Verify Package
             </button>
@@ -274,18 +271,18 @@ export const MainEvidence: React.FC<MainEvidenceProps> = ({
                   key={block.event_id || index}
                   style={{
                     padding: '16px 20px',
-                    borderRadius: '8px',
+                    borderRadius: '16px',
                     border: '1px solid var(--main-border)',
-                    background: 'var(--main-surface)',
+                    background: 'var(--main-surface-elevated)',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '10px',
-                    transition: 'all 0.2s ease'
+                    transition: 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)'
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <span className="main-mono" style={{ fontSize: '11px', fontWeight: 700, padding: '2px 8px', borderRadius: '4px', background: 'var(--main-surface-elevated)', color: 'var(--main-text-primary)' }}>
+                      <span className="main-mono" style={{ fontSize: '11px', fontWeight: 700, padding: '3px 10px', borderRadius: '9999px', background: 'var(--main-surface)', color: 'var(--main-accent)', border: '1px solid var(--main-border)' }}>
                         BLOCK #{index}
                       </span>
                       <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
@@ -383,16 +380,16 @@ export const MainEvidence: React.FC<MainEvidenceProps> = ({
                 </span>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', fontSize: '12px' }}>
-                <div style={{ padding: '10px', background: 'var(--main-bg)', borderRadius: '6px', border: '1px solid var(--main-border)' }}>
-                  <div style={{ color: 'var(--main-text-tertiary)' }}>Digital Signature</div>
-                  <div style={{ fontWeight: 600, color: 'var(--main-text-primary)', marginTop: '2px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', fontSize: '12px' }}>
+                <div style={{ padding: '14px 16px', background: 'var(--main-surface-elevated)', borderRadius: '14px', border: '1px solid var(--main-border)' }}>
+                  <div style={{ color: 'var(--main-text-tertiary)', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>Digital Signature</div>
+                  <div style={{ fontWeight: 600, color: 'var(--main-text-primary)', marginTop: '4px', fontSize: '13.5px' }}>
                     {verificationResult.signature_valid ? 'ML-DSA-65 Valid' : 'Signature Checked'}
                   </div>
                 </div>
-                <div style={{ padding: '10px', background: 'var(--main-bg)', borderRadius: '6px', border: '1px solid var(--main-border)' }}>
-                  <div style={{ color: 'var(--main-text-tertiary)' }}>Merkle Commitment</div>
-                  <div style={{ fontWeight: 600, color: 'var(--main-text-primary)', marginTop: '2px' }}>
+                <div style={{ padding: '14px 16px', background: 'var(--main-surface-elevated)', borderRadius: '14px', border: '1px solid var(--main-border)' }}>
+                  <div style={{ color: 'var(--main-text-tertiary)', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>Merkle Commitment</div>
+                  <div style={{ fontWeight: 600, color: 'var(--main-text-primary)', marginTop: '4px', fontSize: '13.5px' }}>
                     {verificationResult.merkle_root_valid !== false ? 'RFC-6962 Valid' : 'Mismatch'}
                   </div>
                 </div>

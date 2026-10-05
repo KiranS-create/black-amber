@@ -151,7 +151,7 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({
         </button>
       </div>
 
-      {/* Account Creation Card */}
+      {/* Account Creation Card - Apple macOS Lock Screen Squircle */}
       <motion.div
         initial={{ opacity: 0, y: 14, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -160,15 +160,15 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({
         style={{
           width: '100%',
           maxWidth: '464px',
-          backgroundColor: isLight ? 'rgba(255, 255, 255, 0.92)' : 'rgba(18, 27, 35, 0.85)',
-          backdropFilter: 'blur(36px) saturate(190%)',
-          WebkitBackdropFilter: 'blur(36px) saturate(190%)',
-          border: `1px solid ${isLight ? 'rgba(203, 213, 225, 0.95)' : 'rgba(255, 255, 255, 0.12)'}`,
-          borderRadius: '16px',
-          padding: '32px 28px',
+          backgroundColor: isLight ? 'rgba(255, 255, 255, 0.88)' : 'rgba(28, 28, 32, 0.78)',
+          backdropFilter: 'blur(36px) saturate(200%)',
+          WebkitBackdropFilter: 'blur(36px) saturate(200%)',
+          border: `1px solid ${isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.16)'}`,
+          borderRadius: '28px',
+          padding: '36px 32px',
           boxShadow: isLight 
-            ? '0 1px 0 0 rgba(255, 255, 255, 1) inset, 0 24px 50px -12px rgba(15, 23, 42, 0.12), 0 4px 16px rgba(15, 23, 42, 0.04)'
-            : '0 1px 0 0 rgba(255, 255, 255, 0.08) inset, 0 32px 64px -16px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.06)',
+            ? 'inset 0 1px 1px 0 #FFFFFF, 0 24px 60px -12px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.03)'
+            : 'inset 0 1px 1px 0 rgba(255, 255, 255, 0.18), 0 32px 64px -16px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.04)',
           position: 'relative',
           zIndex: 10
         }}
@@ -179,17 +179,17 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({
             style={{
               width: '48px',
               height: '48px',
-              borderRadius: '12px',
+              borderRadius: '14px',
               background: isLight 
-                ? 'linear-gradient(135deg, rgba(2, 132, 199, 0.14) 0%, rgba(15, 118, 110, 0.12) 100%)' 
-                : 'linear-gradient(135deg, rgba(56, 189, 248, 0.16) 0%, rgba(45, 212, 191, 0.14) 100%)',
-              border: `1px solid ${isLight ? 'rgba(2, 132, 199, 0.3)' : 'rgba(56, 189, 248, 0.35)'}`,
+                ? 'linear-gradient(135deg, rgba(0, 113, 227, 0.14) 0%, rgba(52, 199, 89, 0.12) 100%)' 
+                : 'linear-gradient(135deg, rgba(41, 151, 255, 0.18) 0%, rgba(48, 209, 88, 0.15) 100%)',
+              border: `1px solid ${isLight ? 'rgba(0, 113, 227, 0.3)' : 'rgba(41, 151, 255, 0.35)'}`,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: isLight ? '#0284C7' : '#38BDF8',
+              color: isLight ? '#0071E3' : '#2997FF',
               marginBottom: '12px',
-              boxShadow: isLight ? '0 4px 12px rgba(2, 132, 199, 0.15)' : '0 4px 16px rgba(56, 189, 248, 0.2)'
+              boxShadow: isLight ? '0 4px 12px rgba(0, 113, 227, 0.15)' : '0 4px 16px rgba(41, 151, 255, 0.2)'
             }}
           >
             <ShieldCheck size={26} strokeWidth={2.0} />
@@ -524,16 +524,17 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({
             </div>
           </div>
 
-          {/* Submit Button */}
+          {/* Submit Button - Apple Full Pill CTA */}
           <button
             type="submit"
             disabled={isLoading}
             style={{
               width: '100%',
-              height: '42px',
-              borderRadius: '8px',
-              fontSize: '13.5px',
-              fontWeight: 650,
+              height: '44px',
+              borderRadius: '9999px',
+              fontSize: '14px',
+              fontWeight: 600,
+              letterSpacing: '-0.01em',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -541,13 +542,15 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({
               cursor: isLoading ? 'not-allowed' : 'pointer',
               opacity: isLoading ? 0.75 : 1,
               background: isLight 
-                ? 'linear-gradient(135deg, #0284C7 0%, #0F766E 100%)' 
-                : 'linear-gradient(135deg, #0284C7 0%, #0E7490 100%)',
-              color: '#FFFFFF',
+                ? '#0071E3' 
+                : '#2997FF',
+              color: isLight ? '#FFFFFF' : '#000000',
               border: 'none',
-              boxShadow: isLight ? '0 4px 14px rgba(2, 132, 199, 0.28)' : '0 4px 18px rgba(2, 132, 199, 0.35)',
-              transition: 'transform 0.15s ease, box-shadow 0.15s ease'
+              boxShadow: isLight ? '0 4px 14px rgba(0, 113, 227, 0.28)' : '0 4px 18px rgba(41, 151, 255, 0.35)',
+              transition: 'transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.15s ease'
             }}
+            onMouseDown={e => (e.currentTarget.style.transform = 'scale(0.98)')}
+            onMouseUp={e => (e.currentTarget.style.transform = 'scale(1)')}
           >
             {isLoading ? (
               <>

@@ -72,7 +72,10 @@ export const TopBar: React.FC<TopBarProps> = ({
       style={{
         height: '52px',
         backgroundColor: 'var(--surface)',
+        backdropFilter: 'blur(28px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(28px) saturate(180%)',
         borderBottom: '1px solid var(--border)',
+        boxShadow: '0 1px 0 rgba(255, 255, 255, 0.08)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -88,10 +91,11 @@ export const TopBar: React.FC<TopBarProps> = ({
           style={{
             width: '28px',
             height: '28px',
-            borderRadius: 'var(--radius-xs)',
-            backgroundColor: 'var(--primary-subtle)',
-            border: '1px solid var(--primary-border)',
-            color: 'var(--primary)',
+            borderRadius: '9px',
+            background: 'linear-gradient(135deg, #0071E3, #005bb5)',
+            border: '1px solid rgba(255, 255, 255, 0.25)',
+            boxShadow: '0 2px 8px rgba(0, 113, 227, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.35)',
+            color: '#FFFFFF',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -107,7 +111,7 @@ export const TopBar: React.FC<TopBarProps> = ({
               fontSize: '15px',
               fontWeight: 700,
               color: 'var(--text)',
-              letterSpacing: '-0.01em'
+              letterSpacing: '-0.024em'
             }}
           >
             AegisTrace
@@ -116,7 +120,8 @@ export const TopBar: React.FC<TopBarProps> = ({
             style={{
               fontSize: '11px',
               color: 'var(--text-tertiary)',
-              fontWeight: 500
+              fontWeight: 500,
+              letterSpacing: '-0.01em'
             }}
           >
             Forensic Workstation
@@ -126,16 +131,16 @@ export const TopBar: React.FC<TopBarProps> = ({
         {/* MoD / Indian Navy (WESEE) & CERT-In CBOM Credential Pill */}
         <button
           onClick={() => setShowWeseeModal(true)}
-          title="Click to view Problem Statement SIH26237 Sponsoring Agency & CERT-In CBOM Specifications"
+          title="Click to view Sponsoring Agency Specifications & CERT-In CBOM"
           style={{
             display: 'inline-flex',
             alignItems: 'center',
             gap: '6px',
-            padding: '3px 8px',
-            borderRadius: '4px',
-            backgroundColor: 'rgba(2, 132, 199, 0.08)',
-            border: '1px solid rgba(2, 132, 199, 0.28)',
-            color: '#0284C7',
+            padding: '3px 10px',
+            borderRadius: '9999px',
+            backgroundColor: 'rgba(0, 113, 227, 0.08)',
+            border: '1px solid rgba(0, 113, 227, 0.28)',
+            color: 'var(--primary)',
             fontSize: '10.5px',
             fontFamily: 'var(--font-mono)',
             fontWeight: 600,
@@ -143,25 +148,25 @@ export const TopBar: React.FC<TopBarProps> = ({
             transition: 'all 0.15s ease'
           }}
           onMouseEnter={e => {
-            e.currentTarget.style.backgroundColor = 'rgba(2, 132, 199, 0.16)';
-            e.currentTarget.style.borderColor = '#0284C7';
+            e.currentTarget.style.backgroundColor = 'rgba(0, 113, 227, 0.16)';
+            e.currentTarget.style.borderColor = 'var(--primary)';
           }}
           onMouseLeave={e => {
-            e.currentTarget.style.backgroundColor = 'rgba(2, 132, 199, 0.08)';
-            e.currentTarget.style.borderColor = 'rgba(2, 132, 199, 0.28)';
+            e.currentTarget.style.backgroundColor = 'rgba(0, 113, 227, 0.08)';
+            e.currentTarget.style.borderColor = 'rgba(0, 113, 227, 0.28)';
           }}
         >
-          <Anchor size={11} style={{ color: '#0284C7' }} />
-          <span>MoD / Indian Navy (WESEE) · SIH26237</span>
+          <Anchor size={11} style={{ color: 'var(--primary)' }} />
+          <span>MoD / Indian Navy (WESEE) Specification</span>
           <span style={{ color: 'var(--text-tertiary)', opacity: 0.6 }}>|</span>
-          <span style={{ color: '#10B981', display: 'flex', alignItems: 'center', gap: '3px' }}>
-            <span style={{ width: '4px', height: '4px', borderRadius: '50%', backgroundColor: '#10B981' }} />
+          <span style={{ color: '#30D158', display: 'flex', alignItems: 'center', gap: '3px' }}>
+            <span style={{ width: '4px', height: '4px', borderRadius: '50%', backgroundColor: '#30D158' }} />
             CERT-In CBOM
           </span>
         </button>
       </div>
 
-      {/* Global Search / Command Palette Trigger (Layer 2 Surface) */}
+      {/* Global Search / Command Palette Trigger - Apple Spotlight Capsule */}
       <div style={{ flex: 1, maxWidth: '400px', margin: '0 var(--space-4)' }}>
         <button
           onClick={onOpenCommandPalette}
@@ -172,10 +177,10 @@ export const TopBar: React.FC<TopBarProps> = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '0 10px',
+            padding: '0 12px',
             backgroundColor: 'var(--surface-subtle)',
             border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-sm)',
+            borderRadius: '9999px',
             color: 'var(--text-tertiary)',
             fontSize: 'var(--text-xs)',
             cursor: 'pointer',
@@ -192,20 +197,20 @@ export const TopBar: React.FC<TopBarProps> = ({
             style={{
               fontSize: '10px',
               fontFamily: 'var(--font-mono)',
-              padding: '1px 5px',
-              borderRadius: 'var(--radius-xs)',
-              backgroundColor: 'rgba(255, 255, 255, 0.05)',
+              padding: '1px 6px',
+              borderRadius: '9999px',
+              backgroundColor: 'rgba(255, 255, 255, 0.08)',
               border: '1px solid var(--border-subtle)',
               color: 'var(--text-tertiary)'
             }}
           >
-            Ctrl K
+            ⌘K
           </kbd>
         </button>
       </div>
 
-      {/* Quick Interactive Labs Launcher */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+      {/* Quick Interactive Labs Launcher - Apple Pills */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
         {onOpenCollusionLab && (
           <button
             onClick={onOpenCollusionLab}
@@ -215,14 +220,15 @@ export const TopBar: React.FC<TopBarProps> = ({
               alignItems: 'center',
               gap: '4px',
               height: '26px',
-              padding: '0 8px',
-              borderRadius: 'var(--radius-xs)',
-              backgroundColor: 'rgba(139, 92, 246, 0.12)',
-              border: '1px solid rgba(139, 92, 246, 0.3)',
-              color: '#A78BFA',
+              padding: '0 10px',
+              borderRadius: '9999px',
+              backgroundColor: 'rgba(191, 90, 242, 0.12)',
+              border: '1px solid rgba(191, 90, 242, 0.3)',
+              color: '#BF5AF2',
               fontSize: '11px',
               fontWeight: 600,
-              cursor: 'pointer'
+              cursor: 'pointer',
+              transition: 'all 0.15s ease'
             }}
           >
             <Users size={12} />
@@ -239,14 +245,15 @@ export const TopBar: React.FC<TopBarProps> = ({
               alignItems: 'center',
               gap: '4px',
               height: '26px',
-              padding: '0 8px',
-              borderRadius: 'var(--radius-xs)',
-              backgroundColor: 'rgba(245, 158, 11, 0.12)',
-              border: '1px solid rgba(245, 158, 11, 0.3)',
-              color: '#FBBF24',
+              padding: '0 10px',
+              borderRadius: '9999px',
+              backgroundColor: 'rgba(255, 159, 10, 0.12)',
+              border: '1px solid rgba(255, 159, 10, 0.3)',
+              color: '#FF9F0A',
               fontSize: '11px',
               fontWeight: 600,
-              cursor: 'pointer'
+              cursor: 'pointer',
+              transition: 'all 0.15s ease'
             }}
           >
             <Camera size={12} />
@@ -263,14 +270,15 @@ export const TopBar: React.FC<TopBarProps> = ({
               alignItems: 'center',
               gap: '4px',
               height: '26px',
-              padding: '0 8px',
-              borderRadius: 'var(--radius-xs)',
-              backgroundColor: 'rgba(56, 189, 248, 0.12)',
-              border: '1px solid rgba(56, 189, 248, 0.3)',
-              color: '#38BDF8',
+              padding: '0 10px',
+              borderRadius: '9999px',
+              backgroundColor: 'rgba(41, 151, 255, 0.12)',
+              border: '1px solid rgba(41, 151, 255, 0.3)',
+              color: '#2997FF',
               fontSize: '11px',
               fontWeight: 600,
-              cursor: 'pointer'
+              cursor: 'pointer',
+              transition: 'all 0.15s ease'
             }}
           >
             <Key size={12} />
@@ -287,14 +295,15 @@ export const TopBar: React.FC<TopBarProps> = ({
               alignItems: 'center',
               gap: '4px',
               height: '26px',
-              padding: '0 8px',
-              borderRadius: 'var(--radius-xs)',
-              backgroundColor: 'rgba(76, 154, 154, 0.12)',
-              border: '1px solid rgba(76, 154, 154, 0.3)',
-              color: 'var(--primary-text)',
+              padding: '0 10px',
+              borderRadius: '9999px',
+              backgroundColor: 'rgba(48, 209, 88, 0.12)',
+              border: '1px solid rgba(48, 209, 88, 0.3)',
+              color: '#30D158',
               fontSize: '11px',
               fontWeight: 600,
-              cursor: 'pointer'
+              cursor: 'pointer',
+              transition: 'all 0.15s ease'
             }}
           >
             <Eye size={12} />
@@ -311,14 +320,15 @@ export const TopBar: React.FC<TopBarProps> = ({
               alignItems: 'center',
               gap: '4px',
               height: '26px',
-              padding: '0 8px',
-              borderRadius: 'var(--radius-xs)',
-              backgroundColor: 'rgba(2, 132, 199, 0.15)',
-              border: '1px solid rgba(2, 132, 199, 0.35)',
-              color: '#38BDF8',
+              padding: '0 10px',
+              borderRadius: '9999px',
+              backgroundColor: 'rgba(0, 113, 227, 0.15)',
+              border: '1px solid rgba(0, 113, 227, 0.35)',
+              color: '#2997FF',
               fontSize: '11px',
               fontWeight: 650,
-              cursor: 'pointer'
+              cursor: 'pointer',
+              transition: 'all 0.15s ease'
             }}
           >
             <Smartphone size={12} />
@@ -327,45 +337,59 @@ export const TopBar: React.FC<TopBarProps> = ({
         )}
       </div>
 
-      {/* Experience Switcher Pill */}
-      <div className="glass-pill-container" style={{ display: 'flex', gap: '3px', background: 'rgba(255,255,255,0.05)', padding: '2px', borderRadius: '6px', border: '1px solid var(--border)' }}>
-          <button
-            onClick={() => setExperienceVariant('main')}
-            style={{
-              padding: '3px 8px',
-              fontSize: '11px',
-              fontWeight: 600,
-              borderRadius: '4px',
-              border: 'none',
-              background: getExperienceVariant() === 'main' ? 'rgba(59, 130, 246, 0.25)' : 'transparent',
-              color: getExperienceVariant() === 'main' ? '#60A5FA' : 'var(--text-tertiary)',
-              cursor: 'pointer'
-            }}
-            title="Switch to Main Forensic Workstation"
-          >
-            ✦ Main Workstation
-          </button>
-          <button
-            onClick={() => setExperienceVariant('alternate')}
-            style={{
-              padding: '3px 8px',
-              fontSize: '11px',
-              fontWeight: 600,
-              borderRadius: '4px',
-              border: 'none',
-              background: getExperienceVariant() === 'alternate' ? 'rgba(59, 130, 246, 0.25)' : 'transparent',
-              color: getExperienceVariant() === 'alternate' ? '#60A5FA' : 'var(--text-tertiary)',
-              cursor: 'pointer'
-            }}
-            title="Active: Briefing / Full Hub UI"
-          >
-            ☵ Briefing UI
-          </button>
-        </div>
+      {/* Experience Switcher - Apple Segmented Control */}
+      <div 
+        className="glass-pill-container" 
+        style={{ 
+          display: 'flex', 
+          gap: '2px', 
+          background: 'var(--surface-subtle)', 
+          padding: '2px', 
+          borderRadius: '9999px', 
+          border: '1px solid var(--border)' 
+        }}
+      >
+        <button
+          onClick={() => setExperienceVariant('main')}
+          style={{
+            padding: '3px 10px',
+            fontSize: '11px',
+            fontWeight: 600,
+            borderRadius: '9999px',
+            border: 'none',
+            background: getExperienceVariant() === 'main' ? 'var(--surface)' : 'transparent',
+            color: getExperienceVariant() === 'main' ? 'var(--primary)' : 'var(--text-tertiary)',
+            boxShadow: getExperienceVariant() === 'main' ? '0 1px 3px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.15)' : 'none',
+            cursor: 'pointer',
+            transition: 'all 0.15s ease'
+          }}
+          title="Switch to Main Forensic Workstation"
+        >
+          ✦ Main Workstation
+        </button>
+        <button
+          onClick={() => setExperienceVariant('alternate')}
+          style={{
+            padding: '3px 10px',
+            fontSize: '11px',
+            fontWeight: 600,
+            borderRadius: '9999px',
+            border: 'none',
+            background: getExperienceVariant() === 'alternate' ? 'var(--surface)' : 'transparent',
+            color: getExperienceVariant() === 'alternate' ? 'var(--primary)' : 'var(--text-tertiary)',
+            boxShadow: getExperienceVariant() === 'alternate' ? '0 1px 3px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.15)' : 'none',
+            cursor: 'pointer',
+            transition: 'all 0.15s ease'
+          }}
+          title="Active: Briefing / Full Hub UI"
+        >
+          ☵ Briefing UI
+        </button>
+      </div>
 
       {/* System State, Quick Controls & Operator Identity */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: '8px' }}>
-        {/* Operational Status Indicator */}
+        {/* Apple Operational Status Capsule */}
         <div
           title="Zero-Trust Enclave Pipeline: Verified & Operational"
           style={{
@@ -373,8 +397,8 @@ export const TopBar: React.FC<TopBarProps> = ({
             alignItems: 'center',
             gap: '6px',
             height: '28px',
-            padding: '0 9px',
-            borderRadius: 'var(--radius-xs)',
+            padding: '0 10px',
+            borderRadius: '9999px',
             backgroundColor: 'var(--success-subtle)',
             border: '1px solid var(--success-border)',
             color: 'var(--success-text)',
@@ -382,7 +406,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             fontWeight: 600
           }}
         >
-          <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981', display: 'inline-block' }} />
+          <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#30D158', display: 'inline-block' }} />
           <span>Operational</span>
         </div>
 
@@ -395,21 +419,22 @@ export const TopBar: React.FC<TopBarProps> = ({
             alignItems: 'center',
             gap: '5px',
             height: '28px',
-            padding: '0 9px',
-            borderRadius: 'var(--radius-xs)',
-            backgroundColor: 'transparent',
+            padding: '0 12px',
+            borderRadius: '9999px',
+            backgroundColor: 'var(--surface)',
             border: '1px solid var(--border)',
             color: 'var(--text-secondary)',
             fontSize: '11.5px',
             fontWeight: 500,
-            cursor: 'pointer'
+            cursor: 'pointer',
+            transition: 'all 0.15s ease'
           }}
           onMouseEnter={e => {
             e.currentTarget.style.backgroundColor = 'var(--surface-hover)';
             e.currentTarget.style.color = 'var(--text)';
           }}
           onMouseLeave={e => {
-            e.currentTarget.style.backgroundColor = 'transparent';
+            e.currentTarget.style.backgroundColor = 'var(--surface)';
             e.currentTarget.style.color = 'var(--text-secondary)';
           }}
         >
@@ -417,41 +442,50 @@ export const TopBar: React.FC<TopBarProps> = ({
           <span>Guide</span>
         </button>
 
-        {/* Theme Toggle Button */}
+        {/* Theme Toggle Button - Circular Apple Button */}
         <button
           onClick={toggleTheme}
           title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
           style={{
             width: '28px',
             height: '28px',
-            borderRadius: 'var(--radius-xs)',
-            backgroundColor: 'transparent',
+            borderRadius: '50%',
+            backgroundColor: 'var(--surface)',
             border: '1px solid var(--border)',
             color: 'var(--text-secondary)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            transition: 'all 0.15s ease'
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.backgroundColor = 'var(--surface-hover)';
+            e.currentTarget.style.color = 'var(--text)';
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.backgroundColor = 'var(--surface)';
+            e.currentTarget.style.color = 'var(--text-secondary)';
           }}
         >
           {theme === 'dark' ? <Sun size={13} /> : <Moon size={13} />}
         </button>
 
         {/* Operator Profile / Sign Out */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', paddingLeft: '4px', borderLeft: '1px solid var(--border)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', paddingLeft: '6px', borderLeft: '1px solid var(--border)' }}>
           <div
             style={{
-              width: '24px',
-              height: '24px',
+              width: '26px',
+              height: '26px',
               borderRadius: '50%',
-              backgroundColor: 'var(--primary-subtle)',
-              border: '1px solid var(--primary-border)',
+              background: 'linear-gradient(135deg, #0071E3, #005bb5)',
+              border: '1px solid rgba(255, 255, 255, 0.25)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '10px',
+              fontSize: '10.5px',
               fontWeight: 700,
-              color: 'var(--primary)'
+              color: '#FFFFFF'
             }}
           >
             SI
@@ -461,13 +495,18 @@ export const TopBar: React.FC<TopBarProps> = ({
               onClick={onSignOut}
               title="Sign out of workstation"
               style={{
-                background: 'none',
+                width: '26px',
+                height: '26px',
+                borderRadius: '50%',
+                background: 'transparent',
                 border: 'none',
                 color: 'var(--text-tertiary)',
                 cursor: 'pointer',
-                padding: '4px',
+                padding: 0,
                 display: 'flex',
-                alignItems: 'center'
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'all 0.15s ease'
               }}
               onMouseEnter={e => (e.currentTarget.style.color = 'var(--danger)')}
               onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-tertiary)')}
@@ -527,7 +566,7 @@ export const TopBar: React.FC<TopBarProps> = ({
                     Ministry of Defence / Indian Navy (WESEE)
                   </h3>
                   <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}>
-                    Problem Statement SIH26237 · Weapons and Electronics Systems Engineering Establishment
+                    Operational Specification · Weapons and Electronics Systems Engineering Establishment
                   </p>
                 </div>
               </div>

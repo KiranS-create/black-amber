@@ -9,7 +9,10 @@ import {
   AlertCircle,
   ArrowRight,
   Lock,
-  Cpu
+  Cpu,
+  Sparkles,
+  Camera,
+  Scale
 } from 'lucide-react';
 import { MainTabId } from './MainSidebar';
 import { useTheme } from '../../context/ThemeContext';
@@ -24,6 +27,11 @@ interface MainOverviewProps {
   onOpenDecryptionPortal?: () => void;
   onOpenComparator?: () => void;
   onOpenCertificate?: () => void;
+  onRunSihDemo?: () => void;
+  isSimulatingDemo?: boolean;
+  onOpenSihCompliance?: () => void;
+  onOpenCollusionLab?: () => void;
+  onOpenAirGapLab?: () => void;
 }
 
 export const MainOverview: React.FC<MainOverviewProps> = ({
@@ -31,7 +39,11 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
   recipients,
   investigations,
   ledgerEvents,
-  onNavigate
+  onNavigate,
+  onOpenCollusionLab,
+  onOpenAirGapLab,
+  onOpenCertificate,
+  onOpenSihCompliance
 }) => {
   const { theme } = useTheme();
   const isLight = theme === 'light';
@@ -101,33 +113,109 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
         </div>
       </div>
 
-      {/* High-Level Metric Tiles */}
+      {/* Forensic Testing & Simulation Suites Ribbon - Apple Pill Bento */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '12px',
+          padding: '14px 20px',
+          borderRadius: '18px',
+          background: isLight ? 'rgba(255, 255, 255, 0.8)' : 'rgba(28, 28, 32, 0.65)',
+          backdropFilter: 'blur(20px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+          border: `1px solid ${isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.12)'}`,
+          boxShadow: isLight ? '0 2px 8px rgba(0, 0, 0, 0.03)' : '0 8px 24px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Sparkles size={14} style={{ color: '#2997FF' }} />
+          <span style={{ fontSize: '11px', fontWeight: 650, color: 'var(--main-text-primary)', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+            Mission-Critical Forensic Test Suites
+          </span>
+          <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', opacity: 0.8 }}>
+            • NIST FIPS 203/204 • Gabor Tardos • BSA § 63
+          </span>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+          {onOpenCollusionLab && (
+            <button
+              onClick={onOpenCollusionLab}
+              className="main-btn-secondary"
+              style={{ fontSize: '11px', padding: '4px 12px', display: 'flex', alignItems: 'center', gap: '5px' }}
+              title="Interactive Gabor Tardos Traitor-Tracing Collusion Sandbox"
+            >
+              <Cpu size={12} style={{ color: '#FF9F0A' }} />
+              <span>Tardos Collusion Lab</span>
+            </button>
+          )}
+
+          {onOpenAirGapLab && (
+            <button
+              onClick={onOpenAirGapLab}
+              className="main-btn-secondary"
+              style={{ fontSize: '11px', padding: '4px 12px', display: 'flex', alignItems: 'center', gap: '5px' }}
+              title="Camera Scan, Screen Glare & Distortion Robustness Simulator"
+            >
+              <Camera size={12} style={{ color: '#30D158' }} />
+              <span>Air-Gap Camera Scanner</span>
+            </button>
+          )}
+
+          {onOpenCertificate && (
+            <button
+              onClick={onOpenCertificate}
+              className="main-btn-secondary"
+              style={{ fontSize: '11px', padding: '4px 12px', display: 'flex', alignItems: 'center', gap: '5px' }}
+              title="Generate Section 63 BSA Digital Admissibility Certificate"
+            >
+              <Scale size={12} style={{ color: '#2997FF' }} />
+              <span>BSA § 63 Court Docket</span>
+            </button>
+          )}
+
+          {onOpenSihCompliance && (
+            <button
+              onClick={onOpenSihCompliance}
+              className="main-btn-secondary"
+              style={{ fontSize: '11px', padding: '4px 12px', display: 'flex', alignItems: 'center', gap: '5px' }}
+              title="MoD / Indian Navy (WESEE) Compliance Matrix"
+            >
+              <ShieldCheck size={12} style={{ color: '#2997FF' }} />
+              <span>WESEE Compliance</span>
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* High-Level Metric Tiles - Apple Bento Grid */}
       <div 
         style={{ 
           display: 'grid', 
           gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', 
-          gap: '12px' 
+          gap: '14px' 
         }}
       >
         <div 
           className="main-card" 
           style={{ 
-            padding: '16px 18px', 
-            background: 'var(--main-surface)', 
-            border: `1px solid ${isLight ? '#E2E8F0' : 'var(--main-border)'}`,
-            borderRadius: '6px'
+            padding: '20px 22px', 
+            borderRadius: '20px'
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
+            <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 650 }}>
               Registered Documents
             </span>
-            <FileText size={15} style={{ color: '#0284C7' }} />
+            <FileText size={16} style={{ color: '#0071E3' }} />
           </div>
-          <div style={{ fontSize: '22px', fontWeight: 600, color: 'var(--main-text-primary)', marginTop: '8px', fontFamily: 'var(--font-mono)' }}>
+          <div style={{ fontSize: '26px', fontWeight: 600, color: 'var(--main-text-primary)', marginTop: '10px', letterSpacing: '-0.03em', fontVariantNumeric: 'tabular-nums' }}>
             {documents.length || 3}
           </div>
-          <div style={{ fontSize: '11px', color: 'var(--main-text-secondary)', marginTop: '4px' }}>
+          <div style={{ fontSize: '12px', color: 'var(--main-text-secondary)', marginTop: '4px', letterSpacing: '-0.01em' }}>
             Content-addressed SHA-256
           </div>
         </div>
@@ -135,22 +223,20 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
         <div 
           className="main-card" 
           style={{ 
-            padding: '16px 18px', 
-            background: 'var(--main-surface)', 
-            border: `1px solid ${isLight ? '#E2E8F0' : 'var(--main-border)'}`,
-            borderRadius: '6px'
+            padding: '20px 22px', 
+            borderRadius: '20px'
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
+            <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 650 }}>
               Enrolled Recipients
             </span>
-            <Cpu size={15} style={{ color: isLight ? '#059669' : '#10B981' }} />
+            <Cpu size={16} style={{ color: '#30D158' }} />
           </div>
-          <div style={{ fontSize: '22px', fontWeight: 600, color: 'var(--main-text-primary)', marginTop: '8px', fontFamily: 'var(--font-mono)' }}>
+          <div style={{ fontSize: '26px', fontWeight: 600, color: 'var(--main-text-primary)', marginTop: '10px', letterSpacing: '-0.03em', fontVariantNumeric: 'tabular-nums' }}>
             {recipients.length || 3}
           </div>
-          <div style={{ fontSize: '11px', color: 'var(--main-text-secondary)', marginTop: '4px' }}>
+          <div style={{ fontSize: '12px', color: 'var(--main-text-secondary)', marginTop: '4px', letterSpacing: '-0.01em' }}>
             FIPS 203 (ML-KEM-768) Active
           </div>
         </div>
@@ -158,22 +244,20 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
         <div 
           className="main-card" 
           style={{ 
-            padding: '16px 18px', 
-            background: 'var(--main-surface)', 
-            border: `1px solid ${isLight ? '#E2E8F0' : 'var(--main-border)'}`,
-            borderRadius: '6px'
+            padding: '20px 22px', 
+            borderRadius: '20px'
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
+            <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 650 }}>
               Ledger Block Height
             </span>
-            <Database size={15} style={{ color: '#8B5CF6' }} />
+            <Database size={16} style={{ color: '#BF5AF2' }} />
           </div>
-          <div style={{ fontSize: '22px', fontWeight: 600, color: 'var(--main-text-primary)', marginTop: '8px', fontFamily: 'var(--font-mono)' }}>
+          <div style={{ fontSize: '26px', fontWeight: 600, color: 'var(--main-text-primary)', marginTop: '10px', letterSpacing: '-0.03em', fontVariantNumeric: 'tabular-nums' }}>
             {ledgerEvents.length || 38}
           </div>
-          <div style={{ fontSize: '11px', color: 'var(--main-text-secondary)', marginTop: '4px' }}>
+          <div style={{ fontSize: '12px', color: 'var(--main-text-secondary)', marginTop: '4px', letterSpacing: '-0.01em' }}>
             RFC-6962 Merkle Log Verified
           </div>
         </div>
@@ -181,23 +265,21 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
         <div 
           className="main-card" 
           style={{ 
-            padding: '16px 18px', 
-            background: 'var(--main-surface)', 
-            border: `1px solid ${isLight ? '#E2E8F0' : 'var(--main-border)'}`,
-            borderRadius: '6px'
+            padding: '20px 22px', 
+            borderRadius: '20px'
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
+            <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 650 }}>
               Attributed Cases
             </span>
-            <ShieldCheck size={15} style={{ color: '#F59E0B' }} />
+            <ShieldCheck size={16} style={{ color: '#FF9F0A' }} />
           </div>
-          <div style={{ fontSize: '22px', fontWeight: 600, color: 'var(--main-text-primary)', marginTop: '8px', fontFamily: 'var(--font-mono)' }}>
+          <div style={{ fontSize: '26px', fontWeight: 600, color: 'var(--main-text-primary)', marginTop: '10px', letterSpacing: '-0.03em', fontVariantNumeric: 'tabular-nums' }}>
             {investigations.length || 2}
           </div>
-          <div style={{ fontSize: '11px', color: 'var(--main-text-secondary)', marginTop: '4px' }}>
-            Zero false accusations policy
+          <div style={{ fontSize: '12px', color: 'var(--main-text-secondary)', marginTop: '4px', letterSpacing: '-0.01em' }}>
+            Statistically bounded error rate (&lt; 10⁻⁶)
           </div>
         </div>
       </div>
@@ -208,24 +290,22 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
         <div 
           className="main-card"
           style={{ 
-            padding: '18px 20px', 
-            background: 'var(--main-surface)', 
-            border: `1px solid ${isLight ? '#E2E8F0' : 'var(--main-border)'}`,
-            borderRadius: '6px',
+            padding: '22px 24px', 
+            borderRadius: '20px',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between'
           }}
         >
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
-              <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+              <span style={{ fontSize: '14px', fontWeight: 650, color: 'var(--main-text-primary)', letterSpacing: '-0.015em' }}>
                 Recent Cryptographic Audit Events
               </span>
               <button
                 onClick={() => onNavigate('evidence')}
                 className="main-btn-ghost"
-                style={{ fontSize: '11px', padding: '2px 6px', color: 'var(--main-accent)' }}
+                style={{ fontSize: '11.5px', padding: '2px 8px', color: 'var(--main-accent)' }}
               >
                 <span>View Full Ledger</span>
                 <ArrowRight size={11} style={{ marginLeft: '4px' }} />
@@ -237,36 +317,36 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
                 <div
                   key={evt.event_id}
                   style={{
-                    padding: '8px 10px',
-                    borderRadius: '4px',
-                    background: isLight ? '#F8FAFC' : 'rgba(255,255,255,0.02)',
-                    border: `1px solid ${isLight ? '#F1F5F9' : 'rgba(255,255,255,0.04)'}`,
+                    padding: '10px 12px',
+                    borderRadius: '12px',
+                    background: isLight ? 'rgba(0, 0, 0, 0.025)' : 'rgba(255, 255, 255, 0.035)',
+                    border: `1px solid ${isLight ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.06)'}`,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    fontSize: '11.5px'
+                    fontSize: '12px'
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <span 
                       style={{ 
                         fontSize: '9.5px', 
-                        fontFamily: 'var(--font-mono)', 
-                        fontWeight: 600, 
-                        padding: '1px 5px', 
-                        borderRadius: '3px',
-                        background: evt.event_type === 'DOCUMENT_RELEASE' ? 'rgba(2, 132, 199, 0.12)' : 'rgba(16, 185, 129, 0.12)',
-                        color: evt.event_type === 'DOCUMENT_RELEASE' ? '#0284C7' : (isLight ? '#059669' : '#10B981')
+                        fontFamily: 'SF Mono, monospace', 
+                        fontWeight: 650, 
+                        padding: '2px 8px', 
+                        borderRadius: '9999px',
+                        background: evt.event_type === 'DOCUMENT_RELEASE' ? 'var(--main-accent-subtle)' : 'var(--main-jade-subtle)',
+                        color: evt.event_type === 'DOCUMENT_RELEASE' ? 'var(--main-accent)' : 'var(--main-jade)'
                       }}
                     >
                       {evt.event_type === 'DOCUMENT_RELEASE' ? 'RELEASE' : 'DECRYPT'}
                     </span>
-                    <span style={{ color: 'var(--main-text-primary)', fontWeight: 500 }}>
+                    <span style={{ color: 'var(--main-text-primary)', fontWeight: 500, letterSpacing: '-0.01em' }}>
                       {evt.recipient_id}
                     </span>
                   </div>
 
-                  <span className="main-mono" style={{ fontSize: '10.5px', color: 'var(--main-text-tertiary)' }}>
+                  <span className="main-mono" style={{ fontSize: '11px', color: 'var(--main-text-tertiary)' }}>
                     {evt.event_id}
                   </span>
                 </div>
@@ -279,24 +359,22 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
         <div 
           className="main-card"
           style={{ 
-            padding: '18px 20px', 
-            background: 'var(--main-surface)', 
-            border: `1px solid ${isLight ? '#E2E8F0' : 'var(--main-border)'}`,
-            borderRadius: '6px',
+            padding: '22px 24px', 
+            borderRadius: '20px',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between'
           }}
         >
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
-              <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+              <span style={{ fontSize: '14px', fontWeight: 650, color: 'var(--main-text-primary)', letterSpacing: '-0.015em' }}>
                 Active Classified Documents
               </span>
               <button
                 onClick={() => onNavigate('documents')}
                 className="main-btn-ghost"
-                style={{ fontSize: '11px', padding: '2px 6px', color: 'var(--main-accent)' }}
+                style={{ fontSize: '11.5px', padding: '2px 8px', color: 'var(--main-accent)' }}
               >
                 <span>Manage Registry</span>
                 <ArrowRight size={11} style={{ marginLeft: '4px' }} />
@@ -312,24 +390,24 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
                 <div
                   key={doc.document_id}
                   style={{
-                    padding: '8px 10px',
-                    borderRadius: '4px',
-                    background: isLight ? '#F8FAFC' : 'rgba(255,255,255,0.02)',
-                    border: `1px solid ${isLight ? '#F1F5F9' : 'rgba(255,255,255,0.04)'}`,
+                    padding: '10px 12px',
+                    borderRadius: '12px',
+                    background: isLight ? 'rgba(0, 0, 0, 0.025)' : 'rgba(255, 255, 255, 0.035)',
+                    border: `1px solid ${isLight ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.06)'}`,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    fontSize: '11.5px'
+                    fontSize: '12px'
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <Lock size={12} color="#0284C7" />
-                    <span style={{ color: 'var(--main-text-primary)', fontWeight: 500 }}>
+                    <Lock size={13} style={{ color: 'var(--main-accent)' }} />
+                    <span style={{ color: 'var(--main-text-primary)', fontWeight: 500, letterSpacing: '-0.01em' }}>
                       {doc.document_name}
                     </span>
                   </div>
 
-                  <span className="main-mono" style={{ fontSize: '10px', color: 'var(--main-text-tertiary)' }}>
+                  <span className="main-mono" style={{ fontSize: '10.5px', color: 'var(--main-text-tertiary)' }}>
                     SHA-256: {doc.original_document_hash.substring(0, 10)}…
                   </span>
                 </div>

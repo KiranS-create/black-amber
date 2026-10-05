@@ -160,7 +160,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         </button>
       </div>
 
-      {/* Authentication Card (Layer 2 Elevated Frosted Glass Surface) */}
+      {/* Authentication Card (Apple macOS Lock Screen Squircle) */}
       <motion.div
         initial={{ opacity: 0, y: 14, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -169,15 +169,15 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         style={{
           width: '100%',
           maxWidth: '436px',
-          backgroundColor: isLight ? 'rgba(255, 255, 255, 0.92)' : 'rgba(18, 27, 35, 0.85)',
-          backdropFilter: 'blur(36px) saturate(190%)',
-          WebkitBackdropFilter: 'blur(36px) saturate(190%)',
-          border: `1px solid ${isLight ? 'rgba(203, 213, 225, 0.95)' : 'rgba(255, 255, 255, 0.12)'}`,
-          borderRadius: '16px',
-          padding: '34px 28px',
+          backgroundColor: isLight ? 'rgba(255, 255, 255, 0.88)' : 'rgba(28, 28, 32, 0.78)',
+          backdropFilter: 'blur(36px) saturate(200%)',
+          WebkitBackdropFilter: 'blur(36px) saturate(200%)',
+          border: `1px solid ${isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.16)'}`,
+          borderRadius: '28px',
+          padding: '36px 32px',
           boxShadow: isLight 
-            ? '0 1px 0 0 rgba(255, 255, 255, 1) inset, 0 24px 50px -12px rgba(15, 23, 42, 0.12), 0 4px 16px rgba(15, 23, 42, 0.04)'
-            : '0 1px 0 0 rgba(255, 255, 255, 0.08) inset, 0 32px 64px -16px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.06)',
+            ? 'inset 0 1px 1px 0 #FFFFFF, 0 24px 60px -12px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.03)'
+            : 'inset 0 1px 1px 0 rgba(255, 255, 255, 0.18), 0 32px 64px -16px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.04)',
           position: 'relative',
           zIndex: 10
         }}
@@ -188,17 +188,17 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             style={{
               width: '48px',
               height: '48px',
-              borderRadius: '12px',
+              borderRadius: '14px',
               background: isLight 
-                ? 'linear-gradient(135deg, rgba(2, 132, 199, 0.14) 0%, rgba(15, 118, 110, 0.12) 100%)' 
-                : 'linear-gradient(135deg, rgba(56, 189, 248, 0.16) 0%, rgba(45, 212, 191, 0.14) 100%)',
-              border: `1px solid ${isLight ? 'rgba(2, 132, 199, 0.3)' : 'rgba(56, 189, 248, 0.35)'}`,
+                ? 'linear-gradient(135deg, rgba(0, 113, 227, 0.14) 0%, rgba(52, 199, 89, 0.12) 100%)' 
+                : 'linear-gradient(135deg, rgba(41, 151, 255, 0.18) 0%, rgba(48, 209, 88, 0.15) 100%)',
+              border: `1px solid ${isLight ? 'rgba(0, 113, 227, 0.3)' : 'rgba(41, 151, 255, 0.35)'}`,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: isLight ? '#0284C7' : '#38BDF8',
+              color: isLight ? '#0071E3' : '#2997FF',
               marginBottom: '12px',
-              boxShadow: isLight ? '0 4px 12px rgba(2, 132, 199, 0.15)' : '0 4px 16px rgba(56, 189, 248, 0.2)'
+              boxShadow: isLight ? '0 4px 12px rgba(0, 113, 227, 0.15)' : '0 4px 16px rgba(41, 151, 255, 0.2)'
             }}
           >
             <ShieldCheck size={26} strokeWidth={2.0} />
@@ -207,8 +207,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           <h1
             style={{
               fontSize: '22px',
-              fontWeight: 750,
-              color: isLight ? '#0F172A' : '#F8FAFC',
+              fontWeight: 700,
+              color: isLight ? '#1D1D1F' : '#F5F5F7',
               letterSpacing: '-0.025em',
               margin: '0 0 4px 0'
             }}
@@ -219,10 +219,11 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           <p
             style={{
               fontSize: '13.5px',
-              color: isLight ? '#475569' : '#94A3B8',
+              color: isLight ? '#6E6E73' : '#86868B',
               margin: 0,
               textAlign: 'center',
-              fontWeight: 500
+              fontWeight: 500,
+              letterSpacing: '-0.01em'
             }}
           >
             Zero-trust forensic provenance workstation.
@@ -238,12 +239,13 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
               alignItems: 'center',
               gap: '10px',
               padding: '10px 14px',
-              backgroundColor: 'var(--danger-subtle)',
-              border: '1px solid var(--danger-border)',
-              borderRadius: '8px',
+              backgroundColor: 'rgba(255, 69, 58, 0.12)',
+              border: '1px solid rgba(255, 69, 58, 0.25)',
+              borderRadius: '12px',
               marginBottom: '18px',
               fontSize: '12.5px',
-              color: 'var(--danger)',
+              color: '#FF453A',
+              fontWeight: 500,
               lineHeight: 1.4
             }}
           >
@@ -261,9 +263,10 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
               style={{
                 display: 'block',
                 fontSize: '12px',
-                fontWeight: 650,
-                color: isLight ? '#334155' : '#CBD5E1',
-                marginBottom: '6px'
+                fontWeight: 600,
+                color: isLight ? '#1D1D1F' : '#F5F5F7',
+                marginBottom: '7px',
+                letterSpacing: '-0.01em'
               }}
             >
               Username / Identity
@@ -280,41 +283,42 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                 disabled={isLoading}
                 style={{
                   width: '100%',
-                  height: '42px',
-                  padding: '0 14px 0 38px',
-                  backgroundColor: isLight ? '#FFFFFF' : 'rgba(11, 16, 21, 0.85)',
-                  border: `1px solid ${isLight ? '#CBD5E1' : 'rgba(255, 255, 255, 0.14)'}`,
-                  borderRadius: '8px',
-                  color: isLight ? '#0F172A' : '#F8FAFC',
-                  fontSize: '13.5px',
-                  fontWeight: 500,
+                  height: '44px',
+                  padding: '0 16px 0 40px',
+                  backgroundColor: isLight ? 'rgba(0, 0, 0, 0.03)' : 'rgba(255, 255, 255, 0.06)',
+                  border: `1px solid ${isLight ? 'rgba(0, 0, 0, 0.12)' : 'rgba(255, 255, 255, 0.14)'}`,
+                  borderRadius: '14px',
+                  color: isLight ? '#1D1D1F' : '#F5F5F7',
+                  fontSize: '14px',
+                  fontWeight: 450,
                   outline: 'none',
-                  transition: 'border-color 0.15s ease, box-shadow 0.15s ease'
+                  transition: 'border-color 0.18s ease, box-shadow 0.18s ease'
                 }}
                 onFocus={e => {
-                  e.target.style.borderColor = isLight ? '#0284C7' : '#38BDF8';
+                  e.target.style.borderColor = isLight ? '#0071E3' : '#2997FF';
                   e.target.style.boxShadow = isLight 
-                    ? '0 0 0 3px rgba(2, 132, 199, 0.16)' 
-                    : '0 0 0 3px rgba(56, 189, 248, 0.2)';
+                    ? '0 0 0 3.5px rgba(0, 113, 227, 0.25)' 
+                    : '0 0 0 3.5px rgba(41, 151, 255, 0.3)';
                 }}
                 onBlur={e => {
-                  e.target.style.borderColor = isLight ? '#CBD5E1' : 'rgba(255, 255, 255, 0.14)';
+                  e.target.style.borderColor = isLight ? 'rgba(0, 0, 0, 0.12)' : 'rgba(255, 255, 255, 0.14)';
                   e.target.style.boxShadow = 'none';
                 }}
               />
-              <User size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: isLight ? '#64748B' : '#73808C' }} />
+              <User size={16} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: isLight ? '#86868B' : '#A1A1A6' }} />
             </div>
           </div>
 
           {/* Password Input */}
           <div style={{ marginBottom: '22px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '7px' }}>
               <label
                 htmlFor="login-password"
                 style={{
                   fontSize: '12px',
-                  fontWeight: 650,
-                  color: isLight ? '#334155' : '#CBD5E1'
+                  fontWeight: 600,
+                  color: isLight ? '#1D1D1F' : '#F5F5F7',
+                  letterSpacing: '-0.01em'
                 }}
               >
                 Passphrase
@@ -332,29 +336,29 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                 disabled={isLoading}
                 style={{
                   width: '100%',
-                  height: '42px',
-                  padding: '0 40px 0 38px',
-                  backgroundColor: isLight ? '#FFFFFF' : 'rgba(11, 16, 21, 0.85)',
-                  border: `1px solid ${isLight ? '#CBD5E1' : 'rgba(255, 255, 255, 0.14)'}`,
-                  borderRadius: '8px',
-                  color: isLight ? '#0F172A' : '#F8FAFC',
-                  fontSize: '13.5px',
-                  fontWeight: 500,
+                  height: '44px',
+                  padding: '0 44px 0 40px',
+                  backgroundColor: isLight ? 'rgba(0, 0, 0, 0.03)' : 'rgba(255, 255, 255, 0.06)',
+                  border: `1px solid ${isLight ? 'rgba(0, 0, 0, 0.12)' : 'rgba(255, 255, 255, 0.14)'}`,
+                  borderRadius: '14px',
+                  color: isLight ? '#1D1D1F' : '#F5F5F7',
+                  fontSize: '14px',
+                  fontWeight: 450,
                   outline: 'none',
-                  transition: 'border-color 0.15s ease, box-shadow 0.15s ease'
+                  transition: 'border-color 0.18s ease, box-shadow 0.18s ease'
                 }}
                 onFocus={e => {
-                  e.target.style.borderColor = isLight ? '#0284C7' : '#38BDF8';
+                  e.target.style.borderColor = isLight ? '#0071E3' : '#2997FF';
                   e.target.style.boxShadow = isLight 
-                    ? '0 0 0 3px rgba(2, 132, 199, 0.16)' 
-                    : '0 0 0 3px rgba(56, 189, 248, 0.2)';
+                    ? '0 0 0 3.5px rgba(0, 113, 227, 0.25)' 
+                    : '0 0 0 3.5px rgba(41, 151, 255, 0.3)';
                 }}
                 onBlur={e => {
-                  e.target.style.borderColor = isLight ? '#CBD5E1' : 'rgba(255, 255, 255, 0.14)';
+                  e.target.style.borderColor = isLight ? 'rgba(0, 0, 0, 0.12)' : 'rgba(255, 255, 255, 0.14)';
                   e.target.style.boxShadow = 'none';
                 }}
               />
-              <Lock size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: isLight ? '#64748B' : '#73808C' }} />
+              <Lock size={16} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: isLight ? '#86868B' : '#A1A1A6' }} />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
@@ -362,12 +366,12 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
                 style={{
                   position: 'absolute',
-                  right: '10px',
+                  right: '12px',
                   top: '50%',
                   transform: 'translateY(-50%)',
                   background: 'none',
                   border: 'none',
-                  color: isLight ? '#64748B' : '#73808C',
+                  color: isLight ? '#86868B' : '#A1A1A6',
                   cursor: 'pointer',
                   padding: '4px',
                   display: 'flex',
@@ -380,16 +384,17 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             </div>
           </div>
 
-          {/* Submit Action */}
+          {/* Submit Action - Apple Full-Pill CTA */}
           <button
             type="submit"
             disabled={isLoading}
             style={{
               width: '100%',
-              height: '42px',
-              borderRadius: '8px',
-              fontSize: '13.5px',
-              fontWeight: 650,
+              height: '44px',
+              borderRadius: '9999px',
+              fontSize: '14px',
+              fontWeight: 600,
+              letterSpacing: '-0.01em',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -397,13 +402,15 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
               cursor: isLoading ? 'not-allowed' : 'pointer',
               opacity: isLoading ? 0.75 : 1,
               background: isLight 
-                ? 'linear-gradient(135deg, #0284C7 0%, #0F766E 100%)' 
-                : 'linear-gradient(135deg, #0284C7 0%, #0E7490 100%)',
-              color: '#FFFFFF',
+                ? '#0071E3' 
+                : '#2997FF',
+              color: isLight ? '#FFFFFF' : '#000000',
               border: 'none',
-              boxShadow: isLight ? '0 4px 14px rgba(2, 132, 199, 0.28)' : '0 4px 18px rgba(2, 132, 199, 0.35)',
-              transition: 'transform 0.15s ease, box-shadow 0.15s ease'
+              boxShadow: isLight ? '0 4px 14px rgba(0, 113, 227, 0.28)' : '0 4px 18px rgba(41, 151, 255, 0.35)',
+              transition: 'transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.15s ease'
             }}
+            onMouseDown={e => (e.currentTarget.style.transform = 'scale(0.98)')}
+            onMouseUp={e => (e.currentTarget.style.transform = 'scale(1)')}
           >
             {isLoading ? (
               <>
@@ -419,36 +426,35 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           </button>
         </form>
 
-        {/* DEMO ACCESS Box (Natural, Elegant, SIH Judge Focused) */}
+        {/* DEMO ACCESS Box (Natural, Elegant, Apple Bento Squircle) */}
         {demoAuthAvailable && (
           <div
             style={{
-              marginTop: '20px',
-              padding: '12px 14px',
-              backgroundColor: isLight ? 'rgba(241, 245, 249, 0.95)' : 'rgba(15, 22, 29, 0.90)',
-              border: `1px solid ${autofillApplied ? (isLight ? '#0284C7' : '#38BDF8') : (isLight ? '#CBD5E1' : 'rgba(255, 255, 255, 0.10)')}`,
-              borderRadius: '8px',
+              marginTop: '22px',
+              padding: '14px 16px',
+              backgroundColor: isLight ? 'rgba(0, 0, 0, 0.03)' : 'rgba(255, 255, 255, 0.05)',
+              border: `1px solid ${autofillApplied ? (isLight ? '#0071E3' : '#2997FF') : (isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255, 255, 255, 0.10)')}`,
+              borderRadius: '16px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               gap: '12px',
-              transition: 'all 0.2s ease',
-              boxShadow: isLight ? '0 2px 8px rgba(15, 23, 42, 0.04)' : 'none'
+              transition: 'all 0.2s ease'
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <KeyRound size={17} style={{ color: isLight ? '#0284C7' : '#38BDF8', flexShrink: 0 }} />
+              <KeyRound size={17} style={{ color: isLight ? '#0071E3' : '#2997FF', flexShrink: 0 }} />
               <div>
-                <div style={{ fontSize: '11px', fontWeight: 750, color: isLight ? '#0369A1' : '#38BDF8', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <div style={{ fontSize: '10.5px', fontWeight: 700, color: isLight ? '#0071E3' : '#2997FF', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <span>SIH JUDGE EVALUATION ACCESS</span>
                   {autofillApplied && (
-                    <span style={{ fontSize: '10.5px', color: '#10B981', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                    <span style={{ fontSize: '10.5px', color: '#30D158', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
                       <CheckCircle2 size={12} /> Applied
                     </span>
                   )}
                 </div>
-                <div style={{ fontSize: '12px', color: isLight ? '#475569' : '#94A3B8', fontFamily: 'var(--font-mono)', marginTop: '2px' }}>
-                  User: <strong style={{ color: isLight ? '#0F172A' : '#F8FAFC' }}>admin</strong> &nbsp;|&nbsp; Pass: <strong style={{ color: isLight ? '#0F172A' : '#F8FAFC' }}>admin</strong>
+                <div style={{ fontSize: '12.5px', color: isLight ? '#6E6E73' : '#86868B', fontFamily: 'SF Mono, monospace', marginTop: '2px' }}>
+                  User: <strong style={{ color: isLight ? '#1D1D1F' : '#F5F5F7' }}>admin</strong> &nbsp;|&nbsp; Pass: <strong style={{ color: isLight ? '#1D1D1F' : '#F5F5F7' }}>admin</strong>
                 </div>
               </div>
             </div>
@@ -456,19 +462,18 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             <button
               type="button"
               onClick={handleApplyDemoCredentials}
-              className="btn-secondary"
               style={{
-                fontSize: '11.5px',
+                fontSize: '11px',
                 fontWeight: 600,
-                padding: '5px 12px',
+                padding: '5px 14px',
                 height: '30px',
-                borderRadius: '6px',
+                borderRadius: '9999px',
                 flexShrink: 0,
                 backgroundColor: autofillApplied 
-                  ? (isLight ? 'rgba(2, 132, 199, 0.15)' : 'rgba(56, 189, 248, 0.2)') 
+                  ? (isLight ? 'rgba(0, 113, 227, 0.15)' : 'rgba(41, 151, 255, 0.2)') 
                   : (isLight ? '#FFFFFF' : 'rgba(255, 255, 255, 0.08)'),
-                borderColor: autofillApplied ? (isLight ? '#0284C7' : '#38BDF8') : (isLight ? '#CBD5E1' : 'rgba(255, 255, 255, 0.16)'),
-                color: autofillApplied ? (isLight ? '#0284C7' : '#38BDF8') : (isLight ? '#334155' : '#E2E8F0'),
+                border: `1px solid ${autofillApplied ? (isLight ? '#0071E3' : '#2997FF') : (isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255, 255, 255, 0.16)')}`,
+                color: autofillApplied ? (isLight ? '#0071E3' : '#2997FF') : (isLight ? '#1D1D1F' : '#F5F5F7'),
                 cursor: 'pointer',
                 transition: 'all 0.15s ease'
               }}

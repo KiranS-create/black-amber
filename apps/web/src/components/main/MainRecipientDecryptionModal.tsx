@@ -151,37 +151,23 @@ export const MainRecipientDecryptionModal: React.FC<MainRecipientDecryptionModal
         </div>
 
         {/* Sub-tab Selector */}
-        <div style={{ padding: '14px 24px 0 24px', display: 'flex', gap: '8px' }}>
-          <button
-            type="button"
-            onClick={() => setSubTab('terminal')}
-            className={`main-btn-secondary ${subTab === 'terminal' ? 'active' : ''}`}
-            style={{ 
-              fontSize: '12px', 
-              padding: '6px 14px', 
-              background: subTab === 'terminal' ? 'rgba(56, 189, 248, 0.15)' : 'transparent', 
-              borderColor: subTab === 'terminal' ? 'var(--main-petrol)' : 'var(--main-border)', 
-              color: subTab === 'terminal' ? 'var(--main-petrol)' : 'var(--main-text-secondary)',
-              fontWeight: subTab === 'terminal' ? 600 : 500
-            }}
-          >
-            ✦ Terminal Decryption Pipeline
-          </button>
-          <button
-            type="button"
-            onClick={() => setSubTab('enclave')}
-            className={`main-btn-secondary ${subTab === 'enclave' ? 'active' : ''}`}
-            style={{ 
-              fontSize: '12px', 
-              padding: '6px 14px', 
-              background: subTab === 'enclave' ? 'rgba(34, 197, 94, 0.15)' : 'transparent', 
-              borderColor: subTab === 'enclave' ? 'var(--main-jade)' : 'var(--main-border)', 
-              color: subTab === 'enclave' ? 'var(--main-jade)' : 'var(--main-text-secondary)',
-              fontWeight: subTab === 'enclave' ? 600 : 500
-            }}
-          >
-            🛡️ Secure WASM Enclave & Memory Architecture
-          </button>
+        <div style={{ padding: '16px 28px 0 28px', display: 'flex' }}>
+          <div className="glass-pill-container">
+            <button
+              type="button"
+              onClick={() => setSubTab('terminal')}
+              className={`glass-pill-btn ${subTab === 'terminal' ? 'active' : ''}`}
+            >
+              ✦ Terminal Decryption Pipeline
+            </button>
+            <button
+              type="button"
+              onClick={() => setSubTab('enclave')}
+              className={`glass-pill-btn ${subTab === 'enclave' ? 'active' : ''}`}
+            >
+              🛡️ Secure WASM Enclave & Memory Architecture
+            </button>
+          </div>
         </div>
 
         {/* Modal Body */}
@@ -190,10 +176,10 @@ export const MainRecipientDecryptionModal: React.FC<MainRecipientDecryptionModal
             <>
               {/* Recipient Selection */}
               <div>
-                <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--main-text-primary)', display: 'block', marginBottom: '8px' }}>
+                <label style={{ fontSize: '12px', fontWeight: 650, color: 'var(--main-text-primary)', display: 'block', marginBottom: '10px' }}>
                   1. Select Recipient Workstation Terminal
                 </label>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
               {[
                 { id: 'bob', name: 'Marcus Vance', role: 'Principal Cryptanalyst', badge: 'Recommended for Demo' },
                 { id: 'alice', name: 'Sarah Jenkins', role: 'Cyber Defense Lead', badge: 'Co-Recipient' },
@@ -203,24 +189,25 @@ export const MainRecipientDecryptionModal: React.FC<MainRecipientDecryptionModal
                   key={rec.id}
                   onClick={() => !isExecuting && setSelectedRecipientId(rec.id)}
                   style={{
-                    padding: '12px',
-                    borderRadius: '6px',
+                    padding: '14px',
+                    borderRadius: '14px',
                     border: `1px solid ${selectedRecipientId === rec.id ? 'var(--main-accent)' : 'var(--main-border)'}`,
-                    background: selectedRecipientId === rec.id ? 'var(--main-surface-hover)' : 'var(--main-bg)',
+                    background: selectedRecipientId === rec.id ? 'var(--main-surface-hover)' : 'var(--main-surface-elevated)',
                     cursor: isExecuting ? 'not-allowed' : 'pointer',
-                    transition: 'all 0.15s ease'
+                    transition: 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)',
+                    boxShadow: selectedRecipientId === rec.id ? '0 4px 16px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.12)' : 'none'
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
-                    <span style={{ fontSize: '11px', fontWeight: 600, color: selectedRecipientId === rec.id ? 'var(--main-accent)' : 'var(--main-text-tertiary)' }}>
+                    <span style={{ fontSize: '11px', fontWeight: 650, color: selectedRecipientId === rec.id ? 'var(--main-accent)' : 'var(--main-text-tertiary)' }}>
                       TERMINAL #{rec.id.toUpperCase()}
                     </span>
-                    {selectedRecipientId === rec.id && <CheckCircle2 size={12} style={{ color: 'var(--main-accent)' }} />}
+                    {selectedRecipientId === rec.id && <CheckCircle2 size={13} style={{ color: 'var(--main-accent)' }} />}
                   </div>
-                  <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
+                  <div style={{ fontSize: '13.5px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
                     {rec.name}
                   </div>
-                  <div style={{ fontSize: '11px', color: 'var(--main-text-secondary)', marginTop: '2px' }}>
+                  <div style={{ fontSize: '11.5px', color: 'var(--main-text-secondary)', marginTop: '2px' }}>
                     {rec.role}
                   </div>
                   <div style={{ marginTop: '8px', fontSize: '10px', color: selectedRecipientId === rec.id ? '#93C5FD' : 'var(--main-text-tertiary)' }}>
@@ -232,14 +219,14 @@ export const MainRecipientDecryptionModal: React.FC<MainRecipientDecryptionModal
           </div>
 
           {/* Cryptographic Package Info */}
-          <div style={{ padding: '12px 14px', background: 'var(--main-bg)', borderRadius: '6px', border: '1px solid var(--main-border)', fontSize: '12px' }}>
+          <div style={{ padding: '14px 16px', background: 'var(--main-surface-elevated)', borderRadius: '14px', border: '1px solid var(--main-border)', fontSize: '12px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-              <span style={{ fontWeight: 600, color: 'var(--main-text-primary)' }}>Broadcast Envelope Details:</span>
+              <span style={{ fontWeight: 650, color: 'var(--main-text-primary)' }}>Broadcast Envelope Details:</span>
               <span className="main-mono" style={{ fontSize: '11px', color: 'var(--main-text-secondary)' }}>
                 {currentRelease?.release_id || 'rel_20260926_001'}
               </span>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', color: 'var(--main-text-secondary)', fontSize: '11px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', color: 'var(--main-text-secondary)', fontSize: '11.5px' }}>
               <div>Document: <strong style={{ color: 'var(--main-text-primary)' }}>{currentRelease?.document_name || 'National_Defense_Protocol_2026.pdf'}</strong></div>
               <div>Key Encapsulation: <strong style={{ color: 'var(--main-text-primary)' }}>ML-KEM-768 (NIST FIPS 203)</strong></div>
               <div>Digital Signature: <strong style={{ color: 'var(--main-text-primary)' }}>ML-DSA-65 (NIST FIPS 204)</strong></div>
@@ -249,8 +236,8 @@ export const MainRecipientDecryptionModal: React.FC<MainRecipientDecryptionModal
 
           {/* Stepper Progress Visualizer */}
           {(isExecuting || decryptionResult) && (
-            <div style={{ padding: '16px', background: 'var(--main-surface)', borderRadius: '8px', border: '1px solid var(--main-border)' }}>
-              <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--main-text-primary)', marginBottom: '12px' }}>
+            <div style={{ padding: '18px 20px', background: 'var(--main-surface-elevated)', borderRadius: '16px', border: '1px solid var(--main-border)' }}>
+              <div style={{ fontSize: '12.5px', fontWeight: 650, color: 'var(--main-text-primary)', marginBottom: '12px' }}>
                 Cryptographic Execution Pipeline
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>

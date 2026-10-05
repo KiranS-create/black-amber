@@ -11,12 +11,14 @@ interface MainLoginProps {
   onLoginSuccess: (session: UserSession) => void;
   onOpenVerifyStandalone: () => void;
   onOpenSignUp: () => void;
+  onBackToLanding?: () => void;
 }
 
 export const MainLogin: React.FC<MainLoginProps> = ({
   onLoginSuccess,
   onOpenVerifyStandalone,
-  onOpenSignUp
+  onOpenSignUp,
+  onBackToLanding
 }) => {
   const { theme, toggleTheme } = useTheme();
   const isLight = theme === 'light';
@@ -153,30 +155,31 @@ export const MainLogin: React.FC<MainLoginProps> = ({
           </p>
         </div>
 
-        {/* Login Box */}
+        {/* Login Box - Apple macOS Lock Screen Squircle */}
         <div
           style={{
-            background: isLight ? 'rgba(255, 255, 255, 0.92)' : 'rgba(18, 27, 35, 0.85)',
-            backdropFilter: 'blur(36px) saturate(190%)',
-            WebkitBackdropFilter: 'blur(36px) saturate(190%)',
-            border: `1px solid ${isLight ? 'rgba(203, 213, 225, 0.95)' : 'rgba(255, 255, 255, 0.12)'}`,
-            borderRadius: '16px',
-            padding: '32px 28px',
+            background: isLight ? 'rgba(255, 255, 255, 0.88)' : 'rgba(28, 28, 32, 0.78)',
+            backdropFilter: 'blur(36px) saturate(200%)',
+            WebkitBackdropFilter: 'blur(36px) saturate(200%)',
+            border: `1px solid ${isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.16)'}`,
+            borderRadius: '28px',
+            padding: '36px 32px',
             boxShadow: isLight 
-              ? '0 1px 0 0 rgba(255, 255, 255, 1) inset, 0 24px 50px -12px rgba(15, 23, 42, 0.12), 0 4px 16px rgba(15, 23, 42, 0.04)' 
-              : '0 1px 0 0 rgba(255, 255, 255, 0.08) inset, 0 32px 64px -16px rgba(0,0,0,0.8), 0 0 0 1px rgba(255, 255, 255, 0.06)'
+              ? 'inset 0 1px 1px 0 #FFFFFF, 0 24px 60px -12px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.03)' 
+              : 'inset 0 1px 1px 0 rgba(255, 255, 255, 0.18), 0 32px 64px -16px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.04)'
           }}
         >
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
             {errorMessage && (
               <div
                 style={{
-                  padding: '10px 12px',
-                  borderRadius: '6px',
-                  background: 'rgba(239, 68, 68, 0.12)',
-                  border: '1px solid rgba(239, 68, 68, 0.25)',
-                  color: '#EF4444',
-                  fontSize: '12px'
+                  padding: '10px 14px',
+                  borderRadius: '12px',
+                  background: 'rgba(255, 69, 58, 0.12)',
+                  border: '1px solid rgba(255, 69, 58, 0.25)',
+                  color: '#FF453A',
+                  fontSize: '12.5px',
+                  fontWeight: 500
                 }}
               >
                 {errorMessage}
@@ -184,7 +187,7 @@ export const MainLogin: React.FC<MainLoginProps> = ({
             )}
 
             <div>
-              <label style={{ display: 'block', fontSize: '12px', fontWeight: 650, color: isLight ? '#334155' : '#CBD5E1', marginBottom: '6px' }}>
+              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: isLight ? '#1D1D1F' : '#F5F5F7', marginBottom: '7px', letterSpacing: '-0.01em' }}>
                 Username / Principal ID
               </label>
               <input
@@ -195,33 +198,33 @@ export const MainLogin: React.FC<MainLoginProps> = ({
                 autoComplete="username"
                 style={{
                   width: '100%',
-                  height: '42px',
-                  background: isLight ? '#FFFFFF' : 'rgba(11, 16, 21, 0.85)',
-                  border: `1px solid ${isLight ? '#CBD5E1' : 'rgba(255, 255, 255, 0.14)'}`,
-                  borderRadius: '8px',
-                  padding: '0 14px',
-                  color: isLight ? '#0F172A' : '#F8FAFC',
-                  fontSize: '13.5px',
-                  fontWeight: 500,
+                  height: '44px',
+                  background: isLight ? 'rgba(0, 0, 0, 0.03)' : 'rgba(255, 255, 255, 0.06)',
+                  border: `1px solid ${isLight ? 'rgba(0, 0, 0, 0.12)' : 'rgba(255, 255, 255, 0.14)'}`,
+                  borderRadius: '14px',
+                  padding: '0 16px',
+                  color: isLight ? '#1D1D1F' : '#F5F5F7',
+                  fontSize: '14px',
+                  fontWeight: 450,
                   outline: 'none',
                   boxSizing: 'border-box',
-                  transition: 'border-color 0.15s ease, box-shadow 0.15s ease'
+                  transition: 'border-color 0.18s ease, box-shadow 0.18s ease'
                 }}
                 onFocus={e => {
-                  e.target.style.borderColor = isLight ? '#0284C7' : '#38BDF8';
+                  e.target.style.borderColor = isLight ? '#0071E3' : '#2997FF';
                   e.target.style.boxShadow = isLight 
-                    ? '0 0 0 3px rgba(2, 132, 199, 0.16)' 
-                    : '0 0 0 3px rgba(56, 189, 248, 0.2)';
+                    ? '0 0 0 3.5px rgba(0, 113, 227, 0.25)' 
+                    : '0 0 0 3.5px rgba(41, 151, 255, 0.3)';
                 }}
                 onBlur={e => {
-                  e.target.style.borderColor = isLight ? '#CBD5E1' : 'rgba(255, 255, 255, 0.14)';
+                  e.target.style.borderColor = isLight ? 'rgba(0, 0, 0, 0.12)' : 'rgba(255, 255, 255, 0.14)';
                   e.target.style.boxShadow = 'none';
                 }}
               />
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '12px', fontWeight: 650, color: isLight ? '#334155' : '#CBD5E1', marginBottom: '6px' }}>
+              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: isLight ? '#1D1D1F' : '#F5F5F7', marginBottom: '7px', letterSpacing: '-0.01em' }}>
                 Passkey / Master Secret
               </label>
               <div style={{ position: 'relative' }}>
@@ -233,26 +236,26 @@ export const MainLogin: React.FC<MainLoginProps> = ({
                   autoComplete="current-password"
                   style={{
                     width: '100%',
-                    height: '42px',
-                    background: isLight ? '#FFFFFF' : 'rgba(11, 16, 21, 0.85)',
-                    border: `1px solid ${isLight ? '#CBD5E1' : 'rgba(255, 255, 255, 0.14)'}`,
-                    borderRadius: '8px',
-                    padding: '0 40px 0 14px',
-                    color: isLight ? '#0F172A' : '#F8FAFC',
-                    fontSize: '13.5px',
-                    fontWeight: 500,
+                    height: '44px',
+                    background: isLight ? 'rgba(0, 0, 0, 0.03)' : 'rgba(255, 255, 255, 0.06)',
+                    border: `1px solid ${isLight ? 'rgba(0, 0, 0, 0.12)' : 'rgba(255, 255, 255, 0.14)'}`,
+                    borderRadius: '14px',
+                    padding: '0 44px 0 16px',
+                    color: isLight ? '#1D1D1F' : '#F5F5F7',
+                    fontSize: '14px',
+                    fontWeight: 450,
                     outline: 'none',
                     boxSizing: 'border-box',
-                    transition: 'border-color 0.15s ease, box-shadow 0.15s ease'
+                    transition: 'border-color 0.18s ease, box-shadow 0.18s ease'
                   }}
                   onFocus={e => {
-                    e.target.style.borderColor = isLight ? '#0284C7' : '#38BDF8';
+                    e.target.style.borderColor = isLight ? '#0071E3' : '#2997FF';
                     e.target.style.boxShadow = isLight 
-                      ? '0 0 0 3px rgba(2, 132, 199, 0.16)' 
-                      : '0 0 0 3px rgba(56, 189, 248, 0.2)';
+                      ? '0 0 0 3.5px rgba(0, 113, 227, 0.25)' 
+                      : '0 0 0 3.5px rgba(41, 151, 255, 0.3)';
                   }}
                   onBlur={e => {
-                    e.target.style.borderColor = isLight ? '#CBD5E1' : 'rgba(255, 255, 255, 0.14)';
+                    e.target.style.borderColor = isLight ? 'rgba(0, 0, 0, 0.12)' : 'rgba(255, 255, 255, 0.14)';
                     e.target.style.boxShadow = 'none';
                   }}
                 />
@@ -261,12 +264,12 @@ export const MainLogin: React.FC<MainLoginProps> = ({
                   onClick={() => setShowPassword(!showPassword)}
                   style={{
                     position: 'absolute',
-                    right: '12px',
+                    right: '14px',
                     top: '50%',
                     transform: 'translateY(-50%)',
                     background: 'transparent',
                     border: 'none',
-                    color: isLight ? '#64748B' : '#94A3B8',
+                    color: isLight ? '#86868B' : '#A1A1A6',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
@@ -285,10 +288,11 @@ export const MainLogin: React.FC<MainLoginProps> = ({
               disabled={isLoading}
               style={{
                 width: '100%',
-                height: '42px',
-                borderRadius: '8px',
-                fontSize: '13.5px',
-                fontWeight: 650,
+                height: '44px',
+                borderRadius: '9999px',
+                fontSize: '14px',
+                fontWeight: 600,
+                letterSpacing: '-0.01em',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -296,14 +300,16 @@ export const MainLogin: React.FC<MainLoginProps> = ({
                 cursor: isLoading ? 'not-allowed' : 'pointer',
                 opacity: isLoading ? 0.75 : 1,
                 background: isLight 
-                  ? 'linear-gradient(135deg, #0284C7 0%, #0F766E 100%)' 
-                  : 'linear-gradient(135deg, #0284C7 0%, #0E7490 100%)',
-                color: '#FFFFFF',
+                  ? '#0071E3' 
+                  : '#2997FF',
+                color: isLight ? '#FFFFFF' : '#000000',
                 border: 'none',
-                boxShadow: isLight ? '0 4px 14px rgba(2, 132, 199, 0.28)' : '0 4px 18px rgba(2, 132, 199, 0.35)',
+                boxShadow: isLight ? '0 4px 14px rgba(0, 113, 227, 0.28)' : '0 4px 18px rgba(41, 151, 255, 0.35)',
                 marginTop: '6px',
-                transition: 'transform 0.15s ease, box-shadow 0.15s ease'
+                transition: 'transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.15s ease'
               }}
+              onMouseDown={e => (e.currentTarget.style.transform = 'scale(0.98)')}
+              onMouseUp={e => (e.currentTarget.style.transform = 'scale(1)')}
             >
               {isLoading ? 'Authenticating...' : 'Sign In to Workstation'}
             </button>
@@ -312,9 +318,9 @@ export const MainLogin: React.FC<MainLoginProps> = ({
           {/* Quick Evaluator Access */}
           <div
             style={{
-              marginTop: '18px',
-              paddingTop: '16px',
-              borderTop: `1px solid ${isLight ? '#E2E8F0' : 'rgba(255, 255, 255, 0.08)'}`,
+              marginTop: '22px',
+              paddingTop: '18px',
+              borderTop: `1px solid ${isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255, 255, 255, 0.08)'}`,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -322,10 +328,10 @@ export const MainLogin: React.FC<MainLoginProps> = ({
             }}
           >
             <div>
-              <span style={{ color: isLight ? '#64748B' : '#5D6675', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600, display: 'block' }}>
+              <span style={{ color: isLight ? '#86868B' : '#A1A1A6', fontSize: '10.5px', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 650, display: 'block' }}>
                 EVALUATOR CLEARANCE
               </span>
-              <span style={{ color: isLight ? '#334155' : '#9BA3AF', fontSize: '12px', fontFamily: 'monospace' }}>
+              <span style={{ color: isLight ? '#1D1D1F' : '#F5F5F7', fontSize: '12.5px', fontFamily: 'SF Mono, monospace', fontWeight: 500 }}>
                 admin / admin
               </span>
             </div>
@@ -334,14 +340,15 @@ export const MainLogin: React.FC<MainLoginProps> = ({
               type="button"
               onClick={handleAutofillCredentials}
               style={{
-                background: isLight ? '#F1F5F9' : 'rgba(255, 255, 255, 0.06)',
-                border: `1px solid ${isLight ? '#E2E8F0' : 'rgba(255, 255, 255, 0.1)'}`,
-                color: isLight ? '#0F172A' : '#EDEDE8',
-                borderRadius: '4px',
-                padding: '4px 10px',
+                background: isLight ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.08)',
+                border: `1px solid ${isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.12)'}`,
+                color: isLight ? '#1D1D1F' : '#F5F5F7',
+                borderRadius: '9999px',
+                padding: '4px 12px',
                 fontSize: '11px',
-                fontWeight: 500,
-                cursor: 'pointer'
+                fontWeight: 600,
+                cursor: 'pointer',
+                transition: 'all 0.15s ease'
               }}
             >
               Autofill
@@ -350,17 +357,16 @@ export const MainLogin: React.FC<MainLoginProps> = ({
         </div>
 
         {/* Bottom Auxiliary Links */}
-        <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '12px', color: isLight ? '#64748B' : '#5D6675' }}>
+        <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '12.5px', color: isLight ? '#86868B' : '#A1A1A6' }}>
           <div>
             Need clearance registration?{' '}
             <button
               onClick={onOpenSignUp}
-              style={{ background: 'transparent', border: 'none', color: '#0284C7', cursor: 'pointer', padding: 0, textDecoration: 'underline' }}
+              style={{ background: 'transparent', border: 'none', color: isLight ? '#0071E3' : '#2997FF', cursor: 'pointer', padding: 0, textDecoration: 'underline', fontWeight: 500 }}
             >
               Create workspace
             </button>
           </div>
-
         </div>
       </motion.div>
     </div>

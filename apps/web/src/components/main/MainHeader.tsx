@@ -20,55 +20,89 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <header className="main-header" style={{ height: '48px', padding: '0 20px', borderBottom: '1px solid var(--main-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--main-surface)' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--main-text-primary)', letterSpacing: '-0.01em' }}>
+    <header 
+      className="main-header" 
+      style={{ 
+        height: '52px', 
+        padding: '0 24px', 
+        borderBottom: '1px solid var(--main-border)', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'space-between', 
+        background: 'var(--main-surface)',
+        backdropFilter: 'blur(28px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(28px) saturate(180%)'
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <span style={{ fontSize: '13px', fontWeight: 650, color: 'var(--main-text-primary)', letterSpacing: '-0.02em' }}>
           AegisTrace
         </span>
-        <span style={{ color: 'var(--main-text-tertiary)', fontSize: '12px' }}>/</span>
-        <span style={{ fontSize: '12.5px', color: 'var(--main-text-secondary)', textTransform: 'capitalize' }}>
+        <span style={{ color: 'var(--main-text-tertiary)', fontSize: '12px', opacity: 0.6 }}>/</span>
+        <span style={{ fontSize: '12.5px', color: 'var(--main-text-secondary)', fontWeight: 500, letterSpacing: '-0.01em', textTransform: 'capitalize' }}>
           {currentSection}
         </span>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-        {/* Subtle Operational Status */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        {/* Apple Status Capsule */}
         <div
           style={{
             display: 'inline-flex',
             alignItems: 'center',
             gap: '6px',
-            padding: '3px 9px',
-            borderRadius: '12px',
-            background: 'rgba(16, 185, 129, 0.08)',
-            border: '1px solid rgba(16, 185, 129, 0.2)',
+            padding: '3px 10px',
+            borderRadius: '9999px',
+            background: 'var(--main-jade-subtle)',
+            border: '1px solid var(--main-jade)',
             color: 'var(--main-jade)',
             fontSize: '11px',
-            fontWeight: 500
+            fontWeight: 600,
+            letterSpacing: '0.02em'
           }}
         >
-          <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10B981', display: 'inline-block' }} />
+          <span className="radar-dot" style={{ width: '5px', height: '5px' }} />
           <span>Operational</span>
         </div>
 
-        {/* Theme Switcher */}
+        {/* Theme Switcher - Circular Apple Button */}
         <button
           onClick={toggleTheme}
           className="main-btn-ghost"
-          title="Toggle theme"
+          title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
           aria-label="Toggle theme"
-          style={{ padding: '6px', color: 'var(--main-text-secondary)' }}
+          style={{ 
+            width: '28px', 
+            height: '28px', 
+            padding: 0, 
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'var(--main-text-secondary)',
+            border: '1px solid var(--main-border)',
+            background: 'var(--main-surface-hover)'
+          }}
         >
-          {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+          {theme === 'dark' ? <Sun size={13} /> : <Moon size={13} />}
         </button>
 
-        {/* User Session Profile & Signout */}
+        {/* User Session Profile & Signout Capsule */}
         {userSession && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', paddingLeft: '8px', borderLeft: '1px solid var(--main-border)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px', paddingLeft: '8px', borderLeft: '1px solid var(--main-border)' }}>
             <button
               onClick={onOpenSettings}
               className="main-btn-ghost"
-              style={{ padding: '3px 8px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}
+              style={{ 
+                padding: '3px 10px', 
+                fontSize: '12px', 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '8px',
+                borderRadius: '9999px',
+                border: '1px solid var(--main-border)',
+                background: 'var(--main-surface)'
+              }}
               title="Settings"
             >
               <div
@@ -76,19 +110,18 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
                   width: '20px',
                   height: '20px',
                   borderRadius: '50%',
-                  background: 'var(--main-surface-elevated)',
-                  border: '1px solid var(--main-border)',
+                  background: 'linear-gradient(135deg, #0071E3, #005bb5)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontSize: '10px',
-                  fontWeight: 600,
-                  color: 'var(--main-text-primary)'
+                  fontWeight: 700,
+                  color: '#FFFFFF'
                 }}
               >
                 {userSession.display_name ? userSession.display_name.charAt(0).toUpperCase() : 'A'}
               </div>
-              <span style={{ color: 'var(--main-text-primary)', fontWeight: 500, fontSize: '12px' }}>
+              <span style={{ color: 'var(--main-text-primary)', fontWeight: 550, fontSize: '12px', letterSpacing: '-0.01em' }}>
                 {userSession.display_name || userSession.email}
               </span>
             </button>
@@ -98,7 +131,16 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
               className="main-btn-ghost"
               title="Sign out"
               aria-label="Sign out"
-              style={{ padding: '6px', color: 'var(--main-text-tertiary)' }}
+              style={{ 
+                width: '28px', 
+                height: '28px', 
+                padding: 0, 
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'var(--main-text-tertiary)' 
+              }}
             >
               <LogOut size={13} />
             </button>

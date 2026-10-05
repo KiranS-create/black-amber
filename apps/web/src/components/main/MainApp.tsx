@@ -21,6 +21,9 @@ import { MainLogin } from './MainLogin';
 import { MainRecipientDecryptionModal } from './MainRecipientDecryptionModal';
 import { MainVisualComparatorModal } from './MainVisualComparatorModal';
 import { MainSection65BCertificateModal } from './MainSection65BCertificateModal';
+import { MainCollusionLabModal } from './MainCollusionLabModal';
+import { MainAirGapCameraModal } from './MainAirGapCameraModal';
+import { MainSihComplianceModal } from './MainSihComplianceModal';
 import { VerifyTab } from '../VerifyTab';
 import '../../styles/main-experience.css';
 
@@ -31,10 +34,13 @@ export function MainApp() {
   const [isVerifyStandalone, setIsVerifyStandalone] = useState<boolean>(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
 
-  // Modals for Recipient Decryption, Comparator, and Statutory Certificate
+  // Modals for Recipient Decryption, Comparator, Statutory Certificate, Collusion Lab, Air-Gap Camera, and Compliance
   const [isDecryptionModalOpen, setIsDecryptionModalOpen] = useState<boolean>(false);
   const [isComparatorModalOpen, setIsComparatorModalOpen] = useState<boolean>(false);
   const [isCertificateModalOpen, setIsCertificateModalOpen] = useState<boolean>(false);
+  const [isCollusionModalOpen, setIsCollusionModalOpen] = useState<boolean>(false);
+  const [isAirGapModalOpen, setIsAirGapModalOpen] = useState<boolean>(false);
+  const [isComplianceModalOpen, setIsComplianceModalOpen] = useState<boolean>(false);
   const [comparatorContext, setComparatorContext] = useState<{ docName: string; recipientName: string }>({
     docName: 'National_Defense_Protocol_2026.pdf',
     recipientName: 'Marcus Vance'
@@ -205,6 +211,9 @@ export function MainApp() {
                 onOpenDecryptionPortal={() => setIsDecryptionModalOpen(true)}
                 onOpenComparator={() => handleOpenComparator()}
                 onOpenCertificate={() => setIsCertificateModalOpen(true)}
+                onOpenCollusionLab={() => setIsCollusionModalOpen(true)}
+                onOpenAirGapLab={() => setIsAirGapModalOpen(true)}
+                onOpenSihCompliance={() => setIsComplianceModalOpen(true)}
               />
             )}
 
@@ -226,6 +235,8 @@ export function MainApp() {
                 activeResult={leakResult}
                 onIngestLeakAndAnalyze={handleIngestLeakAndAnalyze}
                 onOpenCertificate={() => setIsCertificateModalOpen(true)}
+                onOpenComparator={() => handleOpenComparator()}
+                onOpenAirGapScanner={() => setIsAirGapModalOpen(true)}
                 onExecuteQuarantine={async (suspectName, terminalId, reason) => {
                   await apiService.executeSovereignQuarantine(suspectName, terminalId, reason);
                   await refreshData();
@@ -273,6 +284,32 @@ export function MainApp() {
         result={leakResult}
         candidateName={leakResult?.candidate?.name || 'Cmdr. Rajesh Sharma'}
         documentName={releases[0]?.document_name || 'National_Defense_Protocol_2026.pdf'}
+      />
+
+      {/* Modal 4: Collusion Resistance Lab Modal */}
+      <MainCollusionLabModal
+        isOpen={isCollusionModalOpen}
+        onClose={() => setIsCollusionModalOpen(false)}
+      />
+
+      {/* Modal 5: Live Optical Camera & Air-Gap Leak Scanner */}
+      <MainAirGapCameraModal
+        isOpen={isAirGapModalOpen}
+        onClose={() => setIsAirGapModalOpen(false)}
+        onAttributionComplete={async (suspect) => {
+          await handleRunBenchmark('print_scan');
+          setActiveTab('investigations');
+        }}
+        onOpenCertificate={() => {
+          setIsAirGapModalOpen(false);
+          setIsCertificateModalOpen(true);
+        }}
+      />
+
+      {/* Modal 6: SIH Problem Statement 26237 Compliance Matrix Modal */}
+      <MainSihComplianceModal
+        isOpen={isComplianceModalOpen}
+        onClose={() => setIsComplianceModalOpen(false)}
       />
 
       {/* Contextual More / Settings Modal */}

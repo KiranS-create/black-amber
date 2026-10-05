@@ -250,104 +250,138 @@ export const MainCollusionLabModal: React.FC<MainCollusionLabModalProps> = ({
   const isLive = apiService.isOnline();
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+    <div className="main-modal-backdrop" onClick={onClose}>
       <div
-        className="relative w-full max-w-5xl max-h-[92vh] overflow-y-auto rounded-2xl border shadow-2xl"
+        className="main-modal glass-panel"
         style={{
-          background: 'linear-gradient(135deg, rgba(10,10,30,0.98) 0%, rgba(15,25,50,0.98) 100%)',
-          borderColor: 'rgba(99,102,241,0.3)'
+          maxWidth: '1020px',
+          width: '100%',
+          maxHeight: '92vh',
+          overflowY: 'auto',
+          borderRadius: '24px'
         }}
+        onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div
-          className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 border-b"
+          className="main-modal-header"
           style={{
-            borderColor: 'rgba(99,102,241,0.2)',
-            background: 'linear-gradient(90deg, rgba(99,102,241,0.12) 0%, rgba(139,92,246,0.08) 100%)'
+            padding: '20px 24px',
+            borderBottom: '1px solid var(--main-border)',
+            background: 'var(--main-surface)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between'
           }}
         >
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl" style={{ background: 'rgba(99,102,241,0.2)' }}>
-              <Layers className="w-5 h-5 text-indigo-400" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ padding: '8px', borderRadius: '12px', background: 'rgba(99,102,241,0.15)', color: '#818CF8' }}>
+              <Layers size={18} />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white tracking-tight">Anti-Collusion Lab</h2>
-              <p className="text-xs text-indigo-300/70 mt-0.5">Symmetric Tardos Fingerprinting · Coalition Traceability</p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <h2 className="main-modal-title" style={{ fontSize: '18px', fontWeight: 700, margin: 0, letterSpacing: '-0.02em' }}>
+                  Anti-Collusion Lab
+                </h2>
+                <span
+                  style={{
+                    padding: '2px 9px',
+                    borderRadius: '9999px',
+                    fontSize: '10px',
+                    fontWeight: 650,
+                    letterSpacing: '0.04em',
+                    background: isLive ? 'rgba(34,197,94,0.15)' : 'rgba(251,191,36,0.15)',
+                    color: isLive ? '#10B981' : '#F59E0B',
+                    border: `1px solid ${isLive ? 'rgba(34,197,94,0.3)' : 'rgba(251,191,36,0.3)'}`
+                  }}
+                >
+                  {isLive ? '● LIVE BACKEND' : '◎ OFFLINE SIM'}
+                </span>
+              </div>
+              <p style={{ fontSize: '12px', color: 'var(--main-text-secondary)', margin: '2px 0 0 0' }}>
+                Symmetric Tardos Fingerprinting · Coalition Traceability
+              </p>
             </div>
-            <span
-              className="ml-3 px-2 py-0.5 rounded text-xs font-semibold"
-              style={{
-                background: isLive ? 'rgba(34,197,94,0.15)' : 'rgba(251,191,36,0.15)',
-                color: isLive ? '#4ade80' : '#fbbf24',
-                border: `1px solid ${isLive ? 'rgba(34,197,94,0.3)' : 'rgba(251,191,36,0.3)'}`
-              }}
-            >
-              {isLive ? '● LIVE BACKEND' : '◎ OFFLINE SIM'}
-            </span>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+            className="main-btn-ghost"
+            style={{ padding: '8px', borderRadius: '9999px' }}
+            aria-label="Close"
           >
-            <X className="w-5 h-5" />
+            <X size={16} />
           </button>
         </div>
 
-        <div className="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div style={{ padding: '24px', display: 'grid', gridTemplateColumns: 'minmax(300px, 1fr) 2fr', gap: '24px' }}>
           {/* LEFT: Configuration panel */}
-          <div className="lg:col-span-1 space-y-5">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
             {/* Recipients */}
             <div
-              className="rounded-xl p-4 border"
-              style={{ background: 'rgba(255,255,255,0.03)', borderColor: 'rgba(255,255,255,0.08)' }}
+              className="glass-card"
+              style={{ padding: '16px', borderRadius: '18px', border: '1px solid var(--main-border)', background: 'var(--main-surface)' }}
             >
-              <div className="flex items-center gap-2 mb-3">
-                <Users className="w-4 h-4 text-indigo-400" />
-                <span className="text-sm font-semibold text-white">Coalition Members</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                <Users size={16} style={{ color: '#818CF8' }} />
+                <span style={{ fontSize: '13px', fontWeight: 650, color: 'var(--main-text-primary)' }}>Coalition Members</span>
                 {selectedCoalition.length > 0 && (
-                  <span className="ml-auto px-2 py-0.5 rounded-full text-xs bg-indigo-500/20 text-indigo-300">
+                  <span style={{ marginLeft: 'auto', padding: '2px 8px', borderRadius: '9999px', fontSize: '11px', fontWeight: 600, background: 'rgba(99,102,241,0.15)', color: '#818CF8' }}>
                     {selectedCoalition.length} selected
                   </span>
                 )}
               </div>
 
               {loadingRecipients ? (
-                <div className="flex items-center gap-2 text-slate-400 py-4 justify-center">
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span className="text-xs">Loading recipients…</span>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', color: 'var(--main-text-secondary)', padding: '16px 0' }}>
+                  <Loader2 size={16} className="animate-spin" />
+                  <span style={{ fontSize: '12px' }}>Loading recipients…</span>
                 </div>
               ) : (
-                <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '250px', overflowY: 'auto', paddingRight: '4px' }}>
                   {recipients.map(r => {
                     const selected = selectedCoalition.includes(r.recipient_id);
                     return (
                       <button
                         key={r.recipient_id}
                         onClick={() => toggleCoalitionMember(r.recipient_id)}
-                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all duration-150"
                         style={{
+                          width: '100%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '10px',
+                          padding: '8px 12px',
+                          borderRadius: '12px',
+                          textAlign: 'left',
+                          transition: 'all 0.15s ease',
+                          cursor: 'pointer',
                           background: selected
-                            ? 'rgba(239,68,68,0.18)'
-                            : 'rgba(255,255,255,0.04)',
-                          borderWidth: 1,
-                          borderStyle: 'solid',
-                          borderColor: selected ? 'rgba(239,68,68,0.4)' : 'rgba(255,255,255,0.07)'
+                            ? 'rgba(239,68,68,0.12)'
+                            : 'var(--main-surface-hover)',
+                          border: `1px solid ${selected ? 'rgba(239,68,68,0.3)' : 'var(--main-border)'}`
                         }}
                       >
                         <div
-                          className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
                           style={{
-                            background: selected ? 'rgba(239,68,68,0.3)' : 'rgba(99,102,241,0.3)',
+                            width: '28px',
+                            height: '28px',
+                            borderRadius: '50%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '11px',
+                            fontWeight: 700,
+                            flexShrink: 0,
+                            background: selected ? 'rgba(239,68,68,0.2)' : 'rgba(99,102,241,0.2)',
                             color: selected ? '#f87171' : '#a5b4fc'
                           }}
                         >
                           {(r.name || r.recipient_id).slice(0, 2).toUpperCase()}
                         </div>
-                        <div className="min-w-0">
-                          <div className="text-xs font-medium text-white truncate">{r.name || r.recipient_id}</div>
-                          {r.role && <div className="text-xs text-slate-500 truncate">{r.role}</div>}
+                        <div style={{ minWidth: 0, flex: 1 }}>
+                          <div style={{ fontSize: '12.5px', fontWeight: 600, color: 'var(--main-text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.name || r.recipient_id}</div>
+                          {r.role && <div style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.role}</div>}
                         </div>
-                        {selected && <ShieldAlert className="w-3.5 h-3.5 text-red-400 ml-auto flex-shrink-0" />}
+                        {selected && <ShieldAlert size={14} style={{ color: '#ef4444', flexShrink: 0 }} />}
                       </button>
                     );
                   })}
@@ -357,23 +391,29 @@ export const MainCollusionLabModal: React.FC<MainCollusionLabModalProps> = ({
 
             {/* Attack Method */}
             <div
-              className="rounded-xl p-4 border"
-              style={{ background: 'rgba(255,255,255,0.03)', borderColor: 'rgba(255,255,255,0.08)' }}
+              className="glass-card"
+              style={{ padding: '16px', borderRadius: '18px', border: '1px solid var(--main-border)', background: 'var(--main-surface)' }}
             >
-              <div className="flex items-center gap-2 mb-3">
-                <Sliders className="w-4 h-4 text-purple-400" />
-                <span className="text-sm font-semibold text-white">Attack Method</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                <Sliders size={16} style={{ color: '#A855F7' }} />
+                <span style={{ fontSize: '13px', fontWeight: 650, color: 'var(--main-text-primary)' }}>Attack Method</span>
               </div>
-              <div className="space-y-2">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {ATTACK_METHODS.map(m => (
                   <label
                     key={m.value}
-                    className="flex items-start gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all"
                     style={{
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: '10px',
+                      padding: '10px 12px',
+                      borderRadius: '12px',
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease',
                       background: attackMethod === m.value
-                        ? 'rgba(139,92,246,0.18)'
-                        : 'rgba(255,255,255,0.03)',
-                      border: `1px solid ${attackMethod === m.value ? 'rgba(139,92,246,0.4)' : 'rgba(255,255,255,0.06)'}`
+                        ? 'rgba(168,85,247,0.12)'
+                        : 'var(--main-surface-hover)',
+                      border: `1px solid ${attackMethod === m.value ? 'rgba(168,85,247,0.3)' : 'var(--main-border)'}`
                     }}
                   >
                     <input
@@ -382,11 +422,11 @@ export const MainCollusionLabModal: React.FC<MainCollusionLabModalProps> = ({
                       value={m.value}
                       checked={attackMethod === m.value}
                       onChange={() => setAttackMethod(m.value)}
-                      className="mt-0.5 accent-purple-500"
+                      style={{ marginTop: '2px', accentColor: '#a855f7' }}
                     />
                     <div>
-                      <div className="text-xs font-semibold text-white">{m.label}</div>
-                      <div className="text-xs text-slate-500 mt-0.5 leading-relaxed">{m.desc}</div>
+                      <div style={{ fontSize: '12px', fontWeight: 650, color: 'var(--main-text-primary)' }}>{m.label}</div>
+                      <div style={{ fontSize: '11px', color: 'var(--main-text-secondary)', marginTop: '2px', lineHeight: 1.4 }}>{m.desc}</div>
                     </div>
                   </label>
                 ))}
@@ -395,34 +435,38 @@ export const MainCollusionLabModal: React.FC<MainCollusionLabModalProps> = ({
 
             {/* Code Length */}
             <div
-              className="rounded-xl p-4 border"
-              style={{ background: 'rgba(255,255,255,0.03)', borderColor: 'rgba(255,255,255,0.08)' }}
+              className="glass-card"
+              style={{ padding: '16px', borderRadius: '18px', border: '1px solid var(--main-border)', background: 'var(--main-surface)' }}
             >
-              <div className="flex items-center gap-2 mb-3">
-                <Cpu className="w-4 h-4 text-cyan-400" />
-                <span className="text-sm font-semibold text-white">Code Length</span>
-                <span className="ml-auto text-xs font-mono text-cyan-300">{codeLength} bits</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+                <Cpu size={16} style={{ color: '#06B6D4' }} />
+                <span style={{ fontSize: '13px', fontWeight: 650, color: 'var(--main-text-primary)' }}>Code Length</span>
+                <span style={{ marginLeft: 'auto', fontSize: '12px', fontFamily: 'monospace', fontWeight: 650, color: '#06B6D4' }}>{codeLength} bits</span>
               </div>
-              <div className="flex gap-2 flex-wrap">
+              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                 {CODE_LENGTHS.map(n => (
                   <button
                     key={n}
                     onClick={() => setCodeLength(n)}
-                    className="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold transition-all"
                     style={{
-                      background: codeLength === n ? 'rgba(6,182,212,0.25)' : 'rgba(255,255,255,0.05)',
-                      borderWidth: 1,
-                      borderStyle: 'solid',
-                      borderColor: codeLength === n ? 'rgba(6,182,212,0.5)' : 'rgba(255,255,255,0.08)',
-                      color: codeLength === n ? '#67e8f9' : '#94a3b8'
+                      padding: '5px 12px',
+                      borderRadius: '9999px',
+                      fontSize: '11.5px',
+                      fontFamily: 'monospace',
+                      fontWeight: 650,
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease',
+                      background: codeLength === n ? '#06B6D4' : 'var(--main-surface-hover)',
+                      color: codeLength === n ? '#FFFFFF' : 'var(--main-text-secondary)',
+                      border: `1px solid ${codeLength === n ? '#06B6D4' : 'var(--main-border)'}`
                     }}
                   >
                     {n}
                   </button>
                 ))}
               </div>
-              <p className="text-xs text-slate-500 mt-2">
-                Longer codes → sharper discrimination but slower. 64 bits recommended for demos.
+              <p style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', margin: '8px 0 0 0', lineHeight: 1.4 }}>
+                Longer codes → sharper discrimination but slower. 64 bits recommended for live demos.
               </p>
             </div>
 
@@ -430,77 +474,90 @@ export const MainCollusionLabModal: React.FC<MainCollusionLabModalProps> = ({
             <button
               onClick={handleRunAttack}
               disabled={isExecuting || selectedCoalition.length < 2}
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm transition-all"
+              className="btn-primary"
               style={{
-                background: isExecuting || selectedCoalition.length < 2
-                  ? 'rgba(99,102,241,0.2)'
-                  : 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-                color: isExecuting || selectedCoalition.length < 2 ? '#6366f1' : 'white',
-                cursor: isExecuting || selectedCoalition.length < 2 ? 'not-allowed' : 'pointer'
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                padding: '12px',
+                borderRadius: '9999px',
+                fontWeight: 650,
+                fontSize: '13px',
+                opacity: (isExecuting || selectedCoalition.length < 2) ? 0.6 : 1,
+                cursor: (isExecuting || selectedCoalition.length < 2) ? 'not-allowed' : 'pointer'
               }}
             >
               {isExecuting ? (
-                <><Loader2 className="w-4 h-4 animate-spin" /> Running Tardos Analysis…</>
+                <><Loader2 size={15} className="animate-spin" /> Running Tardos Analysis…</>
               ) : (
-                <><Zap className="w-4 h-4" /> Run Coalition Attack</>
+                <><Zap size={15} /> Run Coalition Attack</>
               )}
             </button>
 
             {result && (
               <button
                 onClick={handleReset}
-                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm text-slate-400 hover:text-white transition-colors"
-                style={{ background: 'rgba(255,255,255,0.04)' }}
+                className="main-btn-secondary"
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  padding: '10px',
+                  borderRadius: '9999px',
+                  fontSize: '12.5px'
+                }}
               >
-                <RotateCcw className="w-4 h-4" /> Reset Lab
+                <RotateCcw size={14} /> Reset Lab
               </button>
             )}
 
             {error && (
-              <div className="flex items-start gap-2 p-3 rounded-xl text-red-300 text-xs"
-                style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)' }}>
-                <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                {error}
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', padding: '12px', borderRadius: '14px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', color: '#EF4444', fontSize: '12px' }}>
+                <AlertCircle size={15} style={{ flexShrink: 0, marginTop: '2px' }} />
+                <span>{error}</span>
               </div>
             )}
           </div>
 
           {/* RIGHT: Results panel */}
-          <div className="lg:col-span-2 space-y-5">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
             {/* Theory explainer (pre-result) */}
             {!result && (
               <div
-                className="rounded-xl p-5 border"
-                style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'rgba(255,255,255,0.07)' }}
+                className="glass-card"
+                style={{ padding: '20px', borderRadius: '18px', border: '1px solid var(--main-border)', background: 'var(--main-surface)' }}
               >
-                <div className="flex items-center gap-2 mb-4">
-                  <BarChart2 className="w-5 h-5 text-indigo-400" />
-                  <span className="text-sm font-semibold text-white">Symmetric Tardos Fingerprinting</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
+                  <BarChart2 size={18} style={{ color: '#818CF8' }} />
+                  <span style={{ fontSize: '14px', fontWeight: 650, color: 'var(--main-text-primary)' }}>Symmetric Tardos Fingerprinting</span>
                 </div>
-                <div className="space-y-3 text-xs text-slate-400 leading-relaxed">
-                  <p>
-                    <span className="text-indigo-300 font-semibold">Tardos codes</span> are probabilistic
-                    fingerprinting codes that are robust against collusion attacks. Each recipient receives a unique
-                    binary codeword. When a pirate document is discovered, the colluding recipients can be traced
-                    even if they combine their copies.
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '12.5px', color: 'var(--main-text-secondary)', lineHeight: 1.55 }}>
+                  <p style={{ margin: 0 }}>
+                    <strong style={{ color: 'var(--main-text-primary)' }}>Tardos codes</strong> are probabilistic
+                    fingerprinting codes that are provably robust against collusion attacks. Each recipient receives a unique
+                    binary codeword. When a pirate document is discovered, the colluding recipients can be mathematically traced
+                    even if they combine or interleave their copies.
                   </p>
-                  <p>
-                    The <span className="text-yellow-300 font-mono">τ (tau) threshold</span> is computed from the
-                    Neyman-Pearson criterion. Any recipient whose Tardos score exceeds τ is identified as a colluder
+                  <p style={{ margin: 0 }}>
+                    The <strong style={{ color: '#F59E0B', fontFamily: 'monospace' }}>τ (tau) threshold</strong> is computed from the
+                    Neyman-Pearson criterion. Any recipient whose Tardos score exceeds τ is accused as a colluder
                     with false-positive probability below 10⁻³.
                   </p>
-                  <div className="grid grid-cols-3 gap-3 mt-4">
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginTop: '8px' }}>
                     {[
                       { label: 'Select Recipients', desc: 'Choose ≥ 2 colluders from the left panel', icon: '①' },
-                      { label: 'Pick Attack', desc: 'Choose how the coalition forges the piracy copy', icon: '②' },
+                      { label: 'Pick Attack', desc: 'Choose how coalition forges the piracy copy', icon: '②' },
                       { label: 'Run Analysis', desc: 'Tardos scores computed per recipient', icon: '③' }
                     ].map(step => (
                       <div key={step.icon}
-                        className="rounded-lg p-3 text-center"
-                        style={{ background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.15)' }}>
-                        <div className="text-2xl text-indigo-300 font-bold mb-1">{step.icon}</div>
-                        <div className="text-white text-xs font-semibold mb-1">{step.label}</div>
-                        <div className="text-slate-500 text-xs">{step.desc}</div>
+                        style={{ padding: '14px 10px', borderRadius: '14px', textAlign: 'center', background: 'var(--main-surface-hover)', border: '1px solid var(--main-border)' }}>
+                        <div style={{ fontSize: '18px', color: 'var(--apple-blue)', fontWeight: 700, marginBottom: '4px' }}>{step.icon}</div>
+                        <div style={{ fontSize: '12px', fontWeight: 650, color: 'var(--main-text-primary)', marginBottom: '2px' }}>{step.label}</div>
+                        <div style={{ fontSize: '11px', color: 'var(--main-text-tertiary)' }}>{step.desc}</div>
                       </div>
                     ))}
                   </div>
@@ -511,42 +568,34 @@ export const MainCollusionLabModal: React.FC<MainCollusionLabModalProps> = ({
             {/* Result: Summary cards */}
             {result && (
               <>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
                   {[
                     {
                       label: 'Code Length',
                       value: `${result.code_length} bits`,
-                      color: '#67e8f9',
-                      bg: 'rgba(6,182,212,0.1)',
-                      border: 'rgba(6,182,212,0.25)'
+                      color: '#06B6D4'
                     },
                     {
                       label: 'Coalition Size',
                       value: `${result.coalition_size} members`,
-                      color: '#f87171',
-                      bg: 'rgba(239,68,68,0.1)',
-                      border: 'rgba(239,68,68,0.25)'
+                      color: '#EF4444'
                     },
                     {
                       label: 'Threshold τ',
                       value: result.threshold.toFixed(2),
-                      color: '#fbbf24',
-                      bg: 'rgba(245,158,11,0.1)',
-                      border: 'rgba(245,158,11,0.25)'
+                      color: '#F59E0B'
                     },
                     {
                       label: 'Accused',
                       value: `${result.accused_recipients.length} / ${result.scores.length}`,
-                      color: result.accused_recipients.length > 0 ? '#f87171' : '#4ade80',
-                      bg: result.accused_recipients.length > 0 ? 'rgba(239,68,68,0.1)' : 'rgba(34,197,94,0.1)',
-                      border: result.accused_recipients.length > 0 ? 'rgba(239,68,68,0.25)' : 'rgba(34,197,94,0.25)'
+                      color: result.accused_recipients.length > 0 ? '#EF4444' : '#10B981'
                     }
                   ].map(card => (
                     <div key={card.label}
-                      className="rounded-xl p-3 text-center"
-                      style={{ background: card.bg, border: `1px solid ${card.border}` }}>
-                      <div className="text-xs text-slate-400 mb-1">{card.label}</div>
-                      <div className="text-sm font-bold font-mono" style={{ color: card.color }}>
+                      className="glass-card"
+                      style={{ padding: '14px 12px', borderRadius: '16px', textAlign: 'center', background: 'var(--main-surface)', border: '1px solid var(--main-border)' }}>
+                      <div style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600, marginBottom: '4px' }}>{card.label}</div>
+                      <div style={{ fontSize: '16px', fontWeight: 700, fontFamily: 'monospace', color: card.color }}>
                         {card.value}
                       </div>
                     </div>
@@ -555,8 +604,13 @@ export const MainCollusionLabModal: React.FC<MainCollusionLabModalProps> = ({
 
                 {/* Marking Assumption */}
                 <div
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs"
                   style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    padding: '12px 16px',
+                    borderRadius: '14px',
+                    fontSize: '12px',
                     background: result.marking_assumption_valid
                       ? 'rgba(34,197,94,0.08)'
                       : 'rgba(239,68,68,0.08)',
@@ -564,88 +618,91 @@ export const MainCollusionLabModal: React.FC<MainCollusionLabModalProps> = ({
                   }}
                 >
                   {result.marking_assumption_valid
-                    ? <CheckCircle2 className="w-4 h-4 text-green-400 flex-shrink-0" />
-                    : <AlertTriangle className="w-4 h-4 text-red-400 flex-shrink-0" />}
-                  <span className="text-slate-300">
-                    <strong className={result.marking_assumption_valid ? 'text-green-400' : 'text-red-400'}>
+                    ? <CheckCircle2 size={16} style={{ color: '#10B981', flexShrink: 0 }} />
+                    : <AlertTriangle size={16} style={{ color: '#EF4444', flexShrink: 0 }} />}
+                  <span style={{ color: 'var(--main-text-secondary)', lineHeight: 1.4 }}>
+                    <strong style={{ color: result.marking_assumption_valid ? '#10B981' : '#EF4444' }}>
                       Marking Assumption {result.marking_assumption_valid ? 'SATISFIED' : 'VIOLATED'}
                     </strong>
                     {result.marking_assumption_valid
-                      ? ' \u2014 All piracy bits appear in at least one colluder\u2019s codeword. Identification is provably valid.'
-                      : ' \u2014 Coalition produced bits outside their codewords. Results may be unreliable.'}
+                      ? ' — All piracy bits appear in at least one colluder’s codeword. Identification is provably valid.'
+                      : ' — Coalition produced bits outside their codewords. Results may be unreliable.'}
                   </span>
                 </div>
 
                 {/* Bar chart */}
                 <div
-                  className="rounded-xl p-4 border"
-                  style={{ background: 'rgba(0,0,0,0.4)', borderColor: 'rgba(255,255,255,0.08)' }}
+                  className="glass-card"
+                  style={{ padding: '16px', borderRadius: '18px', border: '1px solid var(--main-border)', background: 'var(--main-surface)' }}
                 >
-                  <div className="flex items-center gap-2 mb-3">
-                    <BarChart2 className="w-4 h-4 text-indigo-400" />
-                    <span className="text-sm font-semibold text-white">Tardos Score Distribution</span>
-                    <span className="ml-auto text-xs text-yellow-400 font-mono">— τ = {result.threshold.toFixed(2)}</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                    <BarChart2 size={16} style={{ color: '#818CF8' }} />
+                    <span style={{ fontSize: '13px', fontWeight: 650, color: 'var(--main-text-primary)' }}>Tardos Score Distribution</span>
+                    <span style={{ marginLeft: 'auto', fontSize: '12px', color: '#F59E0B', fontFamily: 'monospace', fontWeight: 650 }}>— τ = {result.threshold.toFixed(2)}</span>
                   </div>
                   <canvas
                     ref={chartRef}
-                    className="w-full"
-                    style={{ height: '200px', display: 'block' }}
+                    style={{ width: '100%', height: '200px', display: 'block', borderRadius: '12px' }}
                   />
                 </div>
 
                 {/* Per-recipient verdict table */}
                 <div
-                  className="rounded-xl border overflow-hidden"
-                  style={{ borderColor: 'rgba(255,255,255,0.08)' }}
+                  className="glass-card"
+                  style={{ borderRadius: '18px', border: '1px solid var(--main-border)', background: 'var(--main-surface)', overflow: 'hidden' }}
                 >
                   <div
-                    className="px-4 py-2.5 text-xs font-semibold text-slate-400 uppercase tracking-widest"
-                    style={{ background: 'rgba(255,255,255,0.04)' }}
+                    style={{ padding: '12px 16px', fontSize: '11px', fontWeight: 650, color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '1px solid var(--main-border)', background: 'var(--main-surface-hover)' }}
                   >
                     Per-Recipient Verdict
                   </div>
-                  <div className="divide-y" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
                     {result.scores
                       .sort((a, b) => b.score - a.score)
-                      .map(s => (
+                      .map((s, idx) => (
                         <div
                           key={s.recipient_id}
-                          className="flex items-center gap-4 px-4 py-3"
                           style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '14px',
+                            padding: '12px 16px',
+                            borderTop: idx > 0 ? '1px solid var(--main-border)' : 'none',
                             background: s.accused
                               ? 'rgba(239,68,68,0.06)'
-                              : 'rgba(34,197,94,0.03)'
+                              : 'transparent'
                           }}
                         >
                           {s.accused
-                            ? <UserX className="w-4 h-4 text-red-400 flex-shrink-0" />
-                            : <UserCheck className="w-4 h-4 text-green-400 flex-shrink-0" />}
-                          <div className="flex-1 min-w-0">
-                            <div className="text-sm font-medium text-white truncate">{s.name}</div>
-                            <div className="text-xs text-slate-500">{s.recipient_id}</div>
+                            ? <UserX size={16} style={{ color: '#EF4444', flexShrink: 0 }} />
+                            : <UserCheck size={16} style={{ color: '#10B981', flexShrink: 0 }} />}
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--main-text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.name}</div>
+                            <div style={{ fontSize: '11px', color: 'var(--main-text-tertiary)' }}>{s.recipient_id}</div>
                           </div>
                           {/* Score bar */}
-                          <div className="w-32 flex-shrink-0">
-                            <div className="h-1.5 rounded-full overflow-hidden bg-white/10">
+                          <div style={{ width: '120px', flexShrink: 0 }}>
+                            <div style={{ height: '6px', borderRadius: '9999px', overflow: 'hidden', background: 'var(--main-surface-hover)' }}>
                               <div
-                                className="h-full rounded-full transition-all duration-700"
                                 style={{
+                                  height: '100%',
+                                  borderRadius: '9999px',
+                                  transition: 'all 0.7s ease',
                                   width: `${Math.min(100, (s.score / (result.threshold * 2)) * 100)}%`,
                                   background: s.accused
                                     ? 'linear-gradient(90deg, #ef4444, #f87171)'
-                                    : 'linear-gradient(90deg, #22c55e, #4ade80)'
+                                    : 'linear-gradient(90deg, #10b981, #34d399)'
                                 }}
                               />
                             </div>
                           </div>
-                          <div className="text-right flex-shrink-0 w-16">
+                          <div style={{ textAlign: 'right', flexShrink: 0, width: '70px' }}>
                             <div
-                              className="text-sm font-mono font-bold"
-                              style={{ color: s.accused ? '#f87171' : '#4ade80' }}
+                              style={{ fontSize: '13px', fontFamily: 'monospace', fontWeight: 700, color: s.accused ? '#EF4444' : '#10B981' }}
                             >
                               {s.score.toFixed(3)}
                             </div>
-                            <div className="text-xs" style={{ color: s.accused ? '#ef4444' : '#22c55e' }}>
+                            <div style={{ fontSize: '10.5px', fontWeight: 650, color: s.accused ? '#EF4444' : '#10B981' }}>
                               {s.accused ? 'ACCUSED' : 'INNOCENT'}
                             </div>
                           </div>
@@ -656,14 +713,22 @@ export const MainCollusionLabModal: React.FC<MainCollusionLabModalProps> = ({
 
                 {/* Attack method info */}
                 <div
-                  className="flex items-start gap-3 px-4 py-3 rounded-xl text-xs"
-                  style={{ background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.2)' }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    padding: '12px 16px',
+                    borderRadius: '14px',
+                    fontSize: '12px',
+                    background: 'rgba(99,102,241,0.08)',
+                    border: '1px solid rgba(99,102,241,0.2)'
+                  }}
                 >
-                  <Layers className="w-4 h-4 text-indigo-400 flex-shrink-0 mt-0.5" />
-                  <span className="text-slate-400">
-                    Attack: <strong className="text-indigo-300">{result.attack_method}</strong> ·
-                    Code length: <strong className="text-indigo-300">{result.code_length} bits</strong> ·
-                    Coalition of <strong className="text-red-300">{result.coalition_size}</strong>
+                  <Layers size={16} style={{ color: '#818CF8', flexShrink: 0 }} />
+                  <span style={{ color: 'var(--main-text-secondary)' }}>
+                    Attack: <strong style={{ color: 'var(--main-text-primary)' }}>{result.attack_method}</strong> ·
+                    Code length: <strong style={{ color: 'var(--main-text-primary)' }}>{result.code_length} bits</strong> ·
+                    Coalition of <strong style={{ color: '#EF4444' }}>{result.coalition_size} members</strong>
                   </span>
                 </div>
               </>
