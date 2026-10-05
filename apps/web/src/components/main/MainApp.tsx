@@ -116,6 +116,11 @@ export function MainApp() {
     await refreshData();
   };
 
+  const handleDeleteDocument = async (documentId: string) => {
+    await apiService.deleteDocument(documentId);
+    await refreshData();
+  };
+
   const handleProtectAndRelease = async (documentId: string, recipientIds: string[]) => {
     const doc = documents.find(d => d.document_id === documentId);
     const docName = doc?.document_name || 'Protected_Document.pdf';
@@ -244,6 +249,7 @@ export function MainApp() {
                 recipients={recipients}
                 onUpload={handleUploadDocument}
                 onProtectAndRelease={handleProtectAndRelease}
+                onDeleteDocument={handleDeleteDocument}
                 onOpenDecryptionPortal={() => setIsDecryptionModalOpen(true)}
                 onOpenComparator={() => handleOpenComparator()}
               />

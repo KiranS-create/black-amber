@@ -505,6 +505,44 @@ class ApiService {
     }
   }
 
+  public async deleteDocument(documentId: string): Promise<boolean> {
+    if (this.forceOffline) {
+      const idx = this.localDocuments.findIndex(d => d.document_id === documentId);
+      if (idx !== -1) {
+        this.localDocuments.splice(idx, 1);
+        return true;
+      }
+      return false;
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/documents/${encodeURIComponent(documentId)}`, {
+        method: 'DELETE',
+        headers: this.getAuthHeaders(),
+        signal: AbortSignal.timeout(5000)
+      });
+      if (res.ok) {
+        this.isLiveBackend = true;
+        this.localDocuments = this.localDocuments.filter(d => d.document_id !== documentId);
+        return true;
+      }
+      if (res.status === 404) {
+        this.localDocuments = this.localDocuments.filter(d => d.document_id !== documentId);
+        return true;
+      }
+      const err = await res.json().catch(() => ({}));
+      const msg = err?.error?.message || err?.detail || `HTTP ${res.status}: Failed to delete document`;
+      throw new Error(msg);
+    } catch (e: any) {
+      if (e?.message && !e.message.includes('Failed to fetch') && !e.message.includes('NetworkError') && !e.message.includes('timeout')) {
+        throw e;
+      }
+      this.isLiveBackend = false;
+      this.localDocuments = this.localDocuments.filter(d => d.document_id !== documentId);
+      return true;
+    }
+  }
+
   // -------------------------------------------------------------
   // 2. Recipients API
   // -------------------------------------------------------------

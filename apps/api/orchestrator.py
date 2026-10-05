@@ -141,6 +141,15 @@ class SystemOrchestrator:
         doc = self.get_document(document_id, tenant_id=tenant_id)
         return self.storage.retrieve_artifact_bytes(doc.artifact_id)
 
+    def delete_document(self, document_id: str, tenant_id: Optional[str] = None) -> bool:
+        doc = self.get_document(document_id, tenant_id=tenant_id)
+        if doc.artifact_id:
+            try:
+                self.storage.delete_artifact(doc.artifact_id)
+            except Exception:
+                pass
+        return self.metadata_repo.delete_document(document_id, tenant_id=tenant_id)
+
     # 2. Identity & Directory Lifecycle
     def search_directory(self, query: str = "", limit: int = 20) -> List[Identity]:
         return self.identity_provider.search_identities(query=query, limit=limit)

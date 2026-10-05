@@ -14,7 +14,8 @@ import {
   FileImage,
   Layers,
   AlertCircle,
-  Loader2
+  Loader2,
+  Trash2
 } from 'lucide-react';
 import { DocumentMetadata, DocumentRelease } from '../types';
 import { StatusBadge } from './common/StatusBadge';
@@ -25,6 +26,7 @@ interface DocumentsTabProps {
   documents: DocumentMetadata[];
   releases: DocumentRelease[];
   onUploadDocument: (file: File, name?: string) => Promise<DocumentMetadata>;
+  onDeleteDocument?: (documentId: string) => Promise<void>;
   setActiveTab: (tab: any) => void;
   onSelectForRelease?: (docId: string) => void;
 }
@@ -35,6 +37,7 @@ export const DocumentsTab: React.FC<DocumentsTabProps> = ({
   documents,
   releases,
   onUploadDocument,
+  onDeleteDocument,
   setActiveTab,
   onSelectForRelease
 }) => {
@@ -47,6 +50,8 @@ export const DocumentsTab: React.FC<DocumentsTabProps> = ({
   const [isDragActive, setIsDragActive] = useState(false);
   const [copiedHash, setCopiedHash] = useState(false);
   const [showTechDetails, setShowTechDetails] = useState(false);
+  const [docToDelete, setDocToDelete] = useState<DocumentMetadata | null>(null);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -533,6 +538,20 @@ export const DocumentsTab: React.FC<DocumentsTabProps> = ({
                               >
                                 Release
                               </button>
+
+                              {onDeleteDocument && (
+                                <button
+                                  onClick={e => {
+                                    e.stopPropagation();
+                                    setDocToDelete(doc);
+                                  }}
+                                  className="btn-ghost"
+                                  style={{ padding: '4px 8px', fontSize: '11px', color: 'var(--danger, #EF4444)' }}
+                                  title={`Remove ${doc.document_name} from registry`}
+                                >
+                                  <Trash2 size={12} />
+                                </button>
+                              )}
                             </div>
                           </td>
                         </tr>
@@ -713,9 +732,146 @@ export const DocumentsTab: React.FC<DocumentsTabProps> = ({
               <Package size={15} />
               <span>Create release for document</span>
             </button>
+
+            {/* Remove Action */}
+            {onDeleteDocument && (
+              <button
+                onClick={() => setDocToDelete(selectedDoc)}
+                className="btn-secondary"
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  marginTop: '8px',
+                  color: 'var(--danger, #EF4444)',
+                  borderColor: 'rgba(239, 68, 68, 0.3)'
+                }}
+              >
+                <Trash2 size={14} />
+                <span>Remove artifact from registry</span>
+              </button>
+            )}
           </div>
         )}
       </Drawer>
+
+      {/* Delete Confirmation Modal */}
+      {docToDelete && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'rgba(0, 0, 0, 0.65)',
+          backdropFilter: 'blur(4px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 100,
+          padding: '16px'
+        }}>
+          <div style={{
+            background: 'var(--surface)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-md, 8px)',
+            width: '100%',
+            maxWidth: '440px',
+            padding: '24px',
+            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '16px'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '50%',
+                background: 'rgba(239, 68, 68, 0.15)',
+                color: 'var(--danger, #EF4444)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0
+              }}>
+                <Trash2 size={18} />
+              </div>
+              <div>
+                <h3 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text)', margin: 0 }}>
+                  Remove Document from Registry
+                </h3>
+                <p style={{ fontSize: '12px', color: 'var(--text-tertiary)', margin: '2px 0 0 0' }}>
+                  Permanent purge from content-addressed storage
+                </p>
+              </div>
+            </div>
+
+            <div style={{
+              padding: '12px',
+              borderRadius: '4px',
+              background: 'var(--surface-subtle)',
+              border: '1px solid var(--border)',
+              fontSize: '12px'
+            }}>
+              <div style={{ fontWeight: 600, color: 'var(--text)' }}>
+                {docToDelete.document_name}
+              </div>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-secondary)', marginTop: '4px', wordBreak: 'break-all' }}>
+                SHA-256: {docToDelete.original_document_hash || docToDelete.document_id}
+              </div>
+            </div>
+
+            <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.5 }}>
+              Are you sure you want to remove this document from the registry? This will permanently delete the sealed master payload from storage.
+            </p>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '4px' }}>
+              <button
+                type="button"
+                disabled={isDeleting}
+                onClick={() => setDocToDelete(null)}
+                className="btn-secondary"
+                style={{ padding: '7px 14px', fontSize: '12px' }}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={isDeleting}
+                onClick={async () => {
+                  if (!onDeleteDocument || !docToDelete) return;
+                  setIsDeleting(true);
+                  try {
+                    await onDeleteDocument(docToDelete.document_id);
+                    if (selectedDoc?.document_id === docToDelete.document_id) {
+                      setSelectedDoc(null);
+                    }
+                    setDocToDelete(null);
+                  } finally {
+                    setIsDeleting(false);
+                  }
+                }}
+                style={{
+                  padding: '7px 16px',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  background: 'var(--danger, #EF4444)',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+              >
+                {isDeleting ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
+                <span>{isDeleting ? 'Removing...' : 'Confirm Remove'}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -96,3 +96,26 @@ def download_document(
             "Pragma": "no-cache"
         }
     )
+
+@router.delete("/{document_id}", status_code=status.HTTP_200_OK)
+def delete_document(
+    document_id: str,
+    actor: SecurityPrincipal = Depends(require_role(["operator", "administrator", "system"]))
+):
+    """
+    Remove/delete a document from the registry and storage.
+    Enforces tenant boundaries and role-based permissions.
+    """
+    validate_id_format(document_id, "document_id")
+    doc = default_orchestrator.get_document(document_id)
+    verify_tenant_boundary(doc.tenant_id, actor, "document", document_id)
+
+    tenant = None if actor.role == "system" else actor.tenant_id
+    success = default_orchestrator.delete_document(document_id, tenant_id=tenant)
+    if not success:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Document '{document_id}' not found."
+        )
+    return {"status": "DELETED", "document_id": document_id}
+

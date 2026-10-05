@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
 import { DocumentMetadata, PublicRecipient } from '../../types';
-import { X, ShieldCheck, ChevronDown, ChevronRight, Lock, Users, Download, ArrowRight } from 'lucide-react';
+import { X, ShieldCheck, ChevronDown, ChevronRight, Lock, Users, Download, ArrowRight, Trash2, AlertTriangle, Loader2 } from 'lucide-react';
 
 interface MainDocumentDrawerProps {
   document: DocumentMetadata | null;
   recipients: PublicRecipient[];
   onClose: () => void;
   onProtectAndRelease: (documentId: string, recipientIds: string[]) => Promise<void>;
+  onDeleteDocument?: (documentId: string) => Promise<void>;
 }
 
 export const MainDocumentDrawer: React.FC<MainDocumentDrawerProps> = ({
   document,
   recipients,
   onClose,
-  onProtectAndRelease
+  onProtectAndRelease,
+  onDeleteDocument
 }) => {
   const [selectedRecipients, setSelectedRecipients] = useState<string[]>(() => 
     recipients.slice(0, 3).map(r => r.recipient_id)
@@ -21,6 +23,8 @@ export const MainDocumentDrawer: React.FC<MainDocumentDrawerProps> = ({
   const [showTechnicalDetails, setShowTechnicalDetails] = useState<boolean>(false);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [releaseComplete, setReleaseComplete] = useState<boolean>(false);
+  const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
   if (!document) return null;
 
@@ -193,7 +197,94 @@ export const MainDocumentDrawer: React.FC<MainDocumentDrawerProps> = ({
             </div>
           )}
         </div>
+
+        {/* Danger Zone: Artifact Removal */}
+        {onDeleteDocument && (
+          <div style={{ marginTop: 'auto', paddingTop: '16px', borderTop: '1px solid var(--main-border)' }}>
+            {!showConfirmDelete ? (
+              <button
+                type="button"
+                onClick={() => setShowConfirmDelete(true)}
+                className="main-btn-secondary"
+                style={{
+                  width: '100%',
+                  justifyContent: 'center',
+                  borderColor: 'rgba(239, 68, 68, 0.35)',
+                  color: 'var(--main-crimson)',
+                  fontSize: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+              >
+                <Trash2 size={13} />
+                <span>Remove Artifact from Registry</span>
+              </button>
+            ) : (
+              <div style={{
+                padding: '12px',
+                borderRadius: '6px',
+                background: 'var(--main-crimson-subtle)',
+                border: '1px solid var(--main-crimson)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--main-crimson)', fontSize: '12px', fontWeight: 600 }}>
+                  <AlertTriangle size={14} />
+                  <span>Confirm Permanent Removal</span>
+                </div>
+                <p style={{ fontSize: '11.5px', color: 'var(--main-text-secondary)', margin: 0, lineHeight: 1.4 }}>
+                  Permanently purge this document and its cryptographic master envelope from storage?
+                </p>
+                <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
+                  <button
+                    type="button"
+                    disabled={isDeleting}
+                    onClick={() => setShowConfirmDelete(false)}
+                    className="main-btn-secondary"
+                    style={{ flex: 1, padding: '5px 8px', fontSize: '11px', justifyContent: 'center' }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    disabled={isDeleting}
+                    onClick={async () => {
+                      setIsDeleting(true);
+                      try {
+                        await onDeleteDocument(document.document_id);
+                        onClose();
+                      } finally {
+                        setIsDeleting(false);
+                      }
+                    }}
+                    style={{
+                      flex: 1,
+                      padding: '5px 8px',
+                      fontSize: '11px',
+                      justifyContent: 'center',
+                      background: 'var(--main-crimson)',
+                      color: '#ffffff',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      fontWeight: 600
+                    }}
+                  >
+                    {isDeleting ? <Loader2 size={12} className="animate-spin" /> : <Trash2 size={12} />}
+                    <span>{isDeleting ? 'Removing...' : 'Confirm Remove'}</span>
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
 };
+

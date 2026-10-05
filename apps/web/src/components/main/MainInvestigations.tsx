@@ -89,19 +89,19 @@ export const MainInvestigations: React.FC<MainInvestigationsProps> = ({
 
   // Active incident details
   const isAbstain = activeResult?.should_abstain || activeResult?.state === 'NO_SIGNAL' || activeResult?.state === 'INSUFFICIENT_EVIDENCE';
-  const suspectName = activeResult?.candidate?.name || (isAbstain ? 'Unassigned' : 'Cmdr. Rajesh Sharma');
-  const suspectRank = isAbstain ? 'N/A' : 'Commander (Naval Operations)';
-  const suspectRole = isAbstain ? 'N/A' : 'Principal Cryptanalyst, Naval Cyber Command';
-  const suspectTerminal = isAbstain ? 'N/A' : 'Field Terminal #W-842911';
+  const suspectName = activeResult?.candidate?.name || (isAbstain ? 'Unassigned' : 'Marcus Vance');
+  const suspectRank = isAbstain ? 'N/A' : 'Principal Cryptanalyst';
+  const suspectRole = isAbstain ? 'N/A' : 'Strategic Intelligence Division (usr_3d4e5f6a02)';
+  const suspectTerminal = isAbstain ? 'N/A' : 'Field Terminal #ST-842911 (bob)';
   const secretCodeHex = isAbstain ? '0x0000-0000-0000' : '0x7E9A-C401-88F3-902B-0CDA07-9AF2';
   const merkleLeaf = isAbstain ? 'N/A' : 'Block #842,911 (ML-DSA-65 Valid Signature)';
   const confidenceStr = isAbstain ? '0.00% (Abstained)' : '99.98% (BCH-Verified, 0 Bit Errors)';
 
   const routeHops = [
-    'Apex Integrated Defence HQ (New Delhi)',
-    'Western Sector Dissemination Hub (Mumbai)',
-    'Naval Operations Command Node #04',
-    'Field Terminal #W-842911 (Cmdr. Rajesh Sharma)'
+    'Strategic Central Enclave (HQ Node)',
+    'Intelligence Dissemination Hub #02',
+    'Tactical Cryptography Terminal',
+    'Field Terminal #ST-842911 (Marcus Vance / bob)'
   ];
 
   const handleSabhaCountersign = async () => {

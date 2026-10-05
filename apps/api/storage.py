@@ -170,6 +170,26 @@ class FilesystemArtifactStorage:
             validate_id_format(artifact_id, "artifact_id")
             return self._metadata_index.get(artifact_id)
 
+    def delete_artifact(self, artifact_id: str) -> bool:
+        with self._lock:
+            validate_id_format(artifact_id, "artifact_id")
+            meta = self._metadata_index.pop(artifact_id, None)
+            safe_path = sanitize_path(f"{artifact_id}.bin", self.storage_dir)
+            if safe_path.exists():
+                try:
+                    safe_path.unlink()
+                except Exception:
+                    pass
+            try:
+                conn = sqlite3.connect(str(self.db_path))
+                cur = conn.cursor()
+                cur.execute("DELETE FROM artifacts WHERE artifact_id = ?", (artifact_id,))
+                conn.commit()
+                conn.close()
+            except Exception:
+                pass
+            return meta is not None
+
     def clear(self):
         """Clear all in-memory metadata entries and SQLite artifact records."""
         with self._lock:
@@ -305,6 +325,25 @@ class MetadataRepository:
             if not tenant_id or tenant_id == "*":
                 return list(self._documents.values())
             return [d for d in self._documents.values() if d.tenant_id == tenant_id]
+
+    def delete_document(self, document_id: str, tenant_id: Optional[str] = None) -> bool:
+        with self._lock:
+            validate_id_format(document_id, "document_id")
+            doc = self._documents.get(document_id)
+            if not doc:
+                return False
+            if tenant_id and tenant_id != "*" and doc.tenant_id != tenant_id:
+                return False
+            del self._documents[document_id]
+            try:
+                conn = sqlite3.connect(str(self.db_path))
+                cur = conn.cursor()
+                cur.execute("DELETE FROM documents WHERE document_id = ?", (document_id,))
+                conn.commit()
+                conn.close()
+            except Exception:
+                pass
+            return True
 
     # Leak operations
     def save_leak(self, leak: LeakMetadata):

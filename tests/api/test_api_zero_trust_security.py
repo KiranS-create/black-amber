@@ -365,3 +365,40 @@ def test_revoked_recipient_state_machine_defense():
     )
     assert rel_fail.status_code == 400
     assert rel_fail.json()["error"]["code"] == ErrorCode.INVALID_RELEASE
+
+
+def test_delete_document_lifecycle():
+    """Verify document deletion, RBAC enforcement, and tenant isolation."""
+    headers_op_a = {"Authorization": "Bearer token_operator_tenant_a"}
+    headers_view_a = {"Authorization": "Bearer token_viewer_tenant_a"}
+    headers_admin_b = {"Authorization": "Bearer token_admin_tenant_b"}
+
+    # 1. Tenant A Operator uploads a document
+    pdf_bytes = create_sample_pdf()
+    res_upload = client.post(
+        "/documents",
+        headers=headers_op_a,
+        files={"file": ("removable_doc.pdf", pdf_bytes, "application/pdf")},
+        data={"document_name": "Removable Briefing.pdf"}
+    )
+    assert res_upload.status_code == 201
+    doc_id = res_upload.json()["document_id"]
+
+    # 2. Viewer lacks delete permission -> 403
+    res_view_del = client.delete(f"/documents/{doc_id}", headers=headers_view_a)
+    assert res_view_del.status_code == 403
+
+    # 3. Tenant B Admin cannot delete Tenant A document -> 403
+    res_b_del = client.delete(f"/documents/{doc_id}", headers=headers_admin_b)
+    assert res_b_del.status_code == 403
+
+    # 4. Tenant A Operator successfully deletes document -> 200
+    res_del = client.delete(f"/documents/{doc_id}", headers=headers_op_a)
+    assert res_del.status_code == 200
+    assert res_del.json()["status"] == "DELETED"
+    assert res_del.json()["document_id"] == doc_id
+
+    # 5. Subsequent GET yields 404
+    res_get = client.get(f"/documents/{doc_id}", headers=headers_op_a)
+    assert res_get.status_code == 404
+
