@@ -23,15 +23,15 @@
   --font-display: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, Menlo, Monaco, Consolas, monospace;
   
-  --text-2xs: 10px;
-  --text-xs: 11.5px;
-  --text-sm: 12.5px;
-  --text-base: 13.5px;
-  --text-md: 15px;
-  --text-lg: 17.5px;
-  --text-xl: 21px;
-  --text-2xl: 26px;
-  --text-3xl: 32px;
+  --text-2xs: 11px;
+  --text-xs: 12.5px;
+  --text-sm: 14px;
+  --text-base: 15.5px;
+  --text-md: 17px;
+  --text-lg: 19.5px;
+  --text-xl: 23px;
+  --text-2xl: 28px;
+  --text-3xl: 36px;
 
   /* Disciplined Apple Concentric Radii */
   --radius-xs: 6px;
@@ -61,64 +61,64 @@
 .theme-dark {
   --theme: dark;
 
-  /* Apple Pro OLED Depth Layers */
-  --bg: #000000;
-  --bg-elevated: #0A0A0C;
+  /* Apple Pro OLED Depth Layers with Luminous Midnight Depth */
+  --bg: #070A0F;
+  --bg-elevated: #0C121D;
   
-  --surface: #121215;
-  --surface-subtle: #09090C;
-  --surface-hover: #1A1A20;
-  --surface-active: #22222A;
+  --surface: #111927;
+  --surface-subtle: #0B101A;
+  --surface-hover: #192437;
+  --surface-active: #233149;
 
-  --surface-elevated: #16161C;
-  --surface-elevated-hover: #1F1F27;
+  --surface-elevated: #151F30;
+  --surface-elevated-hover: #1E2D45;
 
   /* Frosted Glass Layers with Specular Highlight */
-  --glass-surface: rgba(22, 22, 28, 0.72);
-  --glass-surface-elevated: rgba(26, 26, 34, 0.86);
-  --glass-border: rgba(255, 255, 255, 0.11);
-  --glass-highlight: rgba(255, 255, 255, 0.08);
+  --glass-surface: rgba(17, 25, 39, 0.75);
+  --glass-surface-elevated: rgba(21, 31, 48, 0.88);
+  --glass-border: rgba(56, 189, 248, 0.14);
+  --glass-highlight: rgba(255, 255, 255, 0.12);
 
   /* Apple Hairline Specular Borders */
-  --border: rgba(255, 255, 255, 0.10);
-  --border-strong: rgba(255, 255, 255, 0.18);
-  --border-subtle: rgba(255, 255, 255, 0.05);
+  --border: rgba(56, 189, 248, 0.14);
+  --border-strong: rgba(56, 189, 248, 0.28);
+  --border-subtle: rgba(255, 255, 255, 0.06);
 
   /* Typography / Content (Apple SF Hierarchy) */
-  --text: #F5F5F7;            /* Apple Crisp White */
-  --text-secondary: #86868B;  /* Apple Silver Grey */
-  --text-tertiary: #515154;   /* Muted Graphite */
-  --text-disabled: #38383B;
-  --text-inverse: #000000;
+  --text: #F8FAFC;            /* Crisp Bright White */
+  --text-secondary: #94A3B8;  /* Refined Silver Slate */
+  --text-tertiary: #64748B;   /* Muted Graphite */
+  --text-disabled: #475569;
+  --text-inverse: #070A0F;
 
   /* Signature Apple System Accents */
-  --primary: #2997FF;
-  --primary-hover: #0077ED;
-  --primary-active: #005BB5;
-  --primary-subtle: rgba(41, 151, 255, 0.14);
-  --primary-border: rgba(41, 151, 255, 0.32);
-  --primary-text: #2997FF;
+  --primary: #38BDF8;
+  --primary-hover: #0284C7;
+  --primary-active: #0369A1;
+  --primary-subtle: rgba(56, 189, 248, 0.14);
+  --primary-border: rgba(56, 189, 248, 0.35);
+  --primary-text: #38BDF8;
 
   /* Semantic Forensic Palette (Apple System Colors) */
-  --success: #30D158;         /* Apple Green */
-  --success-subtle: rgba(48, 209, 88, 0.14);
-  --success-border: rgba(48, 209, 88, 0.30);
-  --success-text: #30D158;
+  --success: #10B981;         /* Sovereign Emerald */
+  --success-subtle: rgba(16, 185, 129, 0.14);
+  --success-border: rgba(16, 185, 129, 0.32);
+  --success-text: #34D399;
 
-  --warning: #FF9F0A;         /* Apple Orange / Amber */
-  --warning-subtle: rgba(255, 159, 10, 0.14);
-  --warning-border: rgba(255, 159, 10, 0.30);
-  --warning-text: #FF9F0A;
+  --warning: #F59E0B;         /* Amber Radiant */
+  --warning-subtle: rgba(245, 158, 11, 0.14);
+  --warning-border: rgba(245, 158, 11, 0.32);
+  --warning-text: #FBBF24;
 
-  --danger: #FF453A;          /* Apple Red / Coral */
-  --danger-subtle: rgba(255, 69, 58, 0.14);
-  --danger-border: rgba(255, 69, 58, 0.30);
-  --danger-text: #FF453A;
+  --danger: #EF4444;          /* Coral Crimson */
+  --danger-subtle: rgba(239, 68, 68, 0.14);
+  --danger-border: rgba(239, 68, 68, 0.32);
+  --danger-text: #F87171;
 
-  --info: #0A84FF;            /* Apple Blue */
-  --info-subtle: rgba(10, 132, 255, 0.14);
-  --info-border: rgba(10, 132, 255, 0.30);
-  --info-text: #0A84FF;
+  --info: #0284C7;            /* Defense Azure */
+  --info-subtle: rgba(2, 132, 199, 0.14);
+  --info-border: rgba(2, 132, 199, 0.32);
+  --info-text: #38BDF8;
 
   /* Apple Pro Shadows */
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.40);
@@ -138,39 +138,39 @@
 .theme-light {
   --theme: light;
 
-  /* Apple Aluminum Canvas */
-  --bg: #F5F5F7;
-  --bg-elevated: #EBEBED;
+  /* Apple Ceramic Porcelain & Defense Silver (Light Mode) */
+  --bg: #F8FAFC;
+  --bg-elevated: #F1F5F9;
   
   --surface: #FFFFFF;
-  --surface-subtle: #FAFAFC;
-  --surface-hover: #F2F2F4;
-  --surface-active: #E8E8ED;
+  --surface-subtle: #F8FAFC;
+  --surface-hover: #F1F5F9;
+  --surface-active: #E2E8F0;
 
   --surface-elevated: #FFFFFF;
-  --surface-elevated-hover: #F7F7F9;
+  --surface-elevated-hover: #F8FAFC;
 
-  --glass-surface: rgba(255, 255, 255, 0.85);
-  --glass-surface-elevated: rgba(255, 255, 255, 0.96);
-  --glass-border: rgba(0, 0, 0, 0.08);
-  --glass-highlight: rgba(255, 255, 255, 0.90);
+  --glass-surface: rgba(255, 255, 255, 0.90);
+  --glass-surface-elevated: rgba(255, 255, 255, 0.98);
+  --glass-border: rgba(15, 23, 42, 0.08);
+  --glass-highlight: rgba(255, 255, 255, 0.95);
 
-  --border: rgba(0, 0, 0, 0.08);
-  --border-strong: rgba(0, 0, 0, 0.15);
-  --border-subtle: rgba(0, 0, 0, 0.04);
+  --border: rgba(15, 23, 42, 0.08);
+  --border-strong: rgba(15, 23, 42, 0.18);
+  --border-subtle: rgba(15, 23, 42, 0.04);
 
-  --text: #1D1D1F;
-  --text-secondary: #6E6E73;
-  --text-tertiary: #86868B;
-  --text-disabled: #AEAEB2;
+  --text: #0F172A;
+  --text-secondary: #334155;
+  --text-tertiary: #64748B;
+  --text-disabled: #94A3B8;
   --text-inverse: #FFFFFF;
 
-  --primary: #0071E3;
-  --primary-hover: #0077ED;
-  --primary-active: #005BB5;
-  --primary-subtle: rgba(0, 113, 227, 0.08);
-  --primary-border: rgba(0, 113, 227, 0.24);
-  --primary-text: #0071E3;
+  --primary: #0284C7;
+  --primary-hover: #0369A1;
+  --primary-active: #075985;
+  --primary-subtle: rgba(2, 132, 199, 0.10);
+  --primary-border: rgba(2, 132, 199, 0.28);
+  --primary-text: #0284C7;
 
   --success: #34C759;
   --success-subtle: rgba(52, 199, 89, 0.10);

@@ -83,31 +83,31 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
   ];
 
   return (
-    <div style={{ maxWidth: '1080px', margin: '0 auto', padding: '28px 24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <div style={{ maxWidth: '1120px', margin: '0 auto', padding: '32px 28px', display: 'flex', flexDirection: 'column', gap: '28px' }}>
       {/* Page Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <h1 className="main-title" style={{ fontSize: '20px', fontWeight: 600 }}>Overview</h1>
-          <p className="main-subtitle" style={{ marginTop: '2px', fontSize: '12.5px' }}>
+          <h1 className="main-title" style={{ fontSize: '24px', fontWeight: 700 }}>Overview</h1>
+          <p className="main-subtitle" style={{ marginTop: '4px', fontSize: '14.5px' }}>
             Post-quantum digital provenance, active distribution lifecycle, and forensic audit telemetry.
           </p>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <button
             onClick={() => onNavigate('investigations')}
             className="main-btn-secondary"
-            style={{ fontSize: '12px' }}
+            style={{ fontSize: '13.5px', padding: '8px 16px' }}
           >
-            <Search size={13} />
+            <Search size={15} />
             <span>Investigate Leak</span>
           </button>
           <button
             onClick={() => onNavigate('documents')}
             className="main-btn-primary"
-            style={{ fontSize: '12px' }}
+            style={{ fontSize: '13.5px', padding: '8px 18px' }}
           >
-            <Upload size={13} />
+            <Upload size={15} />
             <span>Import Document</span>
           </button>
         </div>
@@ -120,35 +120,35 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
           alignItems: 'center',
           justifyContent: 'space-between',
           flexWrap: 'wrap',
-          gap: '12px',
-          padding: '14px 20px',
-          borderRadius: '18px',
-          background: isLight ? 'rgba(255, 255, 255, 0.8)' : 'rgba(28, 28, 32, 0.65)',
+          gap: '14px',
+          padding: '16px 22px',
+          borderRadius: '20px',
+          background: isLight ? 'rgba(255, 255, 255, 0.85)' : 'rgba(17, 25, 39, 0.7)',
           backdropFilter: 'blur(20px) saturate(180%)',
           WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-          border: `1px solid ${isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.12)'}`,
-          boxShadow: isLight ? '0 2px 8px rgba(0, 0, 0, 0.03)' : '0 8px 24px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+          border: `1px solid ${isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(56, 189, 248, 0.15)'}`,
+          boxShadow: isLight ? '0 2px 10px rgba(0, 0, 0, 0.03)' : '0 10px 30px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08)'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Sparkles size={14} style={{ color: '#2997FF' }} />
-          <span style={{ fontSize: '11px', fontWeight: 650, color: 'var(--main-text-primary)', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <Sparkles size={16} style={{ color: '#0284C7' }} />
+          <span style={{ fontSize: '12.5px', fontWeight: 700, color: 'var(--main-text-primary)', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
             Mission-Critical Forensic Test Suites
           </span>
-          <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', opacity: 0.8 }}>
+          <span style={{ fontSize: '12.5px', color: 'var(--main-text-tertiary)' }}>
             • NIST FIPS 203/204 • Gabor Tardos • BSA § 63
           </span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
           {onOpenCollusionLab && (
             <button
               onClick={onOpenCollusionLab}
               className="main-btn-secondary"
-              style={{ fontSize: '11px', padding: '4px 12px', display: 'flex', alignItems: 'center', gap: '5px' }}
+              style={{ fontSize: '12.5px', padding: '6px 14px', display: 'flex', alignItems: 'center', gap: '6px' }}
               title="Interactive Gabor Tardos Traitor-Tracing Collusion Sandbox"
             >
-              <Cpu size={12} style={{ color: '#FF9F0A' }} />
+              <Cpu size={14} style={{ color: '#FF9F0A' }} />
               <span>Tardos Collusion Lab</span>
             </button>
           )}
@@ -157,10 +157,10 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
             <button
               onClick={onOpenAirGapLab}
               className="main-btn-secondary"
-              style={{ fontSize: '11px', padding: '4px 12px', display: 'flex', alignItems: 'center', gap: '5px' }}
+              style={{ fontSize: '12.5px', padding: '6px 14px', display: 'flex', alignItems: 'center', gap: '6px' }}
               title="Camera Scan, Screen Glare & Distortion Robustness Simulator"
             >
-              <Camera size={12} style={{ color: '#30D158' }} />
+              <Camera size={14} style={{ color: '#10B981' }} />
               <span>Air-Gap Camera Scanner</span>
             </button>
           )}
@@ -169,10 +169,10 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
             <button
               onClick={onOpenCertificate}
               className="main-btn-secondary"
-              style={{ fontSize: '11px', padding: '4px 12px', display: 'flex', alignItems: 'center', gap: '5px' }}
+              style={{ fontSize: '12.5px', padding: '6px 14px', display: 'flex', alignItems: 'center', gap: '6px' }}
               title="Generate Section 63 BSA Digital Admissibility Certificate"
             >
-              <Scale size={12} style={{ color: '#2997FF' }} />
+              <Scale size={14} style={{ color: '#0284C7' }} />
               <span>BSA § 63 Court Docket</span>
             </button>
           )}
@@ -181,10 +181,10 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
             <button
               onClick={onOpenSihCompliance}
               className="main-btn-secondary"
-              style={{ fontSize: '11px', padding: '4px 12px', display: 'flex', alignItems: 'center', gap: '5px' }}
+              style={{ fontSize: '12.5px', padding: '6px 14px', display: 'flex', alignItems: 'center', gap: '6px' }}
               title="MoD / Indian Navy (WESEE) Compliance Matrix"
             >
-              <ShieldCheck size={12} style={{ color: '#2997FF' }} />
+              <ShieldCheck size={14} style={{ color: '#0284C7' }} />
               <span>WESEE Compliance</span>
             </button>
           )}
@@ -195,27 +195,27 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
       <div 
         style={{ 
           display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', 
-          gap: '14px' 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', 
+          gap: '16px' 
         }}
       >
         <div 
           className="main-card" 
           style={{ 
-            padding: '20px 22px', 
+            padding: '22px 24px', 
             borderRadius: '20px'
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 650 }}>
+            <span style={{ fontSize: '12.5px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}>
               Registered Documents
             </span>
-            <FileText size={16} style={{ color: '#0071E3' }} />
+            <FileText size={18} style={{ color: '#0284C7' }} />
           </div>
-          <div style={{ fontSize: '26px', fontWeight: 600, color: 'var(--main-text-primary)', marginTop: '10px', letterSpacing: '-0.03em', fontVariantNumeric: 'tabular-nums' }}>
+          <div style={{ fontSize: '32px', fontWeight: 700, color: 'var(--main-text-primary)', marginTop: '12px', letterSpacing: '-0.03em', fontVariantNumeric: 'tabular-nums' }}>
             {documents.length || 3}
           </div>
-          <div style={{ fontSize: '12px', color: 'var(--main-text-secondary)', marginTop: '4px', letterSpacing: '-0.01em' }}>
+          <div style={{ fontSize: '13.5px', color: 'var(--main-text-secondary)', marginTop: '6px', letterSpacing: '-0.01em' }}>
             Content-addressed SHA-256
           </div>
         </div>
@@ -223,20 +223,20 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
         <div 
           className="main-card" 
           style={{ 
-            padding: '20px 22px', 
+            padding: '22px 24px', 
             borderRadius: '20px'
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 650 }}>
+            <span style={{ fontSize: '12.5px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}>
               Enrolled Recipients
             </span>
-            <Cpu size={16} style={{ color: '#30D158' }} />
+            <Cpu size={18} style={{ color: '#10B981' }} />
           </div>
-          <div style={{ fontSize: '26px', fontWeight: 600, color: 'var(--main-text-primary)', marginTop: '10px', letterSpacing: '-0.03em', fontVariantNumeric: 'tabular-nums' }}>
+          <div style={{ fontSize: '32px', fontWeight: 700, color: 'var(--main-text-primary)', marginTop: '12px', letterSpacing: '-0.03em', fontVariantNumeric: 'tabular-nums' }}>
             {recipients.length || 3}
           </div>
-          <div style={{ fontSize: '12px', color: 'var(--main-text-secondary)', marginTop: '4px', letterSpacing: '-0.01em' }}>
+          <div style={{ fontSize: '13.5px', color: 'var(--main-text-secondary)', marginTop: '6px', letterSpacing: '-0.01em' }}>
             FIPS 203 (ML-KEM-768) Active
           </div>
         </div>
@@ -244,20 +244,20 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
         <div 
           className="main-card" 
           style={{ 
-            padding: '20px 22px', 
+            padding: '22px 24px', 
             borderRadius: '20px'
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 650 }}>
+            <span style={{ fontSize: '12.5px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}>
               Ledger Block Height
             </span>
-            <Database size={16} style={{ color: '#BF5AF2' }} />
+            <Database size={18} style={{ color: '#A855F7' }} />
           </div>
-          <div style={{ fontSize: '26px', fontWeight: 600, color: 'var(--main-text-primary)', marginTop: '10px', letterSpacing: '-0.03em', fontVariantNumeric: 'tabular-nums' }}>
+          <div style={{ fontSize: '32px', fontWeight: 700, color: 'var(--main-text-primary)', marginTop: '12px', letterSpacing: '-0.03em', fontVariantNumeric: 'tabular-nums' }}>
             {ledgerEvents.length || 38}
           </div>
-          <div style={{ fontSize: '12px', color: 'var(--main-text-secondary)', marginTop: '4px', letterSpacing: '-0.01em' }}>
+          <div style={{ fontSize: '13.5px', color: 'var(--main-text-secondary)', marginTop: '6px', letterSpacing: '-0.01em' }}>
             RFC-6962 Merkle Log Verified
           </div>
         </div>
@@ -265,75 +265,75 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
         <div 
           className="main-card" 
           style={{ 
-            padding: '20px 22px', 
+            padding: '22px 24px', 
             borderRadius: '20px'
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 650 }}>
+            <span style={{ fontSize: '12.5px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}>
               Attributed Cases
             </span>
-            <ShieldCheck size={16} style={{ color: '#FF9F0A' }} />
+            <ShieldCheck size={18} style={{ color: '#F59E0B' }} />
           </div>
-          <div style={{ fontSize: '26px', fontWeight: 600, color: 'var(--main-text-primary)', marginTop: '10px', letterSpacing: '-0.03em', fontVariantNumeric: 'tabular-nums' }}>
+          <div style={{ fontSize: '32px', fontWeight: 700, color: 'var(--main-text-primary)', marginTop: '12px', letterSpacing: '-0.03em', fontVariantNumeric: 'tabular-nums' }}>
             {investigations.length || 2}
           </div>
-          <div style={{ fontSize: '12px', color: 'var(--main-text-secondary)', marginTop: '4px', letterSpacing: '-0.01em' }}>
+          <div style={{ fontSize: '13.5px', color: 'var(--main-text-secondary)', marginTop: '6px', letterSpacing: '-0.01em' }}>
             Statistically bounded error rate (&lt; 10⁻⁶)
           </div>
         </div>
       </div>
 
       {/* Two Column Section: Recent Ledger Events & Registered Documents */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(460px, 1fr))', gap: '16px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(460px, 1fr))', gap: '20px' }}>
         {/* Recent Ledger Events */}
         <div 
           className="main-card"
           style={{ 
-            padding: '22px 24px', 
-            borderRadius: '20px',
+            padding: '24px 26px', 
+            borderRadius: '22px',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between'
           }}
         >
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-              <span style={{ fontSize: '14px', fontWeight: 650, color: 'var(--main-text-primary)', letterSpacing: '-0.015em' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px' }}>
+              <span style={{ fontSize: '16px', fontWeight: 700, color: 'var(--main-text-primary)', letterSpacing: '-0.015em' }}>
                 Recent Cryptographic Audit Events
               </span>
               <button
                 onClick={() => onNavigate('evidence')}
                 className="main-btn-ghost"
-                style={{ fontSize: '11.5px', padding: '2px 8px', color: 'var(--main-accent)' }}
+                style={{ fontSize: '13px', padding: '4px 10px', color: 'var(--main-accent)' }}
               >
                 <span>View Full Ledger</span>
-                <ArrowRight size={11} style={{ marginLeft: '4px' }} />
+                <ArrowRight size={13} style={{ marginLeft: '5px' }} />
               </button>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {recentEvents.map(evt => (
                 <div
                   key={evt.event_id}
                   style={{
-                    padding: '10px 12px',
-                    borderRadius: '12px',
+                    padding: '12px 14px',
+                    borderRadius: '14px',
                     background: isLight ? 'rgba(0, 0, 0, 0.025)' : 'rgba(255, 255, 255, 0.035)',
                     border: `1px solid ${isLight ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.06)'}`,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    fontSize: '12px'
+                    fontSize: '13.5px'
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <span 
                       style={{ 
-                        fontSize: '9.5px', 
+                        fontSize: '11px', 
                         fontFamily: 'SF Mono, monospace', 
-                        fontWeight: 650, 
-                        padding: '2px 8px', 
+                        fontWeight: 700, 
+                        padding: '3px 9px', 
                         borderRadius: '9999px',
                         background: evt.event_type === 'DOCUMENT_RELEASE' ? 'var(--main-accent-subtle)' : 'var(--main-jade-subtle)',
                         color: evt.event_type === 'DOCUMENT_RELEASE' ? 'var(--main-accent)' : 'var(--main-jade)'
@@ -341,12 +341,12 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
                     >
                       {evt.event_type === 'DOCUMENT_RELEASE' ? 'RELEASE' : 'DECRYPT'}
                     </span>
-                    <span style={{ color: 'var(--main-text-primary)', fontWeight: 500, letterSpacing: '-0.01em' }}>
+                    <span style={{ color: 'var(--main-text-primary)', fontWeight: 600, letterSpacing: '-0.01em' }}>
                       {evt.recipient_id}
                     </span>
                   </div>
 
-                  <span className="main-mono" style={{ fontSize: '11px', color: 'var(--main-text-tertiary)' }}>
+                  <span className="main-mono" style={{ fontSize: '12.5px', color: 'var(--main-text-tertiary)' }}>
                     {evt.event_id}
                   </span>
                 </div>
@@ -359,29 +359,29 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
         <div 
           className="main-card"
           style={{ 
-            padding: '22px 24px', 
-            borderRadius: '20px',
+            padding: '24px 26px', 
+            borderRadius: '22px',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between'
           }}
         >
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-              <span style={{ fontSize: '14px', fontWeight: 650, color: 'var(--main-text-primary)', letterSpacing: '-0.015em' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px' }}>
+              <span style={{ fontSize: '16px', fontWeight: 700, color: 'var(--main-text-primary)', letterSpacing: '-0.015em' }}>
                 Active Classified Documents
               </span>
               <button
                 onClick={() => onNavigate('documents')}
                 className="main-btn-ghost"
-                style={{ fontSize: '11.5px', padding: '2px 8px', color: 'var(--main-accent)' }}
+                style={{ fontSize: '13px', padding: '4px 10px', color: 'var(--main-accent)' }}
               >
                 <span>Manage Registry</span>
-                <ArrowRight size={11} style={{ marginLeft: '4px' }} />
+                <ArrowRight size={13} style={{ marginLeft: '5px' }} />
               </button>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {(documents.length > 0 ? documents.slice(0, 4) : [
                 { document_id: 'doc_1', document_name: 'Strategic_Operations_Plan.pdf', original_document_hash: '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', recipient_count: 3 },
                 { document_id: 'doc_2', document_name: 'Naval_Tactical_Comms_Matrix.docx', original_document_hash: '3a5b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b', recipient_count: 2 },
@@ -390,24 +390,24 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
                 <div
                   key={doc.document_id}
                   style={{
-                    padding: '10px 12px',
-                    borderRadius: '12px',
+                    padding: '12px 14px',
+                    borderRadius: '14px',
                     background: isLight ? 'rgba(0, 0, 0, 0.025)' : 'rgba(255, 255, 255, 0.035)',
                     border: `1px solid ${isLight ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.06)'}`,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    fontSize: '12px'
+                    fontSize: '13.5px'
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <Lock size={13} style={{ color: 'var(--main-accent)' }} />
-                    <span style={{ color: 'var(--main-text-primary)', fontWeight: 500, letterSpacing: '-0.01em' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <Lock size={15} style={{ color: 'var(--main-accent)' }} />
+                    <span style={{ color: 'var(--main-text-primary)', fontWeight: 600, letterSpacing: '-0.01em' }}>
                       {doc.document_name}
                     </span>
                   </div>
 
-                  <span className="main-mono" style={{ fontSize: '10.5px', color: 'var(--main-text-tertiary)' }}>
+                  <span className="main-mono" style={{ fontSize: '12px', color: 'var(--main-text-tertiary)' }}>
                     SHA-256: {doc.original_document_hash.substring(0, 10)}…
                   </span>
                 </div>
