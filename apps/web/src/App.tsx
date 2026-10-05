@@ -184,6 +184,11 @@ export function AppContent() {
     return doc;
   };
 
+  const handleDeleteDocument = async (documentId: string) => {
+    await apiService.deleteDocument(documentId);
+    await refreshAllData();
+  };
+
   const handleEnrollRecipient = async (name: string, id?: string) => {
     await apiService.enrollRecipient(name, id);
     await refreshAllData();
@@ -392,6 +397,7 @@ export function AppContent() {
                 documents={documents}
                 releases={releases}
                 onUploadDocument={handleUploadDocument}
+                onDeleteDocument={handleDeleteDocument}
                 setActiveTab={setActiveTab}
               />
             )}
