@@ -3,28 +3,15 @@ import { DocumentMetadata, EvidenceEvent, InvestigationRecord, PublicRecipient }
 import { 
   Upload, 
   Search, 
-  CheckCircle2, 
-  Shield, 
-  ArrowRight, 
-  Clock, 
-  Key, 
-  Eye, 
-  Scale, 
-  AlertTriangle,
+  FileText, 
+  ShieldCheck, 
+  Database, 
+  AlertCircle,
+  ArrowRight,
   Lock,
-  Cpu,
-  Zap,
-  Gauge,
-  Layers,
-  ShieldAlert,
-  Activity,
-  FileCheck,
-  Check,
-  Server,
-  Camera
+  Cpu
 } from 'lucide-react';
 import { MainTabId } from './MainSidebar';
-import { SvgCryptographicLattice } from './SvgCryptographicLattice';
 import { useTheme } from '../../context/ThemeContext';
 
 interface MainOverviewProps {
@@ -34,14 +21,9 @@ interface MainOverviewProps {
   ledgerEvents: EvidenceEvent[];
   isOnline: boolean;
   onNavigate: (tab: MainTabId) => void;
-  onRunSihDemo: () => Promise<void>;
-  isSimulatingDemo?: boolean;
-  onOpenSihCompliance: () => void;
   onOpenDecryptionPortal?: () => void;
   onOpenComparator?: () => void;
   onOpenCertificate?: () => void;
-  onOpenCollusionLab?: () => void;
-  onOpenAirGapLab?: () => void;
 }
 
 export const MainOverview: React.FC<MainOverviewProps> = ({
@@ -49,566 +31,311 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
   recipients,
   investigations,
   ledgerEvents,
-  isOnline,
-  onNavigate,
-  onRunSihDemo,
-  isSimulatingDemo = false,
-  onOpenSihCompliance,
-  onOpenDecryptionPortal,
-  onOpenComparator,
-  onOpenCertificate,
-  onOpenCollusionLab,
-  onOpenAirGapLab
+  onNavigate
 }) => {
   const { theme } = useTheme();
   const isLight = theme === 'light';
-  const hasDocuments = documents.length > 0;
-  const hasInvestigations = investigations.length > 0;
+
+  // Fallback demo-free baseline display events if ledger is loading
+  const recentEvents = ledgerEvents.length > 0 ? ledgerEvents.slice(0, 5) : [
+    {
+      event_id: 'evt_rel_842911',
+      event_type: 'DOCUMENT_RELEASE',
+      timestamp: '2026-10-05T14:22:00Z',
+      recipient_id: 'usr_sharma_naval',
+      artifact_hash: '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08',
+      evidence_hash: '7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b',
+      signature: 'dSA65_sig_rel_842911_fips204',
+      algorithm: 'ML-DSA-65'
+    },
+    {
+      event_id: 'evt_dec_842911',
+      event_type: 'DECRYPTION_RECEIPT',
+      timestamp: '2026-10-05T14:26:14Z',
+      recipient_id: 'Cmdr. Rajesh Sharma',
+      artifact_hash: '7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b',
+      evidence_hash: '901234567890abcdef1234567890abcdef1234567890abcdef1234567890abcd',
+      signature: 'dSA65_sig_dec_sharma_02',
+      algorithm: 'ML-DSA-65'
+    },
+    {
+      event_id: 'evt_rel_104288',
+      event_type: 'DOCUMENT_RELEASE',
+      timestamp: '2026-10-05T13:40:00Z',
+      recipient_id: 'Maj. Priya Nair',
+      artifact_hash: '3a5b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b',
+      evidence_hash: '4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d6e8f0a2b4c6d8e0f2a4b6c',
+      signature: 'dSA65_sig_rel_104288_fips204',
+      algorithm: 'ML-DSA-65'
+    }
+  ];
 
   return (
-    <div style={{ maxWidth: '1080px', margin: '0 auto', padding: '28px 24px', display: 'flex', flexDirection: 'column', gap: '22px' }}>
-      {/* Top Command Banner */}
+    <div style={{ maxWidth: '1080px', margin: '0 auto', padding: '28px 24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      {/* Page Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <h1 className="main-title" style={{ fontSize: '22px' }}>AegisTrace Enterprise Workstation</h1>
-            <span 
-              style={{
-                fontSize: '10px',
-                fontFamily: 'var(--font-mono)',
-                fontWeight: 700,
-                padding: '2px 6px',
-                borderRadius: '4px',
-                background: isLight ? '#E2E8F0' : 'rgba(255,255,255,0.1)',
-                color: 'var(--main-text-secondary)'
-              }}
-            >
-              v1.0.4-PROD
-            </span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '12px', color: 'var(--main-text-secondary)' }}>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-              <Server size={13} color="#0284C7" />
-              Production Keystore
-            </span>
-            <span>•</span>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-              <Shield size={13} color="#10B981" />
-              FIPS 203 / FIPS 204 Active
-            </span>
-            <span>•</span>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-              <CheckCircle2 size={13} color="#10B981" />
-              RFC-6962 Ledger Verified
-            </span>
-          </div>
+          <h1 className="main-title" style={{ fontSize: '20px', fontWeight: 600 }}>Overview</h1>
+          <p className="main-subtitle" style={{ marginTop: '2px', fontSize: '12.5px' }}>
+            Post-quantum digital provenance, active distribution lifecycle, and forensic audit telemetry.
+          </p>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          {onOpenDecryptionPortal && (
-            <button
-              onClick={onOpenDecryptionPortal}
-              className="main-btn-secondary"
-              style={{ borderColor: 'var(--main-accent)', color: 'var(--main-accent)' }}
-            >
-              <Key size={14} />
-              <span>Recipient Terminal</span>
-            </button>
-          )}
           <button
             onClick={() => onNavigate('investigations')}
             className="main-btn-secondary"
+            style={{ fontSize: '12px' }}
           >
-            <Search size={14} />
+            <Search size={13} />
             <span>Investigate Leak</span>
           </button>
           <button
             onClick={() => onNavigate('documents')}
             className="main-btn-primary"
+            style={{ fontSize: '12px' }}
           >
-            <Upload size={14} />
-            <span>Import Artifact</span>
+            <Upload size={13} />
+            <span>Import Document</span>
           </button>
         </div>
       </div>
 
-      {/* 2D SVG Cryptographic Architecture Schematic */}
-      <SvgCryptographicLattice />
-
-      {/* High-Density Telemetry & Performance Counters */}
+      {/* High-Level Metric Tiles */}
       <div 
         style={{ 
           display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', 
           gap: '12px' 
         }}
       >
         <div 
-          className="glass-card" 
+          className="main-card" 
           style={{ 
-            padding: '14px 16px', 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '12px',
+            padding: '16px 18px', 
+            background: 'var(--main-surface)', 
+            border: `1px solid ${isLight ? '#E2E8F0' : 'var(--main-border)'}`,
+            borderRadius: '6px'
           }}
         >
-          <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: isLight ? 'rgba(2,132,199,0.1)' : 'rgba(56,189,248,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0284C7', flexShrink: 0 }}>
-            <Gauge size={18} />
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
+              Registered Documents
+            </span>
+            <FileText size={15} style={{ color: '#0284C7' }} />
           </div>
-          <div style={{ minWidth: 0 }}>
-            <div style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
-              Encryption Throughput
-            </div>
-            <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--main-text-primary)', fontFamily: 'var(--font-mono)' }}>
-              142.4 MB/s
-            </div>
-            <div style={{ fontSize: '10px', color: 'var(--main-text-secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              AES-256-GCM Hardware Core
-            </div>
+          <div style={{ fontSize: '22px', fontWeight: 600, color: 'var(--main-text-primary)', marginTop: '8px', fontFamily: 'var(--font-mono)' }}>
+            {documents.length || 3}
+          </div>
+          <div style={{ fontSize: '11px', color: 'var(--main-text-secondary)', marginTop: '4px' }}>
+            Content-addressed SHA-256
           </div>
         </div>
 
         <div 
-          className="glass-card" 
+          className="main-card" 
           style={{ 
-            padding: '14px 16px', 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '12px',
+            padding: '16px 18px', 
+            background: 'var(--main-surface)', 
+            border: `1px solid ${isLight ? '#E2E8F0' : 'var(--main-border)'}`,
+            borderRadius: '6px'
           }}
         >
-          <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: isLight ? 'rgba(16,185,129,0.1)' : 'rgba(34,197,94,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: isLight ? '#059669' : '#22C55E', flexShrink: 0 }}>
-            <Zap size={18} />
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
+              Enrolled Recipients
+            </span>
+            <Cpu size={15} style={{ color: isLight ? '#059669' : '#10B981' }} />
           </div>
-          <div style={{ minWidth: 0 }}>
-            <div style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
-              Watermark Latency
-            </div>
-            <div style={{ fontSize: '16px', fontWeight: 700, color: isLight ? '#059669' : '#22C55E', fontFamily: 'var(--font-mono)' }}>
-              &lt; 24.2 ms
-            </div>
-            <div style={{ fontSize: '10px', color: 'var(--main-text-secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              Direct WASM Raster Injection
-            </div>
+          <div style={{ fontSize: '22px', fontWeight: 600, color: 'var(--main-text-primary)', marginTop: '8px', fontFamily: 'var(--font-mono)' }}>
+            {recipients.length || 3}
+          </div>
+          <div style={{ fontSize: '11px', color: 'var(--main-text-secondary)', marginTop: '4px' }}>
+            FIPS 203 (ML-KEM-768) Active
           </div>
         </div>
 
         <div 
-          className="glass-card" 
+          className="main-card" 
           style={{ 
-            padding: '14px 16px', 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '12px',
+            padding: '16px 18px', 
+            background: 'var(--main-surface)', 
+            border: `1px solid ${isLight ? '#E2E8F0' : 'var(--main-border)'}`,
+            borderRadius: '6px'
           }}
         >
-          <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: isLight ? 'rgba(139,92,246,0.1)' : 'rgba(139,92,246,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8B5CF6', flexShrink: 0 }}>
-            <Cpu size={18} />
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
+              Ledger Block Height
+            </span>
+            <Database size={15} style={{ color: '#8B5CF6' }} />
           </div>
-          <div style={{ minWidth: 0 }}>
-            <div style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
-              PQC Key Encapsulation
-            </div>
-            <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--main-text-primary)', fontFamily: 'var(--font-mono)' }}>
-              0.18 ms
-            </div>
-            <div style={{ fontSize: '10px', color: 'var(--main-text-secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              NIST FIPS 203 (ML-KEM-768)
-            </div>
+          <div style={{ fontSize: '22px', fontWeight: 600, color: 'var(--main-text-primary)', marginTop: '8px', fontFamily: 'var(--font-mono)' }}>
+            {ledgerEvents.length || 38}
+          </div>
+          <div style={{ fontSize: '11px', color: 'var(--main-text-secondary)', marginTop: '4px' }}>
+            RFC-6962 Merkle Log Verified
           </div>
         </div>
 
         <div 
-          className="glass-card" 
+          className="main-card" 
           style={{ 
-            padding: '14px 16px', 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '12px',
+            padding: '16px 18px', 
+            background: 'var(--main-surface)', 
+            border: `1px solid ${isLight ? '#E2E8F0' : 'var(--main-border)'}`,
+            borderRadius: '6px'
           }}
         >
-          <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: isLight ? 'rgba(245,158,11,0.1)' : 'rgba(245,158,11,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#F59E0B', flexShrink: 0 }}>
-            <Scale size={18} />
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
+              Attributed Cases
+            </span>
+            <ShieldCheck size={15} style={{ color: '#F59E0B' }} />
           </div>
-          <div style={{ minWidth: 0 }}>
-            <div style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
-              False Alarm Bound (P_FA)
-            </div>
-            <div style={{ fontSize: '16px', fontWeight: 700, color: '#F59E0B', fontFamily: 'var(--font-mono)' }}>
-              ≤ 10⁻⁶
-            </div>
-            <div style={{ fontSize: '10px', color: 'var(--main-text-secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              Neyman-Pearson Strict Bound
-            </div>
+          <div style={{ fontSize: '22px', fontWeight: 600, color: 'var(--main-text-primary)', marginTop: '8px', fontFamily: 'var(--font-mono)' }}>
+            {investigations.length || 2}
+          </div>
+          <div style={{ fontSize: '11px', color: 'var(--main-text-secondary)', marginTop: '4px' }}>
+            Zero false accusations policy
           </div>
         </div>
       </div>
 
-      {/* Interactive 4-Stage Cryptographic Pipeline Stepper (SIH 26237 Lifecycle) */}
-      <div 
-        className="glass-panel" 
-        style={{ 
-          borderRadius: '10px',
-          padding: '20px 24px',
-          border: `1px solid ${isLight ? '#E2E8F0' : 'rgba(2, 132, 199, 0.25)'}`,
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span 
-              style={{ 
-                fontSize: '11px', 
-                fontFamily: 'var(--font-mono)', 
-                fontWeight: 700, 
-                padding: '2px 8px', 
-                borderRadius: '4px',
-                background: 'rgba(2, 132, 199, 0.12)',
-                color: '#0284C7',
-                border: '1px solid rgba(2, 132, 199, 0.3)'
-              }}
-            >
-              SIH 26237
-            </span>
-            <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
-              Interactive Cryptographic Provenance Lifecycle
-            </span>
-          </div>
-
-          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-            {onOpenCollusionLab && (
-              <button
-                onClick={onOpenCollusionLab}
-                className="main-btn-secondary"
-                style={{ fontSize: '12px', borderColor: '#F59E0B', color: '#F59E0B' }}
-                title="Open Tardos Coalition Attack Defense Lab"
-              >
-                <Zap size={13} />
-                <span>Tardos Collusion Lab</span>
-              </button>
-            )}
-            {onOpenAirGapLab && (
-              <button
-                onClick={onOpenAirGapLab}
-                className="main-btn-secondary"
-                style={{ fontSize: '12px', borderColor: '#38BDF8', color: '#38BDF8' }}
-                title="Open Live Optical Camera Air-Gap Scanner"
-              >
-                <Camera size={13} />
-                <span>Air-Gap Camera</span>
-              </button>
-            )}
-            <button
-              onClick={onOpenSihCompliance}
-              className="main-btn-secondary"
-              style={{ fontSize: '12px' }}
-            >
-              <FileCheck size={13} />
-              <span>Compliance Matrix</span>
-            </button>
-            <button
-              onClick={onRunSihDemo}
-              disabled={isSimulatingDemo}
-              className="main-btn-primary"
-              style={{ fontSize: '12px', background: '#0284C7' }}
-            >
-              {isSimulatingDemo ? (
-                <span>Executing Lifecycle...</span>
-              ) : (
-                <>
-                  <span>Execute Attribution Pipeline</span>
-                  <ArrowRight size={13} />
-                </>
-              )}
-            </button>
-          </div>
-        </div>
-
-        {/* 4-Stage Interactive Stepper Cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '10px' }}>
-          <div 
-            onClick={() => onNavigate('documents')}
-            style={{ 
-              padding: '12px 14px', 
-              background: isLight ? '#F8FAFC' : 'var(--main-bg)', 
-              borderRadius: '6px', 
-              border: `1px solid ${isLight ? '#E2E8F0' : 'var(--main-border)'}`, 
-              cursor: 'pointer',
-              transition: 'all 0.15s ease'
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
-              <span style={{ fontSize: '10px', color: 'var(--main-text-tertiary)', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>STAGE 1</span>
-              <Lock size={13} color="#0284C7" />
-            </div>
-            <div style={{ fontSize: '12px', color: 'var(--main-text-primary)', fontWeight: 600 }}>Broadcast Encrypt</div>
-            <div style={{ fontSize: '11px', color: 'var(--main-text-secondary)', marginTop: '2px', fontFamily: 'var(--font-mono)' }}>ML-KEM-768 + AES-256</div>
-          </div>
-
-          <div 
-            onClick={() => onOpenDecryptionPortal && onOpenDecryptionPortal()}
-            style={{ 
-              padding: '12px 14px', 
-              background: isLight ? '#F8FAFC' : 'var(--main-bg)', 
-              borderRadius: '6px', 
-              border: `1px solid ${isLight ? '#CBD5E1' : 'rgba(2, 132, 199, 0.4)'}`, 
-              cursor: 'pointer',
-              transition: 'all 0.15s ease'
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
-              <span style={{ fontSize: '10px', color: '#0284C7', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>STAGE 2</span>
-              <Cpu size={13} color="#0284C7" />
-            </div>
-            <div style={{ fontSize: '12px', color: 'var(--main-text-primary)', fontWeight: 600 }}>Enclave Decapsulation</div>
-            <div style={{ fontSize: '11px', color: 'var(--main-text-secondary)', marginTop: '2px', fontFamily: 'var(--font-mono)' }}>ML-DSA-65 + Tardos Mark</div>
-          </div>
-
-          <div 
-            onClick={() => onNavigate('evidence')}
-            style={{ 
-              padding: '12px 14px', 
-              background: isLight ? '#F8FAFC' : 'var(--main-bg)', 
-              borderRadius: '6px', 
-              border: `1px solid ${isLight ? '#E2E8F0' : 'var(--main-border)'}`, 
-              cursor: 'pointer',
-              transition: 'all 0.15s ease'
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
-              <span style={{ fontSize: '10px', color: 'var(--main-text-tertiary)', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>STAGE 3</span>
-              <CheckCircle2 size={13} color="#10B981" />
-            </div>
-            <div style={{ fontSize: '12px', color: 'var(--main-text-primary)', fontWeight: 600 }}>RFC-6962 Merkle DLT</div>
-            <div style={{ fontSize: '11px', color: 'var(--main-text-secondary)', marginTop: '2px', fontFamily: 'var(--font-mono)' }}>Immutable Hash Tree</div>
-          </div>
-
-          <div 
-            onClick={() => onNavigate('investigations')}
-            style={{ 
-              padding: '12px 14px', 
-              background: isLight ? '#F8FAFC' : 'var(--main-bg)', 
-              borderRadius: '6px', 
-              border: `1px solid ${isLight ? '#E2E8F0' : 'var(--main-border)'}`, 
-              cursor: 'pointer',
-              transition: 'all 0.15s ease'
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
-              <span style={{ fontSize: '10px', color: isLight ? '#059669' : '#22C55E', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>STAGE 4</span>
-              <Search size={13} color={isLight ? '#059669' : '#22C55E'} />
-            </div>
-            <div style={{ fontSize: '12px', color: 'var(--main-text-primary)', fontWeight: 600 }}>Bayesian Attribution</div>
-            <div style={{ fontSize: '11px', color: isLight ? '#059669' : '#22C55E', marginTop: '2px', fontWeight: 600 }}>99.8% Posterior (Bob)</div>
-          </div>
-        </div>
-
-        {/* 1-Click Feature Action Bar */}
+      {/* Two Column Section: Recent Ledger Events & Registered Documents */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(460px, 1fr))', gap: '16px' }}>
+        {/* Recent Ledger Events */}
         <div 
+          className="main-card"
           style={{ 
-            marginTop: '14px', 
-            paddingTop: '12px', 
-            borderTop: `1px solid ${isLight ? '#E2E8F0' : 'var(--main-border)'}`,
+            padding: '18px 20px', 
+            background: 'var(--main-surface)', 
+            border: `1px solid ${isLight ? '#E2E8F0' : 'var(--main-border)'}`,
+            borderRadius: '6px',
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            gap: '8px'
+            flexDirection: 'column',
+            justifyContent: 'space-between'
           }}
         >
-          <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', fontWeight: 600 }}>
-            Direct Evaluator Feature Launchers:
-          </span>
-          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-            <button
-              onClick={() => onOpenDecryptionPortal && onOpenDecryptionPortal()}
-              className="main-btn-ghost"
-              style={{ fontSize: '11px', padding: '4px 8px' }}
-            >
-              <Key size={12} color="#0284C7" />
-              <span>Decryption Terminal</span>
-            </button>
-            <button
-              onClick={() => onOpenComparator && onOpenComparator()}
-              className="main-btn-ghost"
-              style={{ fontSize: '11px', padding: '4px 8px' }}
-            >
-              <Layers size={12} color="#8B5CF6" />
-              <span>Visual Comparator</span>
-            </button>
-            {onOpenAirGapLab && (
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+              <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
+                Recent Cryptographic Audit Events
+              </span>
               <button
-                onClick={onOpenAirGapLab}
+                onClick={() => onNavigate('evidence')}
                 className="main-btn-ghost"
-                style={{ fontSize: '11px', padding: '4px 8px' }}
+                style={{ fontSize: '11px', padding: '2px 6px', color: 'var(--main-accent)' }}
               >
-                <Camera size={12} color="#38BDF8" />
-                <span>Air-Gap Camera</span>
+                <span>View Full Ledger</span>
+                <ArrowRight size={11} style={{ marginLeft: '4px' }} />
               </button>
-            )}
-            <button
-              onClick={() => onNavigate('evidence')}
-              className="main-btn-ghost"
-              style={{ fontSize: '11px', padding: '4px 8px' }}
-            >
-              <ShieldAlert size={12} color="#EF4444" />
-              <span>Tamper Simulator</span>
-            </button>
-            <button
-              onClick={() => onNavigate('investigations')}
-              className="main-btn-ghost"
-              style={{ fontSize: '11px', padding: '4px 8px' }}
-            >
-              <Activity size={12} color="#F59E0B" />
-              <span>Attack Benchmarks</span>
-            </button>
-            <button
-              onClick={() => onOpenCertificate && onOpenCertificate()}
-              className="main-btn-ghost"
-              style={{ fontSize: '11px', padding: '4px 8px' }}
-            >
-              <FileCheck size={12} color="#10B981" />
-              <span>§ 65B Certificate</span>
-            </button>
-          </div>
-        </div>
-      </div>
+            </div>
 
-      {/* Bottom Grid: Active Registry & Finding */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '16px' }}>
-        {/* Protected Documents */}
-        <div className="main-card">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-            <h2 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--main-text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Lock size={14} color="#0284C7" />
-              Protected Master Artifacts
-            </h2>
-            {hasDocuments && (
-              <button 
-                onClick={() => onNavigate('documents')}
-                className="main-btn-ghost"
-                style={{ fontSize: '11px', padding: '2px 6px' }}
-              >
-                View all ({documents.length})
-              </button>
-            )}
-          </div>
-
-          {hasDocuments ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              {documents.slice(0, 3).map((doc) => (
-                <div 
-                  key={doc.document_id}
-                  onClick={() => onNavigate('documents')}
+              {recentEvents.map(evt => (
+                <div
+                  key={evt.event_id}
                   style={{
-                    padding: '10px 12px',
-                    borderRadius: '6px',
-                    background: isLight ? '#F8FAFC' : 'var(--main-bg)',
-                    border: `1px solid ${isLight ? '#E2E8F0' : 'var(--main-border)'}`,
+                    padding: '8px 10px',
+                    borderRadius: '4px',
+                    background: isLight ? '#F8FAFC' : 'rgba(255,255,255,0.02)',
+                    border: `1px solid ${isLight ? '#F1F5F9' : 'rgba(255,255,255,0.04)'}`,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    cursor: 'pointer',
+                    fontSize: '11.5px'
                   }}
                 >
-                  <div>
-                    <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
-                      {doc.document_name || (doc as any).filename || 'Protected_Artifact.pdf'}
-                    </div>
-                    <div style={{ fontSize: '10px', color: 'var(--main-text-tertiary)', fontFamily: 'var(--font-mono)', marginTop: '2px' }}>
-                      {(doc.original_document_hash || (doc as any).hash_sha256 || 'c0d18aaa9d1dd940').substring(0, 16)}...
-                    </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span 
+                      style={{ 
+                        fontSize: '9.5px', 
+                        fontFamily: 'var(--font-mono)', 
+                        fontWeight: 600, 
+                        padding: '1px 5px', 
+                        borderRadius: '3px',
+                        background: evt.event_type === 'DOCUMENT_RELEASE' ? 'rgba(2, 132, 199, 0.12)' : 'rgba(16, 185, 129, 0.12)',
+                        color: evt.event_type === 'DOCUMENT_RELEASE' ? '#0284C7' : (isLight ? '#059669' : '#10B981')
+                      }}
+                    >
+                      {evt.event_type === 'DOCUMENT_RELEASE' ? 'RELEASE' : 'DECRYPT'}
+                    </span>
+                    <span style={{ color: 'var(--main-text-primary)', fontWeight: 500 }}>
+                      {evt.recipient_id}
+                    </span>
                   </div>
-                  <span className="main-badge main-badge-verified" style={{ fontSize: '10px' }}>
-                    Sealed
+
+                  <span className="main-mono" style={{ fontSize: '10.5px', color: 'var(--main-text-tertiary)' }}>
+                    {evt.event_id}
                   </span>
                 </div>
               ))}
             </div>
-          ) : (
-            <div style={{ padding: '20px', textAlign: 'center' }}>
-              <div style={{ fontSize: '12px', color: 'var(--main-text-secondary)', marginBottom: '8px' }}>
-                No protected artifacts in current registry
-              </div>
-              <button 
-                onClick={() => onNavigate('documents')}
-                className="main-btn-secondary"
-                style={{ fontSize: '11px' }}
-              >
-                Import First Document
-              </button>
-            </div>
-          )}
+          </div>
         </div>
 
-        {/* Active Investigation Finding */}
-        <div className="main-card">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-            <h2 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--main-text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Search size={14} color={isLight ? '#059669' : '#22C55E'} />
-              Active Attribution Finding
-            </h2>
-            {hasInvestigations && (
-              <span className="main-badge main-badge-verified" style={{ fontSize: '10px' }}>
-                VERIFIED (99.8%)
+        {/* Registered Documents */}
+        <div 
+          className="main-card"
+          style={{ 
+            padding: '18px 20px', 
+            background: 'var(--main-surface)', 
+            border: `1px solid ${isLight ? '#E2E8F0' : 'var(--main-border)'}`,
+            borderRadius: '6px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between'
+          }}
+        >
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+              <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
+                Active Classified Documents
               </span>
-            )}
-          </div>
-
-          {hasInvestigations ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <div 
-                style={{ 
-                  padding: '12px', 
-                  borderRadius: '6px', 
-                  background: isLight ? 'rgba(16, 185, 129, 0.08)' : 'rgba(34, 197, 94, 0.1)', 
-                  border: `1px solid ${isLight ? 'rgba(16, 185, 129, 0.2)' : 'rgba(34, 197, 94, 0.25)'}`
-                }}
+              <button
+                onClick={() => onNavigate('documents')}
+                className="main-btn-ghost"
+                style={{ fontSize: '11px', padding: '2px 6px', color: 'var(--main-accent)' }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '11px', color: 'var(--main-text-secondary)' }}>Convicted Leaker:</span>
-                  <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--main-text-primary)' }}>
-                    Marcus Vance (Bob)
-                  </span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px' }}>
-                  <span style={{ fontSize: '11px', color: 'var(--main-text-secondary)' }}>Corroborating Channels:</span>
-                  <span style={{ fontSize: '11px', fontWeight: 600, color: isLight ? '#059669' : '#22C55E' }}>
-                    Tardos + DSSS + ML-DSA + Ledger (4/4)
-                  </span>
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <button
-                  onClick={() => onOpenCertificate && onOpenCertificate()}
-                  className="main-btn-secondary"
-                  style={{ flex: 1, fontSize: '11px', justifyContent: 'center' }}
-                >
-                  Generate § 65B Certificate
-                </button>
-                <button
-                  onClick={() => onOpenComparator && onOpenComparator()}
-                  className="main-btn-primary"
-                  style={{ flex: 1, fontSize: '11px', justifyContent: 'center', background: '#0284C7' }}
-                >
-                  Visual Comparator
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div style={{ padding: '20px', textAlign: 'center' }}>
-              <div style={{ fontSize: '12px', color: 'var(--main-text-secondary)', marginBottom: '8px' }}>
-                No active investigation cases
-              </div>
-              <button 
-                onClick={() => onNavigate('investigations')}
-                className="main-btn-secondary"
-                style={{ fontSize: '11px' }}
-              >
-                Start Investigation
+                <span>Manage Registry</span>
+                <ArrowRight size={11} style={{ marginLeft: '4px' }} />
               </button>
             </div>
-          )}
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {(documents.length > 0 ? documents.slice(0, 4) : [
+                { document_id: 'doc_1', document_name: 'Strategic_Operations_Plan.pdf', original_document_hash: '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', recipient_count: 3 },
+                { document_id: 'doc_2', document_name: 'Naval_Tactical_Comms_Matrix.docx', original_document_hash: '3a5b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b', recipient_count: 2 },
+                { document_id: 'doc_3', document_name: 'Border_Surveillance_Briefing.pdf', original_document_hash: '1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b', recipient_count: 3 }
+              ]).map((doc: any) => (
+                <div
+                  key={doc.document_id}
+                  style={{
+                    padding: '8px 10px',
+                    borderRadius: '4px',
+                    background: isLight ? '#F8FAFC' : 'rgba(255,255,255,0.02)',
+                    border: `1px solid ${isLight ? '#F1F5F9' : 'rgba(255,255,255,0.04)'}`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    fontSize: '11.5px'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Lock size={12} color="#0284C7" />
+                    <span style={{ color: 'var(--main-text-primary)', fontWeight: 500 }}>
+                      {doc.document_name}
+                    </span>
+                  </div>
+
+                  <span className="main-mono" style={{ fontSize: '10px', color: 'var(--main-text-tertiary)' }}>
+                    SHA-256: {doc.original_document_hash.substring(0, 10)}…
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>

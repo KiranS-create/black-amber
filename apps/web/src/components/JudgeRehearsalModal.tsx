@@ -41,7 +41,7 @@ export const JudgeRehearsalModal: React.FC<JudgeRehearsalModalProps> = ({
 
   if (!isOpen) return null;
 
-  const liveMobileUrl = 'https://aegistrace-kirans-create.vercel.app/?variant=main&role=judge_eval&session=JUDGE_DG_7719';
+  const liveMobileUrl = 'https://aegistrace-sih.vercel.app/?variant=main&role=judge_eval&session=JUDGE_DG_7719';
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(liveMobileUrl);

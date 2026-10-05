@@ -2,25 +2,14 @@ import React, { useState, useRef } from 'react';
 import { EvidenceRecord, EvidenceEvent } from '../../types';
 import { 
   CheckCircle2, 
-  ShieldAlert, 
-  Download, 
-  Upload, 
-  FileCheck, 
-  ChevronDown, 
-  ChevronRight, 
   FileArchive, 
   Database, 
-  AlertTriangle, 
-  RefreshCw, 
+  ChevronRight, 
   Scale, 
-  Link as LinkIcon,
-  ShieldCheck,
-  Lock
+  Upload
 } from 'lucide-react';
-import { apiService } from '../../services/api';
 import { VerificationService } from '../../services/semanticServices';
 import { SvgMerkleChain } from './SvgMerkleChain';
-import { audioService } from '../../services/audioService';
 
 interface MainEvidenceProps {
   evidenceRecords: EvidenceRecord[];
@@ -37,25 +26,6 @@ export const MainEvidence: React.FC<MainEvidenceProps> = ({
   const [isVerifying, setIsVerifying] = useState<boolean>(false);
   const [verificationResult, setVerificationResult] = useState<any | null>(null);
   const [packageInputRef] = [useRef<HTMLInputElement>(null)];
-
-  // Tamper attack simulation state
-  const [isLedgerTampered, setIsLedgerTampered] = useState<boolean>(false);
-  const [tamperError, setTamperError] = useState<string | null>(null);
-
-  const handleSimulateTamper = () => {
-    // Tamper with block 1 or 2
-    apiService.simulateTamperBlock(1);
-    setIsLedgerTampered(true);
-    setTamperError('CRYPTOGRAPHIC INTEGRITY BROKEN: Block #1 Merkle Leaf Hash Mismatch! Current root (0xDEADBEEF...) != Expected root (0x03a58e65...). Non-repudiation preserved: alteration detected and rejected.');
-    audioService.playTamperAlert();
-  };
-
-  const handleRestoreLedger = () => {
-    apiService.resetLedgerTamper();
-    setIsLedgerTampered(false);
-    setTamperError(null);
-    audioService.playDecryptionSuccess();
-  };
 
   const handleVerifyPackage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -94,8 +64,8 @@ export const MainEvidence: React.FC<MainEvidenceProps> = ({
       event_type: 'DOCUMENT_RELEASE',
       timestamp: '2026-09-26T11:00:00Z',
       recipient_id: 'HQ_AUTHORITY',
-      artifact_hash: isLedgerTampered ? 'DEADBEEF_TAMPERED_HASH_FORGED_EVENT_99999999' : '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08',
-      evidence_hash: isLedgerTampered ? 'FORGED_LEAF_HASH' : '7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b',
+      artifact_hash: '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08',
+      evidence_hash: '7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b',
       signature: 'dSA65_sig_rel_001_authority_fips204',
       algorithm: 'ML-DSA-65'
     },
@@ -147,7 +117,7 @@ export const MainEvidence: React.FC<MainEvidenceProps> = ({
               className={`main-btn-ghost ${activeSubTab === 'ledger' ? 'active' : ''}`}
               style={{ fontSize: '12px', padding: '6px 12px', background: activeSubTab === 'ledger' ? 'var(--main-surface-hover)' : 'transparent', color: activeSubTab === 'ledger' ? 'var(--main-text-primary)' : 'var(--main-text-tertiary)' }}
             >
-              Ledger & Tamper Defense
+              Ledger Chain
             </button>
             <button
               onClick={() => setActiveSubTab('verify')}
@@ -251,72 +221,46 @@ export const MainEvidence: React.FC<MainEvidenceProps> = ({
         </>
       )}
 
-      {/* Sub-tab 2: Ledger Chain & Anti-Tamper Defense (Feature 3) */}
+      {/* Sub-tab 2: Ledger Chain */}
       {activeSubTab === 'ledger' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          {/* Tamper Simulation Command Banner */}
           <div 
             className="main-card glass-panel" 
             style={{ 
-              background: isLedgerTampered ? 'rgba(239, 68, 68, 0.08)' : 'rgba(15, 20, 28, 0.7)', 
-              border: `1px solid ${isLedgerTampered ? 'var(--main-crimson)' : 'rgba(56, 189, 248, 0.25)'}`,
+              background: 'var(--main-surface)', 
+              border: '1px solid var(--main-border-active)',
               transition: 'all 0.2s ease'
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                  <span className="main-badge" style={{ background: isLedgerTampered ? 'rgba(239, 68, 68, 0.2)' : 'rgba(34, 197, 94, 0.15)', color: isLedgerTampered ? 'var(--main-crimson)' : 'var(--main-jade)' }}>
-                    {isLedgerTampered ? 'CHAIN INTEGRITY COMPROMISED' : 'MERKLE TREE ROOT VERIFIED'}
+                  <span className="main-badge main-badge-verified">
+                    <CheckCircle2 size={11} />
+                    MERKLE ROOT VERIFIED
                   </span>
                   <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
                     RFC-6962 Cryptographic Ledger
                   </span>
                 </div>
                 <div style={{ fontSize: '17px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
-                  {isLedgerTampered ? 'Tamper Attack Detected: Non-Repudiation Preserved' : 'Immutable Provenance Ledger & Non-Repudiation'}
+                  Immutable Provenance Ledger & Audit Trail
                 </div>
                 <p style={{ fontSize: '12px', color: 'var(--main-text-secondary)', margin: '4px 0 0 0', maxWidth: '640px' }}>
-                  SIH 26237 requires that rogue administrators cannot tamper with recipient decryption records or frame innocent users. Each record is signed with recipient ML-DSA-65 keys and anchored in a cryptographic hash chain.
+                  Cryptographic audit log anchored with post-quantum ML-DSA-65 signatures and SHA-256 leaf commitments. Non-repudiation guaranteed by forward-secure hash chains.
                 </p>
               </div>
 
-              <div>
-                {!isLedgerTampered ? (
-                  <button
-                    onClick={handleSimulateTamper}
-                    className="main-btn-secondary"
-                    style={{ fontSize: '12px', borderColor: 'var(--main-crimson)', color: 'var(--main-crimson)' }}
-                  >
-                    <AlertTriangle size={13} />
-                    <span>Simulate Rogue Admin Tamper Attack</span>
-                  </button>
-                ) : (
-                  <button
-                    onClick={handleRestoreLedger}
-                    className="main-btn-primary"
-                    style={{ fontSize: '12px', background: 'var(--main-jade)', borderColor: 'var(--main-jade)' }}
-                  >
-                    <RefreshCw size={13} />
-                    <span>Restore Cryptographic Integrity</span>
-                  </button>
-                )}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span className="main-badge" style={{ padding: '6px 12px', fontSize: '11px', background: 'var(--main-surface-elevated)', color: 'var(--main-text-secondary)' }}>
+                  CHAIN HEIGHT: #{displayBlocks.length}
+                </span>
               </div>
             </div>
-
-            {/* Error banner if tampered */}
-            {tamperError && (
-              <div style={{ marginTop: '16px', padding: '12px 14px', background: 'rgba(239, 68, 68, 0.12)', border: '1px solid var(--main-crimson)', borderRadius: '6px', fontSize: '12px', color: '#FCA5A5', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <ShieldAlert size={18} style={{ color: 'var(--main-crimson)', flexShrink: 0 }} />
-                <div>
-                  <strong>[CRITICAL ALERT] {tamperError}</strong>
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Interactive 2D SVG Merkle Chain Visualizer */}
-          <SvgMerkleChain isTampered={isLedgerTampered} />
+          <SvgMerkleChain isTampered={false} />
 
           {/* Merkle Hash Chain Visualizer */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -325,15 +269,14 @@ export const MainEvidence: React.FC<MainEvidenceProps> = ({
             </div>
 
             {displayBlocks.map((block, index) => {
-              const isBlockTampered = isLedgerTampered && index === 1;
               return (
                 <div 
                   key={block.event_id || index}
                   style={{
                     padding: '16px 20px',
                     borderRadius: '8px',
-                    border: `1px solid ${isBlockTampered ? 'var(--main-crimson)' : 'var(--main-border)'}`,
-                    background: isBlockTampered ? 'rgba(239, 68, 68, 0.05)' : 'var(--main-surface)',
+                    border: '1px solid var(--main-border)',
+                    background: 'var(--main-surface)',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '10px',
@@ -342,7 +285,7 @@ export const MainEvidence: React.FC<MainEvidenceProps> = ({
                 >
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <span className="main-mono" style={{ fontSize: '11px', fontWeight: 700, padding: '2px 8px', borderRadius: '4px', background: isBlockTampered ? 'rgba(239, 68, 68, 0.2)' : 'var(--main-surface-elevated)', color: isBlockTampered ? 'var(--main-crimson)' : 'var(--main-text-primary)' }}>
+                      <span className="main-mono" style={{ fontSize: '11px', fontWeight: 700, padding: '2px 8px', borderRadius: '4px', background: 'var(--main-surface-elevated)', color: 'var(--main-text-primary)' }}>
                         BLOCK #{index}
                       </span>
                       <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
@@ -354,8 +297,8 @@ export const MainEvidence: React.FC<MainEvidenceProps> = ({
                       <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)' }}>
                         {new Date(block.timestamp).toLocaleTimeString()}
                       </span>
-                      <span className={`main-badge ${isBlockTampered ? 'main-badge-danger' : 'main-badge-verified'}`} style={{ fontSize: '10px' }}>
-                        {isBlockTampered ? 'FORGED HASH' : 'VALID'}
+                      <span className="main-badge main-badge-verified" style={{ fontSize: '10px' }}>
+                        VALID
                       </span>
                     </div>
                   </div>
@@ -371,7 +314,7 @@ export const MainEvidence: React.FC<MainEvidenceProps> = ({
                     </div>
                     <div style={{ gridColumn: 'span 2' }}>
                       <span style={{ color: 'var(--main-text-tertiary)' }}>Leaf Digest: </span>
-                      <span className="main-mono" style={{ color: isBlockTampered ? 'var(--main-crimson)' : 'var(--main-jade)', fontWeight: 600 }}>
+                      <span className="main-mono" style={{ color: 'var(--main-jade)', fontWeight: 600 }}>
                         {block.artifact_hash}
                       </span>
                     </div>

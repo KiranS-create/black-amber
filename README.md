@@ -4,7 +4,7 @@
 ### Post-Quantum Forensic Attribution & Sovereign Decryption Provenance Platform
 **Official Grand Finale Release · Build 26237-PROD**
 
-[![Live Workstation](https://img.shields.io/badge/Production%20Workstation-Live%20on%20Vercel-3B82F6?style=for-the-badge&logo=vercel&logoColor=white)](https://aegistrace-kirans-create.vercel.app/)
+[![Live Workstation](https://img.shields.io/badge/Production%20Workstation-Live%20on%20Vercel-3B82F6?style=for-the-badge&logo=vercel&logoColor=white)](https://aegistrace-sih.vercel.app/)
 [![Zero-Server Verifier](https://img.shields.io/badge/Air--Gapped%20Verifier-Standalone%20HTML5-10B981?style=for-the-badge&logo=shield&logoColor=white)](https://aegistrace.vercel.app/)
 [![Tests Passing](https://img.shields.io/badge/Automated%20Tests-1%2C098%20Passing%20(100%25)-059669?style=for-the-badge&logo=pytest&logoColor=white)](#-automated-verification--test-suite)
 [![PQC Standard](https://img.shields.io/badge/PQC%20Standard-NIST%20FIPS%20203%20%2F%20204-6366F1?style=for-the-badge&logo=quantum&logoColor=white)](#-cryptographic-standards--compliance)
@@ -26,7 +26,7 @@
   <b>A zero-trust cryptographic defense platform solving the "broadcast-encrypt, individually-decrypt" confidential document exfiltration crisis without server-side key escrow or cloud dependency.</b>
 </p>
 
-[🌐 Launch Live Workstation](https://aegistrace-kirans-create.vercel.app/) • [📱 2-Device Mobile Stunt](https://aegistrace-kirans-create.vercel.app/) • [⚖️ Court Docket Generator](https://aegistrace-kirans-create.vercel.app/) • [🔬 Air-Gapped Terminal](https://aegistrace-kirans-create.vercel.app/)
+[🌐 Launch Live Workstation](https://aegistrace-sih.vercel.app/) • [📱 2-Device Mobile Stunt](https://aegistrace-sih.vercel.app/) • [⚖️ Court Docket Generator](https://aegistrace-sih.vercel.app/) • [🔬 Air-Gapped Terminal](https://aegistrace-sih.vercel.app/)
 
 </div>
 

@@ -93,91 +93,18 @@ export const MainDocuments: React.FC<MainDocumentsProps> = ({
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          {onOpenComparator && (
-            <button
-              onClick={onOpenComparator}
-              className="main-btn-secondary"
-              style={{ fontSize: '12px' }}
-            >
-              <Eye size={13} />
-              <span>Visual Comparator</span>
-            </button>
-          )}
-
-          {onOpenDecryptionPortal && (
-            <button
-              onClick={() => onOpenDecryptionPortal()}
-              className="main-btn-secondary"
-              style={{ fontSize: '12px', borderColor: 'rgba(59, 130, 246, 0.4)', color: '#60A5FA' }}
-            >
-              <Key size={13} />
-              <span>Recipient Decryption Portal</span>
-            </button>
-          )}
-
           <button
             onClick={handleBrowseClick}
             disabled={isUploading}
             className="main-btn-primary"
+            style={{ fontSize: '12px' }}
           >
             <Upload size={14} />
-            <span>{isUploading ? 'Importing...' : 'Import artifact'}</span>
+            <span>{isUploading ? 'Importing...' : 'Import Document'}</span>
           </button>
         </div>
       </div>
 
-      {/* SIH Smoking Gun Feature 1 & 2 Quick Launch Strip */}
-      <div 
-        className="main-card" 
-        style={{ 
-          background: 'linear-gradient(90deg, rgba(59, 130, 246, 0.08) 0%, rgba(16, 185, 129, 0.05) 100%)', 
-          border: '1px solid rgba(59, 130, 246, 0.25)', 
-          padding: '14px 18px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: '12px'
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(59, 130, 246, 0.2)', color: '#60A5FA', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Key size={16} />
-          </div>
-          <div>
-            <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
-              SIH 26237 "Smoking Gun" Decryption & Visual Imperceptibility Demo
-            </div>
-            <div style={{ fontSize: '11px', color: 'var(--main-text-secondary)', marginTop: '2px' }}>
-              Simulate Bob Martinez independently decrypting the package (ML-KEM-768) and signing with ML-DSA-65, then inspect the visual comparator.
-            </div>
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', gap: '8px' }}>
-          {onOpenDecryptionPortal && (
-            <button
-              onClick={() => onOpenDecryptionPortal()}
-              className="main-btn-primary"
-              style={{ fontSize: '12px', background: '#3B82F6', borderColor: '#2563EB' }}
-            >
-              <Key size={12} />
-              <span>Simulate Recipient Decryption →</span>
-            </button>
-          )}
-
-          {onOpenComparator && (
-            <button
-              onClick={onOpenComparator}
-              className="main-btn-secondary"
-              style={{ fontSize: '12px' }}
-            >
-              <Eye size={12} />
-              <span>Visual Comparator</span>
-            </button>
-          )}
-        </div>
-      </div>
 
       {/* Import Dropzone */}
       <div

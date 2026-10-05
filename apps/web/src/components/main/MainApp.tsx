@@ -18,30 +18,23 @@ import { MainInvestigations } from './MainInvestigations';
 import { MainEvidence } from './MainEvidence';
 import { MainSettingsModal } from './MainSettingsModal';
 import { MainLogin } from './MainLogin';
-import { MainSihComplianceModal } from './MainSihComplianceModal';
 import { MainRecipientDecryptionModal } from './MainRecipientDecryptionModal';
 import { MainVisualComparatorModal } from './MainVisualComparatorModal';
 import { MainSection65BCertificateModal } from './MainSection65BCertificateModal';
-import { MainCollusionLabModal } from './MainCollusionLabModal';
-import { MainAirGapCameraModal } from './MainAirGapCameraModal';
 import { VerifyTab } from '../VerifyTab';
 import '../../styles/main-experience.css';
 
 export function MainApp() {
   const [activeTab, setActiveTab] = useState<MainTabId>('overview');
   const [userSession, setUserSession] = useState<UserSession | null>(() => apiService.getCurrentUser());
-  const [isDemoMode, setIsDemoMode] = useState<boolean>(() => apiService.isDemoMode());
+  const [isDemoMode] = useState<boolean>(() => apiService.isDemoMode());
   const [isVerifyStandalone, setIsVerifyStandalone] = useState<boolean>(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
-  const [isSihModalOpen, setIsSihModalOpen] = useState<boolean>(false);
-  const [isSimulatingDemo, setIsSimulatingDemo] = useState<boolean>(false);
 
-  // Modals for the 5 SIH 26237 features & Advanced Labs
+  // Modals for Recipient Decryption, Comparator, and Statutory Certificate
   const [isDecryptionModalOpen, setIsDecryptionModalOpen] = useState<boolean>(false);
   const [isComparatorModalOpen, setIsComparatorModalOpen] = useState<boolean>(false);
   const [isCertificateModalOpen, setIsCertificateModalOpen] = useState<boolean>(false);
-  const [isCollusionModalOpen, setIsCollusionModalOpen] = useState<boolean>(false);
-  const [isCameraModalOpen, setIsCameraModalOpen] = useState<boolean>(false);
   const [comparatorContext, setComparatorContext] = useState<{ docName: string; recipientName: string }>({
     docName: 'National_Defense_Protocol_2026.pdf',
     recipientName: 'Marcus Vance'
@@ -143,31 +136,6 @@ export function MainApp() {
     setUserSession(null);
   };
 
-  const handleRunSihDemo = async () => {
-    setIsSimulatingDemo(true);
-    try {
-      // 1. Create a release for Alice, Bob, Charlie with ML-KEM-768
-      const rel = await apiService.createRelease(
-        'Operation_Aegis_Plan.pdf',
-        'U0lIMjYyMzc=',
-        ['alice', 'bob', 'charlie'],
-        undefined,
-        true
-      );
-      // 2. Bob decrypts the package -> client watermarks -> Bob signs with ML-DSA-65 -> committed to ledger
-      await apiService.decryptPackage(rel.release_id, 'bob');
-      // 3. Leak analysis for print_scan_camera scenario
-      const result = await apiService.analyzeLeak('print_scan_camera', rel.release_id);
-      setLeakResult(result);
-      await refreshData();
-      setActiveTab('investigations');
-    } catch (err) {
-      console.error('Demo simulation error:', err);
-    } finally {
-      setIsSimulatingDemo(false);
-    }
-  };
-
   // 1. Standalone Offline Verifier Mode
   if (isVerifyStandalone) {
     return (
@@ -196,7 +164,7 @@ export function MainApp() {
         }}
         onOpenVerifyStandalone={() => setIsVerifyStandalone(true)}
         onOpenSignUp={() => {
-          alert('Self-registration is disabled in this production deployment. Please use demo credentials (admin/admin).');
+          alert('Self-registration is disabled in this deployment.');
         }}
       />
     );
@@ -223,7 +191,6 @@ export function MainApp() {
             isDemoMode={isDemoMode}
             onSignOut={handleSignOut}
             onOpenSettings={() => setIsSettingsOpen(true)}
-            onOpenSihCompliance={() => setIsSihModalOpen(true)}
           />
 
           <main style={{ flex: 1, overflowY: 'auto' }}>
@@ -235,14 +202,9 @@ export function MainApp() {
                 ledgerEvents={ledgerEvents}
                 isOnline={isOnline}
                 onNavigate={setActiveTab}
-                onRunSihDemo={handleRunSihDemo}
-                isSimulatingDemo={isSimulatingDemo}
-                onOpenSihCompliance={() => setIsSihModalOpen(true)}
                 onOpenDecryptionPortal={() => setIsDecryptionModalOpen(true)}
                 onOpenComparator={() => handleOpenComparator()}
                 onOpenCertificate={() => setIsCertificateModalOpen(true)}
-                onOpenCollusionLab={() => setIsCollusionModalOpen(true)}
-                onOpenAirGapLab={() => setIsCameraModalOpen(true)}
               />
             )}
 
@@ -263,10 +225,7 @@ export function MainApp() {
                 releases={releases}
                 activeResult={leakResult}
                 onIngestLeakAndAnalyze={handleIngestLeakAndAnalyze}
-                onRunBenchmark={handleRunBenchmark}
                 onOpenCertificate={() => setIsCertificateModalOpen(true)}
-                onOpenComparator={() => handleOpenComparator()}
-                onOpenAirGapScanner={() => setIsCameraModalOpen(true)}
                 onExecuteQuarantine={async (suspectName, terminalId, reason) => {
                   await apiService.executeSovereignQuarantine(suspectName, terminalId, reason);
                   await refreshData();
@@ -285,7 +244,7 @@ export function MainApp() {
         </div>
       </div>
 
-      {/* Modal 1: Recipient Decryption Portal (Feature 1) */}
+      {/* Modal 1: Recipient Decryption Portal */}
       <MainRecipientDecryptionModal
         isOpen={isDecryptionModalOpen}
         onClose={() => setIsDecryptionModalOpen(false)}
@@ -299,7 +258,7 @@ export function MainApp() {
         onRefresh={refreshData}
       />
 
-      {/* Modal 2: Forensic Visual Comparator (Feature 2) */}
+      {/* Modal 2: Forensic Visual Comparator */}
       <MainVisualComparatorModal
         isOpen={isComparatorModalOpen}
         onClose={() => setIsComparatorModalOpen(false)}
@@ -307,30 +266,13 @@ export function MainApp() {
         documentName={comparatorContext.docName}
       />
 
-      {/* Modal 3: Section 65B Indian Evidence Act Certificate (Feature 5) */}
+      {/* Modal 3: Section 65B Indian Evidence Act Certificate */}
       <MainSection65BCertificateModal
         isOpen={isCertificateModalOpen}
         onClose={() => setIsCertificateModalOpen(false)}
         result={leakResult}
-        candidateName={leakResult?.candidate?.name || 'Marcus Vance'}
+        candidateName={leakResult?.candidate?.name || 'Cmdr. Rajesh Sharma'}
         documentName={releases[0]?.document_name || 'National_Defense_Protocol_2026.pdf'}
-      />
-
-      {/* Advanced Lab 1: Tardos Multi-Recipient Collusion Defense */}
-      <MainCollusionLabModal
-        isOpen={isCollusionModalOpen}
-        onClose={() => setIsCollusionModalOpen(false)}
-      />
-
-      {/* Advanced Lab 2: Live Optical Camera Air-Gap Scanner */}
-      <MainAirGapCameraModal
-        isOpen={isCameraModalOpen}
-        onClose={() => setIsCameraModalOpen(false)}
-        onAttributionComplete={async () => {
-          await handleRunBenchmark('print_scan_camera');
-          setActiveTab('investigations');
-        }}
-        onOpenCertificate={() => setIsCertificateModalOpen(true)}
       />
 
       {/* Contextual More / Settings Modal */}
@@ -340,12 +282,6 @@ export function MainApp() {
         recipients={recipients}
         ledgerEvents={ledgerEvents}
         isOnline={isOnline}
-      />
-
-      {/* SIH 26237 Problem Statement Compliance Modal */}
-      <MainSihComplianceModal
-        isOpen={isSihModalOpen}
-        onClose={() => setIsSihModalOpen(false)}
       />
     </div>
   );

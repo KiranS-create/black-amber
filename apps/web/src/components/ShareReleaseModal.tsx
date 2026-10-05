@@ -45,7 +45,7 @@ export const ShareReleaseModal: React.FC<ShareReleaseModalProps> = ({
   if (!isOpen || !release) return null;
 
   // Build secure dispatch URL
-  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://aegistrace-kirans-create.vercel.app';
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://aegistrace-sih.vercel.app';
   const dispatchUrl = `${baseUrl}/?tab=verify&release_id=${encodeURIComponent(release.release_id)}`;
   const releaseHash = release.original_hash || release.original_document_hash || 'SHA-256 Digest';
 

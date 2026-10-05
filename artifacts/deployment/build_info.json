@@ -1,9 +1,9 @@
 {
   "application_name": "SIH26237 \u2014 Cryptographic Attribution Platform",
   "version": "1.0.0",
-  "git_commit": "74bc0bdaa7196bab5b14feae4b8e7277a588b6e0",
+  "git_commit": "4a11afe0c62beba5daeb8cc7335332fa4be28fa6",
   "git_branch": "main",
-  "build_timestamp": "2026-09-29T15:05:33.989816+00:00",
+  "build_timestamp": "2026-10-05T10:56:58.629042+00:00",
   "platform": {
     "system": "Windows",
     "release": "10",
