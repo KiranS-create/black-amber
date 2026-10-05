@@ -63,27 +63,49 @@ export const MainAirGapCameraModal: React.FC<MainAirGapCameraModalProps> = ({
     setCapturedImage(null);
     setScanResult(null);
 
-    try {
-      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        const constraints: MediaStreamConstraints = {
-          video: {
-            facingMode: { ideal: mode },
-            width: { ideal: 1920 },
-            height: { ideal: 1080 }
-          }
-        };
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      setCameraError('Webcam API is unavailable in this browser environment. You can upload an authentic physical photograph below.');
+      return;
+    }
 
-        const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
-        setStream(mediaStream);
-        if (videoRef.current) {
-          videoRef.current.srcObject = mediaStream;
-          videoRef.current.play().catch(() => {});
+    try {
+      const preferredConstraints: MediaStreamConstraints = {
+        video: {
+          facingMode: { ideal: mode },
+          width: { ideal: 1920 },
+          height: { ideal: 1080 }
+        },
+        audio: false
+      };
+
+      let mediaStream: MediaStream;
+      try {
+        mediaStream = await navigator.mediaDevices.getUserMedia(preferredConstraints);
+      } catch (constraintErr) {
+        console.warn('High-resolution camera constraint failed, trying fallback video constraints:', constraintErr);
+        mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+      }
+
+      setStream(mediaStream);
+      if (videoRef.current) {
+        videoRef.current.srcObject = mediaStream;
+        try {
+          await videoRef.current.play();
+        } catch (playErr) {
+          console.warn('Video auto-play interrupted:', playErr);
         }
-      } else {
-        setCameraError('Webcam API is unavailable in this browser environment. You can upload an authentic physical photograph below.');
       }
     } catch (err: any) {
-      setCameraError('Camera access was denied or no optical sensor detected. You can upload an authentic physical photograph below.');
+      console.warn('Camera request error:', err);
+      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+        setCameraError('Camera access was blocked by the browser. To enable: click the Camera / Lock icon in your browser URL bar, select "Allow", and click "Request Camera Access" below.');
+      } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+        setCameraError('No active optical sensor or webcam was found on this device. You can upload a photo directly below.');
+      } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
+        setCameraError('The camera is currently in use by another app or browser tab. Please release the sensor and try again.');
+      } else {
+        setCameraError(`Camera error: ${err.message || 'Unable to access camera'}. You can upload an authentic smartphone photograph below.`);
+      }
     }
   };
 

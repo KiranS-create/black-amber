@@ -84,7 +84,7 @@ export const AttackLabTab: React.FC = () => {
     innocentMaxScore: number;
     margin: number;
   }>({
-    detectedTraitor: 'Cmdr. Rajesh Sharma (Principal #03)',
+    detectedTraitor: 'Marcus Vance (Principal #03)',
     score: 84.6,
     threshold: 22.4,
     innocentMaxScore: 11.2,
@@ -457,7 +457,7 @@ export const AttackLabTab: React.FC = () => {
     const score = 84.6 - (size - 2) * 6.2;
     const thresh = 22.4;
     setCoalitionAttribution({
-      detectedTraitor: size === 2 ? 'Elena Rostova (Principal #02)' : 'Cmdr. Rajesh Sharma (Principal #03)',
+      detectedTraitor: size === 2 ? 'Sarah Jenkins (Principal #02)' : 'Marcus Vance (Principal #03)',
       score: Number(score.toFixed(1)),
       threshold: thresh,
       innocentMaxScore: Number((11.2 + (size - 2) * 1.5).toFixed(1)),

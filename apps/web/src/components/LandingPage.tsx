@@ -25,7 +25,9 @@ import {
   Mail,
   Building,
   User,
-  Send
+  Send,
+  Play,
+  Sparkles
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
@@ -36,12 +38,14 @@ interface LandingPageProps {
   onEnterApp: () => void;
   onOpenVerify: () => void;
   onOpenRehearsal?: () => void;
+  onStartAutoTour?: () => void;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({
   onEnterApp,
   onOpenVerify,
-  onOpenRehearsal
+  onOpenRehearsal,
+  onStartAutoTour
 }) => {
   const { theme, toggleTheme } = useTheme();
   const isLight = theme === 'light';
@@ -68,7 +72,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     bchErrors: string;
     merkleStatus: string;
   }>({
-    suspect: 'Cmdr. Rajesh Sharma',
+    suspect: 'Marcus Vance',
     rank: 'Directorate of Naval Operations',
     terminal: 'Terminal #NAV-4821 (Western Command)',
     confidence: '99.98%',
@@ -80,7 +84,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     screen_photo: {
       title: 'Smartphone Screen Photo',
       description: 'Document displayed on an authorized monitor, photographed at an angle by an unauthorized mobile device with ambient glare and moiré distortion.',
-      suspect: 'Cmdr. Rajesh Sharma',
+      suspect: 'Marcus Vance',
       rank: 'Directorate of Naval Operations',
       terminal: 'Terminal #NAV-4821 (Western Command)',
       confidence: '99.98%',
@@ -265,6 +269,31 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <span>Offline Verifier</span>
           </button>
 
+          {/* Auto-Demo Tour CTA */}
+          {onStartAutoTour && (
+            <button
+              onClick={onStartAutoTour}
+              className="main-btn-secondary"
+              style={{
+                padding: '6px 14px',
+                fontSize: '12.5px',
+                fontWeight: 650,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                borderRadius: '9999px',
+                border: `1px solid ${isLight ? 'rgba(2, 132, 199, 0.4)' : 'rgba(56, 189, 248, 0.45)'}`,
+                background: isLight ? 'rgba(2, 132, 199, 0.08)' : 'rgba(56, 189, 248, 0.12)',
+                color: isLight ? '#0284C7' : '#38BDF8',
+                cursor: 'pointer'
+              }}
+              title="Watch full automated interactive tour with AI voiceover"
+            >
+              <Play size={12} fill="currentColor" />
+              <span>Auto-Demo (Voice)</span>
+            </button>
+          )}
+
           {/* Enter Workstation CTA */}
           <button
             onClick={onEnterApp}
@@ -413,6 +442,46 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <span>Launch Workstation Console</span>
             <ArrowRight size={16} />
           </button>
+
+          {onStartAutoTour && (
+            <button
+              onClick={onStartAutoTour}
+              className="main-btn-secondary"
+              style={{
+                padding: '14px 28px',
+                fontSize: '15px',
+                fontWeight: 650,
+                borderRadius: '9999px',
+                background: isLight 
+                  ? 'linear-gradient(135deg, rgba(2, 132, 199, 0.08) 0%, rgba(14, 165, 233, 0.12) 100%)' 
+                  : 'linear-gradient(135deg, rgba(56, 189, 248, 0.12) 0%, rgba(45, 212, 191, 0.12) 100%)',
+                border: `1.5px solid ${isLight ? '#0284C7' : '#38BDF8'}`,
+                color: isLight ? '#0284C7' : '#38BDF8',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '9px',
+                cursor: 'pointer',
+                boxShadow: isLight ? '0 4px 16px rgba(2, 132, 199, 0.15)' : '0 4px 20px rgba(56, 189, 248, 0.22)',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <Play size={16} fill="currentColor" />
+              <span>Watch Auto-Demo with Voice</span>
+              <span
+                style={{
+                  fontSize: '10.5px',
+                  fontWeight: 750,
+                  padding: '2px 8px',
+                  borderRadius: '9999px',
+                  background: isLight ? '#0284C7' : '#38BDF8',
+                  color: isLight ? '#FFFFFF' : '#080C10',
+                  letterSpacing: '0.04em'
+                }}
+              >
+                AI NARRATED
+              </span>
+            </button>
+          )}
 
           <button
             onClick={() => setBriefingModalOpen(true)}
@@ -1370,7 +1439,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                     <input
                       type="text"
                       required
-                      placeholder="e.g. Cmdr. K. Sharma / Dr. A. Varma"
+                      placeholder="e.g. Marcus Vance / Dr. Aris Thorne"
                       value={briefingForm.name}
                       onChange={(e) => setBriefingForm({ ...briefingForm, name: e.target.value })}
                       style={{

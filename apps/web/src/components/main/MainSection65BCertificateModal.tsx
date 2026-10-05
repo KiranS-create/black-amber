@@ -38,10 +38,10 @@ export const MainSection65BCertificateModal: React.FC<MainSection65BCertificateM
   isOpen,
   onClose,
   result,
-  candidateName = 'Cmdr. Rajesh Sharma',
+  candidateName = 'Marcus Vance',
   documentName = 'Strategic_Defence_Dispatch_2026.pdf',
   terminalId = 'Terminal #W-842911',
-  suspectRank = 'Commander (Naval Operations)',
+  suspectRank = 'Senior Analyst (Operations)',
   secretCodeHex = '0x7E9A-C401-88F3-902B-0CDA07-9AF2',
   merkleLeaf = 'Block #842,911 (ML-DSA-65 Valid Signature)',
   confidence = '99.98% (BCH-Verified, 0 Bit Errors)',
@@ -50,7 +50,7 @@ export const MainSection65BCertificateModal: React.FC<MainSection65BCertificateM
     'Apex Integrated Defence HQ (New Delhi)',
     'Western Sector Dissemination Hub (Mumbai)',
     'Naval Operations Command Node #04',
-    'Field Terminal #W-842911 (Cmdr. Rajesh Sharma)'
+    'Field Terminal #W-842911 (Marcus Vance)'
   ],
   sabhaCountersigned = true
 }) => {
@@ -69,7 +69,7 @@ export const MainSection65BCertificateModal: React.FC<MainSection65BCertificateM
   const resolvedCandidate = result?.candidate?.name || candidateName;
   const originalDocHash = '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08';
   const leakHash = '7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b';
-  const sigDigest = 'dSA65_sig_sharma_04_eefa1234567890abcdef1234567890abcdef1234567890ab';
+  const sigDigest = 'dSA65_sig_vance_04_eefa1234567890abcdef1234567890abcdef1234567890ab';
   const merkleRoot = '03a58e65f9024b11e2890acdef1234567890abcdef1234567890abcdef123456';
 
   const handlePrint = () => {

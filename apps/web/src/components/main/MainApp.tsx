@@ -26,6 +26,7 @@ import { MainAirGapCameraModal } from './MainAirGapCameraModal';
 import { MainSihComplianceModal } from './MainSihComplianceModal';
 import { LandingPage } from '../LandingPage';
 import { VerifyTab } from '../VerifyTab';
+import { AutoDemoTour } from '../common/AutoDemoTour';
 import '../../styles/main-experience.css';
 
 export function MainApp() {
@@ -42,6 +43,7 @@ export function MainApp() {
   const [isDemoMode] = useState<boolean>(() => apiService.isDemoMode());
   const [isVerifyStandalone, setIsVerifyStandalone] = useState<boolean>(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
+  const [isAutoTourOpen, setIsAutoTourOpen] = useState<boolean>(false);
 
   // Modals for Recipient Decryption, Comparator, Statutory Certificate, Collusion Lab, Air-Gap Camera, and Compliance
   const [isDecryptionModalOpen, setIsDecryptionModalOpen] = useState<boolean>(false);
@@ -157,131 +159,150 @@ export function MainApp() {
     setViewMode('landing');
   };
 
-  // 1. Standalone Offline Verifier Mode
-  if (isVerifyStandalone) {
-    return (
-      <div className="main-experience" style={{ minHeight: '100vh', background: 'var(--main-bg)', padding: '24px' }}>
-        <div style={{ maxWidth: '960px', margin: '0 auto' }}>
-          <button
-            onClick={() => setIsVerifyStandalone(false)}
-            className="main-btn-secondary"
-            style={{ marginBottom: '16px' }}
-          >
-            ← Back to Platform Overview
-          </button>
-          <VerifyTab onBackToApp={() => setIsVerifyStandalone(false)} isStandalone={true} />
-        </div>
-      </div>
-    );
-  }
-
-  // 2. Unauthenticated State: Landing Page or Secure Workstation Login
-  if (!userSession) {
-    if (viewMode === 'landing') {
-      return (
-        <LandingPage
-          onEnterApp={() => setViewMode('login')}
-          onOpenVerify={() => setIsVerifyStandalone(true)}
-        />
-      );
+  const handleDemoLogin = async () => {
+    try {
+      const session = await apiService.login({ email: 'admin', password: 'admin' });
+      setUserSession(session);
+      setViewMode('workstation');
+      await refreshData();
+    } catch (err) {
+      console.warn('Demo login API fallback:', err);
+      const mockSession: UserSession = {
+        actor_id: 'usr_admin_001',
+        email: 'admin@aegistrace.gov',
+        role: 'administrator',
+        tenant_id: 'sovereign_defense_hq',
+        token: 'aegis_jwt_demo_token',
+        display_name: 'Director (Operations)',
+        authenticated_at: new Date().toISOString()
+      };
+      setUserSession(mockSession);
+      setViewMode('workstation');
+      await refreshData();
     }
+  };
 
-    return (
-      <MainLogin
-        onLoginSuccess={(session) => {
-          setUserSession(session);
-          setViewMode('workstation');
-          refreshData();
-        }}
-        onBackToLanding={() => setViewMode('landing')}
-        onOpenVerifyStandalone={() => setIsVerifyStandalone(true)}
-        onOpenSignUp={() => {
-          alert('Self-registration is disabled in this sovereign deployment.');
-        }}
-      />
-    );
-  }
-
-  // 3. Authenticated Workstation Shell
   return (
-    <div className="main-experience">
-      <div style={{ display: 'flex', flex: 1, minHeight: '100vh' }}>
-        {/* Slim 4-Item Sidebar */}
-        <MainSidebar
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          documentCount={documents.length}
-          hasActiveInvestigation={investigations.length > 0}
-          onOpenSettings={() => setIsSettingsOpen(true)}
-        />
-
-        {/* Primary Workspace */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflowX: 'hidden' }}>
-          <MainHeader
-            currentSection={activeTab}
-            userSession={userSession}
-            isDemoMode={isDemoMode}
-            onSignOut={handleSignOut}
-            onOpenSettings={() => setIsSettingsOpen(true)}
-          />
-
-          <main style={{ flex: 1, overflowY: 'auto' }}>
-            {activeTab === 'overview' && (
-              <MainOverview
-                documents={documents}
-                recipients={recipients}
-                investigations={investigations}
-                ledgerEvents={ledgerEvents}
-                isOnline={isOnline}
-                onNavigate={setActiveTab}
-                onOpenDecryptionPortal={() => setIsDecryptionModalOpen(true)}
-                onOpenComparator={() => handleOpenComparator()}
-                onOpenCertificate={() => setIsCertificateModalOpen(true)}
-                onOpenCollusionLab={() => setIsCollusionModalOpen(true)}
-                onOpenAirGapLab={() => setIsAirGapModalOpen(true)}
-                onOpenSihCompliance={() => setIsComplianceModalOpen(true)}
-              />
-            )}
-
-            {activeTab === 'documents' && (
-              <MainDocuments
-                documents={documents}
-                recipients={recipients}
-                onUpload={handleUploadDocument}
-                onProtectAndRelease={handleProtectAndRelease}
-                onDeleteDocument={handleDeleteDocument}
-                onOpenDecryptionPortal={() => setIsDecryptionModalOpen(true)}
-                onOpenComparator={() => handleOpenComparator()}
-              />
-            )}
-
-            {activeTab === 'investigations' && (
-              <MainInvestigations
-                investigations={investigations}
-                releases={releases}
-                activeResult={leakResult}
-                onIngestLeakAndAnalyze={handleIngestLeakAndAnalyze}
-                onOpenCertificate={() => setIsCertificateModalOpen(true)}
-                onOpenComparator={() => handleOpenComparator()}
-                onOpenAirGapScanner={() => setIsAirGapModalOpen(true)}
-                onExecuteQuarantine={async (suspectName, terminalId, reason) => {
-                  await apiService.executeSovereignQuarantine(suspectName, terminalId, reason);
-                  await refreshData();
-                }}
-              />
-            )}
-
-            {activeTab === 'evidence' && (
-              <MainEvidence
-                evidenceRecords={evidenceRecords}
-                ledgerEvents={ledgerEvents}
-                onOpenCertificate={() => setIsCertificateModalOpen(true)}
-              />
-            )}
-          </main>
+    <>
+      {/* 1. Standalone Offline Verifier Mode */}
+      {isVerifyStandalone ? (
+        <div className="main-experience" style={{ minHeight: '100vh', background: 'var(--main-bg)', padding: '24px' }}>
+          <div style={{ maxWidth: '960px', margin: '0 auto' }}>
+            <button
+              onClick={() => setIsVerifyStandalone(false)}
+              className="main-btn-secondary"
+              style={{ marginBottom: '16px' }}
+            >
+              ← Back to Platform Overview
+            </button>
+            <VerifyTab onBackToApp={() => setIsVerifyStandalone(false)} isStandalone={true} />
+          </div>
         </div>
-      </div>
+      ) : !userSession ? (
+        /* 2. Unauthenticated State: Landing Page or Secure Workstation Login */
+        viewMode === 'landing' ? (
+          <LandingPage
+            onEnterApp={() => setViewMode('login')}
+            onOpenVerify={() => setIsVerifyStandalone(true)}
+            onStartAutoTour={() => setIsAutoTourOpen(true)}
+          />
+        ) : (
+          <MainLogin
+            onLoginSuccess={(session) => {
+              setUserSession(session);
+              setViewMode('workstation');
+              refreshData();
+            }}
+            onBackToLanding={() => setViewMode('landing')}
+            onOpenVerifyStandalone={() => setIsVerifyStandalone(true)}
+            onOpenSignUp={() => {
+              alert('Self-registration is disabled in this sovereign deployment.');
+            }}
+            onStartAutoTour={() => setIsAutoTourOpen(true)}
+          />
+        )
+      ) : (
+        /* 3. Authenticated Workstation Shell */
+        <div className="main-experience">
+          <div style={{ display: 'flex', flex: 1, minHeight: '100vh' }}>
+            {/* Slim 4-Item Sidebar */}
+            <MainSidebar
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              documentCount={documents.length}
+              hasActiveInvestigation={investigations.length > 0}
+              onOpenSettings={() => setIsSettingsOpen(true)}
+            />
 
+            {/* Primary Workspace */}
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflowX: 'hidden' }}>
+              <MainHeader
+                currentSection={activeTab}
+                userSession={userSession}
+                isDemoMode={isDemoMode}
+                onSignOut={handleSignOut}
+                onOpenSettings={() => setIsSettingsOpen(true)}
+                onStartAutoTour={() => setIsAutoTourOpen(true)}
+              />
+
+              <main style={{ flex: 1, overflowY: 'auto' }}>
+                {activeTab === 'overview' && (
+                  <MainOverview
+                    documents={documents}
+                    recipients={recipients}
+                    investigations={investigations}
+                    ledgerEvents={ledgerEvents}
+                    isOnline={isOnline}
+                    onNavigate={setActiveTab}
+                    onOpenDecryptionPortal={() => setIsDecryptionModalOpen(true)}
+                    onOpenComparator={() => handleOpenComparator()}
+                    onOpenCertificate={() => setIsCertificateModalOpen(true)}
+                    onOpenCollusionLab={() => setIsCollusionModalOpen(true)}
+                    onOpenAirGapLab={() => setIsAirGapModalOpen(true)}
+                    onOpenSihCompliance={() => setIsComplianceModalOpen(true)}
+                  />
+                )}
+
+                {activeTab === 'documents' && (
+                  <MainDocuments
+                    documents={documents}
+                    recipients={recipients}
+                    onUpload={handleUploadDocument}
+                    onProtectAndRelease={handleProtectAndRelease}
+                    onDeleteDocument={handleDeleteDocument}
+                    onOpenDecryptionPortal={() => setIsDecryptionModalOpen(true)}
+                    onOpenComparator={() => handleOpenComparator()}
+                  />
+                )}
+
+                {activeTab === 'investigations' && (
+                  <MainInvestigations
+                    investigations={investigations}
+                    releases={releases}
+                    activeResult={leakResult}
+                    onIngestLeakAndAnalyze={handleIngestLeakAndAnalyze}
+                    onOpenCertificate={() => setIsCertificateModalOpen(true)}
+                    onOpenComparator={() => handleOpenComparator()}
+                    onOpenAirGapScanner={() => setIsAirGapModalOpen(true)}
+                    onExecuteQuarantine={async (suspectName, terminalId, reason) => {
+                      await apiService.executeSovereignQuarantine(suspectName, terminalId, reason);
+                      await refreshData();
+                    }}
+                  />
+                )}
+
+                {activeTab === 'evidence' && (
+                  <MainEvidence
+                    evidenceRecords={evidenceRecords}
+                    ledgerEvents={ledgerEvents}
+                    onOpenCertificate={() => setIsCertificateModalOpen(true)}
+                  />
+                )}
+              </main>
+            </div>
+          </div>
+        </div>
+      )}
       {/* Modal 1: Recipient Decryption Portal */}
       <MainRecipientDecryptionModal
         isOpen={isDecryptionModalOpen}
@@ -309,7 +330,7 @@ export function MainApp() {
         isOpen={isCertificateModalOpen}
         onClose={() => setIsCertificateModalOpen(false)}
         result={leakResult}
-        candidateName={leakResult?.candidate?.name || 'Cmdr. Rajesh Sharma'}
+        candidateName={leakResult?.candidate?.name || 'Marcus Vance'}
         documentName={releases[0]?.document_name || 'National_Defense_Protocol_2026.pdf'}
       />
 
@@ -347,6 +368,28 @@ export function MainApp() {
         ledgerEvents={ledgerEvents}
         isOnline={isOnline}
       />
-    </div>
+
+      {/* Persistent Automated Interactive Tour with AI Speech Synthesis */}
+      <AutoDemoTour
+        isOpen={isAutoTourOpen}
+        onClose={() => setIsAutoTourOpen(false)}
+        onSetViewMode={(mode) => setViewMode(mode)}
+        onLoginDemo={handleDemoLogin}
+        onSetTab={(tab) => setActiveTab(tab)}
+        onOpenComparator={(recName, docName) => handleOpenComparator(recName, docName)}
+        onCloseComparator={() => setIsComparatorModalOpen(false)}
+        onOpenCollusion={() => setIsCollusionModalOpen(true)}
+        onCloseCollusion={() => setIsCollusionModalOpen(false)}
+        onOpenAirGap={() => setIsAirGapModalOpen(true)}
+        onCloseAirGap={() => setIsAirGapModalOpen(false)}
+        onOpenCertificate={() => setIsCertificateModalOpen(true)}
+        onCloseCertificate={() => setIsCertificateModalOpen(false)}
+        onOpenStandaloneVerifier={() => setIsVerifyStandalone(true)}
+        onCloseStandaloneVerifier={() => setIsVerifyStandalone(false)}
+        onTriggerPipeline={async () => {
+          await handleRunBenchmark('screen_photo');
+        }}
+      />
+    </>
   );
 }

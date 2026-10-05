@@ -1,6 +1,6 @@
 import React from 'react';
 import { UserSession } from '../../types';
-import { Sun, Moon, LogOut } from 'lucide-react';
+import { Sun, Moon, LogOut, Play } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 
 interface MainHeaderProps {
@@ -9,13 +9,15 @@ interface MainHeaderProps {
   isDemoMode?: boolean;
   onSignOut: () => void;
   onOpenSettings: () => void;
+  onStartAutoTour?: () => void;
 }
 
 export const MainHeader: React.FC<MainHeaderProps> = ({
   currentSection,
   userSession,
   onSignOut,
-  onOpenSettings
+  onOpenSettings,
+  onStartAutoTour
 }) => {
   const { theme, toggleTheme } = useTheme();
 
@@ -45,6 +47,32 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        {/* Auto-Tour With Voice Capsule */}
+        {onStartAutoTour && (
+          <button
+            onClick={onStartAutoTour}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '3px 12px',
+              borderRadius: '9999px',
+              background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.12) 0%, rgba(45, 212, 191, 0.10) 100%)',
+              border: '1px solid rgba(56, 189, 248, 0.4)',
+              color: '#38BDF8',
+              fontSize: '11px',
+              fontWeight: 650,
+              cursor: 'pointer',
+              boxShadow: '0 2px 10px rgba(56, 189, 248, 0.15)',
+              transition: 'all 0.15s ease'
+            }}
+            title="Watch full automated interactive tour with AI voiceover"
+          >
+            <Play size={10} fill="currentColor" />
+            <span>Auto-Demo (Voice)</span>
+          </button>
+        )}
+
         {/* Apple Status Capsule */}
         <div
           style={{

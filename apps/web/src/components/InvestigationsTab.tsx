@@ -124,9 +124,9 @@ export const InvestigationsTab: React.FC<InvestigationsTabProps> = ({
 
   const scaleScenarios: ScaleScenario[] = [
     {
-      id: 'sharma_842911',
-      name: 'Cmdr. Rajesh Sharma',
-      rank: 'Commander (Naval Operations)',
+      id: 'vance_842911',
+      name: 'Marcus Vance',
+      rank: 'Senior Analyst (Operations)',
       uuid: '#842,911',
       decimalId: 842911,
       terminal: 'Terminal #W-842911',
@@ -137,7 +137,7 @@ export const InvestigationsTab: React.FC<InvestigationsTabProps> = ({
         'Apex Integrated Defence HQ (New Delhi)',
         'Western Sector Dissemination Hub (Mumbai)',
         'Naval Operations Command Node #04',
-        'Field Terminal #W-842911 (Cmdr. Rajesh Sharma)'
+        'Field Terminal #W-842911 (Marcus Vance)'
       ],
       merkleLeaf: 'Block #842,911 (ML-DSA-65 Valid Signature)',
       confidence: '99.98% (BCH-Verified, 0 Bit Errors)',

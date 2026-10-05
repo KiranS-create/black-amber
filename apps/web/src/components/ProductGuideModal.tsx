@@ -134,7 +134,7 @@ export const ProductGuideModal: React.FC<ProductGuideModalProps> = ({
       icon: Building,
       color: 'var(--petrol)',
       tabTarget: 'directory',
-      narrative: 'The forensic engine identifies an opaque principal ID from mathematical evidence. It then queries the enterprise Identity Directory to resolve the principal into an employee identity (Cmdr. Rajesh Sharma / Marcus Vance) with fail-soft resilience against directory outages.',
+      narrative: 'The forensic engine identifies an opaque principal ID from mathematical evidence. It then queries the enterprise Identity Directory to resolve the principal into an employee identity (Marcus Vance) with fail-soft resilience against directory outages.',
       keyPoints: [
         'Complete separation of forensic evidence principal from human directory identity',
         'Fail-soft directory caching: Offline resilience during Active Directory outages',
