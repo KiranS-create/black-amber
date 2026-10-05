@@ -101,6 +101,25 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
     setTimeout(() => setAutofillApplied(false), 2500);
   };
 
+  const handleQuickSignIn = async () => {
+    setUsername('admin');
+    setPassword('admin');
+    setErrorMessage(null);
+    setAutofillApplied(true);
+    setIsLoading(true);
+    try {
+      const session = await apiService.login({
+        email: 'admin',
+        password: 'admin'
+      });
+      onLoginSuccess(session);
+    } catch (err: any) {
+      setErrorMessage(err?.message || 'Quick login failed. Please sign in manually.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div
       style={{
@@ -426,46 +445,46 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           </button>
         </form>
 
-        {/* DEMO ACCESS Box (Natural, Elegant, Apple Bento Squircle) */}
-        {demoAuthAvailable && (
-          <div
-            style={{
-              marginTop: '22px',
-              padding: '14px 16px',
-              backgroundColor: isLight ? 'rgba(0, 0, 0, 0.03)' : 'rgba(255, 255, 255, 0.05)',
-              border: `1px solid ${autofillApplied ? (isLight ? '#0071E3' : '#2997FF') : (isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255, 255, 255, 0.10)')}`,
-              borderRadius: '16px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '12px',
-              transition: 'all 0.2s ease'
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <KeyRound size={17} style={{ color: isLight ? '#0071E3' : '#2997FF', flexShrink: 0 }} />
-              <div>
-                <div style={{ fontSize: '10.5px', fontWeight: 700, color: isLight ? '#0071E3' : '#2997FF', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span>EVALUATOR SECURE CLEARANCE</span>
-                  {autofillApplied && (
-                    <span style={{ fontSize: '10.5px', color: '#30D158', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
-                      <CheckCircle2 size={12} /> Applied
-                    </span>
-                  )}
-                </div>
-                <div style={{ fontSize: '12.5px', color: isLight ? '#6E6E73' : '#86868B', fontFamily: 'SF Mono, monospace', marginTop: '2px' }}>
-                  User: <strong style={{ color: isLight ? '#1D1D1F' : '#F5F5F7' }}>admin</strong> &nbsp;|&nbsp; Pass: <strong style={{ color: isLight ? '#1D1D1F' : '#F5F5F7' }}>admin</strong>
-                </div>
+        {/* DEMO ACCESS Box (Always Visible, Natural, Apple Bento Squircle) */}
+        <div
+          style={{
+            marginTop: '22px',
+            padding: '14px 16px',
+            backgroundColor: isLight ? 'rgba(0, 0, 0, 0.03)' : 'rgba(255, 255, 255, 0.05)',
+            border: `1px solid ${autofillApplied ? (isLight ? '#0071E3' : '#2997FF') : (isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255, 255, 255, 0.10)')}`,
+            borderRadius: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '12px',
+            transition: 'all 0.2s ease'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <KeyRound size={17} style={{ color: isLight ? '#0071E3' : '#2997FF', flexShrink: 0 }} />
+            <div>
+              <div style={{ fontSize: '10.5px', fontWeight: 700, color: isLight ? '#0071E3' : '#2997FF', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span>EVALUATOR DEMO ACCESS</span>
+                {autofillApplied && (
+                  <span style={{ fontSize: '10.5px', color: '#10B981', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                    <CheckCircle2 size={12} /> Applied
+                  </span>
+                )}
+              </div>
+              <div style={{ fontSize: '12.5px', color: isLight ? '#6E6E73' : '#86868B', fontFamily: 'SF Mono, monospace', marginTop: '2px' }}>
+                User: <strong style={{ color: isLight ? '#1D1D1F' : '#F5F5F7' }}>admin</strong> &nbsp;|&nbsp; Pass: <strong style={{ color: isLight ? '#1D1D1F' : '#F5F5F7' }}>admin</strong>
               </div>
             </div>
+          </div>
 
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <button
               type="button"
               onClick={handleApplyDemoCredentials}
               style={{
                 fontSize: '11px',
                 fontWeight: 600,
-                padding: '5px 14px',
+                padding: '5px 12px',
                 height: '30px',
                 borderRadius: '9999px',
                 flexShrink: 0,
@@ -477,11 +496,34 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                 cursor: 'pointer',
                 transition: 'all 0.15s ease'
               }}
+              title="Autofill username 'admin' and password 'admin'"
             >
-              {autofillApplied ? 'Loaded' : '1-Click Autofill'}
+              {autofillApplied ? '✔ Filled' : 'Autofill'}
+            </button>
+
+            <button
+              type="button"
+              onClick={handleQuickSignIn}
+              disabled={isLoading}
+              style={{
+                fontSize: '11px',
+                fontWeight: 600,
+                padding: '5px 12px',
+                height: '30px',
+                borderRadius: '9999px',
+                flexShrink: 0,
+                backgroundColor: isLight ? '#0071E3' : '#2997FF',
+                border: 'none',
+                color: isLight ? '#FFFFFF' : '#000000',
+                cursor: isLoading ? 'not-allowed' : 'pointer',
+                transition: 'all 0.15s ease'
+              }}
+              title="Autofill and sign in immediately with demo clearance"
+            >
+              Quick Enter →
             </button>
           </div>
-        )}
+        </div>
 
         {/* Create workspace link */}
         {onSwitchToSignUp && (
