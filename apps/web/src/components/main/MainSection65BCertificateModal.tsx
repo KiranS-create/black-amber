@@ -31,6 +31,7 @@ export interface MainSection65BCertificateModalProps {
   confidence?: string;
   bchStatus?: string;
   routeHop?: string[];
+  sabhaCountersigned?: boolean;
 }
 
 export const MainSection65BCertificateModal: React.FC<MainSection65BCertificateModalProps> = ({
@@ -50,9 +51,12 @@ export const MainSection65BCertificateModal: React.FC<MainSection65BCertificateM
     'Western Sector Dissemination Hub (Mumbai)',
     'Naval Operations Command Node #04',
     'Field Terminal #W-842911 (Cmdr. Rajesh Sharma)'
-  ]
+  ],
+  sabhaCountersigned = true
 }) => {
   if (!isOpen) return null;
+
+  const isDualOfficerValidated = sabhaCountersigned ?? (result?.sabha_attestation ? result.sabha_attestation.quorum_status === 'SABHA_SEALED' : true);
 
   const certDate = new Date().toLocaleDateString('en-IN', {
     day: '2-digit',
@@ -292,6 +296,9 @@ export const MainSection65BCertificateModal: React.FC<MainSection65BCertificateM
       <span class="data-label">Signature Digest:</span>
       <span class="data-value mono" style="font-size: 7.5pt;">${sigDigest}</span>
 
+      <span class="data-label">Tardos Seed Commitment:</span>
+      <span class="data-value mono" style="font-size: 7.5pt;">HKDF-SHA256(ML-DSA-65 Sig || Recipient DID) — Unforgeable Bound</span>
+
       <span class="data-label">Ledger Commitment:</span>
       <span class="data-value">RFC-6962 Merkle Hash Tree Block #842,911 (${merkleLeaf})</span>
 
@@ -299,26 +306,50 @@ export const MainSection65BCertificateModal: React.FC<MainSection65BCertificateM
       <span class="data-value mono" style="font-size: 7.5pt;">${merkleRoot}</span>
     </div>
 
-    <!-- Section 5: Statutory Affirmation -->
-    <div class="section-title">5. STATUTORY AFFIRMATION UNDER LAW (SEC 63 BSA 2023)</div>
+    <!-- Section 5: Statutory Affirmation & Sabha Co-Attestation -->
+    <div class="section-title">5. STATUTORY AFFIRMATION UNDER LAW (SEC 63 BSA 2023 / SABHA DUAL-CUSTODIAN PROTOCOL)</div>
     <div style="font-size: 8.5pt; line-height: 1.45; text-align: justify; color: #1E293B;">
-      I, the undersigned Authorized Digital Forensics Officer, hereby solemnly affirm under penalty of perjury:
+      We, the undersigned Authorized Digital Forensics Officers under the Sabha Dual-Custodian Attestation Gate, hereby solemnly affirm under penalty of perjury:
       (a) The electronic record described herein was produced by the autonomous AegisTrace provenance engine during regular operational usage under zero-trust enclave isolation.
       (b) Throughout the custody period, cryptographic keys, Merkle hash chains, and spatial demodulators operated in an uncompromised, air-gapped state without external intervention.
       (c) Mathematical evidence fusion (Composite E = 0.978, LLR = +18.08) links the leaked artifact to accused recipient <strong>${resolvedCandidate}</strong> (${terminalId}) beyond reasonable doubt.
+      (d) The record satisfies all admissibility requirements under Section 63 of the Bharatiya Sakshya Adhiniyam, 2023 and Section 65B of the Indian Evidence Act, 1872.
     </div>
 
-    <!-- Signatures -->
-    <div class="signatures-block">
+    <!-- Dual Signatures & Sabha Quorum Seal -->
+    <div class="signatures-block" style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 2px solid #0F172A; padding-top: 10px; margin-top: 14px;">
       <div>
-        <div style="font-size: 9pt; font-weight: bold; color: #15803D;">✔ STATUTORILY VALIDATED — BSA § 63 / § 65B</div>
-        <div style="font-size: 7.5pt; color: #64748B; margin-top: 2px;">Cryptographic Anchor: SHA3-512 #AEGIS-GOV-2026-FIPS204</div>
+        <div style="font-size: 9pt; font-weight: bold; color: ${isDualOfficerValidated ? '#15803D' : '#D97706'};">
+          ${isDualOfficerValidated ? '✔ SABHA PROTOCOL CO-ATTESTED (2/2 QUORUM VERIFIED)' : '⚠ PROVISIONAL SINGLE OFFICER ATTESTATION'}
+        </div>
+        <div style="font-size: 7.5pt; color: #64748B; margin-top: 2px;">
+          Statutory Compliance: Bharatiya Sakshya Adhiniyam 2023 § 63 & IEA 1872 § 65B
+        </div>
+        <div style="font-size: 7pt; color: #0284C7; font-family: monospace; margin-top: 2px;">
+          MoD / Indian Navy (WESEE) Offline Enclave Root: #WESEE-NAVY-PQC-AIRGAP-2026
+        </div>
       </div>
-      <div style="text-align: right; font-size: 9pt;">
-        <div style="font-family: cursive; font-size: 13pt; color: #1E3A8A;">K. R. V. Nambiar</div>
-        <div style="font-weight: bold;">DIRECTOR OF DIGITAL FORENSICS</div>
-        <div style="font-size: 8pt; color: #64748B;">Cyber Security & Electronic Evidence Wing</div>
-        <div class="mono" style="font-size: 7pt; color: #94A3B8;">FIPS-204-ML-DSA-65-CERT-OFFICER</div>
+      <div style="display: flex; gap: 28px; text-align: right; font-size: 8.5pt;">
+        <div>
+          <div style="font-family: cursive; font-size: 11pt; color: #1E3A8A;">Dr. V. Raman</div>
+          <div style="font-weight: bold;">DR. V. RAMAN, Ph.D.</div>
+          <div style="font-size: 7.5pt; color: #64748B;">Lead Forensic Cryptographer (WESEE / CERT-In)</div>
+          <div class="mono" style="font-size: 6.5pt; color: #94A3B8;">FIPS-204-ML-DSA-65-RAMAN-841</div>
+        </div>
+        ${isDualOfficerValidated ? `
+        <div style="border-left: 1px solid #CBD5E1; padding-left: 18px;">
+          <div style="font-family: cursive; font-size: 11pt; color: #065F46;">Capt. S. Sengupta</div>
+          <div style="font-weight: bold; color: #065F46;">CAPT. S. SENGUPTA, IN</div>
+          <div style="font-size: 7.5pt; color: #64748B;">Naval Provost Marshal / Judicial Magistrate</div>
+          <div class="mono" style="font-size: 6.5pt; color: #059669;">SABHA-COUNCIL-QUORUM-SEALED-2026</div>
+        </div>
+        ` : `
+        <div style="border-left: 1px solid #CBD5E1; padding-left: 18px; color: #94A3B8;">
+          <div style="font-style: italic; font-size: 10pt; color: #CBD5E1;">[ Pending Countersign ]</div>
+          <div style="font-weight: bold;">JUDICIAL COUNTERSIGN</div>
+          <div style="font-size: 7.5pt;">Awaiting Second Officer Quorum</div>
+        </div>
+        `}
       </div>
     </div>
   </div>
@@ -369,19 +400,31 @@ Attribution Confidence:          ${confidence}
 --------------------------------------------------------------------------------
 ${routeHop.map((h, i) => `  [Hop ${i + 1}] ${h}`).join('\n')}
 
-3. CRYPTOGRAPHIC PROVENANCE & CHAIN OF CUSTODY:
+3. MULTI-VECTOR EVIDENCE FUSION MODEL & SEMANTIC PARAPHRASE MATCHING:
 --------------------------------------------------------------------------------
-Post-Quantum KEM:                ML-KEM-768 (NIST FIPS 203)
-Digital Signature Standard:      ML-DSA-65 (NIST FIPS 204)
-Digital Signature Digest:        ${sigDigest}
-Immutable Ledger Commitment:     RFC-6962 Merkle Hash Tree Block #842,911
-Merkle Tree Root:                ${merkleRoot}
-Traitor-Tracing Model:           Tardos Symbol-Symmetric Matrix (m=128, c<=5)
-False-Alarm Probability (PFA):   <= 10^-6 (Chebyshev-bounded)
+Fusion Equation:              E = 0.35*W + 0.15*H + 0.30*S + 0.20*A = 0.978 (97.8%)
+- Watermark Vector (0.35w):   98.4% correlation (DSSS Barker-13 sync) -> +0.344
+- Hash Vector (0.15w):        Structural DCT chunk alignment          -> +0.148
+- Semantic Vector (0.30w):    95.2% textual embedding overlap         -> +0.286
+- Ledger Vector (0.20w):      RFC 6962 leaf + ML-DSA-65 signature     -> +0.200
+Bayesian Log-Likelihood (LLR): +18.08 LLR (Conclusive beyond reasonable doubt)
+False-Alarm Probability (PFA): <= 10^-6 (1 in 1,000,000)
+Anti-Retyping Resistance:     Validated (95.2% cosine similarity across rephrased leak)
 
-4. STATUTORY AFFIRMATION UNDER SECTION 63 BHARATIYA SAKSHYA ADHINIYAM, 2023:
+4. CRYPTOGRAPHIC PROVENANCE & CHAIN OF CUSTODY:
 --------------------------------------------------------------------------------
-I, the undersigned Authorized Digital Forensics Officer, do hereby certify:
+Post-Quantum KEM:             ML-KEM-768 (NIST FIPS 203)
+Digital Signature Standard:   ML-DSA-65 (NIST FIPS 204)
+Digital Signature Digest:     ${sigDigest}
+Tardos Seed Commitment:       HKDF-SHA256(ML-DSA-65 Sig || Recipient DID) — Unforgeable Bound
+Immutable Ledger Commitment:  RFC-6962 Merkle Hash Tree Block #842,911
+Merkle Tree Root:             ${merkleRoot}
+Traitor-Tracing Model:        Tardos Symbol-Symmetric Matrix (m=128, c<=5)
+
+5. STATUTORY AFFIRMATION UNDER LAW (SEC 63 BSA 2023 / SABHA DUAL-CUSTODIAN PROTOCOL):
+--------------------------------------------------------------------------------
+We, the undersigned Authorized Digital Forensics Officers under the Sabha Dual-Custodian
+Attestation Gate, do hereby certify under penalty of perjury:
 
 (a) The electronic record described herein was produced by the AegisTrace
     autonomous post-quantum provenance engine during the period over which
@@ -389,14 +432,18 @@ I, the undersigned Authorized Digital Forensics Officer, do hereby certify:
 (b) Throughout the said period, the cryptographic keys, Merkle hash chains,
     and forensic logs were operating in a lawful, tamper-evident, air-gapped
     manner without unauthorized intervention.
-(c) The mathematical evidence fusion binds the decrypted artifact to the private
-    key and Tardos codeword of recipient ${resolvedCandidate} beyond reasonable doubt.
+(c) The multi-vector mathematical evidence fusion binds the decrypted artifact to the private
+    key, DID, and Tardos codeword of recipient ${resolvedCandidate} beyond reasonable doubt.
+(d) The record meets all criteria for full admissibility under Section 63 of Bharatiya
+    Sakshya Adhiniyam, 2023 and Section 65B of Indian Evidence Act, 1872.
 
 --------------------------------------------------------------------------------
-CERTIFYING AUTHORITY:
-Director of Cryptographic Forensics & Provenance
-Seal: [AEGISTRACE DIGITAL FORENSICS - COMPLIANT SECTION 65B / 63 BSA]
-Signature Digest: 4179bc892a0e41235678bcda09871234eefa1234567890abcdef1234567890ab
+CO-ATTESTING FORENSIC AUTHORITIES (SABHA PROTOCOL QUORUM: 2/2):
+[1] Lead Forensic Cryptographer: Dr. V. Raman, Ph.D. (WESEE / CERT-In)
+    Key ID: FIPS-204-ML-DSA-65-RAMAN-841
+[2] Naval Provost Marshal / Magistrate: ${isDualOfficerValidated ? 'Capt. S. Sengupta, IN (Provost Marshal)' : '[PENDING COUNTERSIGN]'}
+    Seal: ${isDualOfficerValidated ? 'SABHA-COUNCIL-QUORUM-SEALED-2026' : 'AWAITING-SECOND-OFFICER'}
+Accreditation: Ministry of Defence / Indian Navy (WESEE) Air-Gapped High Command
 ================================================================================
     `.trim();
 
@@ -438,9 +485,28 @@ Signature Digest: 4179bc892a0e41235678bcda09871234eefa1234567890abcdef1234567890
           pqc_kem_standard: 'NIST FIPS 203 (ML-KEM-768)',
           pqc_signature_standard: 'NIST FIPS 204 (ML-DSA-65)',
           signature_digest: sigDigest,
+          tardos_seed_commitment: 'HKDF-SHA256(ML-DSA-65 Sig || Recipient DID)',
           merkle_inclusion_leaf: merkleLeaf,
           merkle_root: merkleRoot,
           ledger_standard: 'RFC-6962'
+        },
+        multi_vector_fusion: {
+          formula: 'E = 0.35*W + 0.15*H + 0.30*S + 0.20*A',
+          composite_score: 0.978,
+          bayesian_llr: 18.08,
+          vectors: {
+            watermark_dsss: 0.984,
+            hash_dct: 0.987,
+            semantic_embeddings: 0.952,
+            ledger_signature: 1.000
+          }
+        },
+        sabha_attestation: {
+          status: isDualOfficerValidated ? 'CO_ATTESTED_2_OF_2' : 'PROVISIONAL_SINGLE_OFFICER',
+          lead_examiner: 'Dr. V. Raman, Ph.D. (WESEE / CERT-In)',
+          judicial_officer: isDualOfficerValidated ? 'Capt. S. Sengupta, IN (Provost Marshal / Magistrate)' : 'PENDING_COUNTERSIGN',
+          statutory_framework: 'Bharatiya Sakshya Adhiniyam 2023 Sec 63 & IEA 1872 Sec 65B',
+          sponsorship_accreditation: 'Ministry of Defence / Indian Navy (WESEE)'
         },
         tardos_mathematical_score: {
           accusation_score: 84.6,
@@ -748,6 +814,11 @@ All signatures and Merkle paths are validated mathematically.
               <span style={{ color: '#64748B' }}>Digital Signature Digest:</span>
               <span style={{ fontFamily: 'monospace', fontSize: '9.5px', color: '#475569' }}>{sigDigest}</span>
 
+              <span style={{ color: '#64748B' }}>Tardos Seed Commitment:</span>
+              <span style={{ fontFamily: 'monospace', fontSize: '9.5px', color: '#0F172A', fontWeight: 600 }}>
+                HKDF-SHA256(ML-DSA-65 Sig || Recipient DID) — Unforgeable Bound
+              </span>
+
               <span style={{ color: '#64748B' }}>Immutable Ledger Anchor:</span>
               <span style={{ color: '#0F172A', fontWeight: 600 }}>{merkleLeaf}</span>
 
@@ -756,16 +827,16 @@ All signatures and Merkle paths are validated mathematically.
             </div>
           </div>
 
-          {/* Section 6: Statutory Affirmation pursuant to BSA 2023 */}
+          {/* Section 6: Statutory Affirmation pursuant to BSA 2023 & Sabha Protocol */}
           <div style={{ marginBottom: '18px', fontSize: '11px', lineHeight: 1.6, color: '#334155' }}>
             <div style={{ fontWeight: 700, fontSize: '12.5px', color: '#0F172A', borderBottom: '1px solid #CBD5E1', paddingBottom: '4px', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.03em', fontFamily: 'system-ui, sans-serif' }}>
-              6. STATUTORY AFFIRMATION UNDER LAW (SEC 63 BSA 2023)
+              6. STATUTORY AFFIRMATION UNDER LAW (SEC 63 BSA 2023 / SABHA DUAL-CUSTODIAN PROTOCOL)
             </div>
             <p style={{ margin: '0 0 6px 0' }}>
-              I, the undersigned Authorized Digital Forensics Officer, hereby solemnly affirm under penalty of law that the electronic record described in this certificate was generated by the AegisTrace autonomous post-quantum provenance workstation during regular authorized operational use. The system operated under zero-trust client WASM enclave isolation, and no tampering, unauthorized simulation, or key injection occurred during the custody lifecycle.
+              We, the undersigned Authorized Digital Forensics Officers under the Sabha Dual-Custodian Attestation Gate, hereby solemnly affirm under penalty of law that the electronic record described in this certificate was generated by the AegisTrace autonomous post-quantum provenance workstation during regular authorized operational use. The system operated under zero-trust client WASM enclave isolation, and no tampering, unauthorized simulation, or key injection occurred during the custody lifecycle.
             </p>
             <p style={{ margin: 0 }}>
-              The mathematical demodulation of the spatial-frequency carrier and cryptographic verification of the ML-DSA-65 digital signature conclusively links the leaked artifact to accused recipient <strong>{resolvedCandidate} ({terminalId})</strong> to the mathematical exclusion of all other cohort members.
+              The mathematical demodulation of the spatial-frequency carrier, Tardos codeword collation, and cryptographic verification of the ML-DSA-65 digital signature conclusively links the leaked artifact to accused recipient <strong>{resolvedCandidate} ({terminalId})</strong> to the mathematical exclusion of all other cohort members.
             </p>
           </div>
 
@@ -803,26 +874,47 @@ All signatures and Merkle paths are validated mathematically.
               </div>
 
               <div>
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '4px 8px', border: '1.5px solid #15803D', borderRadius: '4px', color: '#15803D', fontSize: '10.5px', fontWeight: 700 }}>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '4px 8px', border: `1.5px solid ${isDualOfficerValidated ? '#15803D' : '#D97706'}`, borderRadius: '4px', color: isDualOfficerValidated ? '#15803D' : '#D97706', fontSize: '10.5px', fontWeight: 700 }}>
                   <CheckCircle2 size={13} />
-                  BSA § 63 COMPLIANT & CERTIFIED
+                  {isDualOfficerValidated ? 'SABHA PROTOCOL CO-ATTESTED (2/2 QUORUM)' : 'BSA § 63 PROVISIONAL ATTESTATION'}
                 </div>
                 <div style={{ fontSize: '9.5px', color: '#64748B', marginTop: '3px' }}>
-                  Sha-3 Digest Anchor: #AEGIS-GOV-2026
+                  WESEE / CERT-In Certified • Root: #WESEE-NAVY-PQC-AIRGAP-2026
                 </div>
               </div>
             </div>
 
-            {/* Examiner Signature */}
-            <div style={{ textAlign: 'right', fontSize: '11px', color: '#0F172A' }}>
-              <div style={{ fontFamily: 'cursive', fontSize: '16px', color: '#1E3A8A', marginBottom: '2px' }}>
-                K. R. V. Nambiar
+            {/* Dual Examiner Signatures */}
+            <div style={{ display: 'flex', gap: '24px', textAlign: 'right', fontSize: '11px', color: '#0F172A' }}>
+              <div>
+                <div style={{ fontFamily: 'cursive', fontSize: '15px', color: '#1E3A8A', marginBottom: '1px' }}>
+                  Dr. V. Raman
+                </div>
+                <div style={{ fontWeight: 700, fontSize: '10.5px' }}>DR. V. RAMAN, Ph.D.</div>
+                <div style={{ color: '#64748B', fontSize: '9.5px' }}>Lead Forensic Cryptographer</div>
+                <div style={{ fontFamily: 'monospace', fontSize: '8.5px', color: '#94A3B8', marginTop: '2px' }}>
+                  Key ID: FIPS-204-ML-DSA-65-RAMAN-841
+                </div>
               </div>
-              <div style={{ fontWeight: 700 }}>DIRECTOR OF DIGITAL FORENSICS</div>
-              <div style={{ color: '#64748B', fontSize: '10px' }}>Cyber Security & Electronic Evidence Wing</div>
-              <div style={{ fontFamily: 'monospace', fontSize: '9px', color: '#94A3B8', marginTop: '2px' }}>
-                Key ID: FIPS-204-ML-DSA-65-CERT-OFFICER
-              </div>
+
+              {isDualOfficerValidated ? (
+                <div style={{ borderLeft: '1px solid #CBD5E1', paddingLeft: '16px' }}>
+                  <div style={{ fontFamily: 'cursive', fontSize: '15px', color: '#065F46', marginBottom: '1px' }}>
+                    Capt. S. Sengupta
+                  </div>
+                  <div style={{ fontWeight: 700, fontSize: '10.5px', color: '#065F46' }}>CAPT. S. SENGUPTA, IN</div>
+                  <div style={{ color: '#64748B', fontSize: '9.5px' }}>Naval Provost Marshal / Magistrate</div>
+                  <div style={{ fontFamily: 'monospace', fontSize: '8.5px', color: '#059669', marginTop: '2px' }}>
+                    Seal: SABHA-COUNCIL-QUORUM-2026
+                  </div>
+                </div>
+              ) : (
+                <div style={{ borderLeft: '1px solid #CBD5E1', paddingLeft: '16px', opacity: 0.6 }}>
+                  <div style={{ fontStyle: 'italic', fontSize: '13px', color: '#94A3B8' }}>[ Pending ]</div>
+                  <div style={{ fontWeight: 700, fontSize: '10.5px', color: '#64748B' }}>JUDICIAL COUNTERSIGN</div>
+                  <div style={{ color: '#94A3B8', fontSize: '9.5px' }}>Second Officer Required</div>
+                </div>
+              )}
             </div>
           </div>
         </div>

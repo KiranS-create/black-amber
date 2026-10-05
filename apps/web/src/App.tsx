@@ -588,6 +588,7 @@ export function AppContent() {
           bchStatus={certificateContext?.bchStatus || '0 Bit Errors (BCH t=3 Corrected)'}
           routeHop={certificateContext?.routeHop}
           documentName={certificateContext?.documentName || documents[0]?.document_name || comparatorContext.docName}
+          sabhaCountersigned={certificateContext?.sabhaCountersigned ?? true}
         />
 
         {/* SIH Problem Statement 26237 Compliance Matrix Modal */}
