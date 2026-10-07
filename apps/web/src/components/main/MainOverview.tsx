@@ -43,6 +43,7 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
   onOpenCollusionLab,
   onOpenAirGapLab,
   onOpenCertificate,
+  onOpenDecryptionPortal,
   onOpenSihCompliance
 }) => {
   const { theme } = useTheme();
@@ -78,6 +79,104 @@ export const MainOverview: React.FC<MainOverviewProps> = ({
             <Upload size={15} />
             <span>Import Document</span>
           </button>
+        </div>
+      </div>
+
+      {/* 3-Step Interactive Evaluation & Demonstration Workflow Guide */}
+      <div
+        style={{
+          padding: '20px 24px',
+          borderRadius: '20px',
+          background: isLight ? 'rgba(2, 132, 199, 0.05)' : 'rgba(2, 132, 199, 0.08)',
+          border: '1px solid rgba(2, 132, 199, 0.25)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '14px',
+          boxShadow: isLight ? '0 4px 14px rgba(2, 132, 199, 0.04)' : '0 8px 24px rgba(0, 0, 0, 0.2)'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#0284C7', color: '#FFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: 700 }}>
+              ⚡
+            </div>
+            <div>
+              <div style={{ fontSize: '13.5px', fontWeight: 700, color: 'var(--main-text-primary)' }}>
+                Recommended Evaluation & Demonstration Workflow
+              </div>
+              <div style={{ fontSize: '12px', color: 'var(--main-text-secondary)', marginTop: '1px' }}>
+                Follow these 3 core steps to see post-quantum watermark injection, air-gap leak attribution, and statutory court docket generation.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '14px' }}>
+          {/* Step 1 */}
+          <div style={{ padding: '14px 16px', borderRadius: '14px', background: 'var(--main-surface)', border: '1px solid var(--main-border)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <div>
+              <div style={{ fontSize: '11px', fontWeight: 700, color: '#0284C7', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                Step 1: Distribution & Decryption
+              </div>
+              <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--main-text-primary)', marginTop: '3px' }}>
+                Decapsulate & Download Watermarked Copy
+              </div>
+              <div style={{ fontSize: '11.5px', color: 'var(--main-text-secondary)', marginTop: '4px', lineHeight: 1.45 }}>
+                Select any officer/terminal or enroll a custom principal to mint an unforgeable in-memory DSSS watermark.
+              </div>
+            </div>
+            <button 
+              onClick={() => onOpenDecryptionPortal ? onOpenDecryptionPortal() : onNavigate('recipients')} 
+              className="main-btn-secondary" 
+              style={{ marginTop: '12px', fontSize: '12px', padding: '6px 12px', width: '100%', borderColor: 'rgba(2, 132, 199, 0.4)' }}
+            >
+              Open Decryption Portal →
+            </button>
+          </div>
+
+          {/* Step 2 */}
+          <div style={{ padding: '14px 16px', borderRadius: '14px', background: 'var(--main-surface)', border: '1px solid var(--main-border)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <div>
+              <div style={{ fontSize: '11px', fontWeight: 700, color: '#10B981', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                Step 2: Leak Detection & Fusion
+              </div>
+              <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--main-text-primary)', marginTop: '3px' }}>
+                Ingest Intercepted Leak & Attribute Suspect
+              </div>
+              <div style={{ fontSize: '11.5px', color: 'var(--main-text-secondary)', marginTop: '4px', lineHeight: 1.45 }}>
+                Drop the downloaded copy or run attack lab scenarios (optical camera, compression, collusion) to isolate the exfiltration hop.
+              </div>
+            </div>
+            <button 
+              onClick={() => onNavigate('investigations')} 
+              className="main-btn-secondary" 
+              style={{ marginTop: '12px', fontSize: '12px', padding: '6px 12px', width: '100%', borderColor: 'rgba(16, 185, 129, 0.4)' }}
+            >
+              Launch Leak Analysis →
+            </button>
+          </div>
+
+          {/* Step 3 */}
+          <div style={{ padding: '14px 16px', borderRadius: '14px', background: 'var(--main-surface)', border: '1px solid var(--main-border)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <div>
+              <div style={{ fontSize: '11px', fontWeight: 700, color: '#8B5CF6', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                Step 3: Legal Admissibility
+              </div>
+              <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--main-text-primary)', marginTop: '3px' }}>
+                Generate BSA § 63 / Sec 65B Court Docket
+              </div>
+              <div style={{ fontSize: '11.5px', color: 'var(--main-text-secondary)', marginTop: '4px', lineHeight: 1.45 }}>
+                Produce court-ready electronic evidence certificates with Merkle proofs, dual-officer Sabha signatures, and printable affidavits.
+              </div>
+            </div>
+            <button 
+              onClick={() => onOpenCertificate ? onOpenCertificate() : onNavigate('evidence')} 
+              className="main-btn-secondary" 
+              style={{ marginTop: '12px', fontSize: '12px', padding: '6px 12px', width: '100%', borderColor: 'rgba(139, 92, 246, 0.4)' }}
+            >
+              Generate Court Docket →
+            </button>
+          </div>
         </div>
       </div>
 

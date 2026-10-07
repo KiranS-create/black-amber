@@ -34,6 +34,7 @@ interface MainRecipientDecryptionModalProps {
   ) => Promise<void>;
   onOpenComparator?: (recipientName: string, docName: string) => void;
   onInvestigateLeak?: (scenarioId: string) => void;
+  onTestLeakAttribution?: (recipient: PublicRecipient) => void;
   onRefresh?: () => Promise<void>;
 }
 
@@ -46,6 +47,7 @@ export const MainRecipientDecryptionModal: React.FC<MainRecipientDecryptionModal
   onEnrollRecipient,
   onOpenComparator,
   onInvestigateLeak,
+  onTestLeakAttribution,
   onRefresh
 }) => {
   const [selectedRecipientId, setSelectedRecipientId] = useState<string>(() => initialRecipientId || 'bob');
@@ -503,15 +505,18 @@ export const MainRecipientDecryptionModal: React.FC<MainRecipientDecryptionModal
                 <button
                   onClick={() => {
                     onClose();
-                    if (onInvestigateLeak) {
-                      onInvestigateLeak('clean_bob');
+                    if (onTestLeakAttribution) {
+                      onTestLeakAttribution(currentRecipient);
+                    } else if (onInvestigateLeak) {
+                      const scenarioId = currentRecipient.recipient_id === 'alice' ? 'clean_alice' : currentRecipient.recipient_id === 'charlie' ? 'clean_charlie' : 'clean_bob';
+                      onInvestigateLeak(scenarioId);
                     }
                   }}
-                  className="main-btn-ghost"
-                  style={{ fontSize: '12px' }}
+                  className="main-btn-primary"
+                  style={{ fontSize: '12px', background: '#0284C7', borderColor: '#0369A1' }}
                 >
                   <Search size={13} />
-                  <span>Test Leak Attribution →</span>
+                  <span>⚡ Immediately Test Leak Attribution on This Copy →</span>
                 </button>
               </div>
             </div>

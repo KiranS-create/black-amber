@@ -56,6 +56,7 @@ export function MainApp() {
     docName: 'National_Defense_Protocol_2026.pdf',
     recipientName: 'Marcus Vance'
   });
+  const [certificateContext, setCertificateContext] = useState<any>(null);
 
   const [documents, setDocuments] = useState<DocumentMetadata[]>([]);
   const [recipients, setRecipients] = useState<PublicRecipient[]>([]);
@@ -411,7 +412,10 @@ export function MainApp() {
                     activeResult={leakResult}
                     onIngestLeakAndAnalyze={handleIngestLeakAndAnalyze}
                     onRunBenchmark={handleRunBenchmark}
-                    onOpenCertificate={() => setIsCertificateModalOpen(true)}
+                    onOpenCertificate={(ctx) => {
+                      setCertificateContext(ctx || null);
+                      setIsCertificateModalOpen(true);
+                    }}
                     onOpenComparator={() => handleOpenComparator()}
                     onOpenAirGapScanner={() => setIsAirGapModalOpen(true)}
                     onExecuteQuarantine={async (suspectName, terminalId, reason) => {
@@ -446,6 +450,7 @@ export function MainApp() {
           await handleRunBenchmark(scenarioId);
           setActiveTab('investigations');
         }}
+        onTestLeakAttribution={handleTestLeakAttribution}
         onRefresh={refreshData}
       />
 
@@ -463,8 +468,17 @@ export function MainApp() {
         isOpen={isCertificateModalOpen}
         onClose={() => setIsCertificateModalOpen(false)}
         result={leakResult}
-        candidateName={leakResult?.candidate?.name || 'Marcus Vance'}
-        documentName={releases[0]?.document_name || 'National_Defense_Protocol_2026.pdf'}
+        candidateName={certificateContext?.candidateName || leakResult?.candidate?.name || 'Marcus Vance'}
+        documentName={certificateContext?.documentName || releases[0]?.document_name || 'National_Defense_Protocol_2026.pdf'}
+        terminalId={certificateContext?.terminalId}
+        suspectRank={certificateContext?.suspectRank}
+        secretCodeHex={certificateContext?.secretCodeHex}
+        merkleLeaf={certificateContext?.merkleLeaf}
+        confidence={certificateContext?.confidence}
+        routeHop={certificateContext?.routeHop}
+        bchStatus={certificateContext?.bchStatus}
+        sabhaCountersigned={certificateContext?.sabhaCountersigned}
+        recipients={recipients}
       />
 
       {/* Modal 4: Collusion Resistance Lab Modal */}
