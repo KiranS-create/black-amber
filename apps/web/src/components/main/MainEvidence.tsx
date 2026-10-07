@@ -47,39 +47,7 @@ export const MainEvidence: React.FC<MainEvidenceProps> = ({
     }
   };
 
-  // Canonical blocks to show in the ledger explorer
-  const displayBlocks = ledgerEvents.length > 0 ? ledgerEvents : [
-    {
-      event_id: 'evt_genesis_000',
-      event_type: 'SYSTEM_INITIALIZATION',
-      timestamp: '2026-09-26T10:00:00Z',
-      recipient_id: 'HQ_AUTHORITY',
-      artifact_hash: '0000000000000000000000000000000000000000000000000000000000000000',
-      evidence_hash: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
-      signature: 'PQC_INIT_SIG_ROOT_000',
-      algorithm: 'ML-DSA-65'
-    },
-    {
-      event_id: 'evt_rel_001',
-      event_type: 'DOCUMENT_RELEASE',
-      timestamp: '2026-09-26T11:00:00Z',
-      recipient_id: 'HQ_AUTHORITY',
-      artifact_hash: '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08',
-      evidence_hash: '7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b',
-      signature: 'dSA65_sig_rel_001_authority_fips204',
-      algorithm: 'ML-DSA-65'
-    },
-    {
-      event_id: 'evt_dec_bob_002',
-      event_type: 'DECRYPTION_RECEIPT',
-      timestamp: '2026-09-26T11:05:00Z',
-      recipient_id: 'bob (Marcus Vance)',
-      artifact_hash: '7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b',
-      evidence_hash: '901234567890abcdef1234567890abcdef1234567890abcdef1234567890abcd',
-      signature: 'dSA65_sig_bob_02_eefa1234567890',
-      algorithm: 'ML-DSA-65'
-    }
-  ];
+  const displayBlocks = ledgerEvents;
 
   return (
     <div style={{ maxWidth: '1080px', margin: '0 auto', padding: '32px 24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -265,60 +233,66 @@ export const MainEvidence: React.FC<MainEvidenceProps> = ({
               Ledger Blocks & Cryptographic Linkages
             </div>
 
-            {displayBlocks.map((block, index) => {
-              return (
-                <div 
-                  key={block.event_id || index}
-                  style={{
-                    padding: '16px 20px',
-                    borderRadius: '16px',
-                    border: '1px solid var(--main-border)',
-                    background: 'var(--main-surface-elevated)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '10px',
-                    transition: 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)'
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <span className="main-mono" style={{ fontSize: '11px', fontWeight: 700, padding: '3px 10px', borderRadius: '9999px', background: 'var(--main-surface)', color: 'var(--main-accent)', border: '1px solid var(--main-border)' }}>
-                        BLOCK #{index}
-                      </span>
-                      <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
-                        {block.event_type}
-                      </span>
+            {displayBlocks.length === 0 ? (
+              <div style={{ padding: '36px', textAlign: 'center', color: 'var(--main-text-secondary)', background: 'var(--main-surface)', borderRadius: '16px', border: '1px solid var(--main-border)', fontSize: '13px' }}>
+                No ledger blocks recorded yet. Minting occurs when releasing or decrypting protected documents.
+              </div>
+            ) : (
+              displayBlocks.map((block, index) => {
+                return (
+                  <div 
+                    key={block.event_id || index}
+                    style={{
+                      padding: '16px 20px',
+                      borderRadius: '16px',
+                      border: '1px solid var(--main-border)',
+                      background: 'var(--main-surface-elevated)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '10px',
+                      transition: 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <span className="main-mono" style={{ fontSize: '11px', fontWeight: 700, padding: '3px 10px', borderRadius: '9999px', background: 'var(--main-surface)', color: 'var(--main-accent)', border: '1px solid var(--main-border)' }}>
+                          BLOCK #{index}
+                        </span>
+                        <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
+                          {block.event_type}
+                        </span>
+                      </div>
+
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)' }}>
+                          {new Date(block.timestamp).toLocaleTimeString()}
+                        </span>
+                        <span className="main-badge main-badge-verified" style={{ fontSize: '10px' }}>
+                          VALID
+                        </span>
+                      </div>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span style={{ fontSize: '11px', color: 'var(--main-text-tertiary)' }}>
-                        {new Date(block.timestamp).toLocaleTimeString()}
-                      </span>
-                      <span className="main-badge main-badge-verified" style={{ fontSize: '10px' }}>
-                        VALID
-                      </span>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '8px', fontSize: '11px' }}>
+                      <div>
+                        <span style={{ color: 'var(--main-text-tertiary)' }}>Actor / Principal: </span>
+                        <span style={{ color: 'var(--main-text-primary)', fontWeight: 500 }}>{block.recipient_id}</span>
+                      </div>
+                      <div>
+                        <span style={{ color: 'var(--main-text-tertiary)' }}>Signature Algorithm: </span>
+                        <span style={{ color: 'var(--main-text-primary)' }}>{block.algorithm || 'ML-DSA-65'}</span>
+                      </div>
+                      <div style={{ gridColumn: 'span 2' }}>
+                        <span style={{ color: 'var(--main-text-tertiary)' }}>Leaf Digest: </span>
+                        <span className="main-mono" style={{ color: 'var(--main-jade)', fontWeight: 600 }}>
+                          {block.artifact_hash}
+                        </span>
+                      </div>
                     </div>
                   </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '8px', fontSize: '11px' }}>
-                    <div>
-                      <span style={{ color: 'var(--main-text-tertiary)' }}>Actor / Principal: </span>
-                      <span style={{ color: 'var(--main-text-primary)', fontWeight: 500 }}>{block.recipient_id}</span>
-                    </div>
-                    <div>
-                      <span style={{ color: 'var(--main-text-tertiary)' }}>Signature Algorithm: </span>
-                      <span style={{ color: 'var(--main-text-primary)' }}>{block.algorithm || 'ML-DSA-65'}</span>
-                    </div>
-                    <div style={{ gridColumn: 'span 2' }}>
-                      <span style={{ color: 'var(--main-text-tertiary)' }}>Leaf Digest: </span>
-                      <span className="main-mono" style={{ color: 'var(--main-jade)', fontWeight: 600 }}>
-                        {block.artifact_hash}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })
+            )}
           </div>
         </div>
       )}

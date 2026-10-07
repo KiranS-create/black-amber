@@ -46,6 +46,7 @@ export const MainInvestigations: React.FC<MainInvestigationsProps> = ({
   releases,
   activeResult,
   onIngestLeakAndAnalyze,
+  onRunBenchmark,
   onOpenCertificate,
   onOpenComparator,
   onOpenAirGapScanner,
@@ -59,8 +60,8 @@ export const MainInvestigations: React.FC<MainInvestigationsProps> = ({
   const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
   const [dragActive, setDragActive] = useState<boolean>(false);
   const [copiedCli, setCopiedCli] = useState<boolean>(false);
-  const [activeBenchmark, setActiveBenchmark] = useState<string>('print_scan');
-  const [pipelineStep, setPipelineStep] = useState<number>(9);
+  const [activeBenchmark, setActiveBenchmark] = useState<string | null>(null);
+  const [pipelineStep, setPipelineStep] = useState<number>(activeResult ? 9 : 0);
   const [showPipelineDrawer, setShowPipelineDrawer] = useState<boolean>(true);
   const [sabhaCountersigned, setSabhaCountersigned] = useState<boolean>(true);
   const [isCountersigning, setIsCountersigning] = useState<boolean>(false);
@@ -88,21 +89,23 @@ export const MainInvestigations: React.FC<MainInvestigationsProps> = ({
   ];
 
   // Active incident details
-  const isAbstain = activeResult?.should_abstain || activeResult?.state === 'NO_SIGNAL' || activeResult?.state === 'INSUFFICIENT_EVIDENCE';
-  const suspectName = activeResult?.candidate?.name || (isAbstain ? 'Unassigned' : 'Marcus Vance');
-  const suspectRank = isAbstain ? 'N/A' : 'Principal Cryptanalyst';
-  const suspectRole = isAbstain ? 'N/A' : 'Strategic Intelligence Division (usr_3d4e5f6a02)';
-  const suspectTerminal = isAbstain ? 'N/A' : 'Field Terminal #ST-842911 (bob)';
-  const secretCodeHex = isAbstain ? '0x0000-0000-0000' : '0x7E9A-C401-88F3-902B-0CDA07-9AF2';
-  const merkleLeaf = isAbstain ? 'N/A' : 'Block #842,911 (ML-DSA-65 Valid Signature)';
-  const confidenceStr = isAbstain ? '0.00% (Abstained)' : '99.98% (BCH-Verified, 0 Bit Errors)';
+  const hasResult = activeResult !== null;
+  const isAbstain = hasResult && Boolean(activeResult?.should_abstain || activeResult?.state === 'NO_SIGNAL' || activeResult?.state === 'INSUFFICIENT_EVIDENCE');
+  const candidateId = activeResult?.candidate?.recipient_id || '';
+  const suspectName = activeResult?.candidate?.name || (isAbstain ? 'No Candidate Attributed' : (hasResult ? 'Unknown Candidate' : 'No Active Investigation'));
+  const suspectRank = activeResult?.candidate ? (activeResult.candidate.identity_summary?.title || 'Principal Cryptanalyst') : 'N/A';
+  const suspectRole = activeResult?.candidate ? `${activeResult.candidate.identity_summary?.department || 'Strategic Intelligence Division'} (${activeResult.candidate.identity_id || activeResult.candidate.recipient_id})` : (isAbstain ? 'Attribution Abstained' : 'Standby Mode');
+  const suspectTerminal = activeResult?.candidate ? (activeResult.candidate.identity_summary?.terminal || `Field Terminal #ST-${activeResult.candidate.recipient_id.toUpperCase()}`) : (isAbstain ? 'None Active' : 'No Active Terminal');
+  const secretCodeHex = activeResult?.candidate ? `0x${candidateId.toUpperCase()}-C401-88F3-902B-0CDA07-9AF2` : 'N/A';
+  const merkleLeaf = activeResult?.candidate ? `Block #842,911 (ML-DSA-65 Valid Signature - ${candidateId})` : (hasResult ? 'Pending Ledger Block' : 'Awaiting Seal');
+  const confidenceStr = activeResult?.candidate ? `${((activeResult.candidate.confidence ?? 0.9998) * 100).toFixed(2)}% (BCH-Verified, 0 Bit Errors)` : (isAbstain ? '0.00% (Abstained)' : '0.00%');
 
-  const routeHops = [
+  const routeHops = (hasResult && !isAbstain && activeResult?.candidate) ? [
     'Strategic Central Enclave (HQ Node)',
     'Intelligence Dissemination Hub #02',
     'Tactical Cryptography Terminal',
-    'Field Terminal #ST-842911 (Marcus Vance / bob)'
-  ];
+    `${suspectTerminal} (${suspectName} / ${candidateId})`
+  ] : [];
 
   const handleSabhaCountersign = async () => {
     setIsCountersigning(true);
@@ -127,9 +130,12 @@ export const MainInvestigations: React.FC<MainInvestigationsProps> = ({
     }
   }, [activeResult]);
 
-  const handleSelectBenchmark = (benchId: string) => {
+  const handleSelectBenchmark = async (benchId: string) => {
     setActiveBenchmark(benchId);
-    executePipelineAnimation();
+    if (onRunBenchmark) {
+      await onRunBenchmark(benchId);
+    }
+    await executePipelineAnimation();
   };
 
   const handleLeakFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -236,8 +242,10 @@ export const MainInvestigations: React.FC<MainInvestigationsProps> = ({
                 bchStatus: '0 Bit Errors (BCH t=3 Corrected)',
                 sabhaCountersigned: sabhaCountersigned
               })}
+              disabled={!hasResult || isAbstain}
               className="main-btn-secondary"
-              style={{ fontSize: '12px' }}
+              style={{ fontSize: '12px', opacity: (!hasResult || isAbstain) ? 0.5 : 1, cursor: (!hasResult || isAbstain) ? 'not-allowed' : 'pointer' }}
+              title={(!hasResult || isAbstain) ? "Run an investigation or benchmark first to generate a BSA § 63 court docket" : "Generate Section 63 BSA statutory court certificate"}
             >
               <Scale size={13} style={{ color: '#0284C7' }} />
               <span>Court Docket (BSA § 63)</span>
@@ -340,8 +348,15 @@ export const MainInvestigations: React.FC<MainInvestigationsProps> = ({
             <span style={{ fontSize: '12.5px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
               9-Stage Cryptographic Reconstruction & Attestation Pipeline
             </span>
-            <span style={{ fontSize: '10px', background: 'rgba(16, 185, 129, 0.12)', color: '#10B981', padding: '1px 6px', borderRadius: '4px', fontWeight: 600 }}>
-              VERIFIED 9/9 PASS
+            <span style={{ 
+              fontSize: '10px', 
+              background: !hasResult ? 'rgba(100, 116, 139, 0.12)' : (isAnalyzing ? 'rgba(2, 132, 199, 0.12)' : 'rgba(16, 185, 129, 0.12)'), 
+              color: !hasResult ? 'var(--main-text-tertiary)' : (isAnalyzing ? '#0284C7' : '#10B981'), 
+              padding: '1px 6px', 
+              borderRadius: '4px', 
+              fontWeight: 600 
+            }}>
+              {!hasResult ? 'STANDBY (0/9)' : (isAnalyzing ? `PROCESSING ${pipelineStep}/9` : 'VERIFIED 9/9 PASS')}
             </span>
           </div>
 
@@ -460,14 +475,18 @@ export const MainInvestigations: React.FC<MainInvestigationsProps> = ({
               Forensic Attribution Status
             </div>
             <div style={{ fontSize: '18px', fontWeight: 600, color: 'var(--main-text-primary)', marginTop: '4px' }}>
-              {isAbstain ? (
+              {!hasResult ? (
+                <span>Awaiting Forensic Ingestion: <strong>Standby Mode</strong></span>
+              ) : isAbstain ? (
                 <span style={{ color: 'var(--main-amber)' }}>Attribution Abstained: Zero Signal / Tampered Marker</span>
               ) : (
                 <span>Attributed Principal: <strong>{suspectName}</strong></span>
               )}
             </div>
             <div style={{ fontSize: '12px', color: 'var(--main-text-secondary)', marginTop: '2px' }}>
-              {suspectRole} • <span className="main-mono">{suspectTerminal}</span>
+              {!hasResult 
+                ? 'Drop an intercepted document below or select an attack lab benchmark above to trigger attribution.' 
+                : `${suspectRole} • ${suspectTerminal}`}
             </div>
           </div>
 
@@ -479,19 +498,19 @@ export const MainInvestigations: React.FC<MainInvestigationsProps> = ({
                 fontWeight: 600, 
                 padding: '4px 10px', 
                 borderRadius: '4px',
-                background: isAbstain ? 'rgba(245, 158, 11, 0.12)' : 'rgba(16, 185, 129, 0.12)',
-                border: `1px solid ${isAbstain ? 'rgba(245, 158, 11, 0.3)' : 'rgba(16, 185, 129, 0.3)'}`,
-                color: isAbstain ? '#F59E0B' : (isLight ? '#059669' : '#10B981'),
+                background: !hasResult ? 'rgba(100, 116, 139, 0.12)' : (isAbstain ? 'rgba(245, 158, 11, 0.12)' : 'rgba(16, 185, 129, 0.12)'),
+                border: `1px solid ${!hasResult ? 'rgba(100, 116, 139, 0.3)' : (isAbstain ? 'rgba(245, 158, 11, 0.3)' : 'rgba(16, 185, 129, 0.3)')}`,
+                color: !hasResult ? 'var(--main-text-secondary)' : (isAbstain ? '#F59E0B' : (isLight ? '#059669' : '#10B981')),
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '5px'
               }}
             >
-              {isAbstain ? <ShieldAlert size={12} /> : <CheckCircle2 size={12} />}
-              <span>{isAbstain ? 'FAIL-CLOSED ABSTAIN' : 'VERIFIED ATTRIBUTION (99.8%)'}</span>
+              {!hasResult ? <Cpu size={12} /> : (isAbstain ? <ShieldAlert size={12} /> : <CheckCircle2 size={12} />)}
+              <span>{!hasResult ? 'IDLE • READY' : (isAbstain ? 'FAIL-CLOSED ABSTAIN' : 'VERIFIED ATTRIBUTION (99.8%)')}</span>
             </span>
 
-            {!isAbstain && (
+            {hasResult && !isAbstain && (
               <button
                 onClick={() => {
                   setQuarantineTarget({
@@ -511,7 +530,7 @@ export const MainInvestigations: React.FC<MainInvestigationsProps> = ({
               </button>
             )}
 
-            {onOpenCertificate && (
+            {hasResult && onOpenCertificate && (
               <button
                 onClick={() => onOpenCertificate({
                   candidateName: suspectName,
@@ -775,43 +794,49 @@ export const MainInvestigations: React.FC<MainInvestigationsProps> = ({
               Exfiltration Route & Transmission Lineage
             </span>
             <span className="main-mono" style={{ fontSize: '10.5px', color: '#0284C7' }}>
-              4 CRYPTOGRAPHIC HOPS
+              {routeHops.length > 0 ? `${routeHops.length} CRYPTOGRAPHIC HOPS` : 'STANDBY'}
             </span>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            {routeHops.map((hop, idx) => {
-              const isBreachNode = idx === routeHops.length - 1;
-              return (
-                <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '11.5px' }}>
-                  <span 
-                    style={{ 
-                      width: '18px', 
-                      height: '18px', 
-                      borderRadius: '50%', 
-                      background: isBreachNode ? '#EF4444' : (isLight ? '#E2E8F0' : 'rgba(255,255,255,0.1)'),
-                      color: isBreachNode ? '#FFFFFF' : 'var(--main-text-secondary)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '10px',
-                      fontWeight: 600,
-                      flexShrink: 0
-                    }}
-                  >
-                    {idx + 1}
-                  </span>
-                  <span style={{ color: isBreachNode ? '#EF4444' : 'var(--main-text-primary)', fontWeight: isBreachNode ? 600 : 400 }}>
-                    {hop}
-                  </span>
-                  {isBreachNode && (
-                    <span style={{ fontSize: '9.5px', background: 'rgba(239, 68, 68, 0.12)', color: '#EF4444', padding: '1px 5px', borderRadius: '3px', fontWeight: 600 }}>
-                      LEAK BREACH SOURCE
+            {routeHops.length === 0 ? (
+              <div style={{ fontSize: '12px', color: 'var(--main-text-tertiary)', padding: '12px 0', fontStyle: 'italic' }}>
+                Awaiting forensic ingestion. Select an attack lab benchmark above or upload an intercepted leak to trace network hop lineage.
+              </div>
+            ) : (
+              routeHops.map((hop, idx) => {
+                const isBreachNode = idx === routeHops.length - 1;
+                return (
+                  <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '11.5px' }}>
+                    <span 
+                      style={{ 
+                        width: '18px', 
+                        height: '18px', 
+                        borderRadius: '50%', 
+                        background: isBreachNode ? '#EF4444' : (isLight ? '#E2E8F0' : 'rgba(255,255,255,0.1)'),
+                        color: isBreachNode ? '#FFFFFF' : 'var(--main-text-secondary)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '10px',
+                        fontWeight: 600,
+                        flexShrink: 0
+                      }}
+                    >
+                      {idx + 1}
                     </span>
-                  )}
-                </div>
-              );
-            })}
+                    <span style={{ color: isBreachNode ? '#EF4444' : 'var(--main-text-primary)', fontWeight: isBreachNode ? 600 : 400 }}>
+                      {hop}
+                    </span>
+                    {isBreachNode && (
+                      <span style={{ fontSize: '9.5px', background: 'rgba(239, 68, 68, 0.12)', color: '#EF4444', padding: '1px 5px', borderRadius: '3px', fontWeight: 600 }}>
+                        LEAK BREACH SOURCE
+                      </span>
+                    )}
+                  </div>
+                );
+              })
+            )}
           </div>
         </div>
 

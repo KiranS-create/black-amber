@@ -210,10 +210,6 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
               label: "Import artifact",
               onClick: () => setActiveTab('documents')
             }}
-            secondaryAction={onLoadDemo ? {
-              label: "Load demo records",
-              onClick: onLoadDemo
-            } : undefined}
           />
         </div>
       ) : (
@@ -551,10 +547,6 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
               label: "Start investigation",
               onClick: () => setActiveTab('investigations')
             }}
-            secondaryAction={onLoadDemo ? {
-              label: "Load demonstration data",
-              onClick: onLoadDemo
-            } : undefined}
           />
         ) : (
           <div className="evidence-table-container">

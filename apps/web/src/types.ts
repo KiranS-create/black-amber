@@ -43,6 +43,9 @@ export interface PublicRecipient {
   identity_id?: string;
   identity_status?: string;
   role?: string;
+  terminal_id?: string;
+  department?: string;
+  clearance?: string;
   origin?: DataSourceOrigin;
 }
 
@@ -140,6 +143,7 @@ export interface ResolvedIdentitySummary {
   status: 'ACTIVE' | 'SUSPENDED' | 'REVOKED' | 'DEPROVISIONED';
   department?: string;
   title?: string;
+  terminal?: string;
   source: 'DIRECTORY' | 'CACHE' | 'FALLBACK';
 }
 

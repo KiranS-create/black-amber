@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { DocumentMetadata, PublicRecipient } from '../../types';
-import { Upload, FileText, Search, Shield, ChevronRight, Check, Key, Eye, Sparkles, Trash2, AlertTriangle, Loader2 } from 'lucide-react';
+import { Upload, FileText, Search, Shield, ChevronRight, Check, Key, Eye, Sparkles, Trash2, AlertTriangle, Loader2, Users } from 'lucide-react';
 import { MainDocumentDrawer } from './MainDocumentDrawer';
 
 interface MainDocumentsProps {
@@ -11,6 +11,7 @@ interface MainDocumentsProps {
   onDeleteDocument?: (documentId: string) => Promise<void>;
   onOpenDecryptionPortal?: (doc?: DocumentMetadata) => void;
   onOpenComparator?: () => void;
+  onNavigateToRecipients?: () => void;
 }
 
 export const MainDocuments: React.FC<MainDocumentsProps> = ({
@@ -20,7 +21,8 @@ export const MainDocuments: React.FC<MainDocumentsProps> = ({
   onProtectAndRelease,
   onDeleteDocument,
   onOpenDecryptionPortal,
-  onOpenComparator
+  onOpenComparator,
+  onNavigateToRecipients
 }) => {
   const [selectedDoc, setSelectedDoc] = useState<DocumentMetadata | null>(null);
   const [isUploading, setIsUploading] = useState<boolean>(false);
@@ -97,6 +99,17 @@ export const MainDocuments: React.FC<MainDocumentsProps> = ({
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {onNavigateToRecipients && (
+            <button
+              onClick={onNavigateToRecipients}
+              className="main-btn-secondary"
+              style={{ fontSize: '12px' }}
+              title="Manage Enrolled Principals & Field Terminals"
+            >
+              <Users size={14} />
+              <span>Principals ({recipients.length})</span>
+            </button>
+          )}
           <button
             onClick={handleBrowseClick}
             disabled={isUploading}

@@ -1,7 +1,8 @@
 import React from 'react';
 import { UserSession } from '../../types';
-import { Sun, Moon, LogOut, Play } from 'lucide-react';
+import { Sun, Moon, LogOut } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
+import { getExperienceVariant, setExperienceVariant } from '../../variant';
 
 interface MainHeaderProps {
   currentSection: string;
@@ -9,15 +10,13 @@ interface MainHeaderProps {
   isDemoMode?: boolean;
   onSignOut: () => void;
   onOpenSettings: () => void;
-  onStartAutoTour?: () => void;
 }
 
 export const MainHeader: React.FC<MainHeaderProps> = ({
   currentSection,
   userSession,
   onSignOut,
-  onOpenSettings,
-  onStartAutoTour
+  onOpenSettings
 }) => {
   const { theme, toggleTheme } = useTheme();
 
@@ -47,31 +46,43 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-        {/* Auto-Tour With Voice Capsule */}
-        {onStartAutoTour && (
+        {/* Experience Variant Switcher */}
+        <div style={{ display: 'inline-flex', alignItems: 'center', padding: '2px', background: 'var(--main-surface-hover)', border: '1px solid var(--main-border)', borderRadius: '9999px' }}>
           <button
-            onClick={onStartAutoTour}
+            onClick={() => setExperienceVariant('main')}
             style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '3px 12px',
-              borderRadius: '9999px',
-              background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.12) 0%, rgba(45, 212, 191, 0.10) 100%)',
-              border: '1px solid rgba(56, 189, 248, 0.4)',
-              color: '#38BDF8',
+              border: 'none',
+              background: getExperienceVariant() === 'main' ? 'var(--main-accent)' : 'transparent',
+              color: getExperienceVariant() === 'main' ? '#ffffff' : 'var(--main-text-secondary)',
               fontSize: '11px',
-              fontWeight: 650,
+              fontWeight: 600,
+              padding: '3px 10px',
+              borderRadius: '9999px',
               cursor: 'pointer',
-              boxShadow: '0 2px 10px rgba(56, 189, 248, 0.15)',
               transition: 'all 0.15s ease'
             }}
-            title="Watch full automated interactive tour with AI voiceover"
+            title="Workstation View"
           >
-            <Play size={10} fill="currentColor" />
-            <span>Auto-Demo (Voice)</span>
+            ✦ Workstation
           </button>
-        )}
+          <button
+            onClick={() => setExperienceVariant('alternate')}
+            style={{
+              border: 'none',
+              background: getExperienceVariant() === 'alternate' ? 'var(--main-accent)' : 'transparent',
+              color: getExperienceVariant() === 'alternate' ? '#ffffff' : 'var(--main-text-secondary)',
+              fontSize: '11px',
+              fontWeight: 600,
+              padding: '3px 10px',
+              borderRadius: '9999px',
+              cursor: 'pointer',
+              transition: 'all 0.15s ease'
+            }}
+            title="Switch to Command Center Layout"
+          >
+            ☵ Command Center
+          </button>
+        </div>
 
         {/* Apple Status Capsule */}
         <div

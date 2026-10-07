@@ -15,12 +15,14 @@ import {
   Maximize2
 } from 'lucide-react';
 import { SvgSpectralCarrier } from './SvgSpectralCarrier';
+import { PublicRecipient } from '../../types';
 
 interface MainVisualComparatorModalProps {
   isOpen: boolean;
   onClose: () => void;
   documentName?: string;
   recipientName?: string;
+  recipients?: PublicRecipient[];
 }
 
 const AVAILABLE_RECIPIENTS = [
@@ -34,9 +36,18 @@ export const MainVisualComparatorModal: React.FC<MainVisualComparatorModalProps>
   isOpen,
   onClose,
   documentName = 'National_Defense_Protocol_2026.pdf',
-  recipientName = 'Marcus Vance'
+  recipientName = 'Marcus Vance',
+  recipients
 }) => {
-  const [activeRecipient, setActiveRecipient] = useState<string>(recipientName);
+  const displayRecipients = (recipients && recipients.length > 0)
+    ? recipients.map(r => ({ id: r.recipient_id, name: r.name, role: r.role || 'Authorized Principal' }))
+    : AVAILABLE_RECIPIENTS;
+
+  const [activeRecipient, setActiveRecipient] = useState<string>(() => {
+    if (recipientName) return recipientName;
+    if (recipients && recipients.length > 0) return recipients[0].name;
+    return 'Marcus Vance';
+  });
   const [viewMode, setViewMode] = useState<'sideBySide' | 'splitSlider' | 'differenceHeatmap' | 'dsssCarrier'>('sideBySide');
   const [showSpectralOverlay, setShowSpectralOverlay] = useState<boolean>(false);
   const [ampFactor, setAmpFactor] = useState<number>(30);
@@ -296,7 +307,7 @@ export const MainVisualComparatorModal: React.FC<MainVisualComparatorModalProps>
                   cursor: 'pointer'
                 }}
               >
-                {AVAILABLE_RECIPIENTS.map(r => (
+                {displayRecipients.map(r => (
                   <option key={r.id} value={r.name}>{r.name} ({r.role})</option>
                 ))}
               </select>

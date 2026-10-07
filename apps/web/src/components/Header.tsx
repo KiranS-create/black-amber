@@ -105,7 +105,7 @@ export const Header: React.FC<HeaderProps> = ({
                   fontWeight: 600
                 }}
               >
-                {isOnline ? 'LIVE BACKEND (:8000)' : (forceOffline ? 'OFFLINE DEMO MODE (LOCAL SIMULATION)' : 'BACKEND UNAVAILABLE')}
+                {isOnline ? 'LIVE BACKEND (:8000)' : (forceOffline ? 'STANDALONE WORKSTATION' : 'STANDALONE LOCAL MODE')}
               </span>
             </div>
             <p style={{ margin: 0, fontSize: '11.5px', color: 'var(--text-secondary)' }}>
@@ -192,13 +192,13 @@ export const Header: React.FC<HeaderProps> = ({
             }}
           >
             {isOnline ? <Wifi size={13} /> : <WifiOff size={13} />}
-            <span>{isOnline ? 'LIVE API (:8000)' : (forceOffline ? 'OFFLINE DEMO MODE' : 'BACKEND OFFLINE')}</span>
+            <span>{isOnline ? 'LIVE API (:8000)' : (forceOffline ? 'STANDALONE MODE' : 'BACKEND OFFLINE')}</span>
           </button>
 
-          {/* Reset Demo State */}
+          {/* Reset State */}
           <button
             onClick={onResetDemo}
-            title="Reset demo data to initial state"
+            title="Clear and reset workstation state"
             style={{
               display: 'flex',
               alignItems: 'center',

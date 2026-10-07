@@ -658,10 +658,19 @@ export const ATTACK_SCENARIOS: AttackTestScenario[] = [
   }
 ];
 
+export const BENCHMARK_ALIASES: Record<string, string> = {
+  'print_scan': 'print_scan_camera',
+  'collusion': 'evidence_conflict_bob_charlie',
+  'retyping': 'raw_unwatermarked',
+  'compression': 'heavy_jpeg'
+};
+
 export function computeMockAttribution(scenarioIdOrPayload: string): AttributionResult {
-  const scenario = ATTACK_SCENARIOS.find(s => s.id === scenarioIdOrPayload || s.simulated_payload_b64 === scenarioIdOrPayload);
+  const normalizedId = BENCHMARK_ALIASES[scenarioIdOrPayload] || scenarioIdOrPayload;
+  const scenario = ATTACK_SCENARIOS.find(s => s.id === normalizedId || s.simulated_payload_b64 === normalizedId);
+  const scenarioId = scenario?.id || normalizedId;
   
-  if (!scenario || scenario.id === 'clean_bob') {
+  if (scenarioId === 'clean_bob') {
     return {
       state: 'ATTRIBUTED',
       candidate: {
@@ -714,7 +723,7 @@ export function computeMockAttribution(scenarioIdOrPayload: string): Attribution
     };
   }
 
-  if (scenario.id === 'clean_alice') {
+  if (scenarioId === 'clean_alice') {
     return {
       state: 'ATTRIBUTED',
       candidate: {
@@ -756,7 +765,7 @@ export function computeMockAttribution(scenarioIdOrPayload: string): Attribution
     };
   }
 
-  if (scenario.id === 'clean_charlie') {
+  if (scenarioId === 'clean_charlie') {
     return {
       state: 'ATTRIBUTED',
       candidate: {
@@ -798,7 +807,7 @@ export function computeMockAttribution(scenarioIdOrPayload: string): Attribution
     };
   }
 
-  if (scenario.id === 'print_scan_camera') {
+  if (scenarioId === 'print_scan_camera') {
     return {
       state: 'ATTRIBUTED',
       candidate: {
@@ -844,7 +853,7 @@ export function computeMockAttribution(scenarioIdOrPayload: string): Attribution
     };
   }
 
-  if (scenario.id === 'raw_unwatermarked') {
+  if (scenarioId === 'raw_unwatermarked') {
     return {
       state: 'NO_SIGNAL',
       candidate: null,
@@ -870,7 +879,7 @@ export function computeMockAttribution(scenarioIdOrPayload: string): Attribution
     };
   }
 
-  if (scenario.id === 'forged_hmac') {
+  if (scenarioId === 'forged_hmac') {
     return {
       state: 'INSUFFICIENT_EVIDENCE',
       candidate: null,
@@ -895,7 +904,7 @@ export function computeMockAttribution(scenarioIdOrPayload: string): Attribution
     };
   }
 
-  if (scenario.id === 'framed_identity') {
+  if (scenarioId === 'framed_identity') {
     return {
       state: 'INSUFFICIENT_EVIDENCE',
       candidate: null,
@@ -920,7 +929,7 @@ export function computeMockAttribution(scenarioIdOrPayload: string): Attribution
     };
   }
 
-  if (scenario.id === 'heavy_jpeg') {
+  if (scenarioId === 'heavy_jpeg') {
     return {
       state: 'INSUFFICIENT_EVIDENCE',
       candidate: null,
@@ -944,7 +953,7 @@ export function computeMockAttribution(scenarioIdOrPayload: string): Attribution
     };
   }
 
-  if (scenario.id === 'cross_doc_scope') {
+  if (scenarioId === 'cross_doc_scope') {
     return {
       state: 'CONFLICT',
       candidate: null,
@@ -968,7 +977,7 @@ export function computeMockAttribution(scenarioIdOrPayload: string): Attribution
     };
   }
 
-  if (scenario.id === 'evidence_conflict_bob_charlie') {
+  if (scenarioId === 'evidence_conflict_bob_charlie') {
     return {
       state: 'CONFLICT',
       candidate: null,
@@ -996,7 +1005,7 @@ export function computeMockAttribution(scenarioIdOrPayload: string): Attribution
     };
   }
 
-  if (scenario.id === 'review_required_anomaly') {
+  if (scenarioId === 'review_required_anomaly') {
     return {
       state: 'REVIEW_REQUIRED',
       candidate: null,

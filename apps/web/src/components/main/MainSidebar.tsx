@@ -5,15 +5,17 @@ import {
   Search, 
   FileCheck, 
   Settings, 
-  Shield
+  Shield,
+  Users
 } from 'lucide-react';
 
-export type MainTabId = 'overview' | 'documents' | 'investigations' | 'evidence';
+export type MainTabId = 'overview' | 'documents' | 'recipients' | 'investigations' | 'evidence';
 
 interface MainSidebarProps {
   activeTab: MainTabId;
   setActiveTab: (tab: MainTabId) => void;
   documentCount?: number;
+  recipientCount?: number;
   hasActiveInvestigation?: boolean;
   onOpenSettings: () => void;
 }
@@ -22,6 +24,7 @@ export const MainSidebar: React.FC<MainSidebarProps> = ({
   activeTab,
   setActiveTab,
   documentCount = 0,
+  recipientCount = 0,
   hasActiveInvestigation = false,
   onOpenSettings
 }) => {
@@ -37,6 +40,12 @@ export const MainSidebar: React.FC<MainSidebarProps> = ({
       label: 'Documents',
       icon: FileText,
       badge: documentCount > 0 ? `${documentCount}` : null
+    },
+    {
+      id: 'recipients' as MainTabId,
+      label: 'Recipients',
+      icon: Users,
+      badge: recipientCount > 0 ? `${recipientCount}` : null
     },
     {
       id: 'investigations' as MainTabId,

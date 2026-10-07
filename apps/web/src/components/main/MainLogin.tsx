@@ -12,15 +12,13 @@ interface MainLoginProps {
   onOpenVerifyStandalone: () => void;
   onOpenSignUp: () => void;
   onBackToLanding?: () => void;
-  onStartAutoTour?: () => void;
 }
 
 export const MainLogin: React.FC<MainLoginProps> = ({
   onLoginSuccess,
   onOpenVerifyStandalone,
   onOpenSignUp,
-  onBackToLanding,
-  onStartAutoTour
+  onBackToLanding
 }) => {
   const { theme, toggleTheme } = useTheme();
   const isLight = theme === 'light';
@@ -144,32 +142,6 @@ export const MainLogin: React.FC<MainLoginProps> = ({
           gap: '12px'
         }}
       >
-        {onStartAutoTour && (
-          <button
-            onClick={onStartAutoTour}
-            style={{
-              padding: '7px 16px',
-              borderRadius: '9999px',
-              backgroundColor: isLight ? 'rgba(255, 255, 255, 0.92)' : 'rgba(18, 27, 35, 0.90)',
-              backdropFilter: 'blur(16px)',
-              border: `1.5px solid ${isLight ? 'rgba(2, 132, 199, 0.35)' : 'rgba(56, 189, 248, 0.4)'}`,
-              color: isLight ? '#0284C7' : '#38BDF8',
-              fontSize: '12px',
-              fontWeight: 650,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-              boxShadow: isLight ? '0 4px 12px rgba(2, 132, 199, 0.12)' : '0 4px 16px rgba(56, 189, 248, 0.2)'
-            }}
-            title="Watch automated hands-free walkthrough with voice"
-          >
-            <Play size={12} fill="currentColor" />
-            <span>Auto-Demo (Voice)</span>
-          </button>
-        )}
-
         <button
           onClick={toggleTheme}
           title={`Switch to ${isLight ? 'Dark' : 'Light'} Mode`}
@@ -395,7 +367,7 @@ export const MainLogin: React.FC<MainLoginProps> = ({
             </button>
           </form>
 
-          {/* Quick Evaluator Access & Demo Autofill */}
+          {/* Quick Evaluator Access & Autofill */}
           <div
             style={{
               marginTop: '22px',
@@ -414,7 +386,7 @@ export const MainLogin: React.FC<MainLoginProps> = ({
               <KeyRound size={16} style={{ color: isLight ? '#0071E3' : '#2997FF', flexShrink: 0 }} />
               <div>
                 <div style={{ fontSize: '10.5px', fontWeight: 700, color: isLight ? '#0071E3' : '#2997FF', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span>EVALUATOR DEMO ACCESS</span>
+                  <span>OPERATOR QUICK ACCESS</span>
                   {autofillApplied && (
                     <span style={{ fontSize: '10.5px', color: '#10B981', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
                       <CheckCircle2 size={12} /> Credentials Applied
@@ -464,57 +436,12 @@ export const MainLogin: React.FC<MainLoginProps> = ({
                   cursor: isLoading ? 'not-allowed' : 'pointer',
                   transition: 'all 0.15s ease'
                 }}
-                title="Autofill and sign in immediately with demo clearance"
+                title="Autofill and sign in immediately as Administrator"
               >
                 Quick Enter →
               </button>
             </div>
           </div>
-
-          {/* Hands-Free Automated Demo With Voiceover */}
-          {onStartAutoTour && (
-            <button
-              type="button"
-              onClick={onStartAutoTour}
-              style={{
-                marginTop: '14px',
-                width: '100%',
-                padding: '12px 18px',
-                borderRadius: '14px',
-                background: isLight 
-                  ? 'linear-gradient(135deg, rgba(2, 132, 199, 0.08) 0%, rgba(14, 165, 233, 0.14) 100%)' 
-                  : 'linear-gradient(135deg, rgba(56, 189, 248, 0.12) 0%, rgba(45, 212, 191, 0.12) 100%)',
-                border: `1.5px solid ${isLight ? 'rgba(2, 132, 199, 0.35)' : 'rgba(56, 189, 248, 0.45)'}`,
-                color: isLight ? '#0284C7' : '#38BDF8',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '9px',
-                fontSize: '13px',
-                fontWeight: 650,
-                cursor: 'pointer',
-                boxShadow: isLight ? '0 4px 14px rgba(2, 132, 199, 0.12)' : '0 4px 20px rgba(56, 189, 248, 0.2)',
-                transition: 'all 0.2s ease'
-              }}
-              title="Watch full automated interactive tour with AI voiceover"
-            >
-              <Play size={14} fill="currentColor" />
-              <span>Watch Auto-Demo with Voice</span>
-              <span
-                style={{
-                  fontSize: '10px',
-                  fontWeight: 750,
-                  padding: '2px 7px',
-                  borderRadius: '9999px',
-                  background: isLight ? '#0284C7' : '#38BDF8',
-                  color: isLight ? '#FFFFFF' : '#080C10',
-                  letterSpacing: '0.04em'
-                }}
-              >
-                AI NARRATED
-              </span>
-            </button>
-          )}
         </div>
 
         {/* Bottom Auxiliary Links */}

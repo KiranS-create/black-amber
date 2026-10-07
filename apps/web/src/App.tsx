@@ -326,7 +326,7 @@ export function AppContent() {
         forceOffline={forceOffline}
         onToggleForceOffline={handleToggleForceOffline}
         onOpenWalkthrough={() => setGuideOpen(true)}
-        onResetDemo={handleLoadDemoData}
+        onResetDemo={handlePurgeDemoData}
         onQuickScenario={handleQuickScenario}
         onSimulateTamper={() => handleSimulateTamper(1)}
         onExportReport={() => setReportModalOpen(true)}

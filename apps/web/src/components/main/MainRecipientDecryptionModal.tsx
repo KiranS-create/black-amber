@@ -23,6 +23,15 @@ interface MainRecipientDecryptionModalProps {
   onClose: () => void;
   releases: DocumentRelease[];
   recipients: PublicRecipient[];
+  initialRecipientId?: string;
+  onEnrollRecipient?: (
+    name: string, 
+    id?: string, 
+    role?: string, 
+    terminalId?: string, 
+    department?: string, 
+    clearance?: string
+  ) => Promise<void>;
   onOpenComparator?: (recipientName: string, docName: string) => void;
   onInvestigateLeak?: (scenarioId: string) => void;
   onRefresh?: () => Promise<void>;
@@ -33,26 +42,46 @@ export const MainRecipientDecryptionModal: React.FC<MainRecipientDecryptionModal
   onClose,
   releases,
   recipients,
+  initialRecipientId,
+  onEnrollRecipient,
   onOpenComparator,
   onInvestigateLeak,
   onRefresh
 }) => {
-  const [selectedRecipientId, setSelectedRecipientId] = useState<string>('bob');
+  const [selectedRecipientId, setSelectedRecipientId] = useState<string>(() => initialRecipientId || 'bob');
   const [selectedReleaseId, setSelectedReleaseId] = useState<string>(() => releases[0]?.release_id || 'rel_20260926_001');
   const [isExecuting, setIsExecuting] = useState<boolean>(false);
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [decryptionResult, setDecryptionResult] = useState<any | null>(null);
   const [subTab, setSubTab] = useState<'terminal' | 'enclave'>('terminal');
 
+  // Inline Quick-Enroll state
+  const [showQuickEnroll, setShowQuickEnroll] = useState(false);
+  const [quickName, setQuickName] = useState('');
+  const [quickTerminal, setQuickTerminal] = useState('');
+  const [quickRole, setQuickRole] = useState('');
+
+  React.useEffect(() => {
+    if (initialRecipientId) {
+      setSelectedRecipientId(initialRecipientId);
+    }
+  }, [initialRecipientId]);
+
   if (!isOpen) return null;
 
   const currentRelease = releases.find(r => r.release_id === selectedReleaseId) || releases[0];
-  const currentRecipient = recipients.find(r => r.recipient_id === selectedRecipientId) || {
+  const currentRecipient: PublicRecipient = recipients.find(r => r.recipient_id === selectedRecipientId) || {
     recipient_id: 'bob',
     name: 'Marcus Vance',
     role: 'Principal Cryptanalyst',
     algorithm_kem: 'ML-KEM-768 (Kyber-768 standard)',
-    algorithm_dsa: 'ML-DSA-65 (Dilithium3 standard)'
+    algorithm_dsa: 'ML-DSA-65 (Dilithium3 standard)',
+    kem_public_key_b64: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0',
+    dsa_public_key_b64: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1',
+    created_at: new Date().toISOString(),
+    status: 'ACTIVE',
+    terminal_id: 'Field Terminal #ST-842911',
+    department: 'Strategic Intelligence Division'
   };
 
   const handleExecuteDecryption = async () => {
@@ -108,7 +137,8 @@ export const MainRecipientDecryptionModal: React.FC<MainRecipientDecryptionModal
   const handleDownloadCopy = () => {
     const docName = currentRelease?.document_name || 'Protected_Protocol.pdf';
     const cleanName = docName.replace('.pdf', '') + `_decrypted_${selectedRecipientId}.pdf`;
-    const dummyPdfContent = `%PDF-1.7\n% AegisTrace Cryptographic Provenance Watermarked Document\n% Recipient: ${currentRecipient.name} (${selectedRecipientId})\n% ML-DSA-65 Signature: ${decryptionResult?.signature_b64 || 'SIMULATED'}\n% Original Hash: 9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08\n% Traitor-Tracing Codeword: Tardos m=128, c<=5\n%%EOF`;
+    const terminalTag = currentRecipient.terminal_id || `Field Terminal #ST-${selectedRecipientId.toUpperCase()}`;
+    const dummyPdfContent = `%PDF-1.7\n% AegisTrace Cryptographic Provenance Watermarked Document\n% Recipient: ${currentRecipient.name} (${selectedRecipientId})\n% Terminal: ${terminalTag}\n% Department: ${currentRecipient.department || 'Strategic Intelligence Division'}\n% Role: ${currentRecipient.role || 'Authorized Principal'}\n% ML-DSA-65 Signature: ${decryptionResult?.signature_b64 || 'SIMULATED'}\n% Original Hash: 9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08\n% Traitor-Tracing Codeword: Tardos m=128, c<=5\n%%EOF`;
     const blob = new Blob([dummyPdfContent], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -175,48 +205,166 @@ export const MainRecipientDecryptionModal: React.FC<MainRecipientDecryptionModal
           {subTab === 'terminal' ? (
             <>
               {/* Recipient Selection */}
+              {/* Release Selection */}
+              <div>
+                <label style={{ fontSize: '12px', fontWeight: 650, color: 'var(--main-text-primary)', display: 'block', marginBottom: '8px' }}>
+                  1. Select Broadcast Release Package
+                </label>
+                {releases.length > 0 ? (
+                  <select
+                    value={selectedReleaseId}
+                    onChange={(e) => {
+                      setSelectedReleaseId(e.target.value);
+                      const targetRel = releases.find(r => r.release_id === e.target.value);
+                      if (targetRel && targetRel.recipient_ids && targetRel.recipient_ids.length > 0) {
+                        setSelectedRecipientId(targetRel.recipient_ids[0]);
+                      }
+                    }}
+                    disabled={isExecuting}
+                    className="main-select"
+                    style={{ width: '100%', padding: '10px 14px', borderRadius: '12px', background: 'var(--main-surface)', border: '1px solid var(--main-border)', color: 'var(--main-text-primary)', fontSize: '13px' }}
+                  >
+                    {releases.map(rel => (
+                      <option key={rel.release_id} value={rel.release_id}>
+                        {rel.document_name} ({rel.release_id}) — {rel.recipient_ids?.length || 0} Recipients
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <div style={{ padding: '10px 14px', borderRadius: '12px', background: 'var(--main-surface)', border: '1px solid var(--main-border)', fontSize: '12px', color: 'var(--main-text-secondary)' }}>
+                    Active Release Envelope: <strong>{selectedReleaseId}</strong>
+                  </div>
+                )}
+              </div>
+
+              {/* Recipient Selection */}
               <div>
                 <label style={{ fontSize: '12px', fontWeight: 650, color: 'var(--main-text-primary)', display: 'block', marginBottom: '10px' }}>
-                  1. Select Recipient Workstation Terminal
+                  2. Select Recipient Workstation Terminal
                 </label>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
-              {[
-                { id: 'bob', name: 'Marcus Vance', role: 'Principal Cryptanalyst', badge: 'Recommended for Demo' },
-                { id: 'alice', name: 'Sarah Jenkins', role: 'Cyber Defense Lead', badge: 'Co-Recipient' },
-                { id: 'charlie', name: 'Dr. Aris Thorne', role: 'Visiting PQC Scientist', badge: 'Co-Recipient' }
-              ].map(rec => (
-                <div
-                  key={rec.id}
-                  onClick={() => !isExecuting && setSelectedRecipientId(rec.id)}
-                  style={{
-                    padding: '14px',
-                    borderRadius: '14px',
-                    border: `1px solid ${selectedRecipientId === rec.id ? 'var(--main-accent)' : 'var(--main-border)'}`,
-                    background: selectedRecipientId === rec.id ? 'var(--main-surface-hover)' : 'var(--main-surface-elevated)',
-                    cursor: isExecuting ? 'not-allowed' : 'pointer',
-                    transition: 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)',
-                    boxShadow: selectedRecipientId === rec.id ? '0 4px 16px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.12)' : 'none'
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
-                    <span style={{ fontSize: '11px', fontWeight: 650, color: selectedRecipientId === rec.id ? 'var(--main-accent)' : 'var(--main-text-tertiary)' }}>
-                      TERMINAL #{rec.id.toUpperCase()}
-                    </span>
-                    {selectedRecipientId === rec.id && <CheckCircle2 size={13} style={{ color: 'var(--main-accent)' }} />}
-                  </div>
-                  <div style={{ fontSize: '13.5px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
-                    {rec.name}
-                  </div>
-                  <div style={{ fontSize: '11.5px', color: 'var(--main-text-secondary)', marginTop: '2px' }}>
-                    {rec.role}
-                  </div>
-                  <div style={{ marginTop: '8px', fontSize: '10px', color: selectedRecipientId === rec.id ? '#93C5FD' : 'var(--main-text-tertiary)' }}>
-                    {rec.badge}
-                  </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
+                  {(recipients.length > 0 ? recipients : [
+                    { recipient_id: 'bob', name: 'Marcus Vance', role: 'Principal Cryptanalyst' },
+                    { recipient_id: 'alice', name: 'Sarah Jenkins', role: 'Cyber Defense Lead' },
+                    { recipient_id: 'charlie', name: 'Dr. Aris Thorne', role: 'Visiting PQC Scientist' }
+                  ]).map(rec => {
+                    const isSelected = selectedRecipientId === rec.recipient_id;
+                    return (
+                      <div
+                        key={rec.recipient_id}
+                        onClick={() => !isExecuting && setSelectedRecipientId(rec.recipient_id)}
+                        style={{
+                          padding: '14px',
+                          borderRadius: '14px',
+                          border: `1px solid ${isSelected ? 'var(--main-accent)' : 'var(--main-border)'}`,
+                          background: isSelected ? 'var(--main-surface-hover)' : 'var(--main-surface-elevated)',
+                          cursor: isExecuting ? 'not-allowed' : 'pointer',
+                          transition: 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)',
+                          boxShadow: isSelected ? '0 4px 16px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.12)' : 'none'
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+                          <span style={{ fontSize: '11px', fontWeight: 650, color: isSelected ? 'var(--main-accent)' : 'var(--main-text-tertiary)' }}>
+                            TERMINAL #{rec.recipient_id.toUpperCase()}
+                          </span>
+                          {isSelected && <CheckCircle2 size={13} style={{ color: 'var(--main-accent)' }} />}
+                        </div>
+                        <div style={{ fontSize: '13.5px', fontWeight: 600, color: 'var(--main-text-primary)' }}>
+                          {rec.name}
+                        </div>
+                        <div style={{ fontSize: '11.5px', color: 'var(--main-text-secondary)', marginTop: '2px' }}>
+                          {rec.role || 'Authorized Principal'}
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                  {onEnrollRecipient && (
+                    <div
+                      onClick={() => setShowQuickEnroll(!showQuickEnroll)}
+                      style={{
+                        padding: '14px',
+                        borderRadius: '14px',
+                        border: '1px dashed var(--main-border-active)',
+                        background: 'transparent',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '6px',
+                        minHeight: '80px',
+                        transition: 'all 0.18s ease'
+                      }}
+                    >
+                      <Sparkles size={16} style={{ color: 'var(--main-accent)' }} />
+                      <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--main-accent)' }}>
+                        + Add Custom Recipient
+                      </span>
+                    </div>
+                  )}
                 </div>
-              ))}
-            </div>
-          </div>
+
+                {showQuickEnroll && (
+                  <div style={{ marginTop: '12px', padding: '14px 16px', background: 'var(--main-surface-elevated)', borderRadius: '12px', border: '1px solid var(--main-accent)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <div style={{ fontSize: '12px', fontWeight: 650, color: 'var(--main-text-primary)' }}>
+                      Quick-Enroll Principal & Terminal
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '8px' }}>
+                      <input
+                        type="text"
+                        placeholder="Officer Name *"
+                        value={quickName}
+                        onChange={e => setQuickName(e.target.value)}
+                        style={{ padding: '6px 10px', borderRadius: '6px', border: '1px solid var(--main-border)', background: 'var(--main-surface)', color: 'var(--main-text-primary)', fontSize: '12px' }}
+                      />
+                      <input
+                        type="text"
+                        placeholder="Terminal ID (e.g. ST-7721)"
+                        value={quickTerminal}
+                        onChange={e => setQuickTerminal(e.target.value)}
+                        style={{ padding: '6px 10px', borderRadius: '6px', border: '1px solid var(--main-border)', background: 'var(--main-surface)', color: 'var(--main-text-primary)', fontSize: '12px' }}
+                      />
+                      <input
+                        type="text"
+                        placeholder="Role / Rank"
+                        value={quickRole}
+                        onChange={e => setQuickRole(e.target.value)}
+                        style={{ padding: '6px 10px', borderRadius: '6px', border: '1px solid var(--main-border)', background: 'var(--main-surface)', color: 'var(--main-text-primary)', fontSize: '12px' }}
+                      />
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+                      <button
+                        type="button"
+                        onClick={() => setShowQuickEnroll(false)}
+                        className="main-btn-secondary"
+                        style={{ padding: '4px 10px', fontSize: '11px' }}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        disabled={!quickName.trim()}
+                        onClick={async () => {
+                          if (!onEnrollRecipient || !quickName.trim()) return;
+                          const cleanId = quickName.trim().toLowerCase().replace(/[^a-z0-9]/g, '_');
+                          const term = quickTerminal.trim() || `Field Terminal #ST-${Math.floor(100000 + Math.random() * 900000)}`;
+                          await onEnrollRecipient(quickName.trim(), cleanId, quickRole.trim() || 'Principal Intelligence Officer', term);
+                          setSelectedRecipientId(cleanId);
+                          setQuickName('');
+                          setQuickTerminal('');
+                          setQuickRole('');
+                          setShowQuickEnroll(false);
+                        }}
+                        className="main-btn-primary"
+                        style={{ padding: '4px 12px', fontSize: '11px' }}
+                      >
+                        Enroll & Select
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
 
           {/* Cryptographic Package Info */}
           <div style={{ padding: '14px 16px', background: 'var(--main-surface-elevated)', borderRadius: '14px', border: '1px solid var(--main-border)', fontSize: '12px' }}>

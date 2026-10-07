@@ -445,7 +445,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           </button>
         </form>
 
-        {/* DEMO ACCESS Box (Always Visible, Natural, Apple Bento Squircle) */}
+        {/* OPERATOR ACCESS Box (Quick Access) */}
         <div
           style={{
             marginTop: '22px',
@@ -464,7 +464,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             <KeyRound size={17} style={{ color: isLight ? '#0071E3' : '#2997FF', flexShrink: 0 }} />
             <div>
               <div style={{ fontSize: '10.5px', fontWeight: 700, color: isLight ? '#0071E3' : '#2997FF', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span>EVALUATOR DEMO ACCESS</span>
+                <span>OPERATOR QUICK ACCESS</span>
                 {autofillApplied && (
                   <span style={{ fontSize: '10.5px', color: '#10B981', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
                     <CheckCircle2 size={12} /> Applied
